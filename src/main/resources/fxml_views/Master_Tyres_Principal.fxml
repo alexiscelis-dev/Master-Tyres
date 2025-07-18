@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #111111;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController">
+
+    <children>
+        <AnchorPane fx:id="sidebar" layoutX="14.0" prefHeight="600.0" prefWidth="340.0" style="-fx-background-color: #1A1A1A;" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <VBox alignment="TOP_CENTER" layoutX="-8.0" layoutY="215.0" prefHeight="440.0" prefWidth="249.0" spacing="40.0" style="-fx-background-color: #1A1A1A;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="140.0">
+                    <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                     <children>
+                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
+                                  <image>
+                                      <Image url="@../icons/car-fill.png" />
+                                  </image>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Separator prefHeight="1.0" prefWidth="17.0" visible="false" />
+                              <Label contentDisplay="CENTER" styleClass="menu-label" text="Vehiculos" textFill="WHITE">
+                                  <font>
+                                      <Font name="Roboto" size="14.0" />
+                                  </font>
+                        </Label>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets bottom="-60.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                     <children>
+                              <ImageView fx:id="iconoCliente" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
+                                  <image>
+                                      <Image url="@../icons/group-fill.png" />
+                                  </image>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Separator prefHeight="11.0" prefWidth="17.0" visible="false" />
+                              <Label styleClass="menu-label" text="Clientes" textFill="WHITE">
+                                  <font>
+                                      <Font name="Roboto" size="14.0" />
+                                  </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="-50.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                     <children>
+                              <ImageView fx:id="iconoProximosServicios" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
+                                  <image>
+                                      <Image url="@../icons/calendar-fill.png" />
+                                  </image>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Separator prefHeight="12.0" prefWidth="18.0" visible="false" />
+                              <Label contentDisplay="TOP" styleClass="menu-label" text="Proximos Servicios" textFill="WHITE">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="-30.0" top="-10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                     <children>
+                              <ImageView fx:id="iconoPromociones" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
+                                  <image>
+                                      <Image url="@../icons/gift-fill.png" />
+                                  </image>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Separator prefHeight="11.0" prefWidth="20.0" visible="false" />
+                              <Label styleClass="menu-label" text="Promociones" textFill="WHITE">
+                                  <font>
+                                      <Font name="Roboto" size="14.0" />
+                                  </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="-10.0" top="-30.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                     <children>
+                              <ImageView fx:id="iconoCrearPromociones" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
+                                  <image>
+                                      <Image url="@../icons/add-line.png" />
+                                  </image>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Separator prefHeight="6.0" prefWidth="20.0" visible="false" />
+                              <Label styleClass="menu-label" text="Crear Promociones" textFill="WHITE">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="-10.0" top="-50.0" />
+                     </VBox.margin>
+                  </HBox>
+
+                    </children>
+                </VBox>
+            <HBox id="imgLogo" layoutX="14.0" layoutY="14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="14.0">
+               <children>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="94.0" fitWidth="201.0" layoutX="57.0" layoutY="-15.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0">
+                           <image>
+                              <Image url="@../icons/Master%20Tyres%20Logo.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </AnchorPane>
+               </children></HBox>
+            </children>
+        </AnchorPane>
+      <Pane layoutX="385.0" prefHeight="600.0" prefWidth="418.0" style="-fx-background-color: #111111;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="382.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane fx:id="menuPane"
+                  layoutX="237.0" prefHeight="94.0" prefWidth="116.0" AnchorPane.leftAnchor="265.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <ImageView fx:id="iconoMenu" fitHeight="46.0" fitWidth="32.0" layoutX="17.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.topAnchor="20.0">
+               <image>
+                  <Image url="@../icons/menu-line.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+    </children>
+</AnchorPane>
