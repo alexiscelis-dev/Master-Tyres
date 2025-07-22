@@ -16,13 +16,13 @@ public class MasterTyresApplication extends Application {
 
     @Override
     public void init() throws Exception {
-        context = new SpringApplicationBuilder(MasterTyresApplication.class).run();
+  //      context = new SpringApplicationBuilder(MasterTyresApplication.class).run();
     }
 
     //Mostrar Ventana Principal
     @Override
     public void start(Stage ventanaPrincipal) throws Exception {
-
+/*
         //Cargar ventana para ajustar tamaño
 
         FXMLLoader loader = new FXMLLoader(
@@ -47,12 +47,12 @@ public class MasterTyresApplication extends Application {
         ventanaPrincipal.setTitle("Master Tyres");
         ventanaPrincipal.setMaximized(true);
         ventanaPrincipal.show();
-
+*/
     }
 
     @Override
     public void stop() throws Exception {
-        context.stop();
+  //      context.stop();
     }
 
     public static void main(String[] args) {
