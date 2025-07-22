@@ -28,8 +28,7 @@ public class MasterTyresApplication extends Application {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/fxml_views/Master_Tyres_Principal.fxml"));
 
-        //Configurar la inyeccion en la clase VentanaPrincipalController
-        loader.setControllerFactory(context::getBean);
+
 
         Parent root = null;
         try {
