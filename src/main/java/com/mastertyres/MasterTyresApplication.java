@@ -10,52 +10,51 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class MasterTyresApplication extends Application{
+public class MasterTyresApplication extends Application {
 
-	private ConfigurableApplicationContext context; //Contenedor de spring
+    private ConfigurableApplicationContext context; //Contenedor de spring
 
-	@Override
-	public void init() throws Exception {
-		context = new SpringApplicationBuilder(MasterTyresApplication.class).run();
-	}
+    @Override
+    public void init() throws Exception {
+  //      context = new SpringApplicationBuilder(MasterTyresApplication.class).run();
+    }
 
-	//Mostrar Ventana Principal
-	@Override
-	public void start(Stage ventanaPrincipal) throws Exception {
+    //Mostrar Ventana Principal
+    @Override
+    public void start(Stage ventanaPrincipal) throws Exception {
+/*
+        //Cargar ventana para ajustar tamaño
 
-		//Cargar ventana para ajustar tamaño
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml_views/Master_Tyres_Principal.fxml"));
 
-		FXMLLoader loader = new FXMLLoader(
-				getClass().getResource("/fxml_views/Login.fxml"));
 
-				//Configurar la inyeccion en la clase VentanaPrincipalController
-				loader.setControllerFactory(context:: getBean);
 
-		Parent root = null;
-				try {
-					 root = loader.load();
+        Parent root = null;
+        try {
+            root = loader.load();
 
-				}catch (Exception e){
-					e.printStackTrace();
-				}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         Scene scene = new Scene(root);
 
-		ventanaPrincipal.setScene(scene);
+        ventanaPrincipal.setScene(scene);
 
-		ventanaPrincipal.setTitle("Master Tyres");
-		ventanaPrincipal.setMaximized(true);
-		ventanaPrincipal.show();
+        ventanaPrincipal.setTitle("Master Tyres");
+        ventanaPrincipal.setMaximized(true);
+        ventanaPrincipal.show();
+*/
+    }
 
-	}
+    @Override
+    public void stop() throws Exception {
+  //      context.stop();
+    }
 
-	@Override
-	public void stop() throws Exception {
-		context.stop();
-	}
-
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
