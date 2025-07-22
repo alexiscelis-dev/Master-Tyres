@@ -1,0 +1,82 @@
+.root {
+    -fx-background-color: #111111; /* Fondo principal */
+}
+
+.login-container {
+    -fx-background-color: #1A1A1A; /* Fondo secundario */
+    -fx-padding: 40;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0.3, 0, 4);
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-text-fill: #F2F2F2; /* Texto principal */
+    -fx-font-weight: bold;
+}
+
+.input-field {
+    -fx-pref-height: 40px;
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-border-color: #333333; /* Línea divisoria */
+    -fx-border-radius: 5;
+    -fx-text-fill: #F2F2F2; /* Texto principal */
+    -fx-prompt-text-fill: #BBBBBB; /* Texto secundario */
+}
+
+.input-field:focused {
+    -fx-border-color: #503D3D; /* Mismo dorado suave del botón */
+    -fx-border-width: 2;
+}
+
+.login-button {
+    -fx-background-color: #503D3D; /* Dorado suave */
+    -fx-text-fill: #F2F2F2; /* Texto blanco suave */
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-pref-height: 40px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.login-button:hover {
+    -fx-background-color: #503D3D; /* Dorado más tenue al hacer hover */
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+
+.error-label {
+    -fx-text-fill: #ff4d4d;
+    -fx-font-size: 12px;
+}
+
+.forgot-link {
+    -fx-text-fill: #BBBBBB;
+    -fx-font-size: 13px;
+    -fx-underline: true;
+}
+
+.forgot-link:hover{
+    -fx-text-fill: #503D3D;
+}
+
+.hbox {
+    -fx-alignment: center;
+    -fx-spacing: 50;
+
+}
+
+.image-view {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.2, 0, 2);
+    -fx-background-color: #503D3D
+}
+
+.panel{
+    -fx-background-color: #1A1A1A;
+}
+
+
+
