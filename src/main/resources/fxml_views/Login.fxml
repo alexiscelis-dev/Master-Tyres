@@ -14,24 +14,24 @@
                 <Label styleClass="title" text="Login" />
                 <TextField fx:id="usernameField" promptText="Username" styleClass="input-field" />
                 <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field" />
-                <Button fx:id="loginButton" prefHeight="26.0" prefWidth="451.0" styleClass="login-button" text="Iniciar sesión." />
+                <Button fx:id="loginButton" prefHeight="26.0" prefWidth="451.0" styleClass="login-button" text="Iniciar sesión." onAction="#cambiarAVistaPrincipal" />
                 <Hyperlink fx:id="forgotPassword" styleClass="forgot-link" text="¿Se te olvidó la contraseña?" />
                 <Label fx:id="errorLabel" styleClass="error-label" text="" visible="false" />
             </VBox>
 
             <!-- Contenedor del logo con fondo -->
-            <StackPane maxHeight="500" maxWidth="451.0" prefHeight="383.0" prefWidth="451.0" style="-fx-background-color: #FFFFFF; -fx-padding: 20; -fx-background-radius: 10;">
+            <StackPane maxHeight="500" maxWidth="451.0" prefHeight="383.0" prefWidth="451.0" style="-fx-background-color: #FFFFFF;  -fx-padding: 20; -fx-background-radius: 10;">
                 <ImageView fx:id="logoImage" fitHeight="200" preserveRatio="true">
                     <image>
                         <Image url="@../icons/Master Tyres Logo.png" />
                     </image></ImageView>
             </StackPane>
-            
+
         </HBox>
     </StackPane>
 
     <HBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
-    style="-fx-background-color: #503D3D;" alignment="CENTER">
+          style="-fx-background-color: #503D3D;" alignment="CENTER">
         <Label fx:id="footerLabel" text="© 2025 Master Tyres. Todos los derechos reservados."
                style="-fx-text-fill: #BBBBBB; -fx-font-size: 12px; "
                AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
