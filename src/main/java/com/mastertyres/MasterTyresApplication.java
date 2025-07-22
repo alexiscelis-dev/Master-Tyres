@@ -10,7 +10,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
-public class MasterTyresApplication extends Application{
+public class MasterTyresApplication extends Application {
 
 	private ConfigurableApplicationContext context; //Contenedor de spring
 
@@ -26,21 +26,20 @@ public class MasterTyresApplication extends Application{
 		//Cargar ventana para ajustar tamaño
 
 		FXMLLoader loader = new FXMLLoader(
-				getClass().getResource("/fxml_views/Master_Tyres_Principal.fxml"));
+				getClass().getResource("/fxml_views/Login.fxml"));
 
-				//Configurar la inyeccion en la clase VentanaPrincipalController
-				loader.setControllerFactory(context:: getBean);
+
 
 		Parent root = null;
-				try {
-					 root = loader.load();
+		try {
+			root = loader.load();
 
-				}catch (Exception e){
-					e.printStackTrace();
-				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 
-        Scene scene = new Scene(root);
+		Scene scene = new Scene(root);
 
 		ventanaPrincipal.setScene(scene);
 
