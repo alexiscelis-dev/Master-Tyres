@@ -23,7 +23,7 @@
                                         <Insets left="25.0" right="15.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <Label contentDisplay="CENTER" styleClass="menu-label" text="Nueva Nota" textFill="WHITE">
+                                <Label contentDisplay="CENTER" styleClass="menu-label" text="Notas" textFill="WHITE">
                                     <font>
                                         <Font name="Roboto" size="14.0" />
                                     </font>
@@ -36,7 +36,7 @@
                                 <Insets bottom="-60.0" />
                             </VBox.margin>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                        <HBox fx:id="HBoxClientes" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
                                 <ImageView fx:id="iconoCliente" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
@@ -56,7 +56,7 @@
                                 <Insets bottom="-50.0" />
                             </VBox.margin>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                        <HBox fx:id="HBoxVehiculos" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
                                 <ImageView fx:id="iconoProximosServicios" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
@@ -164,7 +164,7 @@
                   <Insets top="25.0" />
                </padding>
                 </VBox>
-                <HBox layoutX="70.0" layoutY="536.0" prefHeight="50.0" prefWidth="307.0" styleClass="menuLogOut-item" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                <HBox id="HBoxLogOut" fx:id="HBoxLogOut" layoutX="70.0" layoutY="536.0" prefHeight="50.0" prefWidth="307.0" styleClass="menuLogOut-item" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <children>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-logout">
                             <image>
@@ -181,151 +181,7 @@
         </AnchorPane>
 
 
-        <Pane id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0" style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
-                <AnchorPane layoutX="24.0" layoutY="9.0" prefHeight="700.0" prefWidth="932.0">
-
-
-                    <padding>
-                        <Insets bottom="50.0" left="-5.0" />
-                    </padding>
-               <children>
-                  <VBox layoutX="454.0" layoutY="80.0" prefHeight="660.0" prefWidth="450.0" spacing="50.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="130.0">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="tarjeta-menu">
-                           <children>
-                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/file-add-fill.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="15.0" />
-                                 </HBox.margin></ImageView>
-                              <Label prefHeight="18.0" prefWidth="115.0" styleClass="label-tarjeta" text="Nueva Nota" />
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="tarjeta-menu">
-                           <children>
-                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/group-fill.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="15.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label prefHeight="18.0" prefWidth="103.0" styleClass="label-tarjeta" text="Clientes" />
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="tarjeta-menu">
-                           <children>
-                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/car-fill.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="15.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label styleClass="label-tarjeta" text="Vehiculos" />
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="tarjeta-menu">
-                           <children>
-                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/calendar-fill.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="15.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label styleClass="label-tarjeta" text="Proximos Servicios" />
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></HBox>
-                     </children>
-                     <padding>
-                        <Insets left="15.0" top="25.0" />
-                     </padding>
-                     <opaqueInsets>
-                        <Insets right="20.0" />
-                     </opaqueInsets>
-                  </VBox>
-                  <VBox layoutX="454.0" layoutY="80.0" prefHeight="660.0" prefWidth="450.0" spacing="50.0" AnchorPane.leftAnchor="560.0" AnchorPane.topAnchor="155.0">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="tarjeta-menu">
-                           <children>
-                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/gift-fill.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="15.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label styleClass="label-tarjeta" text="Promociones" />
-                           </children>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="tarjeta-menu">
-                           <children>
-                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/add-line.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="15.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label styleClass="label-tarjeta" text="Crear Promociones" />
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="tarjeta-menu">
-                           <children>
-                              <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/settings-2-fill.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets right="15.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <Label styleClass="label-tarjeta" text="Configuraciones" />
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </HBox>
-                     </children>
-                     <padding>
-                        <Insets bottom="50.0" left="40.0" />
-                     </padding>
-                     <opaqueInsets>
-                        <Insets right="25.0" />
-                     </opaqueInsets>
-                  </VBox>
-               </children>
-                </AnchorPane>
-            </children>
-        </Pane>
+        <Pane id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0" style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
 
         <AnchorPane fx:id="menuPane" layoutX="237.0" prefHeight="94.0" prefWidth="116.0" AnchorPane.leftAnchor="265.0" AnchorPane.topAnchor="15.0">
@@ -342,18 +198,6 @@
         </AnchorPane>
       <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0" style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox layoutX="25.0" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <ImageView fitHeight="80.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image">
-                     <image>
-                        <Image url="@../icons/Master%20Tyres%20Logo.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets left="16.0" top="15.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-            </HBox>
             <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="200.0" AnchorPane.rightAnchor="25.0">
                <children>
                   <Label styleClass="label-tarjeta" text="Administrador" />
@@ -367,6 +211,11 @@
                   </ImageView>
                </children>
             </HBox>
+            <ImageView fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="15.0">
+               <image>
+                  <Image url="@../icons/Master%20Tyres%20Logo.png" />
+               </image>
+            </ImageView>
          </children></AnchorPane>
     </children>
 </AnchorPane>
