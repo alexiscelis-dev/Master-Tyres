@@ -3,17 +3,23 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.springframework.stereotype.Component;
 
-import javax.swing.*;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.io.IOException;
 
 
 @Component
@@ -23,7 +29,13 @@ public class VentanaPrincipalController {
     @FXML
     private ImageView iconoMenu;
     @FXML
-    AnchorPane menuPane;
+    private AnchorPane menuPane;
+    @FXML
+    private HBox HBoxLogOut;
+    @FXML
+    private HBox HBoxVehiculos;
+    @FXML
+    private  HBox HBoxClientes;
 
     private boolean sidebarVisible = true;
     private double posicionMenu;
@@ -31,6 +43,7 @@ public class VentanaPrincipalController {
     private TranslateTransition transitionMenu;
     private Image iconShow;
     private Image iconHide;
+
 
 
     @FXML
@@ -42,8 +55,13 @@ public class VentanaPrincipalController {
          iconHide = new Image(getClass().getResource("/icons/arrow-left-s-line.png").toExternalForm());
 
 
-        sidebar.setTranslateX(0);
+
         iconoMenu.setOnMouseClicked(event -> toggleSidebar());
+        HBoxLogOut.setOnMouseClicked(event -> logOut(event,"/fxml_views/Login.fxml"));
+
+        HBoxVehiculos.setOnMouseClicked(event -> ventanasSidebar(event, "/fxml_views/Vehiculo.fxml","Vehiculos"));
+        HBoxClientes.setOnMouseClicked(event -> ventanasSidebar(event,"/fxml_views/Cliente.fxml","Clientes"));
+
 
     }
 
@@ -87,5 +105,58 @@ public class VentanaPrincipalController {
         }
 
     }//togglesidebar
+
+    private void logOut(MouseEvent event, String archivoFXML){
+
+        try {
+            Parent root = FXMLLoader.load(VentanaPrincipalController.class.getResource(archivoFXML));
+            Stage ventanaLogin = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            ventanaLogin.setScene(new Scene(root));
+
+
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds(); //Se ajusta la pantalla al tamaño maximo
+
+            ventanaLogin.setX(screenBounds.getMinX());
+            ventanaLogin.setY(screenBounds.getMinY());
+            ventanaLogin.setWidth(screenBounds.getWidth());
+            ventanaLogin.setHeight(screenBounds.getHeight());
+
+
+            ventanaLogin.show();
+
+
+
+
+        } catch (IOException e) {
+            e.getMessage();
+        }
+
+    }//logOut
+
+    private void ventanasSidebar(MouseEvent event, String archivoFXML, String nombreVentana){
+
+        try {
+            Parent root = FXMLLoader.load(VentanaPrincipalController.class.getResource(archivoFXML));
+            Stage ventana = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            ventana.setScene(new Scene(root));
+
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            ventana.setX(screenBounds.getMinX());
+            ventana.setY(screenBounds.getMinY());
+            ventana.setWidth(screenBounds.getWidth());
+            ventana.setHeight(screenBounds.getHeight());
+
+            ventana.setTitle(nombreVentana);
+            ventana.show();
+
+
+        } catch (IOException e) {
+            e.getMessage();
+        }
+
+    }//ventanasSidebar
+
+
+
 
 }//clase
