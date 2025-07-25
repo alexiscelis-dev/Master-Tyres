@@ -1,0 +1,73 @@
+/* Fondo principal */
+.clientes-panel {
+    -fx-background-color: #080808;
+    -fx-padding: 15px;
+}
+
+
+.vbox {
+    -fx-spacing: 15px;
+}
+
+/* Estilo del buscador */
+.buscador {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: transparent;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+}
+
+/* ChoiceBox de búsqueda */
+.choice-box {
+    -fx-background-color: #1A1A1A;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-padding: 2px;
+    -fx-background-radius: 5px;
+}
+
+/* Label del filtro */
+.label {
+    -fx-text-fill: #BBBBBB;
+    -fx-font-weight: bold;
+}
+
+/* Estilo de la tabla */
+.table-view {
+    -fx-background-color: #1A1A1A;
+    -fx-table-cell-border-color: #080808;
+    -fx-padding: 5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #503D3D;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #503D3D;
+}
+
+/* Botones de acción */
+.boton-accion {
+    -fx-background-color: #503D3D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.boton-accion:hover {
+    -fx-background-color: #6E4D4D;
+}
