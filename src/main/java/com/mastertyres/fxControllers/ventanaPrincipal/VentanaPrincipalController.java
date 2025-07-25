@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -61,6 +62,7 @@ public class VentanaPrincipalController {
 
         HBoxVehiculos.setOnMouseClicked(event -> ventanasSidebar(event, "/fxml_views/Vehiculo.fxml","Vehiculos"));
         HBoxClientes.setOnMouseClicked(event -> ventanasSidebar(event,"/fxml_views/Cliente.fxml","Clientes"));
+
 
 
     }
