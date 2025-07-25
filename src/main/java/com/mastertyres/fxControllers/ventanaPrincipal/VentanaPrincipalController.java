@@ -133,6 +133,8 @@ public class VentanaPrincipalController {
 
     }//logOut
 
+
+
     private void ventanasSidebar(MouseEvent event, String archivoFXML, String nombreVentana){
 
         try {
@@ -155,8 +157,6 @@ public class VentanaPrincipalController {
         }
 
     }//ventanasSidebar
-
-
 
 
 }//clase

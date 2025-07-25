@@ -22,7 +22,6 @@ import java.io.IOException;
 @Component
 public class LoginController {
 
-
     @FXML
     private void logIn(ActionEvent event){
         cambiarVistaPrincipal(event, "/fxml_views/Master_Tyres_Principal.fxml");
