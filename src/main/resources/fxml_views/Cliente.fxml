@@ -184,7 +184,7 @@
 
 
 
-      <AnchorPane fx:id="pantallaMenu"  layoutX="339.0" prefHeight="600.0" prefWidth="1005.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+      <AnchorPane layoutX="339.0" layoutY="121.0" prefHeight="479.0" prefWidth="1005.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="121.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
          <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
 
@@ -193,9 +193,11 @@
                <TextField fx:id="buscarClienteField" prefWidth="250.0" promptText="Buscar cliente..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                  <Label text="Buscar por: " />
-                  <ChoiceBox fx:id="atributoBusquedaChoiceBox" prefWidth="150.0">
-                     <items>
+                  <Label text="Buscar por:" />
+                  <ChoiceBox fx:id="atributoBusquedaChoiceBox"
+                             prefWidth="150.0"
+                             styleClass="compact-choicebox">
+                  <items>
                         <FXCollections fx:factory="observableArrayList">
                            <String fx:value="Nombre" />
                            <String fx:value="Primer apellido" />
@@ -206,7 +208,6 @@
                            <String fx:value="Domicilio" />
                            <String fx:value="CURP" />
                            <String fx:value="Tipo de cliente" />
-                           <String fx:value="Vehiculo" />
                         </FXCollections>
                      </items>
                   </ChoiceBox>
@@ -241,7 +242,14 @@
 
       </AnchorPane>
 
-      <AnchorPane fx:id="menuPane" layoutX="237.0" prefHeight="94.0" prefWidth="116.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="265.0" AnchorPane.topAnchor="15.0">
+      <AnchorPane fx:id="menuPane" layoutX="237.0" prefHeight="94.0" prefWidth="116.0" AnchorPane.leftAnchor="265.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <ImageView fx:id="iconoMenu" fitHeight="46.0" fitWidth="32.0" layoutX="17.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="8.0">
+               <image>
+                  <Image url="@../icons/arrow-left-s-line.png" />
+               </image>
+            </ImageView>
+         </children>
          <padding>
             <Insets top="100.0" />
          </padding>
@@ -264,11 +272,6 @@
             <ImageView fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="15.0">
                <image>
                   <Image url="@../icons/Master%20Tyres%20Logo.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="iconoMenu" fitHeight="46.0" fitWidth="32.0" layoutX="287.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="287.0" AnchorPane.topAnchor="68.0">
-               <image>
-                  <Image url="@../icons/arrow-left-s-line.png" />
                </image>
             </ImageView>
          </children></AnchorPane>
