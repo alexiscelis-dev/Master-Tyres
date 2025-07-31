@@ -4,12 +4,10 @@ import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
-import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
 import org.springframework.stereotype.Component;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -22,10 +20,9 @@ import java.io.IOException;
 @Component
 public class LoginController {
 
-
     @FXML
     private void logIn(ActionEvent event){
-        cambiarVistaPrincipal(event, "/fxml_views/Master_Tyres_Principal.fxml");
+        cambiarVistaPrincipal(event, "/fxml_views/Master Tyres Principal.fxml");
     }
 
     private void cambiarVistaPrincipal(ActionEvent event,String archivoFXML){
@@ -54,7 +51,7 @@ public class LoginController {
 
    /* private void cambiarAVistaPrincipal(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/Master_Tyres_Principal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/Master Tyres Principal.fxml"));
             Parent root = loader.load();
 
             Stage ventanaPrincipal = (Stage) ((Node) event.getSource()).getScene().getWindow();
