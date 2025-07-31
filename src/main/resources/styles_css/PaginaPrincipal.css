@@ -6,7 +6,6 @@
     -fx-scale-x: 1;
     -fx-scale-y: 1;
     -fx-transition: all 120ms ease-in;
-
      -fx-effect: innershadow(gaussian, white, 10, 0.5, 0, 0);
      -fx-opacity: 1;
      -fx-blend-mode: screen;
@@ -52,7 +51,7 @@
 }
 
 .menu-item:hover {
-   -fx-background-color: #503D3D;
+   -fx-background-color: #99CC33;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 6, 0.3, 1, 1);
 }
 
