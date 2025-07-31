@@ -31,7 +31,7 @@
     </StackPane>
 
     <HBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
-          style="-fx-background-color: #503D3D;" alignment="CENTER">
+          style="-fx-background-color: #99CC33;" alignment="CENTER">
         <Label fx:id="footerLabel" text="© 2025 Master Tyres. Todos los derechos reservados."
                style="-fx-text-fill: #BBBBBB; -fx-font-size: 12px; "
                AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
