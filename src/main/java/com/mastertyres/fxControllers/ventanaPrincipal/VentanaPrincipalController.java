@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.ventanaPrincipal;
 
 
+import com.mastertyres.common.ApplicationContextProvider;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,10 +18,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-
 import java.io.IOException;
+import java.net.URL;
 
 
 @Component
@@ -28,15 +30,15 @@ public class VentanaPrincipalController {
     @FXML
     private AnchorPane sidebar;
     @FXML
-    private ImageView iconoMenu;
-    @FXML
-    private AnchorPane menuPane;
-    @FXML
     private HBox HBoxLogOut;
     @FXML
     private HBox HBoxVehiculos;
     @FXML
     private  HBox HBoxClientes;
+    @FXML
+    private Pane panelMenu;
+    @Autowired
+    private ApplicationContext springContex;
 
     private boolean sidebarVisible = true;
     private double posicionMenu;
@@ -47,66 +49,23 @@ public class VentanaPrincipalController {
 
 
 
+
     @FXML
     public void initialize() {
-        posicionMenu = menuPane.getLayoutX(); //guarda la posicion original del icono menu
-
-        //Cargar imagenes iconos sidebar
-         iconShow = new Image(getClass().getResource("/icons/arrow-right-s-line.png").toExternalForm());
-         iconHide = new Image(getClass().getResource("/icons/arrow-left-s-line.png").toExternalForm());
 
 
 
-        iconoMenu.setOnMouseClicked(event -> toggleSidebar());
+       // iconoMenu.setOnMouseClicked(event -> toggleSidebar());
         HBoxLogOut.setOnMouseClicked(event -> logOut(event,"/fxml_views/Login.fxml"));
 
-        HBoxVehiculos.setOnMouseClicked(event -> ventanasSidebar(event, "/fxml_views/Vehiculo.fxml","Vehiculos"));
-        HBoxClientes.setOnMouseClicked(event -> ventanasSidebar(event,"/fxml_views/Cliente.fxml","Clientes"));
+        HBoxVehiculos.setOnMouseClicked(event -> viewContent(event, "/fxml_views/Vehiculo.fxml","Vehiculos"));
+        HBoxClientes.setOnMouseClicked(event -> viewContent(event,"/fxml_views/Cliente.fxml","Clientes"));
 
 
 
     }
 
 
-    private void toggleSidebar() {
-
-        transitionMenu = new TranslateTransition(Duration.millis(300), menuPane);
-
-        posicionMenu = menuPane.getLayoutX();
-
-        try {
-            transition = new TranslateTransition(Duration.millis(300), sidebar);
-
-
-            if (!sidebarVisible) {
-                transition.setToX(0);
-                sidebarVisible = !sidebarVisible;
-                iconoMenu.setImage(iconHide);
-
-                transitionMenu.setToX(2);
-
-            } else {
-
-                transition.setToX(-sidebar.getWidth());
-                sidebarVisible = !sidebarVisible;
-
-                menuPane.setLayoutX(posicionMenu);
-
-                iconoMenu.setImage(iconShow);
-
-
-                transitionMenu.setToX(-280);
-
-
-            }
-            transitionMenu.play();
-            transition.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-    }//togglesidebar
 
     private void logOut(MouseEvent event, String archivoFXML){
 
@@ -130,32 +89,31 @@ public class VentanaPrincipalController {
 
 
         } catch (IOException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
 
     }//logOut
 
 
 
-    private void ventanasSidebar(MouseEvent event, String archivoFXML, String nombreVentana){
+    private void viewContent(MouseEvent event, String archivoFXML, String nombreVentana){
 
         try {
-            Parent root = FXMLLoader.load(VentanaPrincipalController.class.getResource(archivoFXML));
-            Stage ventana = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            ventana.setScene(new Scene(root));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
 
-            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            ventana.setX(screenBounds.getMinX());
-            ventana.setY(screenBounds.getMinY());
-            ventana.setWidth(screenBounds.getWidth());
-            ventana.setHeight(screenBounds.getHeight());
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent contenido = loader.load();
+            panelMenu.getChildren().clear();
+            panelMenu.getChildren().add(contenido);
 
-            ventana.setTitle(nombreVentana);
-            ventana.show();
+            AnchorPane.setTopAnchor(contenido, 0.0);
+            AnchorPane.setBottomAnchor(contenido, 0.0);
+            AnchorPane.setLeftAnchor(contenido, 0.0);
+            AnchorPane.setRightAnchor(contenido, 0.0);
 
 
         } catch (IOException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
 
     }//ventanasSidebar
