@@ -181,22 +181,8 @@
         </AnchorPane>
 
 
-        <Pane id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0" style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-
-
-        <AnchorPane fx:id="menuPane" layoutX="237.0" prefHeight="94.0" prefWidth="116.0" AnchorPane.leftAnchor="265.0" AnchorPane.topAnchor="15.0">
-            <children>
-                <ImageView fx:id="iconoMenu" fitHeight="46.0" fitWidth="32.0" layoutX="17.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="8.0">
-                    <image>
-                        <Image url="@../icons/arrow-left-s-line.png" />
-                    </image>
-                </ImageView>
-            </children>
-         <padding>
-            <Insets top="100.0" />
-         </padding>
-        </AnchorPane>
-      <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0" style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Pane  fx:id="panelMenu" id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0" style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane   layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0" style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="200.0" AnchorPane.rightAnchor="25.0">
                <children>
