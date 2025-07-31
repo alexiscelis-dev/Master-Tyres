@@ -3,7 +3,7 @@
 }
 
 .login-container {
-    -fx-background-color: #1A1A1A; /* Fondo secundario */
+    -fx-background-color: #1A1A1A;
     -fx-padding: 40;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
@@ -12,7 +12,7 @@
 
 .title {
     -fx-font-size: 28px;
-    -fx-text-fill: #F2F2F2; /* Texto principal */
+    -fx-text-fill: #F2F2F2;
     -fx-font-weight: bold;
 }
 
@@ -20,20 +20,20 @@
     -fx-pref-height: 40px;
     -fx-font-size: 14px;
     -fx-background-color: transparent;
-    -fx-border-color: #333333; /* Línea divisoria */
+    -fx-border-color: #333333;
     -fx-border-radius: 5;
-    -fx-text-fill: #F2F2F2; /* Texto principal */
-    -fx-prompt-text-fill: #BBBBBB; /* Texto secundario */
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
 }
 
 .input-field:focused {
-    -fx-border-color: #503D3D; /* Mismo dorado suave del botón */
+    -fx-border-color: #99CC33;
     -fx-border-width: 2;
 }
 
 .login-button {
-    -fx-background-color: #503D3D; /* Dorado suave */
-    -fx-text-fill: #F2F2F2; /* Texto blanco suave */
+    -fx-background-color: #99CC33;
+    -fx-text-fill: #F2F2F2;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
     -fx-pref-height: 40px;
@@ -42,7 +42,7 @@
 }
 
 .login-button:hover {
-    -fx-background-color: #503D3D; /* Dorado más tenue al hacer hover */
+    -fx-background-color: #AEE83A;
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
 }
@@ -60,7 +60,7 @@
 }
 
 .forgot-link:hover{
-    -fx-text-fill: #503D3D;
+    -fx-text-fill: #99CC33;
 }
 
 .hbox {
