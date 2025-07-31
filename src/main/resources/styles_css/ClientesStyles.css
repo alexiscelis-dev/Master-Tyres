@@ -4,7 +4,13 @@
     -fx-padding: 15px;
 }
 
+.label, .button, .choice-box, .text-field {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
 
+
+/* Espaciado vertical */
 .vbox {
     -fx-spacing: 15px;
 }
@@ -19,13 +25,21 @@
     -fx-background-radius: 5px;
 }
 
-/* ChoiceBox de búsqueda */
-.choice-box {
+.buscador:focused {
+    -fx-border-color: #99CC33;
+    -fx-border-width: 2;
+}
+
+/* ChoiceBox visible */
+.choice-box,
+.compact-choicebox {
     -fx-background-color: #1A1A1A;
     -fx-mark-color: #F2F2F2;
     -fx-text-fill: #F2F2F2;
     -fx-padding: 2px;
     -fx-background-radius: 5px;
+    -fx-pref-width: 150px;
+    -fx-font-size: 13px;
 }
 
 /* Label del filtro */
@@ -34,7 +48,7 @@
     -fx-font-weight: bold;
 }
 
-/* Estilo de la tabla */
+/* Tabla */
 .table-view {
     -fx-background-color: #1A1A1A;
     -fx-table-cell-border-color: #080808;
@@ -42,7 +56,7 @@
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #503D3D;
+    -fx-background-color: #99CC33;
 }
 
 .table-view .column-header, .table-view .filler {
@@ -51,16 +65,26 @@
 
 .table-view .table-row-cell {
     -fx-background-color: #1A1A1A;
-    -fx-text-fill: #F2F2F2;
 }
 
 .table-view .table-row-cell:filled:selected {
-    -fx-background-color: #503D3D;
+    -fx-background-color: #99CC33;
 }
 
-/* Botones de acción */
+.table-view .table-cell {
+    -fx-text-fill: white; /* Cambia a blanco u otro color con buen contraste */
+    -fx-font-weight: bold; /* Opcional: texto más grueso */
+}
+
+.table-view .column-header-background .label {
+    -fx-text-fill: white; /* O el color que prefieras */
+    -fx-font-weight: bold;
+}
+
+
+/* Botones */
 .boton-accion {
-    -fx-background-color: #503D3D;
+    -fx-background-color: #99CC33;
     -fx-text-fill: #F2F2F2;
     -fx-font-weight: bold;
     -fx-padding: 8px 16px;
@@ -69,5 +93,28 @@
 }
 
 .boton-accion:hover {
-    -fx-background-color: #6E4D4D;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-background-color: #AEE83A;
+}
+
+
+
+/* Estilo para el menú desplegable del ChoiceBox */
+.choice-box .context-menu {
+    -fx-background-color: #1A1A1A;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 450px;
+}
+
+/* Estilo para los ítems dentro del menú */
+.choice-box .menu-item > .label {
+    -fx-font-size: 13px;
+    -fx-padding: 4 10 4 10;
+    -fx-text-fill: #F2F2F2;
+}
+
+/* Opcional: hover de los ítems */
+.choice-box .menu-item:focused {
+    -fx-background-color: #99CC33;
 }
