@@ -10,4 +10,5 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo,Integer> {
 
     @Query("SELECT v FROM  Vehiculo v JOIN FETCH v.marca JOIN FETCH v.modelo")
     List<Vehiculo>listarVehiculos();
+
 }

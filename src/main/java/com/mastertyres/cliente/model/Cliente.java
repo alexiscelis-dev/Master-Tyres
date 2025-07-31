@@ -40,6 +40,5 @@ public class Cliente {
     private String updatedAt;
     private String active;
 
-
 }
 
