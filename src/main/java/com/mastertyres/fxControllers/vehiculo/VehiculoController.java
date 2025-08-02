@@ -49,6 +49,7 @@ public class VehiculoController {
 
     @FXML
     public void initialize() {
+        tablaVehiculos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 
         buscarVehiculoBuscador.setOnAction(event -> {

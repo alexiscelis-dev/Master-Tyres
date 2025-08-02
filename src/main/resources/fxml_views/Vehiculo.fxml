@@ -2,59 +2,47 @@
 
 <?import java.lang.*?>
 <?import javafx.collections.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.VehiculoController">
+<AnchorPane  maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.VehiculoController">
 
    <children>
 
+      <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
-
-      <AnchorPane fx:id="pantallaMenu" layoutX="339.0" layoutY="107.0" prefHeight="493.0" prefWidth="1204.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="107.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
-
-
-            <VBox prefWidth="1200.0" spacing="15.0" style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
 
             <!-- Zona superior: Búsqueda y botón agregar -->
             <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <TextField fx:id="buscarVehiculoBuscador" prefWidth="250.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
+               <TextField fx:id="buscarVehiculoBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
                   <Label text="Buscar por: " />
-
-                  <ChoiceBox fx:id="atributoBusquedaVehiculos" prefWidth="150.0">
+                  <ChoiceBox fx:id="atributoBusquedaChoiceBox" prefWidth="150.0">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="Marca" />
+                           <String fx:value="Modelo" />
+                           <String fx:value="Año" />
+                           <String fx:value="Placas" />
+                           <String fx:value="Numero Serie" />
+                           <String fx:value="Kilometraje" />
+                           <String fx:value="Ultimo Servicio" />
+                           <String fx:value="Fecha Registro" />
+                        </FXCollections>
+                     </items>
+                  </ChoiceBox>
+               </HBox>
 
-                                    <String fx:value="Marca" />
-                                    <String fx:value="Modelo" />
-                                    <String fx:value="Año" />
-                                    <String fx:value="Placas" />
-                                    <String fx:value="Numero Serie" />
-                                    <String fx:value="Kilometraje" />
-                                    <String fx:value="Ultimo Servicio" />
-                                    <String fx:value="Fecha Registro" />
+               <Pane style="-fx-background-color: #080808;" HBox.hgrow="ALWAYS" />
+               <Button fx:id="btnAgregarVehiculo" styleClass="boton-accion" text="Agregar Vehiculo" />
+
+            </HBox>
 
 
-
-                                 </FXCollections>
-                              </items>
-                           </ChoiceBox>
-
-                        </HBox>
-
-                        <Pane style="-fx-background-color: #080808;" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnAgregarVehiculo" styleClass="boton-accion" text="Agregar Vehiculo" />
-                     </HBox>
-
-                        <ScrollPane fitToHeight="false" fitToWidth="false" prefHeight="389.0" prefWidth="1268.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <AnchorPane minWidth="1300" style="-fx-background-color: #080808;">
-                           <!-- Tabla de clientes -->
-
-            <TableView fx:id="tablaVehiculos" prefHeight="1300.0" style="-fx-background-color: #1A1A1A;">
+            <!-- Tabla de clientes -->
+            <TableView fx:id="tablaVehiculos" prefHeight="500.0" style="-fx-background-color: #1A1A1A;">
                <columns>
                   <TableColumn fx:id="colMarca" prefWidth="150" text="Marca" />
                   <TableColumn fx:id="colModelo" prefWidth="150" text="Modelo" />
@@ -67,8 +55,6 @@
 
                </columns>
             </TableView>
-                  </AnchorPane>
-               </ScrollPane>
 
             <!-- Zona inferior: botón eliminar -->
             <HBox alignment="BOTTOM_LEFT">
@@ -78,28 +64,5 @@
 
 
       </AnchorPane>
-
-
-      <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0" style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="200.0" AnchorPane.rightAnchor="25.0">
-               <children>
-                  <Label styleClass="label-tarjeta" text="Administrador" />
-                  <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="usuario-turno">
-                     <image>
-                        <Image url="@../icons/user.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets left="15.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-            </HBox>
-            <ImageView fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="15.0">
-               <image>
-                  <Image url="@../icons/Master Tyres Logo.png" />
-               </image>
-            </ImageView>
-         </children></AnchorPane>
    </children>
 </AnchorPane>
