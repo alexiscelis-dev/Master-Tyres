@@ -7,6 +7,7 @@ import com.mastertyres.modelo.model.Modelo;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Table(name = "vehiculo")
 @Entity
 @Data
 @AllArgsConstructor
