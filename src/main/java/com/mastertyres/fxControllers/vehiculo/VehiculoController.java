@@ -43,6 +43,8 @@ public class VehiculoController {
 
     @FXML
     public void initialize() {
+        tablaVehiculos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         colMarca.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getMarca().getNombre())
 
