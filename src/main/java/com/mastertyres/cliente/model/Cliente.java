@@ -32,6 +32,7 @@ public class Cliente {
     private String estado;
     private String ciudad;
     private String domicilio;
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo_cliente")
     private TipoCliente tipoCliente;
     @Column(name = "fecha_cumpleanios")
