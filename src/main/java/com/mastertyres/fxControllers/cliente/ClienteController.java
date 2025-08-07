@@ -3,21 +3,34 @@ package com.mastertyres.fxControllers.cliente;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import java.io.IOException;
 import java.util.Optional;
 
 
 @Component
 public class ClienteController {
 
+
+    private VentanaPrincipalController ventanaPrincipalController;
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
     @FXML
     private TableView<Cliente> tablaClientes;
@@ -157,6 +170,24 @@ public class ClienteController {
 
     }// initialize
 
+
+    @FXML
+    private void agregarCliente(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/AgregarCliente.fxml"));
+            Parent root = loader.load();
+
+            Pane panel = ventanaPrincipalController.getPanelMenu();
+            panel.getChildren().setAll(root);
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void cargarClientes() {
 
