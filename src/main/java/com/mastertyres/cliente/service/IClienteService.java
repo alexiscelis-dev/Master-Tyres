@@ -6,6 +6,11 @@ import java.util.List;
 
 public interface IClienteService {
 
-    List<Cliente> listarCliente();
+    List<Cliente> listarCliente(String active);
+
+    int eliminarCliente(String eliminar,Integer idCliente);
+
+
+
 
 }
