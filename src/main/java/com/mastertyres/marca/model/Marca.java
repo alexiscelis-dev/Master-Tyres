@@ -17,6 +17,7 @@ public class Marca {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "marca_id")
     private Integer marcaId;
-    private String nombre;
+    @Column(name = "nombre")
+    private String nombreMarca;
 
 }//clase

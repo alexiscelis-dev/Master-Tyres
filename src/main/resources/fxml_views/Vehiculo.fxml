@@ -15,15 +15,18 @@
 
             <!-- Zona superior: Búsqueda y botón agregar -->
             <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <TextField fx:id="buscarVehiculoField" prefHeight="26.0" prefWidth="481.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
+               <TextField fx:id="buscarVehiculoBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
                   <Label text="Buscar por: " />
-                  <ChoiceBox fx:id="atributoBusquedaChoiceBox" prefWidth="150.0">
+                  <ChoiceBox fx:id="atributoBusquedaVehiculos" prefWidth="150.0">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="Cliente" />
                            <String fx:value="Marca" />
                            <String fx:value="Modelo" />
+                           <String fx:value="Categoria" />
+                           <String fx:value="Color" />
                            <String fx:value="Año" />
                            <String fx:value="Placas" />
                            <String fx:value="Numero Serie" />
@@ -44,8 +47,11 @@
             <!-- Tabla de clientes -->
             <TableView fx:id="tablaVehiculos" prefHeight="500.0" style="-fx-background-color: #1A1A1A;">
                <columns>
+                  <TableColumn fx:id="colCliente" prefWidth="150" text="Propietario" />
                   <TableColumn fx:id="colMarca" prefWidth="150" text="Marca" />
                   <TableColumn fx:id="colModelo" prefWidth="150" text="Modelo" />
+                  <TableColumn fx:id="colCategoria" prefWidth="150" text="Categoria" />
+                  <TableColumn fx:id="colColor" prefWidth="150" text="Color" />
                   <TableColumn fx:id="colAnio" prefWidth="150" text="Año" />
                   <TableColumn fx:id="colPlacas" prefWidth="150" text="Placas" />
                   <TableColumn fx:id="colNumeroSerie" prefWidth="150" text="Numero Serie" />
