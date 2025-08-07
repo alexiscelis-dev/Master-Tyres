@@ -39,7 +39,7 @@
                </HBox>
 
                <Pane HBox.hgrow="ALWAYS" />
-               <Button fx:id="btnAgregarCliente" styleClass="boton-accion" text="Agregar Cliente" />
+               <Button fx:id="btnAgregarCliente" styleClass="boton-accion" text="Agregar Cliente" onAction="#agregarCliente"/>
             </HBox>
 
 
