@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="ventanaAgregarCliente" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.AgregarCliente.AgregarClienteController">
+   <AnchorPane layoutY="110.0" prefHeight="561.0" prefWidth="1186.0">
+      <children>
+      
+          <!-- ScrollPane que contiene ambas secciones -->
+          <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+              <HBox fx:id="contenedorPrincipal" spacing="20.0" style="-fx-background-color: #080808;">
+                  <padding>
+                      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  </padding>
+
+                  <!-- Sección Izquierda: Datos del Cliente -->
+                  <VBox alignment="TOP_CENTER" prefWidth="600.0" spacing="15.0" styleClass="secciones">
+                      <Label styleClass="seccion-titulo" text="Datos del Cliente:" />
+                      <GridPane hgap="10" vgap="10">
+                          <columnConstraints>
+                              <ColumnConstraints percentWidth="33" />
+                              <ColumnConstraints percentWidth="33" />
+                              <ColumnConstraints percentWidth="33" />
+                          </columnConstraints>
+
+                          <TextField fx:id="txtNombre" promptText="Nombre" styleClass="buscador" GridPane.columnIndex="0" />
+                          <TextField fx:id="txtApellido" promptText="Primer Apellido" styleClass="buscador" GridPane.columnIndex="1" />
+                          <TextField fx:id="txtSegundoApellido" promptText="Segundo Apellido" styleClass="buscador" GridPane.columnIndex="2" />
+
+                          <TextField fx:id="txtDomicilio" promptText="Domicilio" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+
+                          <TextField fx:id="txtCiudad" promptText="Ciudad" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                          <TextField fx:id="txtEstado" promptText="Estado" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+                          <TextField fx:id="txtTelefono" promptText="Teléfono" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                          <TextField fx:id="txtCURP" promptText="CURP" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                          <TextField fx:id="txtRFC" promptText="RFC" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+
+                          <TextField fx:id="txtCumpleaños" promptText="Cumpleaños" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                          <Label text="Tipo de cliente:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                          <ChoiceBox fx:id="choiceTipoCliente" style="-fx-text-alignment: right;" styleClass="choicebox-mini" GridPane.columnIndex="2" GridPane.rowIndex="4">
+
+                              <items>
+                                  <FXCollections fx:factory="observableArrayList">
+                                      <String fx:value="Individual" />
+                                      <String fx:value="Empresa" />
+                                  </FXCollections>
+                              </items>
+                          </ChoiceBox>
+                     <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                     </rowConstraints>
+                      </GridPane>
+                  </VBox>
+      
+                  <!-- Sección Derecha: Datos del Vehículo -->
+                  <VBox alignment="TOP_CENTER" prefWidth="600.0" spacing="15.0" styleClass="secciones">
+                      <Label styleClass="seccion-titulo" text="Datos del Vehículo" />
+                      <GridPane hgap="10" vgap="10">
+                          <columnConstraints>
+                              <ColumnConstraints percentWidth="33" />
+                              <ColumnConstraints percentWidth="33" />
+                              <ColumnConstraints percentWidth="33" />
+                          </columnConstraints>
+      
+                          <TextField fx:id="txtMarca" promptText="Marca" styleClass="buscador" GridPane.columnIndex="0" />
+                          <TextField fx:id="txtModelo" promptText="Modelo" styleClass="buscador" GridPane.columnIndex="1" />
+                          <TextField fx:id="txtAnio" promptText="Año" styleClass="buscador" GridPane.columnIndex="2" />
+      
+                          <TextField fx:id="txtColor" promptText="Color" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                          <TextField fx:id="txtPlacas" promptText="Placas" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                          <TextField fx:id="txtSerie" promptText="Numero de Serie" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      
+                          <TextField fx:id="txtCategoria" promptText="Categoría" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                          <TextField fx:id="txtKilometros" promptText="Kilómetros" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                          <TextField fx:id="txtUltimoServicio" promptText="Último Servicio" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      
+                          <TextField fx:id="txtObservaciones" promptText="Observaciones" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                     <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                     </rowConstraints>
+                      </GridPane>
+
+                      <Button alignment="CENTER" contentDisplay="CENTER" onAction="#agregarVehiculo" styleClass="boton-accion" text="Agregar Vehículo" textAlignment="CENTER" />
+
+                      <TableView fx:id="tablaVehiculos" minHeight="150" prefHeight="150">
+                          <columns>
+                              <TableColumn fx:id="colMarca" text="Marca" />
+                              <TableColumn fx:id="colModelo" text="Modelo" />
+                              <TableColumn fx:id="colAnnio" text="Año" />
+                              <TableColumn fx:id="colCategoria" text="Categoria" />
+                              <TableColumn fx:id="colColor" text="Color" />
+                              <TableColumn fx:id="colPlacas" text="Placas" />
+                              <TableColumn fx:id="colNumSerie" text="Numero de serie" />
+                              <TableColumn fx:id="colKilometros" text="Kilometros" />
+                              <TableColumn fx:id="colultimoServicio" text="Ultimo Servicio" />
+                              <TableColumn fx:id="colObservaciones" text="Observaciones" />
+                              <TableColumn fx:id="colEliminar" text="Acción" />
+                          </columns>
+                      </TableView>
+                  </VBox>
+              </HBox>
+          </ScrollPane>
+      
+          <!-- Botones centrados abajo -->
+          <HBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+              <Button fx:id="btnGuardar" styleClass="boton-accion" text="Guardar" />
+              <Button fx:id="btnCancelar" styleClass="boton-accion" text="Cancelar" />
+          </HBox>
+      </children>
+   </AnchorPane>
+</AnchorPane>

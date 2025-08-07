@@ -2,14 +2,17 @@ package com.mastertyres.fxControllers.cliente;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Pane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import lombok.*;
@@ -35,6 +38,12 @@ import java.util.Optional;
 
 @Component
 public class ClienteController {
+
+    private VentanaPrincipalController ventanaPrincipalController;
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
 
     @FXML
@@ -66,6 +75,9 @@ public class ClienteController {
 
     @FXML
     private TableColumn<Cliente, String> colVehiculo;
+
+    @FXML
+    private AnchorPane ventanaPrincipal;
 
 
     @Autowired
@@ -115,7 +127,33 @@ public class ClienteController {
         // Listado de los clientes
         tablaClientes.getItems().setAll(clienteService.listarCliente());
 
+
+
     }
+
+
+
+
+
+
+    @FXML
+    private void agregarCliente(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/AgregarCliente.fxml"));
+            Parent root = loader.load();
+
+            Pane panel = ventanaPrincipalController.getPanelMenu();
+            panel.getChildren().setAll(root);
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 
