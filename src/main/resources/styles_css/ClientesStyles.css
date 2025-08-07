@@ -118,3 +118,84 @@
 .choice-box .menu-item:focused {
     -fx-background-color: #99CC33;
 }
+
+/*AgregarCliente*/
+
+
+
+.secciones {
+    -fx-background-color: rgba(26, 26, 26, 0.85); /* semitransparente */
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}
+
+.seccion-titulo {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-text-alignment: center;
+}
+
+.buscador {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+}
+
+.boton-accion {
+    -fx-background-color: #99CC33;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.boton-accion:hover {
+    -fx-background-color: #AEE83A;
+}
+
+/* Estilo para un ChoiceBox más pequeño y oscuro */
+.choicebox-mini {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 26px;
+    -fx-pref-width: 120px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable más compacto */
+.choicebox-mini .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 130px;
+    -fx-pref-height: 100px;
+}
+
+/* Ítems del menú */
+.choicebox-mini .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #F2F2F2;
+}
+
+.choice-box .menu-item {
+    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
+    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
+    -fx-pref-height: 40px; /* altura preferida para la celda */
+}
+
+
+/* Hover en ítems */
+.choicebox-mini .menu-item:focused {
+    -fx-background-color: #99CC33;
+}
