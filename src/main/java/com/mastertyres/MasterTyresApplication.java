@@ -3,11 +3,14 @@ package com.mastertyres;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+
 
 @SpringBootApplication
 public class MasterTyresApplication extends Application {
@@ -48,6 +51,8 @@ public class MasterTyresApplication extends Application {
 		ventanaPrincipal.show();
 
 	}
+
+
 
 	@Override
 	public void stop() throws Exception {
