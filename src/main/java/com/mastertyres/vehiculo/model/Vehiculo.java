@@ -10,7 +10,6 @@ import lombok.*;
 @Table(name = "vehiculo")
 @Entity
 @Data
-
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -23,7 +22,7 @@ public class Vehiculo {
     @Column(name = "vehiculo_id")
     private Integer vehiculoId;
 
-
+    //relacion cliente
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", insertable = false, updatable = false)
     private Cliente cliente;
@@ -43,6 +42,7 @@ public class Vehiculo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
+
     private Integer anio;
     private Integer kilometros;
     private String color;
