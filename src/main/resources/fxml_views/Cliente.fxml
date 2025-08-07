@@ -17,11 +17,11 @@
 
             <!-- Zona superior: Búsqueda y botón agregar -->
             <HBox alignment="CENTER_LEFT" spacing="10.0">
-               <TextField fx:id="buscarClienteField" prefWidth="481.0" prefHeight="26.0" promptText="Buscar cliente..." styleClass="buscador" />
+               <TextField fx:id="buscarClienteBuscador" prefWidth="481.0" prefHeight="26.0" promptText="Buscar cliente..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
                   <Label text="Buscar por:" />
-                  <ChoiceBox fx:id="atributoBusquedaChoiceBox" prefWidth="150.0" styleClass="compact-choicebox">
+                  <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="compact-choicebox">
                   <items>
                         <FXCollections fx:factory="observableArrayList">
                            <String fx:value="Nombre" />
@@ -60,7 +60,7 @@
 
         <!-- Zona inferior: botón eliminar -->
             <HBox alignment="BOTTOM_LEFT">
-               <Button fx:id="btnEliminarCliente" styleClass="boton-accion" text="Eliminar Cliente" onAction="#eliminarCliente"/>
+               <Button fx:id="btnEliminarCliente" styleClass="boton-accion" text="Eliminar Cliente" />
             </HBox>
          </VBox>
 

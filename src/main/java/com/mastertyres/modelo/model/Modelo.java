@@ -16,5 +16,6 @@ public class Modelo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer modeloId;
-    private String nombre;
+    @Column(name = "nombre")
+    private String nombreModelo;
 }
