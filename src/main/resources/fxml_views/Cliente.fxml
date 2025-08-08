@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.cliente.ClienteController">
+<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.cliente.ClienteController">
 
    <children>
 
@@ -19,7 +19,7 @@
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
                   <Label text="Buscar por:" />
-                  <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="compact-choicebox">
+                  <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="choicebox-mini2">
                   <items>
                         <FXCollections fx:factory="observableArrayList">
                            <String fx:value="Nombre" />
@@ -56,8 +56,7 @@
            </columns>
         </TableView>
 
-        <!-- Zona inferior: botón eliminar -->
-            <HBox alignment="BOTTOM_LEFT" />
+
          </VBox>
 
 

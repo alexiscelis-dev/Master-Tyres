@@ -1,20 +1,28 @@
 package com.mastertyres.fxControllers.vehiculo;
 
 
+import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.model.VehiculoStatus;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -51,6 +59,9 @@ public class VehiculoController {
     private TextField buscarVehiculoBuscador;
     @FXML
     private ChoiceBox<String> atributoBusquedaVehiculos;
+
+    private VentanaPrincipalController ventanaPrincipalController;
+
 
     @Autowired
     private VehiculoService vehiculoService;
@@ -180,6 +191,27 @@ public class VehiculoController {
         );
 
     }//initialize
+
+    @FXML
+    private void agregarVehiculo(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/AgregarVehiculo.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            Pane panel = ventanaPrincipalController.getPanelMenu();
+            panel.getChildren().setAll(root);
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
 
 
     private void cargarVehiculos() {
@@ -342,6 +374,11 @@ public class VehiculoController {
 
 
     }//buscarVehiculo
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }//setVentanaPrincipalController
+
 
 
 }//clase
