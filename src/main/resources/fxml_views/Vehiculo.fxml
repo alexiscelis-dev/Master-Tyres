@@ -19,7 +19,7 @@
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
                   <Label text="Buscar por: " />
-                  <ChoiceBox fx:id="atributoBusquedaVehiculos" prefWidth="150.0">
+                  <ChoiceBox fx:id="atributoBusquedaVehiculos" prefWidth="150.0" styleClass="choicebox-mini2">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
                            <String fx:value="Cliente" />
@@ -39,7 +39,7 @@
                </HBox>
 
                <Pane style="-fx-background-color: #080808;" HBox.hgrow="ALWAYS" />
-               <Button fx:id="btnAgregarVehiculo" styleClass="boton-accion" text="Agregar Vehiculo" />
+               <Button fx:id="btnAgregarVehiculo" styleClass="boton-accion" text="Agregar Vehiculo" onAction="#agregarVehiculo" />
 
             </HBox>
 
