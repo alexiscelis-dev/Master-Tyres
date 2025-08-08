@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.cliente.ClienteController;
+import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -107,6 +108,9 @@ public class VentanaPrincipalController {
             Object controller = loader.getController();
             if (controller instanceof ClienteController) {
                 ((ClienteController) controller).setVentanaPrincipalController(this);
+            }
+            if(controller instanceof VehiculoController){
+                ((VehiculoController) controller).setVentanaPrincipalController(this);
             }
             panelMenu.getChildren().clear();
             panelMenu.getChildren().add(contenido);
