@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.cliente;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -175,6 +176,7 @@ public class ClienteController {
     private void agregarCliente(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/AgregarCliente.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
             Pane panel = ventanaPrincipalController.getPanelMenu();
