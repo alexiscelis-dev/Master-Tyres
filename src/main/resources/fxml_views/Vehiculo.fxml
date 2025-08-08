@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane  maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.VehiculoController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.VehiculoController">
 
    <children>
 
@@ -22,7 +22,7 @@
                   <ChoiceBox fx:id="atributoBusquedaVehiculos" prefWidth="150.0">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
-                           <String fx:value="Cliente" />
+                           <String fx:value="Propietario" />
                            <String fx:value="Marca" />
                            <String fx:value="Modelo" />
                            <String fx:value="Categoria" />
@@ -63,9 +63,7 @@
             </TableView>
 
             <!-- Zona inferior: botón eliminar -->
-            <HBox alignment="BOTTOM_LEFT">
-               <Button fx:id="btnEliminarVehiculo" styleClass="boton-accion" text="Eliminar Vehiculo" />
-            </HBox>
+            <HBox alignment="BOTTOM_LEFT" />
          </VBox>
 
 
