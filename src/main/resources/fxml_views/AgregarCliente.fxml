@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="ventanaAgregarCliente" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.AgregarCliente.AgregarClienteController">
-   <AnchorPane layoutY="110.0" prefHeight="561.0" prefWidth="1186.0">
+   <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0">
       <children>
       
           <!-- ScrollPane que contiene ambas secciones -->
@@ -40,7 +40,7 @@
                           <TextField fx:id="txtCURP" promptText="CURP" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                           <TextField fx:id="txtRFC" promptText="RFC" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 
-                          <TextField fx:id="txtCumpleaños" promptText="Cumpleaños" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                          <DatePicker fx:id="pickerCumpleanos" promptText="Cumpleaños" styleClass="date-picker" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                           <Label text="Tipo de cliente:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                           <ChoiceBox fx:id="choiceTipoCliente" style="-fx-text-alignment: right;" styleClass="choicebox-mini" GridPane.columnIndex="2" GridPane.rowIndex="4">
 
@@ -70,29 +70,46 @@
                               <ColumnConstraints percentWidth="33" />
                               <ColumnConstraints percentWidth="33" />
                           </columnConstraints>
-      
-                          <TextField fx:id="txtMarca" promptText="Marca" styleClass="buscador" GridPane.columnIndex="0" />
-                          <TextField fx:id="txtModelo" promptText="Modelo" styleClass="buscador" GridPane.columnIndex="1" />
-                          <TextField fx:id="txtAnio" promptText="Año" styleClass="buscador" GridPane.columnIndex="2" />
-      
-                          <TextField fx:id="txtColor" promptText="Color" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                          <TextField fx:id="txtPlacas" promptText="Placas" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                          <TextField fx:id="txtSerie" promptText="Numero de Serie" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      
-                          <TextField fx:id="txtCategoria" promptText="Categoría" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                          <TextField fx:id="txtKilometros" promptText="Kilómetros" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                          <TextField fx:id="txtUltimoServicio" promptText="Último Servicio" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      
-                          <TextField fx:id="txtObservaciones" promptText="Observaciones" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-                     <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                     </rowConstraints>
+
+                          <!-- Fila 0 -->
+                          <Label text="Marca:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                          <ChoiceBox fx:id="choiceMarca" styleClass="choicebox-mini2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                          <TextField fx:id="txtSerie" promptText="Número de Serie" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+                          <!-- Fila 1 -->
+                          <Label text="Modelo:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                          <ChoiceBox fx:id="choiceModelo" styleClass="choicebox-mini2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                          <TextField fx:id="txtColor" promptText="Color" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+                          <!-- Fila 2 -->
+                          <Label text="Categoría:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                          <ChoiceBox fx:id="choiceCategoria" styleClass="choicebox-mini2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                          <TextField fx:id="txtPlacas" promptText="Placas" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+                          <!-- Fila 3 -->
+                          <Label text="Año:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                          <Spinner fx:id="spinnerAnio" editable="true" promptText="Año" styleClass="spinner" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                          <TextField fx:id="txtKilometros" promptText="Kilómetros" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+
+                          <!-- Fila 4 -->
+                          <Label text="Último Servicio:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                          <DatePicker fx:id="pickerUltimoServicio" promptText="Último Servicio" styleClass="date-picker" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+
+                          <!-- Fila 5 -->
+                          <TextField fx:id="txtObservaciones" prefHeight="60.0" promptText="Observaciones" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="5" />
+
+                          <rowConstraints>
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                          </rowConstraints>
                       </GridPane>
 
-                      <Button alignment="CENTER" contentDisplay="CENTER" onAction="#agregarVehiculo" styleClass="boton-accion" text="Agregar Vehículo" textAlignment="CENTER" />
+
+                      <Button fx:id="btnAgregarVehiculo" alignment="CENTER" contentDisplay="CENTER" onAction="#agregarVehiculo" styleClass="boton-accion" text="Agregar Vehículo" textAlignment="CENTER" />
 
                       <TableView fx:id="tablaVehiculos" minHeight="150" prefHeight="150">
                           <columns>
