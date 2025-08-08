@@ -1,4 +1,5 @@
-package com.mastertyres.fxControllers.AgregarCliente;
+package com.mastertyres.fxControllers.AgregarVehiculo;
+
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
@@ -25,8 +26,7 @@ import java.time.Year;
 import java.util.List;
 
 @Component
-public class AgregarClienteController {
-
+public class AgregarVehiculoController {
     @Autowired
     private MarcaService marcaService;
 
@@ -35,6 +35,7 @@ public class AgregarClienteController {
 
     @Autowired
     private CategoriaService categoriaService;
+
 
 
     @FXML private TableView<Vehiculo> tablaVehiculos;
@@ -54,44 +55,27 @@ public class AgregarClienteController {
     @FXML private ChoiceBox<Modelo> choiceModelo;
     @FXML private ChoiceBox<Categoria> choiceCategoria;
 
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtApellido;
-    @FXML private TextField txtTelefono;
-    @FXML private ChoiceBox<TipoCliente> choiceTipoCliente;
-
-
-    //@FXML private TextField txtMarca;
-    //@FXML private TextField txtCategoria;
     @FXML private TextField txtColor;
     @FXML private TextField txtPlacas;
-    //@FXML private TextField txtModelo;
-    //@FXML private TextField txtAnio;
-    @FXML
-    private Spinner<Integer> spinnerAnio;
-
+    @FXML private Spinner<Integer> spinnerAnio;
     @FXML private TextField txtSerie;
     @FXML private TextField txtKilometros;
-    //@FXML private TextField txtUltimoServicio;
     @FXML private DatePicker pickerUltimoServicio;
     @FXML private TextField txtObservaciones;
     @FXML private Button btnAgregarVehiculo;
     @FXML private Button btnGuardar;
-
-
 
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
 
 
     @FXML
     private void initialize() {
-
+        cargarOpciones();
         configurarValidaciones();
 
-        cargarOpciones();
         int currentYear = Year.now().getValue();
         SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1950, currentYear , currentYear);
         spinnerAnio.setValueFactory(yearFactory);
-
 
         tablaVehiculos.setItems(listaVehiculos);
 
@@ -134,29 +118,45 @@ public class AgregarClienteController {
                 setGraphic(empty ? null : btn);
             }
         });
+
     }
 
     private void configurarValidaciones() {
-        // Deshabilitar botón "Agregar Vehículo" hasta que se llenen los campos requeridos
-        btnAgregarVehiculo.disableProperty().bind(
-                choiceMarca.valueProperty().isNull()
-                        .or(choiceModelo.valueProperty().isNull())
-                        .or(txtColor.textProperty().isEmpty())
-                        .or(spinnerAnio.valueProperty().isNull())
-        );
-
-        // Deshabilitar botón "Guardar" hasta que se llenen los campos requeridos y haya al menos un vehículo
-        btnGuardar.disableProperty().bind(
-                Bindings.isEmpty(listaVehiculos)
-                        .or(txtNombre.textProperty().isEmpty())
-                        .or(txtApellido.textProperty().isEmpty())
-                        .or(txtTelefono.textProperty().isEmpty())
-                        .or(choiceTipoCliente.valueProperty().isNull())
-        );
-
 
     }
 
+
+    @FXML
+    private void agregarVehiculo(ActionEvent event) {
+        Vehiculo v = new Vehiculo();
+
+        v.setColor(txtColor.getText());
+        v.setPlacas(txtPlacas.getText());
+        v.setNumSerie(txtSerie.getText());
+        v.setObservaciones(txtObservaciones.getText());
+
+        if (pickerUltimoServicio.getValue() != null) {
+            v.setUltimoServicio(pickerUltimoServicio.getValue().toString());
+        }
+
+
+        v.setAnio(spinnerAnio.getValue());
+
+
+        try {
+            v.setKilometros(Integer.parseInt(txtKilometros.getText()));
+        } catch (NumberFormatException e) {
+            v.setKilometros(0);
+        }
+
+
+        v.setMarca(choiceMarca.getValue());
+        v.setModelo(choiceModelo.getValue());
+        v.setCategoria(choiceCategoria.getValue());
+
+        listaVehiculos.add(v);
+        limpiarCamposVehiculo();
+    }
 
     private void cargarOpciones() {
         List<Marca> marcas = marcaService.listarMarcas(); // no nombres
@@ -205,42 +205,6 @@ public class AgregarClienteController {
         });
     }
 
-
-
-
-    @FXML
-    private void agregarVehiculo(ActionEvent event) {
-        Vehiculo v = new Vehiculo();
-
-        v.setColor(txtColor.getText());
-        v.setPlacas(txtPlacas.getText());
-        v.setNumSerie(txtSerie.getText());
-        v.setObservaciones(txtObservaciones.getText());
-
-        if (pickerUltimoServicio.getValue() != null) {
-            v.setUltimoServicio(pickerUltimoServicio.getValue().toString());
-        }
-
-
-        v.setAnio(spinnerAnio.getValue());
-
-
-        try {
-            v.setKilometros(Integer.parseInt(txtKilometros.getText()));
-        } catch (NumberFormatException e) {
-            v.setKilometros(0);
-        }
-
-
-        v.setMarca(choiceMarca.getValue());
-        v.setModelo(choiceModelo.getValue());
-        v.setCategoria(choiceCategoria.getValue());
-
-        listaVehiculos.add(v);
-        limpiarCamposVehiculo();
-    }
-
-
     private void limpiarCamposVehiculo() {
         choiceMarca.setValue(null);
         choiceModelo.setValue(null);
@@ -254,6 +218,5 @@ public class AgregarClienteController {
         pickerUltimoServicio.setValue(null);
         txtObservaciones.clear();
     }
-
 
 }
