@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane  maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.VehiculoController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.VehiculoController">
 
    <children>
 
@@ -39,7 +39,7 @@
                </HBox>
 
                <Pane style="-fx-background-color: #080808;" HBox.hgrow="ALWAYS" />
-               <Button fx:id="btnAgregarVehiculo" styleClass="boton-accion" text="Agregar Vehiculo" onAction="#agregarVehiculo" />
+               <Button fx:id="btnAgregarVehiculo" onAction="#agregarVehiculo" styleClass="boton-accion" text="Agregar Vehiculo" />
 
             </HBox>
 
@@ -62,10 +62,7 @@
                </columns>
             </TableView>
 
-            <!-- Zona inferior: botón eliminar -->
-            <HBox alignment="BOTTOM_LEFT">
-               <Button fx:id="btnEliminarVehiculo" styleClass="boton-accion" text="Eliminar Vehiculo" />
-            </HBox>
+
          </VBox>
 
 
