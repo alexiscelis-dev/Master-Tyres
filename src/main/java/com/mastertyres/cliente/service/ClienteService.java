@@ -58,4 +58,12 @@ public class ClienteService implements IClienteService {
     }//eliminarCliente
 
 
+
+    public Cliente guardarCliente(Cliente cliente) {
+
+        return clienteRepository.save(cliente);
+
+    }
+
+
 }//clase

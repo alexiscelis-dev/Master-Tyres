@@ -121,10 +121,17 @@ public class AgregarVehiculoController {
 
     }
 
+
+
     private void configurarValidaciones() {
-
+        // Deshabilitar botón "Agregar Vehículo" hasta que se llenen los campos requeridos
+        btnAgregarVehiculo.disableProperty().bind(
+                choiceMarca.valueProperty().isNull()
+                        .or(choiceModelo.valueProperty().isNull())
+                        .or(txtColor.textProperty().isEmpty())
+                        .or(spinnerAnio.valueProperty().isNull())
+        );
     }
-
 
     @FXML
     private void agregarVehiculo(ActionEvent event) {

@@ -2,7 +2,9 @@ package com.mastertyres.fxControllers.AgregarCliente;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.TipoCliente;
+import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -19,7 +21,8 @@ import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
-
+import com.mastertyres.cliente.model.TipoCliente;
+import javafx.util.StringConverter;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
@@ -36,6 +39,9 @@ public class AgregarClienteController {
     @Autowired
     private CategoriaService categoriaService;
 
+    @Autowired
+    private ClienteService clienteService;
+
 
     @FXML private TableView<Vehiculo> tablaVehiculos;
     @FXML private TableColumn<Vehiculo, String> colMarca;
@@ -50,28 +56,29 @@ public class AgregarClienteController {
     @FXML private TableColumn<Vehiculo, String> colObservaciones;
     @FXML private TableColumn<Vehiculo, Void> colEliminar;
 
-    @FXML private ChoiceBox<Marca> choiceMarca;
-    @FXML private ChoiceBox<Modelo> choiceModelo;
-    @FXML private ChoiceBox<Categoria> choiceCategoria;
 
     @FXML private TextField txtNombre;
     @FXML private TextField txtApellido;
+    @FXML private TextField txtSegundoApellido;
     @FXML private TextField txtTelefono;
-    @FXML private ChoiceBox<TipoCliente> choiceTipoCliente;
+    @FXML private TextField txtDomicilio;
+    @FXML private TextField txtCiudad;
+    @FXML private TextField txtEstado;
+    @FXML private TextField txtCURP;
+    @FXML private TextField txtRFC;
+    @FXML private DatePicker pickerCumpleanos;
+    @FXML private ChoiceBox<String> choiceTipoCliente;
 
 
-    //@FXML private TextField txtMarca;
-    //@FXML private TextField txtCategoria;
+
+    @FXML private ChoiceBox<Marca> choiceMarca;
+    @FXML private ChoiceBox<Modelo> choiceModelo;
+    @FXML private ChoiceBox<Categoria> choiceCategoria;
     @FXML private TextField txtColor;
     @FXML private TextField txtPlacas;
-    //@FXML private TextField txtModelo;
-    //@FXML private TextField txtAnio;
-    @FXML
-    private Spinner<Integer> spinnerAnio;
-
+    @FXML private Spinner<Integer> spinnerAnio;
     @FXML private TextField txtSerie;
     @FXML private TextField txtKilometros;
-    //@FXML private TextField txtUltimoServicio;
     @FXML private DatePicker pickerUltimoServicio;
     @FXML private TextField txtObservaciones;
     @FXML private Button btnAgregarVehiculo;
@@ -157,7 +164,6 @@ public class AgregarClienteController {
 
     }
 
-
     private void cargarOpciones() {
         List<Marca> marcas = marcaService.listarMarcas(); // no nombres
         List<Modelo> modelos = modeloService.listarModelos();
@@ -205,9 +211,6 @@ public class AgregarClienteController {
         });
     }
 
-
-
-
     @FXML
     private void agregarVehiculo(ActionEvent event) {
         Vehiculo v = new Vehiculo();
@@ -240,7 +243,6 @@ public class AgregarClienteController {
         limpiarCamposVehiculo();
     }
 
-
     private void limpiarCamposVehiculo() {
         choiceMarca.setValue(null);
         choiceModelo.setValue(null);
@@ -255,5 +257,73 @@ public class AgregarClienteController {
         txtObservaciones.clear();
     }
 
+    private void LimpiarCamposClientes(){
+        txtNombre.clear();
+        txtApellido.clear();
+        txtSegundoApellido.clear();
+        txtDomicilio.clear();
+        txtEstado.clear();
+        txtCiudad.clear();
+        txtTelefono.clear();
+        txtCURP.clear();
+        txtRFC.clear();
+        pickerCumpleanos.setValue(null);
+        choiceTipoCliente.setValue(null);
+    }
+
+    @FXML
+    private void GuardarCliente(ActionEvent event) {
+        // Crear Cliente
+
+
+
+
+        Cliente cliente = new Cliente();
+        cliente.setUpdated_at(LocalDate.now().toString());  // <<< AGREGADO
+        cliente.setNombre(txtNombre.getText());
+        cliente.setApellido(txtApellido.getText());
+        cliente.setSegundoApellido(txtSegundoApellido.getText());
+        cliente.setCurp(txtCURP.getText());
+        cliente.setRfc(txtRFC.getText());
+        cliente.setNumTelefono(txtTelefono.getText());
+        cliente.setEstado(txtEstado.getText());
+        cliente.setCiudad(txtCiudad.getText());
+        cliente.setDomicilio(txtDomicilio.getText());
+        cliente.setTipoCliente(choiceTipoCliente.getValue() != null ? choiceTipoCliente.getValue().toString() : null);
+        if (pickerCumpleanos.getValue() != null) {
+            cliente.setFechaCumple(pickerCumpleanos.getValue().toString());
+        }
+        cliente.setActive("ACTIVE");
+        cliente.setCreated_at(LocalDate.now().toString());
+
+        // Asignar los vehículos
+        for (Vehiculo v : listaVehiculos) {
+            v.setCliente(cliente); // relación bidireccional
+            if (v.getActive() == null) {
+                v.setActive("ACTIVE");
+            }
+            if (v.getCreated_at() == null) {
+                v.setCreated_at(LocalDate.now().toString());  // Asignar fecha creación aquí
+            }
+            if (v.getUpdated_at() == null){
+                v.setUpdated_at(LocalDate.now().toString());
+            }
+            if (v.getFechaRegistro() == null){
+                v.setFechaRegistro(LocalDate.now().toString());
+            }
+        }
+        cliente.setVehiculos(listaVehiculos);
+
+        // Guardar usando el servicio
+        clienteService.guardarCliente(cliente);
+
+        // Limpiar formulario
+        limpiarCamposVehiculo();
+        LimpiarCamposClientes();
+        listaVehiculos.clear();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Cliente guardado con éxito", ButtonType.OK);
+        alert.showAndWait();
+    }
 
 }
