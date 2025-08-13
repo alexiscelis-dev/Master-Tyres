@@ -325,7 +325,7 @@ public class AgregarClienteController {
         cliente.setNombre(txtNombre.getText());
         cliente.setApellido(txtApellido.getText());
         cliente.setSegundoApellido(txtSegundoApellido.getText());
-        cliente.setCurp(txtCURP.getText());
+        cliente.setHobbie(txtCURP.getText());
         cliente.setRfc(txtRFC.getText());
         cliente.setNumTelefono(txtTelefono.getText());
         cliente.setEstado(txtEstado.getText());

@@ -215,7 +215,7 @@ public class ClienteController {
         colEstado.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEstado() != null ? data.getValue().getEstado() : "N/A"));
         colCiudad.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCiudad() != null ? data.getValue().getCiudad() : "N/A"));
         colDomicilio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDomicilio() != null ? data.getValue().getDomicilio() : "N/A"));
-        colCurp.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCurp() != null ? data.getValue().getCurp() : "N/A"));
+        colCurp.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHobbie() != null ? data.getValue().getHobbie() : "N/A"));
         colRFC.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRfc() != null ? data.getValue().getRfc() : "N/A"));
         //colVehiculo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVehiculo().getMarca().toString() + data.getValue().getVehiculo().getModelo().toString() + data.getValue().getVehiculo().getAnio().toString()));
         // Validacion de si hay o no hay vehiculos

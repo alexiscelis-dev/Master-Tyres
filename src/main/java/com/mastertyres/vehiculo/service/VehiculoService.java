@@ -1,5 +1,7 @@
 package com.mastertyres.vehiculo.service;
 
+import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import javafx.scene.control.Alert;
@@ -24,6 +26,27 @@ public class VehiculoService implements IVehiculoService {
 
     }
 
+    public void guardarVehiculos(Cliente cliente, List<Vehiculo> vehiculos) {
+        if (cliente == null || vehiculos == null || vehiculos.isEmpty()) {
+            throw new IllegalArgumentException("Cliente o vehículos inválidos");
+        }
+
+        for (Vehiculo v : vehiculos) {
+            v.setCliente(cliente);
+            v.setActive("ACTIVE");
+            if (v.getCreated_at() == null) {
+                v.setCreated_at(LocalDate.now().toString());
+            }
+            if (v.getUpdated_at() == null){
+                v.setUpdated_at(LocalDate.now().toString());
+            }
+            if (v.getFechaRegistro() == null){
+                v.setFechaRegistro(LocalDate.now().toString());
+            }
+
+            vehiculoRepository.save(v);
+        }
+    }
 
     @Override
     @Transactional(readOnly = true)
