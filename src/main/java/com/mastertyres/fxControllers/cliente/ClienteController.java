@@ -18,7 +18,6 @@ import javafx.stage.Popup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import java.io.IOException;
 import java.util.Optional;
 
@@ -166,6 +165,7 @@ public class ClienteController {
             if (event.getCode() == KeyCode.ENTER)
                 buscarCliente();
 
+
         });
 
 
@@ -209,13 +209,12 @@ public class ClienteController {
         ));
 
 
-
         //colApellido.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getApellido() + " " + data.getValue().getSegundoApellido()));
         colTelefono.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNumTelefono() != null ? data.getValue().getNumTelefono() : "N/A"));
         colEstado.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEstado() != null ? data.getValue().getEstado() : "N/A"));
         colCiudad.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCiudad() != null ? data.getValue().getCiudad() : "N/A"));
         colDomicilio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDomicilio() != null ? data.getValue().getDomicilio() : "N/A"));
-        colCurp.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCurp() != null ? data.getValue().getCurp() : "N/A"));
+        colCurp.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHobbie() != null ? data.getValue().getHobbie() : "N/A"));
         colRFC.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRfc() != null ? data.getValue().getRfc() : "N/A"));
         //colVehiculo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVehiculo().getMarca().toString() + data.getValue().getVehiculo().getModelo().toString() + data.getValue().getVehiculo().getAnio().toString()));
         // Validacion de si hay o no hay vehiculos
@@ -245,11 +244,16 @@ public class ClienteController {
 
         // Listado de los clientes
         tablaClientes.getItems().setAll(clienteService.listarCliente(StatusCliente.ACTIVE.toString()));
-    }
+
+    }//cargarClientes
+
 
     private void buscarCliente() {
 
-    }
+
+
+
+}//buscarCliente
 
 
 }//clase
