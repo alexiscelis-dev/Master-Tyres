@@ -29,7 +29,7 @@
                            <String fx:value="Estado" />
                            <String fx:value="Ciudad" />
                            <String fx:value="Domicilio" />
-                           <String fx:value="CURP" />
+                           <String fx:value="Hobbie" />
                            <String fx:value="Tipo de cliente" />
                         </FXCollections>
                      </items>
@@ -50,7 +50,7 @@
                  <TableColumn fx:id="colEstado" prefWidth="150" text="Estado" />
                  <TableColumn fx:id="colCiudad" prefWidth="150" text="Ciudad" />
                  <TableColumn fx:id="colDomicilio" prefWidth="150" text="Domicilio" />
-                 <TableColumn fx:id="colCurp" prefWidth="150" text="CURP" />
+                 <TableColumn fx:id="colCurp" prefWidth="150" text="Hobbie" />
                  <TableColumn fx:id="colVehiculo" prefWidth="150" text="Vehículo" />
                   <TableColumn fx:id="colRFC" prefWidth="150" text="RFC" />
            </columns>
