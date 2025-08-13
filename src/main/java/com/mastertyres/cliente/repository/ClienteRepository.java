@@ -19,5 +19,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     int eliminarCliente(@Param("inactive")String eliminar, @Param("idCliente")Integer idCliente);
 
 
+
+
 }//interface
 

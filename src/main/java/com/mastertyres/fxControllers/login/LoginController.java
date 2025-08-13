@@ -49,23 +49,6 @@ public class LoginController {
 
     }//cambiarVistaPrincipal
 
-   /* private void cambiarAVistaPrincipal(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/Master Tyres Principal.fxml"));
-            Parent root = loader.load();
-
-            Stage ventanaPrincipal = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-
-            ventanaPrincipal.setScene(scene);
-            ventanaPrincipal.setMaximized(false);
-            ventanaPrincipal.setMaximized(true);
-            ventanaPrincipal.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 
 
 }
