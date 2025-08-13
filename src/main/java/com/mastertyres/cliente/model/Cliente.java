@@ -1,14 +1,10 @@
 package com.mastertyres.cliente.model;
 
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.vehiculo.model.Vehiculo;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -34,7 +30,7 @@ public class Cliente {
     private String apellido;
     @Column(name = "segundo_apellido")
     private String segundoApellido;
-    private String curp;
+    private String hobbie;
     private String rfc;
     @Column(name = "num_telefono")
     private String numTelefono;

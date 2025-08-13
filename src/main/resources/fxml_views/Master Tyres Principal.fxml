@@ -68,7 +68,7 @@
                                 </ImageView>
                                 <Label contentDisplay="TOP" styleClass="menu-label" text="Vehiculos" textFill="WHITE">
                                     <font>
-                                        <Font size="14.0" />
+                                        <Font name="Roboto" size="14.0" />
                                     </font>
                                 </Label>
                             </children>
@@ -181,8 +181,8 @@
         </AnchorPane>
 
 
-        <Pane  fx:id="panelMenu" id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0" style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <AnchorPane   layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0" style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Pane id="panelMenu" fx:id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0" style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0" style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="200.0" AnchorPane.rightAnchor="25.0">
                <children>
@@ -197,9 +197,19 @@
                   </ImageView>
                </children>
             </HBox>
-            <ImageView fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="15.0">
+            <ImageView fx:id="LogoPrincipal" fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="15.0">
                <image>
-                  <Image url="@../icons/Master%20Tyres%20Logo.png" />
+                  <Image url="@../icons/Master Tyres Logo.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="cambiarPaginaEtiqueta" layoutX="380.0" layoutY="56.0" text="Inicio" textFill="WHITE" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="405.0">
+               <font>
+                  <Font name="Roboto Bold" size="28.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
+               <image>
+                  <Image url="@../icons/arrow-left-s-line.png" />
                </image>
             </ImageView>
          </children></AnchorPane>
