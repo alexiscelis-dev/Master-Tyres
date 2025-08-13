@@ -8,6 +8,7 @@ import com.mastertyres.vehiculo.model.VehiculoStatus;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,16 +18,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Popup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-import javafx.stage.Popup;
-
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+
+import static com.mastertyres.common.MensajesAlert.*;
 
 
 @Component
@@ -60,24 +64,17 @@ public class VehiculoController {
     @FXML
     private ChoiceBox<String> atributoBusquedaVehiculos;
 
+    private VentanaPrincipalController ventanaPrincipalController;
+
+
     @Autowired
     private VehiculoService vehiculoService;
 
-    private VentanaPrincipalController ventanaPrincipalController;
-
-    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
-        this.ventanaPrincipalController = controller;
-    }
 
     @FXML
     public void initialize() {
 
         cargarVehiculos();
-
-        buscarVehiculoBuscador.setOnAction(event -> {
-            String seleccion = (String) atributoBusquedaVehiculos.getValue();
-
-        });
 
 
         //Click derecho borrar
@@ -90,12 +87,10 @@ public class VehiculoController {
                     VehiculoDTO vehiculoSeleccionado = fila.getItem();
                     Integer vehiculoId = vehiculoSeleccionado.getId();
 
-
                     // Crear el botón "Eliminar"
                     Button eliminarBtn = new Button("Eliminar");
 
                     eliminarBtn.setStyle("-fx-font-size: 15px; -fx-padding: 2 5;");
-
 
                     // Crear el popup
                     Popup popup = new Popup();
@@ -142,15 +137,10 @@ public class VehiculoController {
                             popup.hide();
                             cargarVehiculos(); //metodo que cargar los datos en la tabla
 
-
                         } else {
-                            Alert ventanaCancelado = new Alert(Alert.AlertType.INFORMATION);
-                            ventanaCancelado.setTitle("Accion cancelada");
-                            ventanaCancelado.setHeaderText("Accion cancelada");
-                            ventanaCancelado.showAndWait();
+                            mostrarInformacion("Accion cancelada", "Accion cancelada", "");
 
                         }//else
-
 
                     });
 
@@ -164,10 +154,36 @@ public class VehiculoController {
         //Enter buscar
         buscarVehiculoBuscador.setOnKeyPressed(event -> {
 
+            String seleccion = (String) atributoBusquedaVehiculos.getValue();
+
+            buscarVehiculoBuscador.getText();
+
             if (event.getCode() == KeyCode.ENTER)
-                buscarVehiculo();
+
+                if (seleccion == null || seleccion.isEmpty() || buscarVehiculoBuscador.getText() == null || buscarVehiculoBuscador.getText().isEmpty()) {
+
+                    mostrarWarning("Campos vacios", "Campos vacios", "Favor de llenar los campos correspondientes");
+
+
+                    buscarVehiculoBuscador.setText("");
+                    atributoBusquedaVehiculos.setValue("");
+                } else {
+                    seleccion = seleccion.toLowerCase();
+
+                    buscarVehiculo(seleccion, buscarVehiculoBuscador.getText());
+
+                }
+
 
         });
+        //evento que vuelve a listar la tabla cuando no se escribe nada
+        buscarVehiculoBuscador.setOnKeyReleased(event -> {
+                    if (buscarVehiculoBuscador.getText().isEmpty())
+                        cargarVehiculos();
+
+
+                }//event
+        );
 
     }//initialize
 
@@ -187,7 +203,9 @@ public class VehiculoController {
 
         } catch (IOException e) {
             e.printStackTrace();
+
         }
+
     }
 
 
@@ -244,10 +262,8 @@ public class VehiculoController {
                         LocalDate fecha = LocalDate.parse(fechaStr, input);
                         String texto = fecha.format(output);
                         return new SimpleStringProperty(texto);
-
                     }
                 }
-
         );
 
 
@@ -256,28 +272,187 @@ public class VehiculoController {
                 new SimpleStringProperty(data.getValue().getFechaRegistro())
         );
 
+        cargarDatosVehiculo();
+
+
+    }//cargarVehiculos
+
+
+    private void cargarDatosVehiculo() {
+
         //Llenar tabla con registros
         try {
             tablaVehiculos.getItems().setAll(vehiculoService.listarVehiculos(VehiculoStatus.ACTIVE.toString()));
 
         } catch (Exception e) {
-            Alert ventanaError = new Alert(Alert.AlertType.ERROR);
-            ventanaError.setTitle("Error");
-            ventanaError.setHeaderText("No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde o contacta al soporte.");
-            ventanaError.showAndWait();
+            mostrarError("Error al mostrar datos", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde o contacta al soporte.", "");
 
         }
 
-    }//cargarVehiculos
 
-    private void buscarVehiculo() {
-        Alert ventana = new Alert(Alert.AlertType.INFORMATION);
-        ventana.setTitle("Buscar Vehiculo");
-        ventana.setContentText("Buscando vehiculo");
-        String itemSeleccionado = atributoBusquedaVehiculos.getValue();
-        ventana.setContentText(buscarVehiculoBuscador.getText() + " " + itemSeleccionado);
-        ventana.showAndWait();
-    }
+    }//cargarDatosVehiculo
+
+    private void buscarVehiculo(String seleccion, String vehiculoBuscado) { // porque se va a buscar, vehiculo a buscar
+
+        switch (seleccion) {
+
+            case "propietario" -> {
+                List<VehiculoDTO> vehiculosPorPropietario = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorPropietario));
+
+            }
+            case "marca" -> {
+
+                List<VehiculoDTO> vehiculosPorMarca = vehiculoService.buscarVehiculoPorMarca(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorMarca));
+
+            }
+            case "modelo" -> {
+
+                List<VehiculoDTO> vehiculoPorModelo = vehiculoService.buscarVehiculoPorModelo(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorModelo));
+
+            }
+            case "categoria" -> {
+                List<VehiculoDTO> vehiculoPorCategoria = vehiculoService.buscarVehiculoPorCategoria(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorCategoria));
+
+            }
+            case "color" -> {
+                List<VehiculoDTO> vehiculoPorColor = vehiculoService.buscarVehiculoPorColor(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorColor));
+
+            }
+            case "año" -> {
+                String[] anios;
+                Integer anio;
 
 
-}//NotasController
+                if (vehiculoBuscado.matches("\\d{4}")) { // yyyy
+                    anio = Integer.parseInt(vehiculoBuscado);
+
+                    List<VehiculoDTO> vehiculoPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), anio);
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorAnio));
+
+
+                } else if (vehiculoBuscado.matches("\\d{4},\\d{4}")) { //yyyy,yyyy
+                    anios = vehiculoBuscado.split(",");
+
+                    Arrays.stream(anios).sorted();
+                    //ordenar años para realizar la consulta siempre con el menor primero
+                    String[] aniosOrdenados = Arrays.stream(anios).sorted().toArray(String[]::new);
+
+                    List<VehiculoDTO> vehiculosPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), Integer.parseInt(aniosOrdenados[0]), Integer.parseInt(aniosOrdenados[1]));
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorAnio));
+
+                } else {
+                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato de texto correcto", "Por ejemplo yyyy, o bien yyyy,yyyy para buscar por un rango de fechas.");
+                    buscarVehiculoBuscador.setText("");
+
+
+                }
+
+
+            }
+            case "placas" -> {
+
+
+                String placas = vehiculoBuscado;
+                placas.toUpperCase();
+                List<VehiculoDTO> vehicululoPorPlacas = vehiculoService.buscarVehiculoPorPlacas(VehiculoStatus.ACTIVE.toString(), placas);
+                tablaVehiculos.setItems(FXCollections.observableList(vehicululoPorPlacas));
+
+
+            }
+            case "numero serie" -> {
+                vehiculoBuscado.toUpperCase();
+                if (vehiculoBuscado.matches("^[A-HJ-NPR-Z0-9]{17}$")){
+                    List<VehiculoDTO> vehiculoPorNumSerie = vehiculoService.buscarVehiculoPorNumSerie(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNumSerie));
+                }else {
+                    mostrarWarning("Numero de serie no valido ","","Asegurese de escribir el numero de serie correctamente y vuelva a intentarlo");
+                }
+
+
+            }
+            case "kilometraje" -> {
+
+                String[] kilometraje;
+
+                if (vehiculoBuscado.matches("\\d+")){
+                    Integer vehiculoBuscadoInt = Integer.parseInt(vehiculoBuscado);
+                    List<VehiculoDTO> vehiculoPorkilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(), vehiculoBuscadoInt);
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorkilometros));
+                    
+                } else if (vehiculoBuscado.matches("\\d+,\\d+")) {
+                    kilometraje = vehiculoBuscado.split(",");
+
+
+
+                    //ordenar por el kilometro menor para realizar la consulta
+                    Arrays.stream(kilometraje).sorted();
+
+                    String[] kilometrajeOrdenado = Arrays.stream(kilometraje).sorted().toArray(String[]::new);
+
+                    List<VehiculoDTO> vehiculoPorKilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(),Integer.parseInt(kilometrajeOrdenado[0]),Integer.parseInt(kilometrajeOrdenado[1]));
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorKilometros));
+                }else {
+                    mostrarWarning("Formato incorrecto","Favor de ingresar un formato correcto","Por ejemplo 1000 o bien 0,1000 " +
+                            " si desea buscar por un rango de kilometros");
+                }
+
+
+            }
+            case "ultimo servicio" -> {
+
+
+                if (vehiculoBuscado.matches("\\d{2}-\\d{2}-\\d{4}")){
+                    String fecha = vehiculoBuscado;
+
+                    try {
+                        DateTimeFormatter formatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        LocalDate.parse(fecha,formatter);
+                        System.out.println("Fecha valida");
+
+                    }catch (DateTimeParseException e){
+                       mostrarWarning("Fecha no valida","","La fecha ingresada no es valida vuelva a intentarlo");
+
+                    }
+                } else if (vehiculoBuscado.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
+                    
+                } else {
+                    mostrarWarning("Formato incorrecto","Favor de ingresar un formato correcto","Por ejemplo dd-mm-yyyy o bien" +
+                            "dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                   
+                }
+
+
+
+            }
+
+            case "fecha registro" -> {
+
+                LocalDate fechaRegistro = LocalDate.parse(vehiculoBuscado);
+                List<VehiculoDTO> vehiculoFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(), fechaRegistro);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoFechaRegistro));
+
+
+            }
+            default -> {
+                mostrarError("Informacion no valida", "Asegurese de buscar por el campo correspondiente.", "");
+
+            }
+
+
+        }//switch
+
+
+    }//buscarVehiculo
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }//setVentanaPrincipalController
+
+
+
+}//clase
