@@ -23,18 +23,21 @@ public class Vehiculo {
     private Integer vehiculoId;
 
     //relacion cliente
+    //@JoinColumn(name = "cliente_id", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", insertable = false, updatable = false)
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     //relacion marca
+//    @JoinColumn(name = "marca_id", insertable = false,updatable = false)//Indicar FK marca //false para poder guardardesde marcaId sin usar un objeto marca
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "marca_id", insertable = false,updatable = false)//Indicar FK marca //false para poder guardardesde marcaId sin usar un objeto marca
+    @JoinColumn(name = "marca_id")//Indicar FK marca //false para poder guardardesde marcaId sin usar un objeto marca
     private Marca marca;
 
     //relacion modelo
+    //@JoinColumn(name = "modelo_id", insertable = false,updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modelo_id", insertable = false,updatable = false)
+    @JoinColumn(name = "modelo_id")
     private Modelo modelo;
 
     //relacion categoria
