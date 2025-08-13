@@ -49,8 +49,11 @@ public class Cliente {
     //relaciones
 
     //relacion vehiculo
-    @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
-    private  List<Vehiculo> vehiculos = new ArrayList<>();
+    //@OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    //private  List<Vehiculo> vehiculos = new ArrayList<>();
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Vehiculo> vehiculos = new ArrayList<>();
+
     // orphanRemoval = true si se elimina de la lista tambien de la base de datos
     //cascade = CascadeType.ALL cambios en cliente afectan - vehiculo
 
