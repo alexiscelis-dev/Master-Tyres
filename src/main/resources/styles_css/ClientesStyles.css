@@ -148,6 +148,15 @@
     -fx-background-radius: 5;
     -fx-padding: 6 10;
 }
+.buscador2 {
+    -fx-background-color: #080808;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+}
 
 .boton-accion {
     -fx-background-color: #8EB83D;
@@ -359,3 +368,36 @@ SpinnerAnnio
 .spinner .decrement-arrow-button:hover {
     -fx-background-color: #8EB83D;
 }
+
+.ListaClientes {
+    -fx-background-color: #080808;
+    -fx-border-color: #8EB83D;
+    -fx-border-radius: 15px;
+    -fx-text-fill: white; /* Cambiado */
+    -fx-padding: 2px;
+}
+
+.ListaClientes:selected {
+    -fx-background-color: #8EB83D;
+}
+
+.ListaClientes {
+    -fx-background-color: #080808;
+    -fx-border-color: #8EB83D;
+    -fx-border-radius: 15px;
+    -fx-padding: 2px;
+}
+
+.ListaClientes .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-border-radius: 15px;
+}
+
+.ListaClientes .list-cell:selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+    -fx-border-radius: 15px;
+}
+
+
