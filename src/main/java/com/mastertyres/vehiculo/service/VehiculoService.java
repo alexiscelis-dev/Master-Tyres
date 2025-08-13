@@ -93,13 +93,13 @@ public class VehiculoService implements IVehiculoService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<VehiculoDTO> buscarVehiculoPorAnio(String active, String anio) {
+    public List<VehiculoDTO> buscarVehiculoPorAnio(String active, Integer anio) {
         return vehiculoRepository.buscarVehiculoPorAnio(active,anio);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<VehiculoDTO> buscarVehiculoPorAnio(String active, String fechaInicio, String FechaFin) {
+    public List<VehiculoDTO> buscarVehiculoPorAnio(String active, Integer fechaInicio, Integer FechaFin) {
         return vehiculoRepository.buscarVehiculoPorAnio(active,fechaInicio,FechaFin);
     }
 
@@ -150,6 +150,7 @@ public class VehiculoService implements IVehiculoService {
     public List<VehiculoDTO> buscarVehiculoPorRegistro(String activo, LocalDate fechaInicio, LocalDate fechaFin) {
         return vehiculoRepository.buscarVehiculoPorRegistro(activo,fechaInicio,fechaFin);
     }
+
 
 
 }//clase

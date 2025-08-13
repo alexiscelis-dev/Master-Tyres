@@ -25,8 +25,12 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static com.mastertyres.common.MensajesAlert.*;
 
 
 @Component
@@ -83,12 +87,10 @@ public class VehiculoController {
                     VehiculoDTO vehiculoSeleccionado = fila.getItem();
                     Integer vehiculoId = vehiculoSeleccionado.getId();
 
-
                     // Crear el botón "Eliminar"
                     Button eliminarBtn = new Button("Eliminar");
 
                     eliminarBtn.setStyle("-fx-font-size: 15px; -fx-padding: 2 5;");
-
 
                     // Crear el popup
                     Popup popup = new Popup();
@@ -135,15 +137,10 @@ public class VehiculoController {
                             popup.hide();
                             cargarVehiculos(); //metodo que cargar los datos en la tabla
 
-
                         } else {
-                            Alert ventanaCancelado = new Alert(Alert.AlertType.INFORMATION);
-                            ventanaCancelado.setTitle("Accion cancelada");
-                            ventanaCancelado.setHeaderText("Accion cancelada");
-                            ventanaCancelado.showAndWait();
+                            mostrarInformacion("Accion cancelada", "Accion cancelada", "");
 
                         }//else
-
 
                     });
 
@@ -165,11 +162,9 @@ public class VehiculoController {
 
                 if (seleccion == null || seleccion.isEmpty() || buscarVehiculoBuscador.getText() == null || buscarVehiculoBuscador.getText().isEmpty()) {
 
-                    Alert ventana = new Alert(Alert.AlertType.WARNING);
-                    ventana.setTitle("Campos vacios");
-                    ventana.setHeaderText("Campos vacios.");
-                    ventana.setContentText("Favor de llenar los campos correspondientes");
-                    ventana.showAndWait();
+                    mostrarWarning("Campos vacios", "Campos vacios", "Favor de llenar los campos correspondientes");
+
+
                     buscarVehiculoBuscador.setText("");
                     atributoBusquedaVehiculos.setValue("");
                 } else {
@@ -267,10 +262,8 @@ public class VehiculoController {
                         LocalDate fecha = LocalDate.parse(fechaStr, input);
                         String texto = fecha.format(output);
                         return new SimpleStringProperty(texto);
-
                     }
                 }
-
         );
 
 
@@ -279,26 +272,32 @@ public class VehiculoController {
                 new SimpleStringProperty(data.getValue().getFechaRegistro())
         );
 
+        cargarDatosVehiculo();
+
+
+    }//cargarVehiculos
+
+
+    private void cargarDatosVehiculo() {
+
         //Llenar tabla con registros
         try {
             tablaVehiculos.getItems().setAll(vehiculoService.listarVehiculos(VehiculoStatus.ACTIVE.toString()));
 
         } catch (Exception e) {
-            Alert ventanaError = new Alert(Alert.AlertType.ERROR);
-            ventanaError.setTitle("Error");
-            ventanaError.setHeaderText("No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde o contacta al soporte.");
-            ventanaError.showAndWait();
+            mostrarError("Error al mostrar datos", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde o contacta al soporte.", "");
 
         }
 
-    }//cargarVehiculos
+
+    }//cargarDatosVehiculo
 
     private void buscarVehiculo(String seleccion, String vehiculoBuscado) { // porque se va a buscar, vehiculo a buscar
 
         switch (seleccion) {
 
-            case "propietario" ->{
-                List<VehiculoDTO> vehiculosPorPropietario = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
+            case "propietario" -> {
+                List<VehiculoDTO> vehiculosPorPropietario = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorPropietario));
 
             }
@@ -310,63 +309,138 @@ public class VehiculoController {
             }
             case "modelo" -> {
 
-                List<VehiculoDTO> vehiculoPorModelo = vehiculoService.buscarVehiculoPorModelo(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
+                List<VehiculoDTO> vehiculoPorModelo = vehiculoService.buscarVehiculoPorModelo(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorModelo));
 
             }
-            case "categoria" ->{
-                List<VehiculoDTO> vehiculoPorCategoria = vehiculoService.buscarVehiculoPorCategoria(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
+            case "categoria" -> {
+                List<VehiculoDTO> vehiculoPorCategoria = vehiculoService.buscarVehiculoPorCategoria(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorCategoria));
 
             }
-            case "color" ->{
-                List<VehiculoDTO> vehiculoPorColor = vehiculoService.buscarVehiculoPorColor(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
+            case "color" -> {
+                List<VehiculoDTO> vehiculoPorColor = vehiculoService.buscarVehiculoPorColor(VehiculoStatus.ACTIVE.toString(), vehiculoBuscado);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorColor));
 
             }
-            case "año" ->{
+            case "año" -> {
+                String[] anios;
+                Integer anio;
 
 
-                List<VehiculoDTO> vehiculoPorAnio = vehiculoPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
-                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorAnio));
+                if (vehiculoBuscado.matches("\\d{4}")) { // yyyy
+                    anio = Integer.parseInt(vehiculoBuscado);
+
+                    List<VehiculoDTO> vehiculoPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), anio);
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorAnio));
+
+
+                } else if (vehiculoBuscado.matches("\\d{4},\\d{4}")) { //yyyy,yyyy
+                    anios = vehiculoBuscado.split(",");
+
+                    Arrays.stream(anios).sorted();
+                    //ordenar años para realizar la consulta siempre con el menor primero
+                    String[] aniosOrdenados = Arrays.stream(anios).sorted().toArray(String[]::new);
+
+                    List<VehiculoDTO> vehiculosPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), Integer.parseInt(aniosOrdenados[0]), Integer.parseInt(aniosOrdenados[1]));
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorAnio));
+
+                } else {
+                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato de texto correcto", "Por ejemplo yyyy, o bien yyyy,yyyy para buscar por un rango de fechas.");
+                    buscarVehiculoBuscador.setText("");
+
+
+                }
+
 
             }
             case "placas" -> {
-                List<VehiculoDTO> vehicululoPorPlacas = vehiculoService.buscarVehiculoPorPlacas(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
+
+
+                String placas = vehiculoBuscado;
+                placas.toUpperCase();
+                List<VehiculoDTO> vehicululoPorPlacas = vehiculoService.buscarVehiculoPorPlacas(VehiculoStatus.ACTIVE.toString(), placas);
                 tablaVehiculos.setItems(FXCollections.observableList(vehicululoPorPlacas));
+
 
             }
             case "numero serie" -> {
-                List<VehiculoDTO> vehicululoPorNumSerie = vehiculoService.buscarVehiculoPorNumSerie(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
-                tablaVehiculos.setItems(FXCollections.observableList(vehicululoPorNumSerie));
+                vehiculoBuscado.toUpperCase();
+                if (vehiculoBuscado.matches("^[A-HJ-NPR-Z0-9]{17}$")){
+                    List<VehiculoDTO> vehiculoPorNumSerie = vehiculoService.buscarVehiculoPorNumSerie(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNumSerie));
+                }else {
+                    mostrarWarning("Numero de serie no valido ","","Asegurese de escribir el numero de serie correctamente y vuelva a intentarlo");
+                }
+
+
             }
             case "kilometraje" -> {
 
-                Integer vehiculoBuscadoInt = Integer.parseInt(vehiculoBuscado);
-                List<VehiculoDTO> vehiculoPorkilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(),vehiculoBuscadoInt);
-                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorkilometros));
+                String[] kilometraje;
+
+                if (vehiculoBuscado.matches("\\d+")){
+                    Integer vehiculoBuscadoInt = Integer.parseInt(vehiculoBuscado);
+                    List<VehiculoDTO> vehiculoPorkilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(), vehiculoBuscadoInt);
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorkilometros));
+                    
+                } else if (vehiculoBuscado.matches("\\d+,\\d+")) {
+                    kilometraje = vehiculoBuscado.split(",");
+
+
+
+                    //ordenar por el kilometro menor para realizar la consulta
+                    Arrays.stream(kilometraje).sorted();
+
+                    String[] kilometrajeOrdenado = Arrays.stream(kilometraje).sorted().toArray(String[]::new);
+
+                    List<VehiculoDTO> vehiculoPorKilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(),Integer.parseInt(kilometrajeOrdenado[0]),Integer.parseInt(kilometrajeOrdenado[1]));
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorKilometros));
+                }else {
+                    mostrarWarning("Formato incorrecto","Favor de ingresar un formato correcto","Por ejemplo 1000 o bien 0,1000 " +
+                            " si desea buscar por un rango de kilometros");
+                }
+
 
             }
             case "ultimo servicio" -> {
-                List <VehiculoDTO> vehiculoUltimoSevicio = vehiculoService.buscarVehiculoPorUltimoServicio(VehiculoStatus.ACTIVE.toString(),vehiculoBuscado);
-                tablaVehiculos.setItems(FXCollections.observableList(vehiculoUltimoSevicio));
+
+
+                if (vehiculoBuscado.matches("\\d{2}-\\d{2}-\\d{4}")){
+                    String fecha = vehiculoBuscado;
+
+                    try {
+                        DateTimeFormatter formatter  = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        LocalDate.parse(fecha,formatter);
+                        System.out.println("Fecha valida");
+
+                    }catch (DateTimeParseException e){
+                       mostrarWarning("Fecha no valida","","La fecha ingresada no es valida vuelva a intentarlo");
+
+                    }
+                } else if (vehiculoBuscado.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
+                    
+                } else {
+                    mostrarWarning("Formato incorrecto","Favor de ingresar un formato correcto","Por ejemplo dd-mm-yyyy o bien" +
+                            "dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                   
+                }
+
+
 
             }
 
             case "fecha registro" -> {
 
                 LocalDate fechaRegistro = LocalDate.parse(vehiculoBuscado);
-                List <VehiculoDTO> vehiculoFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(),fechaRegistro);
+                List<VehiculoDTO> vehiculoFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(), fechaRegistro);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoFechaRegistro));
 
 
             }
             default -> {
-                Alert ventana = new Alert(Alert.AlertType.NONE);
-                ventana.setTitle("Informacion no valida");
-                ventana.setHeaderText("Asegurese de buscar por el campo correspondiente.");
-                ventana.setContentText("");
-                ventana.showAndWait();
+                mostrarError("Informacion no valida", "Asegurese de buscar por el campo correspondiente.", "");
+
             }
 
 

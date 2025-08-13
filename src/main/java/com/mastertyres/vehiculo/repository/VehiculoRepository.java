@@ -37,7 +37,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             "JOIN v.categoria ca " +
             " WHERE v.active = :active AND CONCAT(CONCAT(CONCAT(c.nombre, ' '), CONCAT(c.apellido, ' ')), c.segundoApellido) = :nombre ")
     List<VehiculoDTO> buscarVehiculoPorPropietario(@Param("active") String active, @Param("nombre") String nombre);
-
+//usar el operador OR
 
     @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
@@ -83,7 +83,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             "JOIN v.cliente c " +
             "JOIN v.categoria ca " +
             " WHERE v.active = :active AND v.anio = :anio ")
-    List<VehiculoDTO> buscarVehiculoPorAnio(@Param("active") String active, @Param("anio") String anio);
+    List<VehiculoDTO> buscarVehiculoPorAnio(@Param("active") String active, @Param("anio") Integer anio);
 
     @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
@@ -92,7 +92,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             "JOIN v.cliente c " +
             "JOIN v.categoria ca " +
             " WHERE v.active = :active AND v.anio BETWEEN :fechaInicio AND :fechaFin")
-    List<VehiculoDTO> buscarVehiculoPorAnio(@Param("active") String active, @Param("fechaInicio") String fechaInicio, @Param("fechaFin") String fechaFin);
+    List<VehiculoDTO> buscarVehiculoPorAnio(@Param("active") String active, @Param("fechaInicio") Integer fechaInicio, @Param("fechaFin") Integer fechaFin);
 
 
     @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.kilometros, v.color,v.placas, v.ultimoServicio, " +

@@ -22,9 +22,9 @@ public interface IVehiculoService {
 
     List<VehiculoDTO> buscarVehiculoPorColor(String active, String color);
 
-    List<VehiculoDTO> buscarVehiculoPorAnio(String active, String anio);
+    List<VehiculoDTO> buscarVehiculoPorAnio(String active, Integer anio);
 
-    List<VehiculoDTO> buscarVehiculoPorAnio(String active, String fechaInicio, String fechaFin);
+    List<VehiculoDTO> buscarVehiculoPorAnio(String active, Integer fechaInicio, Integer fechaFin);
 
     List<VehiculoDTO> buscarVehiculoPorPlacas(String active, String placas);
 
