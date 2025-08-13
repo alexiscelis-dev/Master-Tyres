@@ -219,7 +219,7 @@ public class ClienteController {
         colRFC.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRfc() != null ? data.getValue().getRfc() : "N/A"));
         //colVehiculo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVehiculo().getMarca().toString() + data.getValue().getVehiculo().getModelo().toString() + data.getValue().getVehiculo().getAnio().toString()));
         // Validacion de si hay o no hay vehiculos
-        colVehiculo.setCellValueFactory(data -> {
+        /*colVehiculo.setCellValueFactory(data -> {
             var vehiculos = data.getValue().getVehiculos(); // lista de Vehiculo
 
             if (vehiculos == null || vehiculos.isEmpty()) {
@@ -241,10 +241,32 @@ public class ClienteController {
             }
 
             return new SimpleStringProperty(descripcion.toString());
+        });*/
+        colVehiculo.setCellValueFactory(data -> {
+            var vehiculos = data.getValue().getVehiculos();
+
+            if (vehiculos == null || vehiculos.isEmpty()) {
+                return new SimpleStringProperty("Sin vehículos");
+            }
+
+            StringBuilder descripcion = new StringBuilder();
+
+            for (var v : vehiculos) {
+                String marca = v.getMarca() != null && v.getMarca().getNombreMarca() != null ? v.getMarca().getNombreMarca() : "Sin marca";
+                String modelo = v.getModelo() != null && v.getModelo().getNombreModelo() != null ? v.getModelo().getNombreModelo() : "Sin modelo";
+                String anio = v.getAnio() != null ? v.getAnio().toString() : "Sin año";
+                descripcion.append(marca).append(" ").append(modelo).append(" ").append(anio).append(" | ");
+            }
+
+            if (descripcion.length() > 3) {
+                descripcion.setLength(descripcion.length() - 3);
+            }
+
+            return new SimpleStringProperty(descripcion.toString());
         });
 
         // Listado de los clientes
-        tablaClientes.getItems().setAll(clienteService.listarCliente(StatusCliente.ACTIVE.toString()));
+        tablaClientes.getItems().setAll(clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString()));
     }
 
     private void buscarCliente() {

@@ -3,12 +3,17 @@ package com.mastertyres.fxControllers.AgregarVehiculo;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.model.TipoCliente;
+import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
 import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.repository.VehiculoRepository;
+import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -36,8 +41,17 @@ public class AgregarVehiculoController {
     @Autowired
     private CategoriaService categoriaService;
 
+    @Autowired
+    private ClienteService clienteService;
+
+    @Autowired
+    private VehiculoService vehiculoService;
+
+    @Autowired
+    private VehiculoRepository vehiculoRepository;
 
 
+// Columnas vehiculo
     @FXML private TableView<Vehiculo> tablaVehiculos;
     @FXML private TableColumn<Vehiculo, String> colMarca;
     @FXML private TableColumn<Vehiculo, String> colCategoria;
@@ -51,10 +65,10 @@ public class AgregarVehiculoController {
     @FXML private TableColumn<Vehiculo, String> colObservaciones;
     @FXML private TableColumn<Vehiculo, Void> colEliminar;
 
+// Campos vehiculo
     @FXML private ChoiceBox<Marca> choiceMarca;
     @FXML private ChoiceBox<Modelo> choiceModelo;
     @FXML private ChoiceBox<Categoria> choiceCategoria;
-
     @FXML private TextField txtColor;
     @FXML private TextField txtPlacas;
     @FXML private Spinner<Integer> spinnerAnio;
@@ -64,17 +78,20 @@ public class AgregarVehiculoController {
     @FXML private TextField txtObservaciones;
     @FXML private Button btnAgregarVehiculo;
     @FXML private Button btnGuardar;
-
+// Campos Cliente
+    @FXML private TextField txtClienteNombre;
+    @FXML private TextField txtClienteTipo;
+    @FXML private ListView<Cliente> listaClientes;
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
-
 
     @FXML
     private void initialize() {
+
         cargarOpciones();
         configurarValidaciones();
 
         int currentYear = Year.now().getValue();
-        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1950, currentYear , currentYear);
+        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear , currentYear);
         spinnerAnio.setValueFactory(yearFactory);
 
         tablaVehiculos.setItems(listaVehiculos);
@@ -83,12 +100,10 @@ public class AgregarVehiculoController {
             Marca marca = data.getValue().getMarca();
             return new SimpleStringProperty(marca != null ? marca.getNombreMarca() : "");
         });
-
         colModelo.setCellValueFactory(data -> {
             Modelo modelo = data.getValue().getModelo();
             return new SimpleStringProperty(modelo != null ? modelo.getNombreModelo() : "");
         });
-
         colCategoria.setCellValueFactory(data -> {
             Categoria categoria = data.getValue().getCategoria();
             return new SimpleStringProperty(categoria != null ? categoria.getNombreCategoria() : "");
@@ -100,6 +115,26 @@ public class AgregarVehiculoController {
         colKilometros.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getKilometros())));
         colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
         colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
+
+        //Listar Clientes
+        listaClientes.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Cliente cliente, boolean empty) {
+                super.updateItem(cliente, empty);
+                if (empty || cliente == null) {
+                    setText(null);
+                } else {
+                    setText(
+                            cliente.getNombre() + " " +
+                                    cliente.getApellido() + " " +
+                                    cliente.getSegundoApellido() +
+                                    "    |   " + cliente.getTipoCliente() +
+                                    "   |  RFC: " + cliente.getRfc() +
+                                    "   |  Tel: " + cliente.getNumTelefono()
+                    );
+                }
+            }
+        });
 
         // Botón eliminar
         colEliminar.setCellFactory(col -> new TableCell<>() {
@@ -119,9 +154,22 @@ public class AgregarVehiculoController {
             }
         });
 
+        //Cliente Seleccionado
+        listaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                txtClienteNombre.setText(
+                        newSelection.getNombre() + " " +
+                                newSelection.getApellido() + " " +
+                                newSelection.getSegundoApellido()
+                );
+                txtClienteTipo.setText(newSelection.getTipoCliente());
+            } else {
+                txtClienteNombre.clear();
+                txtClienteTipo.clear();
+            }
+        });
+
     }
-
-
 
     private void configurarValidaciones() {
         // Deshabilitar botón "Agregar Vehículo" hasta que se llenen los campos requeridos
@@ -130,6 +178,11 @@ public class AgregarVehiculoController {
                         .or(choiceModelo.valueProperty().isNull())
                         .or(txtColor.textProperty().isEmpty())
                         .or(spinnerAnio.valueProperty().isNull())
+        );
+        // Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
+        btnGuardar.disableProperty().bind(
+                Bindings.isEmpty(listaVehiculos)
+                        .or(listaClientes.getSelectionModel().selectedItemProperty().isNull())
         );
     }
 
@@ -210,6 +263,11 @@ public class AgregarVehiculoController {
                 return null;
             }
         });
+
+
+        //LLenar lista
+        List<Cliente> clientes = clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString());
+        listaClientes.setItems(FXCollections.observableArrayList(clientes));
     }
 
     private void limpiarCamposVehiculo() {
@@ -224,6 +282,38 @@ public class AgregarVehiculoController {
         txtKilometros.clear();
         pickerUltimoServicio.setValue(null);
         txtObservaciones.clear();
+    }
+
+    @FXML
+    private void guardarVehiculos(ActionEvent event) {
+        Cliente clienteSeleccionado = listaClientes.getSelectionModel().getSelectedItem();
+
+        if (clienteSeleccionado == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Cliente no seleccionado", "Por favor selecciona un cliente.");
+            return;
+        }
+
+        if (listaVehiculos.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Sin vehículos", "Agrega al menos un vehículo antes de guardar.");
+            return;
+        }
+
+        try {
+            vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Vehículos guardados correctamente.");
+            listaVehiculos.clear();
+            limpiarCamposVehiculo();
+        } catch (Exception e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudieron guardar los vehículos: " + e.getMessage());
+        }
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
     }
 
 }

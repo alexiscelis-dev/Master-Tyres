@@ -42,7 +42,7 @@ public class AgregarClienteController {
     @Autowired
     private ClienteService clienteService;
 
-
+    // Columnas de tabla vehiculos
     @FXML private TableView<Vehiculo> tablaVehiculos;
     @FXML private TableColumn<Vehiculo, String> colMarca;
     @FXML private TableColumn<Vehiculo, String> colCategoria;
@@ -56,7 +56,7 @@ public class AgregarClienteController {
     @FXML private TableColumn<Vehiculo, String> colObservaciones;
     @FXML private TableColumn<Vehiculo, Void> colEliminar;
 
-
+    //Campos Cliente
     @FXML private TextField txtNombre;
     @FXML private TextField txtApellido;
     @FXML private TextField txtSegundoApellido;
@@ -69,8 +69,7 @@ public class AgregarClienteController {
     @FXML private DatePicker pickerCumpleanos;
     @FXML private ChoiceBox<String> choiceTipoCliente;
 
-
-
+    // Campos Vehiculo
     @FXML private ChoiceBox<Marca> choiceMarca;
     @FXML private ChoiceBox<Modelo> choiceModelo;
     @FXML private ChoiceBox<Categoria> choiceCategoria;
@@ -81,12 +80,11 @@ public class AgregarClienteController {
     @FXML private TextField txtKilometros;
     @FXML private DatePicker pickerUltimoServicio;
     @FXML private TextField txtObservaciones;
+    private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
+
+    // Botones Principales
     @FXML private Button btnAgregarVehiculo;
     @FXML private Button btnGuardar;
-
-
-
-    private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
 
 
     @FXML
@@ -161,7 +159,55 @@ public class AgregarClienteController {
                         .or(choiceTipoCliente.valueProperty().isNull())
         );
 
+        txtTelefono.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("\\d{0,13}")) {
+                return c;
+            }
+            return null;
+        }));
 
+        txtKilometros.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+
+        // Validación RFC (4 letras, 6 números de fecha, 3 caracteres alfanuméricos)
+        txtRFC.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) { // cuando pierde el foco
+                if (!txtRFC.getText().matches("^[A-ZÑ&]{3,4}\\d{6}[A-Z0-9]{3}$")) {
+                    mostrarAlerta("RFC inválido", "El RFC debe tener el formato correcto.");
+                    txtRFC.clear();
+                }
+            }
+        });
+
+        // Número de serie (VIN - 17 caracteres alfanuméricos, sin O/I/Q)
+        txtSerie.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("[A-HJ-NPR-Z0-9]{0,17}")) {
+                return c;
+            }
+            return null;
+        }));
+
+        // Placas (ejemplo: 3 letras + 4 números o similar)
+        txtPlacas.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("[A-Z0-9]{0,8}")) { // hasta 8 caracteres
+                c.setText(c.getText().toUpperCase()); // forzar mayúsculas
+                return c;
+            }
+            return null;
+        }));
+
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
     private void cargarOpciones() {
@@ -274,10 +320,6 @@ public class AgregarClienteController {
     @FXML
     private void GuardarCliente(ActionEvent event) {
         // Crear Cliente
-
-
-
-
         Cliente cliente = new Cliente();
         cliente.setUpdated_at(LocalDate.now().toString());  // <<< AGREGADO
         cliente.setNombre(txtNombre.getText());

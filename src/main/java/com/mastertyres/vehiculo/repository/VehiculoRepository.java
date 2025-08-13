@@ -25,6 +25,12 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo,Integer> {
     @Query("UPDATE Vehiculo v SET v.active = :inactive WHERE v.vehiculoId = :idVehiculo")
     int eliminarVehiculo(@Param("inactive")String eliminar,@Param("idVehiculo") Integer idVehiculo);
 
+    // Trae vehículos de los clientes, junto con marca y modelo
+    @Query("SELECT v FROM Vehiculo v " +
+            "JOIN FETCH v.marca " +
+            "JOIN FETCH v.modelo " +
+            "WHERE v.cliente.id IN :clienteIds")
+    List<Vehiculo> listarVehiculosPorClientes(@Param("clienteIds") List<Integer> clienteIds);
 
 
 }

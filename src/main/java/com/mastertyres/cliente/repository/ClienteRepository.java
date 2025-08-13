@@ -11,14 +11,18 @@ import java.util.List;
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
 
-    @Query("SELECT DISTINCT c FROM Cliente c LEFT JOIN FETCH c.vehiculos v LEFT JOIN FETCH v.marca LEFT JOIN FETCH v.modelo WHERE c.active = :active")
-    List<Cliente> listarCliente(@Param("active") String active);
+    //@Query("SELECT DISTINCT c FROM Cliente c LEFT JOIN FETCH c.vehiculos v LEFT JOIN FETCH v.marca LEFT JOIN FETCH v.modelo WHERE c.active = :active")
+    //List<Cliente> listarCliente(@Param("active") String active);
 
-
+    // Consulta base: solo clientes activos
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active")
+    List<Cliente> listarClientesActivos(@Param("active") String active);
 
     @Modifying
     @Query("UPDATE Cliente c SET c.active = :inactive WHERE c.clienteId = :idCliente")
     int eliminarCliente(@Param("inactive")String eliminar, @Param("idCliente")Integer idCliente);
+
+
 
 
 }//interface
