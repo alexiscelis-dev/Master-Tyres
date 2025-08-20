@@ -126,7 +126,7 @@
                                         <Insets left="25.0" right="15.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <Label styleClass="menu-label" text="Crear Promocion" textFill="WHITE">
+                                <Label styleClass="menu-label" text="Inventario" textFill="WHITE">
                                     <font>
                                         <Font size="14.0" />
                                     </font>
@@ -207,7 +207,7 @@
                   <Font name="Roboto Bold" size="28.0" />
                </font>
             </Label>
-            <ImageView fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
+            <ImageView fx:id="irAtras" fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
                <image>
                   <Image url="@../icons/arrow-left-s-line.png" />
                </image>
