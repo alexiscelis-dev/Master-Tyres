@@ -3,29 +3,31 @@ package com.mastertyres.fxControllers.AgregarCliente;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
 import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
-import com.mastertyres.cliente.model.TipoCliente;
-import javafx.util.StringConverter;
+
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class AgregarClienteController {
@@ -41,6 +43,9 @@ public class AgregarClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private VehiculoService vehiculoService;
 
     // Columnas de tabla vehiculos
     @FXML private TableView<Vehiculo> tablaVehiculos;
@@ -64,7 +69,7 @@ public class AgregarClienteController {
     @FXML private TextField txtDomicilio;
     @FXML private TextField txtCiudad;
     @FXML private TextField txtEstado;
-    @FXML private TextField txtCURP;
+    @FXML private TextField txtHobbie;
     @FXML private TextField txtRFC;
     @FXML private DatePicker pickerCumpleanos;
     @FXML private ChoiceBox<String> choiceTipoCliente;
@@ -86,6 +91,16 @@ public class AgregarClienteController {
     @FXML private Button btnAgregarVehiculo;
     @FXML private Button btnGuardar;
 
+    //Validaciones:
+    private BooleanProperty rfcValido = new SimpleBooleanProperty(true);
+    private BooleanProperty serieValido = new SimpleBooleanProperty(true);
+    private BooleanProperty placasValido = new SimpleBooleanProperty(true);
+    private BooleanProperty telefonoValido = new SimpleBooleanProperty(true);
+    private BooleanProperty kilometrosValido = new SimpleBooleanProperty(true);
+    private BooleanProperty nombreValido = new SimpleBooleanProperty(true);
+    private BooleanProperty apellidoValido = new SimpleBooleanProperty(true);
+    private BooleanProperty ColorValido = new SimpleBooleanProperty(true);
+
 
     @FXML
     private void initialize() {
@@ -94,7 +109,7 @@ public class AgregarClienteController {
 
         cargarOpciones();
         int currentYear = Year.now().getValue();
-        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1950, currentYear , currentYear);
+        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear , currentYear);
         spinnerAnio.setValueFactory(yearFactory);
 
 
@@ -142,12 +157,179 @@ public class AgregarClienteController {
     }
 
     private void configurarValidaciones() {
+
+        // NOMBRE
+        txtNombre.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isBlank()) {
+                nombreValido.set(false);
+                txtNombre.setStyle("-fx-border-color: red;");
+            } else {
+                nombreValido.set(true);
+                txtNombre.setStyle("");
+            }
+        });
+        txtNombre.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) { // pierde foco
+                txtNombre.setText(formatoOracion(txtNombre.getText()));
+            }
+        });
+
+// APELLIDO
+        txtApellido.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isBlank()) {
+                apellidoValido.set(false);
+                txtApellido.setStyle("-fx-border-color: red;");
+            } else {
+                apellidoValido.set(true);
+                txtApellido.setStyle("");
+            }
+        });
+        txtApellido.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtApellido.setText(formatoOracion(txtApellido.getText()));
+            }
+        });
+
+// SEGUNDO APELLIDO (no obligatorio, no borde rojo)
+        txtSegundoApellido.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtSegundoApellido.setText(formatoOracion(txtSegundoApellido.getText()));
+            }
+        });
+
+        //Ciudad
+        txtCiudad.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtCiudad.setText(formatoOracion(txtCiudad.getText()));
+            }
+        });
+
+        //Estado
+        txtEstado.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtEstado.setText(formatoOracion(txtEstado.getText()));
+            }
+        });
+
+        //Domicilio
+        txtDomicilio.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtDomicilio.setText(formatoOracion(txtDomicilio.getText()));
+            }
+        });
+
+        // Teléfono
+        txtTelefono.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText != null && !newText.isBlank() && newText.matches("^\\+?[\\d\\s\\-()]{7,20}$")) {
+                // Válido: no vacío y cumple formato
+                telefonoValido.set(true);
+                txtTelefono.setStyle("");
+            } else {
+                telefonoValido.set(false);
+                txtTelefono.setStyle("-fx-border-color: red;");
+            }
+        });
+        txtTelefono.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("[\\d\\s\\-()+]*")) {
+                return c;
+            }
+            return null;
+        }));
+
+        // RFC: opcional, acepta minúsculas
+        txtRFC.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase(); // convertir a mayúsculas para la validación
+            txtRFC.setText(texto); // actualiza el campo visualmente en mayúsculas
+            if (texto.isEmpty()) {
+                rfcValido.set(true);
+                txtRFC.setStyle("");
+            } else if (!texto.matches("^([A-Z,Ñ,&]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z\\d]{3})$")) {
+                rfcValido.set(false);
+                txtRFC.setStyle("-fx-border-color: red;");
+            } else {
+                rfcValido.set(true);
+                txtRFC.setStyle("");
+            }
+        });
+
+// Placas
+        txtPlacas.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtPlacas.setText(texto);
+            if (texto.isEmpty()) {
+                placasValido.set(true);
+                txtPlacas.setStyle("");
+            } else if (!texto.matches("^[A-Z0-9]{1,7}(-[A-Z0-9]{1,4})?$")) {
+                placasValido.set(false);
+                txtPlacas.setStyle("-fx-border-color: red;");
+            } else {
+                placasValido.set(true);
+                txtPlacas.setStyle("");
+            }
+        });
+
+
+// Número de serie (VIN)
+        txtSerie.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtSerie.setText(texto);
+            if (texto.isEmpty()) {
+                serieValido.set(true);
+                txtSerie.setStyle("");
+            } else if (!texto.matches("^[A-HJ-NPR-Z0-9]{17}$")) {
+                serieValido.set(false);
+                txtSerie.setStyle("-fx-border-color: red;");
+            } else {
+                serieValido.set(true);
+                txtSerie.setStyle("");
+            }
+        });
+
+        //Color
+        txtColor.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtColor.setText(texto);
+            if (texto.isEmpty()) {
+                ColorValido.set(false);
+                txtColor.setStyle("-fx-border-color: red;");
+            } else if (!texto.matches("^[A-Z]{1,20}")) {
+                ColorValido.set(false);
+                txtColor.setStyle("-fx-border-color: red;");
+            } else {
+                ColorValido.set(true);
+                txtColor.setStyle("");
+            }
+        });
+
+        // Kilómetros
+        txtKilometros.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isEmpty()) {
+                kilometrosValido.set(true);
+                txtKilometros.setStyle(""); // estilo normal
+            } else if (!newText.matches("\\d*")) {
+                kilometrosValido.set(false);
+                txtKilometros.setStyle("-fx-border-color: red;"); // borde rojo si es inválido
+            } else {
+                kilometrosValido.set(true);
+                txtKilometros.setStyle("");
+            }
+        });
+        txtKilometros.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+
         // Deshabilitar botón "Agregar Vehículo" hasta que se llenen los campos requeridos
         btnAgregarVehiculo.disableProperty().bind(
                 choiceMarca.valueProperty().isNull()
                         .or(choiceModelo.valueProperty().isNull())
                         .or(txtColor.textProperty().isEmpty())
                         .or(spinnerAnio.valueProperty().isNull())
+                        .or(serieValido.not())
+                        .or(placasValido.not())
+                        .or(kilometrosValido.not())
         );
 
         // Deshabilitar botón "Guardar" hasta que se llenen los campos requeridos y haya al menos un vehículo
@@ -157,50 +339,28 @@ public class AgregarClienteController {
                         .or(txtApellido.textProperty().isEmpty())
                         .or(txtTelefono.textProperty().isEmpty())
                         .or(choiceTipoCliente.valueProperty().isNull())
+                        .or(rfcValido.not())
+                        .or(telefonoValido.not())
+
         );
 
-        txtTelefono.setTextFormatter(new TextFormatter<>(c -> {
-            if (c.getControlNewText().matches("\\d{0,13}")) {
-                return c;
-            }
-            return null;
-        }));
-
-        txtKilometros.setTextFormatter(new TextFormatter<>(c -> {
-            if (c.getControlNewText().matches("\\d*")) {
-                return c;
-            }
-            return null;
-        }));
-
-        // Validación RFC (4 letras, 6 números de fecha, 3 caracteres alfanuméricos)
-        txtRFC.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal) { // cuando pierde el foco
-                if (!txtRFC.getText().matches("^[A-ZÑ&]{3,4}\\d{6}[A-Z0-9]{3}$")) {
-                    mostrarAlerta("RFC inválido", "El RFC debe tener el formato correcto.");
-                    txtRFC.clear();
-                }
-            }
-        });
-
-        // Número de serie (VIN - 17 caracteres alfanuméricos, sin O/I/Q)
-        txtSerie.setTextFormatter(new TextFormatter<>(c -> {
-            if (c.getControlNewText().matches("[A-HJ-NPR-Z0-9]{0,17}")) {
-                return c;
-            }
-            return null;
-        }));
-
-        // Placas (ejemplo: 3 letras + 4 números o similar)
-        txtPlacas.setTextFormatter(new TextFormatter<>(c -> {
-            if (c.getControlNewText().matches("[A-Z0-9]{0,8}")) { // hasta 8 caracteres
-                c.setText(c.getText().toUpperCase()); // forzar mayúsculas
-                return c;
-            }
-            return null;
-        }));
-
     }
+
+    private String formatoOracion(String texto) {
+        if (texto == null || texto.isBlank()) return "";
+        String[] palabras = texto.trim().split("\\s+");
+        StringBuilder resultado = new StringBuilder();
+        for (String palabra : palabras) {
+            if (!palabra.isEmpty()) {
+                resultado.append(palabra.substring(0, 1).toUpperCase())
+                        .append(palabra.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+        return resultado.toString().trim();
+    }
+
+
 
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -211,24 +371,24 @@ public class AgregarClienteController {
     }
 
     private void cargarOpciones() {
-        List<Marca> marcas = marcaService.listarMarcas(); // no nombres
+        List<Marca> marcas = marcaService.listarMarcas();
         List<Modelo> modelos = modeloService.listarModelos();
         List<Categoria> categorias = categoriaService.listarCategorias();
 
+
         choiceMarca.setItems(FXCollections.observableArrayList(marcas));
-        choiceModelo.setItems(FXCollections.observableArrayList(modelos));
+        choiceModelo.setItems(FXCollections.observableArrayList(modelos)); // se llenará luego con el filtro
         choiceCategoria.setItems(FXCollections.observableArrayList(categorias));
 
-        // Muestra los nombres en el ChoiceBox (para Marca, Modelo y Categoría)
+        // Mostrar nombres
         choiceMarca.setConverter(new StringConverter<>() {
             @Override
             public String toString(Marca marca) {
                 return marca != null ? marca.getNombreMarca() : "";
             }
-
             @Override
             public Marca fromString(String string) {
-                return null; // no necesario si no permites edición
+                return null;
             }
         });
 
@@ -237,7 +397,6 @@ public class AgregarClienteController {
             public String toString(Modelo modelo) {
                 return modelo != null ? modelo.getNombreModelo() : "";
             }
-
             @Override
             public Modelo fromString(String string) {
                 return null;
@@ -249,16 +408,32 @@ public class AgregarClienteController {
             public String toString(Categoria categoria) {
                 return categoria != null ? categoria.getNombreCategoria() : "";
             }
-
             @Override
             public Categoria fromString(String string) {
                 return null;
+            }
+        });
+
+        // 🔹 Listener para filtrar modelos según la marca seleccionada
+        choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
+            if (newMarca != null) {
+                List<Modelo> modelosFiltrados = modelos.stream()
+                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+                        .toList();
+                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+            } else {
+                choiceModelo.getItems().clear();
             }
         });
     }
 
     @FXML
     private void agregarVehiculo(ActionEvent event) {
+
+        if(!serieValido.get() || !kilometrosValido.get() || !placasValido.get()){
+            mostrarAlerta("Error en campos", "Por favor, corrige los campos marcados en rojo antes de agregar vehiculo");
+            return;
+        }
         Vehiculo v = new Vehiculo();
 
         v.setColor(txtColor.getText());
@@ -311,7 +486,7 @@ public class AgregarClienteController {
         txtEstado.clear();
         txtCiudad.clear();
         txtTelefono.clear();
-        txtCURP.clear();
+        txtHobbie.clear();
         txtRFC.clear();
         pickerCumpleanos.setValue(null);
         choiceTipoCliente.setValue(null);
@@ -319,13 +494,64 @@ public class AgregarClienteController {
 
     @FXML
     private void GuardarCliente(ActionEvent event) {
+
+        if (!rfcValido.get() ||  !telefonoValido.get() ) {
+            mostrarAlerta("Error en campos", "Por favor, corrige los campos marcados en rojo antes de guardar.");
+            return;
+        }
+
+        // Validar RFC duplicado
+        String rfc = txtRFC.getText();
+        if (rfc != null && !rfc.isBlank()) {
+            if (clienteService.existeClientePorRFC(rfc)) {
+                mostrarAlerta("RFC duplicado", "Ya existe un cliente activo con este RFC.");
+                return;
+            }
+        }
+
+        // Validar vehículos duplicados contra la base
+        for (Vehiculo v : listaVehiculos) {
+            String placas = v.getPlacas();
+            String numSerie = v.getNumSerie();
+
+            if (placas != null && !placas.isBlank()){
+                if (vehiculoService.existeVehiculoPorPlacas(placas)){
+                    mostrarAlerta( "Vehículo duplicado",
+                            "Ya existe un vehículo activo con las mismas placas.");
+                    return;
+                }
+            }
+
+            if (numSerie != null && !placas.isBlank()){
+                if (vehiculoService.existeVehiculoPorNumeroSerie(placas)){
+                    mostrarAlerta( "Vehículo duplicado",
+                            "Ya existe un vehículo activo con el mismo numero de serie.");
+                    return;
+                }
+            }
+        }
+
+// Validar que no haya duplicados en la lista antes de guardar
+        Set<String> placasSerieSet = new HashSet<>();
+        for (Vehiculo v : listaVehiculos) {
+            String placas = v.getPlacas() != null ? v.getPlacas() : "";
+            String numSerie = v.getNumSerie() != null ? v.getNumSerie() : "";
+            String key = placas + "|" + numSerie;
+            if (!placasSerieSet.add(key)) {
+                mostrarAlerta("Vehículos repetidos",
+                        "Hay vehículos repetidos en la lista antes de guardar. Revíselos.");
+                return;
+            }
+        }
+
+
         // Crear Cliente
         Cliente cliente = new Cliente();
         cliente.setUpdated_at(LocalDate.now().toString());  // <<< AGREGADO
         cliente.setNombre(txtNombre.getText());
         cliente.setApellido(txtApellido.getText());
         cliente.setSegundoApellido(txtSegundoApellido.getText());
-        cliente.setHobbie(txtCURP.getText());
+        cliente.setHobbie(txtHobbie.getText());
         cliente.setRfc(txtRFC.getText());
         cliente.setNumTelefono(txtTelefono.getText());
         cliente.setEstado(txtEstado.getText());
