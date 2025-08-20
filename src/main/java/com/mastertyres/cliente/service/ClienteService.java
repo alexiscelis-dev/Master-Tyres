@@ -98,12 +98,21 @@ public class ClienteService implements IClienteService {
     }//eliminarCliente
 
 
+    public List<Cliente> buscarClientes(String filtro) {
+        return clienteRepository.buscarClientes(filtro);
+    }
 
     public Cliente guardarCliente(Cliente cliente) {
 
         return clienteRepository.save(cliente);
 
     }
+
+    public boolean existeClientePorRFC(String rfc) {
+        return clienteRepository.existeClientePorRFC(rfc);
+    }
+
+
 
 
 }//clase

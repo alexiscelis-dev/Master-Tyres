@@ -1,5 +1,6 @@
 package com.mastertyres.vehiculo.service;
 
+import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
@@ -47,6 +48,17 @@ public class VehiculoService implements IVehiculoService {
             vehiculoRepository.save(v);
         }
     }
+
+    public boolean existeVehiculoPorPlacas(String placas) {
+        return vehiculoRepository.existeVehiculoPorPlacas(placas);
+    }
+    public boolean existeVehiculoPorNumeroSerie(String numSerie) {
+        return vehiculoRepository.existeVehiculoPorNumeroSerie(numSerie);
+    }
+    public boolean existeVehiculoPorPlacasONumeroSerie(String placas, String numSerie) {
+        return vehiculoRepository.existeVehiculoPorPlacasONumeroSerie(placas, numSerie);
+    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -174,6 +186,18 @@ public class VehiculoService implements IVehiculoService {
         return vehiculoRepository.buscarVehiculoPorRegistro(activo,fechaInicio,fechaFin);
     }
 
+
+    @Transactional(readOnly = true)
+    public List<Categoria> listarCategoriasPorMarcaYModelo(String active, Integer marcaId, Integer modeloId) {
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorMarcaYModelo(active, marcaId, modeloId);
+
+        // Extraer categorías únicas
+        return vehiculos.stream()
+                .map(Vehiculo::getCategoria)
+                .filter(c -> c != null)
+                .distinct() // en memoria
+                .toList();
+    }
 
 
 }//clase

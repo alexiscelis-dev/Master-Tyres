@@ -12,9 +12,12 @@ import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
 import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.model.VehiculoStatus;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,6 +32,8 @@ import javafx.fxml.FXML;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
+
+import static com.mastertyres.common.MensajesAlert.mostrarError;
 
 @Component
 public class AgregarVehiculoController {
@@ -78,11 +83,27 @@ public class AgregarVehiculoController {
     @FXML private TextField txtObservaciones;
     @FXML private Button btnAgregarVehiculo;
     @FXML private Button btnGuardar;
+
 // Campos Cliente
     @FXML private TextField txtClienteNombre;
     @FXML private TextField txtClienteTipo;
-    @FXML private ListView<Cliente> listaClientes;
+    @FXML private TextField txtBuscarCliente;
+    //@FXML private ListView<Cliente> listaClientes;
+    @FXML private TableView<Cliente> tablaClientes;
+    @FXML private TableColumn<Cliente, String> colNombreCompleto;
+    @FXML private TableColumn<Cliente, String> colTipoCliente;
+    @FXML private TableColumn<Cliente, String> colRfc;
+    @FXML private TableColumn<Cliente, String> colTelefono;
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
+    @FXML private Button btnBuscarCliente;
+
+
+    private BooleanProperty serieValido = new SimpleBooleanProperty(true);
+    private BooleanProperty placasValido = new SimpleBooleanProperty(true);
+    private BooleanProperty kilometrosValido = new SimpleBooleanProperty(true);
+    private BooleanProperty ColorValido = new SimpleBooleanProperty(true);
+
+
 
     @FXML
     private void initialize() {
@@ -115,28 +136,6 @@ public class AgregarVehiculoController {
         colKilometros.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getKilometros())));
         colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
         colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
-
-        //Listar Clientes
-        listaClientes.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Cliente cliente, boolean empty) {
-                super.updateItem(cliente, empty);
-                if (empty || cliente == null) {
-                    setText(null);
-                } else {
-                    setText(
-                            cliente.getNombre() + " " +
-                                    cliente.getApellido() + " " +
-                                    cliente.getSegundoApellido() +
-                                    "    |   " + cliente.getTipoCliente() +
-                                    "   |  RFC: " + cliente.getRfc() +
-                                    "   |  Tel: " + cliente.getNumTelefono()
-                    );
-                }
-            }
-        });
-
-        // Botón eliminar
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button("Eliminar");
 
@@ -155,7 +154,7 @@ public class AgregarVehiculoController {
         });
 
         //Cliente Seleccionado
-        listaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        tablaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 txtClienteNombre.setText(
                         newSelection.getNombre() + " " +
@@ -169,21 +168,113 @@ public class AgregarVehiculoController {
             }
         });
 
+//        //Filtro de clientes:
+//        btnBuscarCliente.setOnAction(e -> {
+//            String filtro = txtBuscarCliente.getText().trim();
+//            if (filtro.isEmpty()) {
+//                tablaClientes.setItems(FXCollections.observableArrayList(
+//                        clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString())
+//                ));
+//            } else {
+//                List<Cliente> clientes = clienteService.buscarClientes(filtro);
+//                tablaClientes.setItems(FXCollections.observableArrayList(clientes));
+//            }
+//        });
+
+
     }
 
     private void configurarValidaciones() {
+
+
+// Placas
+        txtPlacas.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtPlacas.setText(texto);
+            if (texto.isEmpty()) {
+                placasValido.set(true);
+                txtPlacas.setStyle("");
+            } else if (!texto.matches("^[A-Z0-9]{1,7}(-[A-Z0-9]{1,4})?$")) {
+                placasValido.set(false);
+                txtPlacas.setStyle("-fx-border-color: red;");
+            } else {
+                placasValido.set(true);
+                txtPlacas.setStyle("");
+            }
+        });
+
+
+// Número de serie (VIN)
+        txtSerie.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtSerie.setText(texto);
+            if (texto.isEmpty()) {
+                serieValido.set(true);
+                txtSerie.setStyle("");
+            } else if (!texto.matches("^[A-HJ-NPR-Z0-9]{17}$")) {
+                serieValido.set(false);
+                txtSerie.setStyle("-fx-border-color: red;");
+            } else {
+                serieValido.set(true);
+                txtSerie.setStyle("");
+            }
+        });
+
+        // Kilómetros
+        txtKilometros.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isEmpty()) {
+                kilometrosValido.set(true);
+                txtKilometros.setStyle(""); // estilo normal
+            } else if (!newText.matches("\\d*")) {
+                kilometrosValido.set(false);
+                txtKilometros.setStyle("-fx-border-color: red;"); // borde rojo si es inválido
+            } else {
+                kilometrosValido.set(true);
+                txtKilometros.setStyle("");
+            }
+        });
+        txtKilometros.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+
+        //Color
+        txtColor.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtColor.setText(texto);
+            if (texto.isEmpty()) {
+                ColorValido.set(false);
+                txtColor.setStyle("-fx-border-color: red;");
+            } else if (!texto.matches("^[A-Z]{1,20}")) {
+                ColorValido.set(false);
+                txtColor.setStyle("-fx-border-color: red;");
+            } else {
+                ColorValido.set(true);
+                txtColor.setStyle("");
+            }
+        });
+
         // Deshabilitar botón "Agregar Vehículo" hasta que se llenen los campos requeridos
         btnAgregarVehiculo.disableProperty().bind(
                 choiceMarca.valueProperty().isNull()
                         .or(choiceModelo.valueProperty().isNull())
                         .or(txtColor.textProperty().isEmpty())
                         .or(spinnerAnio.valueProperty().isNull())
+                        .or(serieValido.not())
+                        .or(placasValido.not())
+                        .or(kilometrosValido.not())
         );
-        // Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
+         //Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
         btnGuardar.disableProperty().bind(
                 Bindings.isEmpty(listaVehiculos)
-                        .or(listaClientes.getSelectionModel().selectedItemProperty().isNull())
+                        .or(tablaClientes.getSelectionModel().selectedItemProperty().isNull())
         );
+//        btnGuardar.disableProperty().bind(
+//                Bindings.isEmpty(listaVehiculos)
+//                        .or(listaClientes.getSelectionModel().selectedItemProperty().isNull())
+//        );
     }
 
     @FXML
@@ -219,24 +310,24 @@ public class AgregarVehiculoController {
     }
 
     private void cargarOpciones() {
-        List<Marca> marcas = marcaService.listarMarcas(); // no nombres
+        List<Marca> marcas = marcaService.listarMarcas();
         List<Modelo> modelos = modeloService.listarModelos();
         List<Categoria> categorias = categoriaService.listarCategorias();
 
+
         choiceMarca.setItems(FXCollections.observableArrayList(marcas));
-        choiceModelo.setItems(FXCollections.observableArrayList(modelos));
+        choiceModelo.setItems(FXCollections.observableArrayList(modelos)); // se llenará luego con el filtro
         choiceCategoria.setItems(FXCollections.observableArrayList(categorias));
 
-        // Muestra los nombres en el ChoiceBox (para Marca, Modelo y Categoría)
+        // Mostrar nombres
         choiceMarca.setConverter(new StringConverter<>() {
             @Override
             public String toString(Marca marca) {
                 return marca != null ? marca.getNombreMarca() : "";
             }
-
             @Override
             public Marca fromString(String string) {
-                return null; // no necesario si no permites edición
+                return null;
             }
         });
 
@@ -245,7 +336,6 @@ public class AgregarVehiculoController {
             public String toString(Modelo modelo) {
                 return modelo != null ? modelo.getNombreModelo() : "";
             }
-
             @Override
             public Modelo fromString(String string) {
                 return null;
@@ -257,17 +347,89 @@ public class AgregarVehiculoController {
             public String toString(Categoria categoria) {
                 return categoria != null ? categoria.getNombreCategoria() : "";
             }
-
             @Override
             public Categoria fromString(String string) {
                 return null;
             }
         });
 
+        // 🔹 Listener para filtrar modelos según la marca seleccionada
+        choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
+            if (newMarca != null) {
+                List<Modelo> modelosFiltrados = modelos.stream()
+                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+                        .toList();
+                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+            } else {
+                choiceModelo.getItems().clear();
+            }
+        });
 
-        //LLenar lista
+       /* choiceModelo.getSelectionModel().selectedItemProperty().addListener((obs, oldModelo, newModelo) -> {
+            Marca marcaSeleccionada = choiceMarca.getSelectionModel().getSelectedItem();
+            if (marcaSeleccionada != null && newModelo != null) {
+                List<Categoria> categoriasFiltradas = vehiculoService.listarCategoriasPorMarcaYModelo(
+                        "ACTIVE",
+                        marcaSeleccionada.getMarcaId(),
+                        newModelo.getModeloId()
+                );
+                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
+            } else {
+                choiceCategoria.getItems().clear();
+            }
+        });*/
+
+        // Configurar columnas del TableView
+        colNombreCompleto.setCellValueFactory(cellData ->
+                new SimpleStringProperty(
+                        cellData.getValue().getNombre() + " " +
+                                cellData.getValue().getApellido() + " " +
+                                cellData.getValue().getSegundoApellido()
+                )
+        );
+        colTipoCliente.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getTipoCliente())
+        );
+        colRfc.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getRfc())
+        );
+        colTelefono.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getNumTelefono())
+        );
+
+        // Llenar tabla
         List<Cliente> clientes = clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString());
-        listaClientes.setItems(FXCollections.observableArrayList(clientes));
+        tablaClientes.setItems(FXCollections.observableArrayList(clientes));
+
+
+        ObservableList<Cliente> listaClientesOriginal = FXCollections.observableArrayList(clientes);
+
+
+        // 🔹 Listener del botón buscar
+        btnBuscarCliente.setOnAction(e -> {
+            String filtro = txtBuscarCliente.getText().trim().toLowerCase();
+
+            if (filtro.isEmpty()) {
+                tablaClientes.setItems(listaClientesOriginal);
+            } else {
+                ObservableList<Cliente> filtrados = listaClientesOriginal.filtered(cliente ->
+                        (cliente.getNombre() != null && cliente.getNombre().toLowerCase().contains(filtro)) ||
+                                (cliente.getApellido() != null && cliente.getApellido().toLowerCase().contains(filtro)) ||
+                                (cliente.getSegundoApellido() != null && cliente.getSegundoApellido().toLowerCase().contains(filtro)) ||
+                                (cliente.getRfc() != null && cliente.getRfc().toLowerCase().contains(filtro)) ||
+                                (cliente.getNumTelefono() != null && cliente.getNumTelefono().toLowerCase().contains(filtro)) ||
+                                (cliente.getTipoCliente() != null && cliente.getTipoCliente().toLowerCase().contains(filtro)) ||
+                                (cliente.getCiudad() != null && cliente.getCiudad().toLowerCase().contains(filtro)) ||
+                                (cliente.getEstado() != null && cliente.getEstado().toLowerCase().contains(filtro)) ||
+                                (cliente.getHobbie() != null && cliente.getHobbie().toLowerCase().contains(filtro)) ||
+                                (cliente.getDomicilio() != null && cliente.getDomicilio().toLowerCase().contains(filtro)) ||
+                                (cliente.getCreated_at() != null && cliente.getCreated_at().toLowerCase().contains(filtro)) ||
+                                (cliente.getUpdated_at() != null && cliente.getUpdated_at().toLowerCase().contains(filtro)) ||
+                                (cliente.getFechaCumple() != null && cliente.getFechaCumple().toLowerCase().contains(filtro))
+                );
+                tablaClientes.setItems(filtrados);
+            }
+        });
     }
 
     private void limpiarCamposVehiculo() {
@@ -286,34 +448,55 @@ public class AgregarVehiculoController {
 
     @FXML
     private void guardarVehiculos(ActionEvent event) {
-        Cliente clienteSeleccionado = listaClientes.getSelectionModel().getSelectedItem();
+        for (Vehiculo v : listaVehiculos) {
+            String placas = v.getPlacas();
+            String numSerie = v.getNumSerie();
 
+            if (placas != null && !placas.isBlank()){
+                if (vehiculoService.existeVehiculoPorPlacas(placas)){
+                    mostrarAlerta(Alert.AlertType.WARNING, "Vehículo duplicado",
+                            "Ya existe un vehículo activo con las mismas placas.");
+                    return;
+                }
+            }
+
+            if (numSerie != null && !placas.isBlank()){
+                if (vehiculoService.existeVehiculoPorNumeroSerie(placas)){
+                    mostrarAlerta(Alert.AlertType.WARNING, "Vehículo duplicado",
+                            "Ya existe un vehículo activo con el mismo numero de serie.");
+                    return;
+                }
+            }
+
+        }
+
+        Cliente clienteSeleccionado = tablaClientes.getSelectionModel().getSelectedItem();
         if (clienteSeleccionado == null) {
             mostrarAlerta(Alert.AlertType.WARNING, "Cliente no seleccionado", "Por favor selecciona un cliente.");
             return;
         }
-
         if (listaVehiculos.isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Sin vehículos", "Agrega al menos un vehículo antes de guardar.");
             return;
         }
-
         try {
             vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
             mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Vehículos guardados correctamente.");
             listaVehiculos.clear();
             limpiarCamposVehiculo();
+            tablaClientes.getSelectionModel().clearSelection();
         } catch (Exception e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudieron guardar los vehículos: " + e.getMessage());
         }
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
+        mostrarError(titulo,tipo.toString(),mensaje);
+//        Alert alerta = new Alert(tipo);
+//        alerta.setTitle(titulo);
+//        alerta.setHeaderText(null);
+//        alerta.setContentText(mensaje);
+//        alerta.showAndWait();
     }
 
 }
