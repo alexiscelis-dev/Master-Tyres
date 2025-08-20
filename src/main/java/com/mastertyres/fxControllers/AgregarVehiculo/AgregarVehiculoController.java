@@ -1,11 +1,9 @@
 package com.mastertyres.fxControllers.AgregarVehiculo;
 
-
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
-import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
@@ -22,16 +20,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import javafx.fxml.FXML;
 
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
+
+import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.MensajesAlert.mostrarWarning;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;
 
@@ -168,20 +168,6 @@ public class AgregarVehiculoController {
             }
         });
 
-//        //Filtro de clientes:
-//        btnBuscarCliente.setOnAction(e -> {
-//            String filtro = txtBuscarCliente.getText().trim();
-//            if (filtro.isEmpty()) {
-//                tablaClientes.setItems(FXCollections.observableArrayList(
-//                        clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString())
-//                ));
-//            } else {
-//                List<Cliente> clientes = clienteService.buscarClientes(filtro);
-//                tablaClientes.setItems(FXCollections.observableArrayList(clientes));
-//            }
-//        });
-
-
     }
 
     private void configurarValidaciones() {
@@ -271,10 +257,6 @@ public class AgregarVehiculoController {
                 Bindings.isEmpty(listaVehiculos)
                         .or(tablaClientes.getSelectionModel().selectedItemProperty().isNull())
         );
-//        btnGuardar.disableProperty().bind(
-//                Bindings.isEmpty(listaVehiculos)
-//                        .or(listaClientes.getSelectionModel().selectedItemProperty().isNull())
-//        );
     }
 
     @FXML
@@ -472,21 +454,25 @@ public class AgregarVehiculoController {
 
         Cliente clienteSeleccionado = tablaClientes.getSelectionModel().getSelectedItem();
         if (clienteSeleccionado == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Cliente no seleccionado", "Por favor selecciona un cliente.");
+            mostrarWarning("Cliente no seleccionado","","Por favor selecciona un cliente.");
             return;
         }
+
         if (listaVehiculos.isEmpty()) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Sin vehículos", "Agrega al menos un vehículo antes de guardar.");
+            mostrarWarning("Sin vehículos","","Agrega al menos un vehículo antes de guardar.");
             return;
         }
+
         try {
             vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Vehículos guardados correctamente.");
+
+            mostrarInformacion("Éxito","","Vehículos guardados correctamente.");
             listaVehiculos.clear();
             limpiarCamposVehiculo();
             tablaClientes.getSelectionModel().clearSelection();
         } catch (Exception e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudieron guardar los vehículos: " + e.getMessage());
+            mostrarWarning("Error","","No se pudieron guardar los vehículos");
+
         }
     }
 

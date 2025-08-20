@@ -5,13 +5,15 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
-import javafx.scene.control.Alert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 
 @Service
 public class VehiculoService implements IVehiculoService {
@@ -75,19 +77,12 @@ public class VehiculoService implements IVehiculoService {
 
         if (filasEliminadas > 0) {
 
-            Alert ventana = new Alert(Alert.AlertType.INFORMATION);
-            ventana.setTitle("Vehiculo eliminado");
-            ventana.setHeaderText("Vehiculo eliminado");
-            ventana.setContentText("Vehiculo eliminado exitosamente.");
-
-            ventana.showAndWait();
-
+            mostrarInformacion("Vehiculo eliminado","Vehiculo eliminado","Vehiculo eliminado exitosamente.");
 
         } else {
-            Alert ventana = new Alert(Alert.AlertType.ERROR);
-            ventana.setTitle("Error al eliminar vehiculo");
-            ventana.setHeaderText("Algo salio mal");
-            ventana.setContentText("No se pudo eliminar el vehiculo seleccionado.");
+
+            mostrarError("Error al eliminar vehicul","Algo salio mal","No se pudo eliminar el vehiculo seleccionado.");
+
         }
 
         return filasEliminadas;
@@ -95,11 +90,13 @@ public class VehiculoService implements IVehiculoService {
 
     }//eliminar vehiculo
 
+
     @Transactional(readOnly = true)
     @Override
     public List<VehiculoDTO> buscarVehiculoPorPropietario(String active, String nombre) {
         return vehiculoRepository.buscarVehiculoPorPropietario(active,nombre);
     }
+
 
     @Transactional(readOnly = true)
     @Override
