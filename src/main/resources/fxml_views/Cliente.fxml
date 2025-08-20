@@ -2,8 +2,10 @@
 
 <?import java.lang.*?>
 <?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.cliente.ClienteController">
 
@@ -23,14 +25,12 @@
                   <items>
                         <FXCollections fx:factory="observableArrayList">
                            <String fx:value="Nombre" />
-                           <String fx:value="Primer apellido" />
-                           <String fx:value="Segundo apellido" />
-                           <String fx:value="Teléfono" />
+                           <String fx:value="Telefono" />
                            <String fx:value="Estado" />
                            <String fx:value="Ciudad" />
                            <String fx:value="Domicilio" />
                            <String fx:value="Hobbie" />
-                           <String fx:value="Tipo de cliente" />
+                            <String fx:value="RFC" />
                         </FXCollections>
                      </items>
                   </ChoiceBox>
@@ -55,6 +55,15 @@
                   <TableColumn fx:id="colRFC" prefWidth="150" text="RFC" />
            </columns>
         </TableView>
+
+             <Label fx:id="statusLabel" prefHeight="60.0" prefWidth="365.0" text="Label" textFill="WHITE" visible="false">
+                 <VBox.margin>
+                     <Insets left="460.0" />
+                 </VBox.margin>
+                 <font>
+                     <Font name="Roboto Bold" size="12.0" />
+                 </font>
+             </Label>
 
 
          </VBox>

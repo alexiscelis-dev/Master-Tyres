@@ -12,9 +12,8 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"cliente","marca","modelo","categoria"}) // parte de evitar recursión al imprimir el cliente.
 @EqualsAndHashCode
-@Builder
 public class Vehiculo {
 
     @Id
@@ -45,13 +44,13 @@ public class Vehiculo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
-
     private Integer anio;
     private Integer kilometros;
     private String color;
     private String placas;
     @Column(name = "numero_serie")
     private String numSerie;
+    private String observaciones;
     @Column(name = "fecha_registro")
     private String fechaRegistro;
     @Column(name = "ultimo_servicio")
@@ -59,7 +58,7 @@ public class Vehiculo {
     private String created_at;
     private String updated_at;
     private String active;
-    private String observaciones;
+
 
 
 }//clase
