@@ -13,13 +13,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
-@Builder
+@ToString(exclude = "vehiculos")//evita recursión al imprimir el cliente.
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include  // Indica que solo clienteId sera usado para generar los metodos EqualsAndHashCode
     @Column(name = "cliente_id")
     private Integer clienteId;
 

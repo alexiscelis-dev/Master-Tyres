@@ -1,13 +1,12 @@
 package com.mastertyres;
 
+import com.mastertyres.common.NavigatorManager;
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import javafx.application.Application;
 import javafx.stage.Stage;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -26,16 +25,22 @@ public class MasterTyresApplication extends Application {
 	@Override
 	public void start(Stage ventanaPrincipal) throws Exception {
 
+        NavigatorManager.setStage(ventanaPrincipal); //sirve para ir hacia atras entre ventanas
+
 		//Cargar ventana para ajustar tamaño
 
-		FXMLLoader loader = new FXMLLoader(
-				getClass().getResource("/fxml_views/Login.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/Login.fxml"));
 
+        FXMLLoader  loaderNavigator = new FXMLLoader(getClass().getResource("/fxml_views/Login.fxml"));
 
 
 		Parent root = null;
+        Parent rooNavigator = null;
+
 		try {
 			root = loader.load();
+            rooNavigator = loaderNavigator.load();
+            NavigatorManager.navigateTo(rooNavigator);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -43,6 +48,7 @@ public class MasterTyresApplication extends Application {
 
 
 		Scene scene = new Scene(root);
+
 
 		ventanaPrincipal.setScene(scene);
 
@@ -63,4 +69,4 @@ public class MasterTyresApplication extends Application {
 		launch(args);
 	}
 
-}
+}//clase

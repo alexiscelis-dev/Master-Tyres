@@ -5,22 +5,32 @@ import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.model.VehiculoStatus;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
+import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+
+import static com.mastertyres.common.MensajesAlert.*;
 
 
 @Component
@@ -68,6 +78,11 @@ public class ClienteController {
 
     @FXML
     private ChoiceBox<String> atributoBusquedaClientes;
+    @FXML
+    private Label statusLabel;
+
+    private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
+    //presiona una tecla hace un delay
 
     @Autowired
     private ClienteService clienteService;
@@ -91,69 +106,184 @@ public class ClienteController {
             fila.setOnContextMenuRequested(event -> {
                 if (!fila.isEmpty()) {
                     Cliente clienteSeleccionado = fila.getItem();
-
                     Integer clienteId = clienteSeleccionado.getClienteId();
 
-                    // Crear el botón "Eliminar"
-                    Button eliminarBtn = new Button("Eliminar");
+                    ListView<String> listaOpciones = new ListView<>();
+                    listaOpciones.getItems().addAll("Copiar", "Copiar fila completa", "Editar", "Eliminar");
+                    listaOpciones.setPrefSize(200, 150);
+                    listaOpciones.getStyleClass().add("popup-table");
 
-                    eliminarBtn.setStyle("-fx-font-size: 15px; -fx-padding: 2 5;");
-
-
-                    // Crear el popup
-                    Popup popup = new Popup();
-
-
-                    popup.getContent().add(eliminarBtn);
-
-                    popup.setAutoHide(true); // Se cierra solo al hacer clic fuera
-                    //hacer clic despues de clic derecho
-                    eliminarBtn.setOnAction(e -> {
-
-                        Alert ventanaEliminar = new Alert(Alert.AlertType.WARNING);
-                        ventanaEliminar.setTitle("Eliminar vehiculo");
-
-                        String clientEliminar;
-
-                        //verificar que no contenga null  mostrar mensaje
-                        clientEliminar = clienteSeleccionado.getNombre() != null ? clienteSeleccionado.getNombre() : "" +
-                                clienteSeleccionado.getApellido() != null ? clienteSeleccionado.getApellido() : "" +
-                                clienteSeleccionado.getSegundoApellido() != null ? clienteSeleccionado.getSegundoApellido() : "" + " Tipo de cliente " +
-                                clienteSeleccionado.getTipoCliente() != null ? clienteSeleccionado.getTipoCliente() : "";
+                    Popup listViewPopup = new Popup();
+                    listViewPopup.getContent().add(listaOpciones);
+                    listViewPopup.setAutoHide(true);
 
 
-                        ventanaEliminar.setHeaderText("¿Estas seguro que quieres eliminar el siguiente cliente? \n\n " + clientEliminar);
-
-                        ventanaEliminar.setContentText("Esta accion no se podra deshacer");
-
-
-                        ButtonType buttonEliminar = new ButtonType("Elimnar", ButtonBar.ButtonData.YES);
-                        ButtonType buttonCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-                        ventanaEliminar.getButtonTypes().setAll(buttonEliminar, buttonCancelar);
-
-                        Optional<ButtonType> resultado = ventanaEliminar.showAndWait();
-
-                        if (resultado.isPresent() && resultado.get() == buttonEliminar) {
-                            System.out.println(clienteId);
-
-                            clienteService.eliminarCliente(StatusCliente.INACTIVE.toString(), clienteId);
-                            popup.hide();
-                            cargarClientes(); //metodo que cargar los datos en la tabla
+                    listaOpciones.setOnMouseClicked(e -> {
+                        String seleccion = listaOpciones.getSelectionModel().getSelectedItem();
 
 
-                        } else {
-                            Alert ventanaCancelado = new Alert(Alert.AlertType.INFORMATION);
-                            ventanaCancelado.setTitle("Accion cancelada");
-                            ventanaCancelado.setHeaderText("Accion cancelada");
-                            ventanaCancelado.showAndWait();
+                        if (seleccion != null) {
+                            switch (seleccion) {
 
-                        }//else
+                                case "Eliminar" -> {
+
+
+                                    Alert ventanaEliminar = new Alert(Alert.AlertType.WARNING);
+                                    ventanaEliminar.setTitle("Eliminar vehiculo");
+
+                                    String cliente, informacionCliente;
+
+                                    //verificar que no contenga null  mostrar mensaje
+                                    cliente = (clienteSeleccionado.getNombre() != null ? clienteSeleccionado.getNombre() : "") + " " +
+                                            (clienteSeleccionado.getApellido() != null ? clienteSeleccionado.getApellido() : "") + " " +
+                                            (clienteSeleccionado.getSegundoApellido() != null ? clienteSeleccionado.getSegundoApellido() : "");
+
+                                    informacionCliente = "Tipo de cliente " + clienteSeleccionado.getTipoCliente() + " " + cliente + " " + clienteSeleccionado.getCiudad() + ", " +
+                                            clienteSeleccionado.getEstado() + ", " + clienteSeleccionado.getDomicilio();
+
+                                    String clienteEliminar = cliente + " " + informacionCliente;
+
+                                    ventanaEliminar.setHeaderText("¿Estas seguro que quieres eliminar el siguiente vehiculo? \n\n " + clienteEliminar);
+
+                                    ventanaEliminar.setContentText("Esta accion no se podra deshacer");
+
+
+                                    ButtonType buttonEliminar = new ButtonType("Elimnar", ButtonBar.ButtonData.YES);
+                                    ButtonType buttonCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                                    ventanaEliminar.getButtonTypes().setAll(buttonEliminar, buttonCancelar);
+
+                                    Optional<ButtonType> resultado = ventanaEliminar.showAndWait();
+
+                                    if (resultado.isPresent() && resultado.get() == buttonEliminar) {
+
+                                        System.out.println("vehiculoId = " + clienteId);
+
+                                        clienteService.eliminarCliente(VehiculoStatus.INACTIVE.toString(), clienteId);
+
+
+                                        cargarClientes(); //metodo que cargar los datos en la tabla
+
+                                    } else {
+                                        mostrarInformacion("Accion cancelada", "", "Accion cancelada");
+
+                                    }//else
+
+
+                                }
+
+                                case "Editar" -> {
+                                    System.out.println("Editado");
+
+                                }
+
+                                case "Copiar" -> {
+                                    var selectedCell = tablaClientes.getSelectionModel().getSelectedCells();
+
+                                    if (!selectedCell.isEmpty()) {
+                                        TablePosition<?, ?> position = selectedCell.get(0);
+                                        int row = position.getRow();
+                                        TableColumn<?, ?> columna = position.getTableColumn();
+
+                                        Object value = columna.getCellData(row);
+
+                                        if (value != null) {
+                                            ClipboardContent content = new ClipboardContent();
+                                            content.putString(value.toString());
+                                            Clipboard.getSystemClipboard().setContent(content);
+
+                                            statusLabel.setVisible(true);
+                                            statusLabel.setText("Texto copiado");
+
+                                            new Thread(() -> {
+                                                try {
+                                                    Thread.sleep(2500);
+
+                                                } catch (InterruptedException exception) {
+                                                    exception.printStackTrace();
+                                                }
+                                                javafx.application.Platform.runLater(() -> statusLabel.setText(""));
+
+                                            }).start();
+
+
+                                        } else {
+                                            System.out.println("No hay celda seleccionada");
+                                        }
+
+                                    }
+
+                                }
+                                case "Copiar fila completa" -> {
+                                    Cliente item = tablaClientes.getSelectionModel().getSelectedItem();
+
+                                    if (item != null) {
+
+                                        StringBuilder vehiculosStr = new StringBuilder();
+
+                                        if (item.getVehiculos() != null && !item.getVehiculos().isEmpty()) {
+                                            for (Vehiculo v : item.getVehiculos()) {
+                                                vehiculosStr.append(v.getMarca().getNombreMarca())
+                                                        .append(" ")
+                                                        .append(v.getModelo().getNombreModelo())
+                                                        .append(" ")
+                                                        .append(v.getAnio())
+                                                        .append(" ")
+                                                        .append("| ");
+
+
+                                            }
+                                            if (vehiculosStr.length() > 1) {
+                                                vehiculosStr.setLength(vehiculosStr.length() - 1);
+                                            }
+
+
+                                        }
+
+
+                                        String filaCopiada = item.getTipoCliente() + " " + (item.getNombre() != null ? item.getNombre() : "") + " " + (item.getApellido() != null ? item.getApellido() : "") + " " +
+                                                (item.getSegundoApellido() != null ? item.getSegundoApellido() : "") + " " + (item.getNumTelefono() != null ? item.getNumTelefono() : "") + " " +
+                                                (item.getEstado() != null ? item.getEstado() : "") + " " + (item.getCiudad() != null ? item.getCiudad() : "") + " " +
+                                                (item.getDomicilio() != null ? item.getDomicilio() : "") + " " + (item.getHobbie() != null ? item.getHobbie() : "") + " " +
+                                                vehiculosStr + " " + (item.getRfc() != null ? item.getRfc() : "");
+
+                                        ClipboardContent content = new ClipboardContent();
+                                        content.putString(filaCopiada);
+                                        Clipboard.getSystemClipboard().setContent(content);
+
+                                        statusLabel.setVisible(true);
+                                        statusLabel.setText("Fila copiada");
+                                        new Thread(() -> {
+                                            try {
+                                                Thread.sleep(2500);
+
+                                            } catch (InterruptedException exception) {
+                                                exception.printStackTrace();
+                                            }
+                                            javafx.application.Platform.runLater(() -> {
+                                                statusLabel.setText("");
+                                                statusLabel.setVisible(false);
+                                            });
+
+                                        }).start();
+
+                                    }
+
+
+                                }
+
+
+                            }//switch
+                            listViewPopup.hide();
+                        }
 
 
                     });
+                    Point2D coordenadasPantalla = fila.localToScreen(event.getX(), event.getY()); //convertir las coordenadas relativas a las obsolutas de la pantalla para que la lista aparezca justo donde click
 
-                    popup.show(fila.getScene().getWindow(), event.getScreenX(), event.getScreenY());
+
+                    listViewPopup.show(fila.getScene().getWindow(), coordenadasPantalla.getX(), coordenadasPantalla.getY());
+
                 }
             });
 
@@ -163,8 +293,34 @@ public class ClienteController {
         //Enter buscar
         buscarClienteBuscador.setOnKeyPressed(event -> {
 
-            if (event.getCode() == KeyCode.ENTER)
-                buscarCliente();
+            if (event.getCode() == KeyCode.ENTER) {
+                String seleccion = atributoBusquedaClientes.getValue(), busqueda = buscarClienteBuscador.getText();
+                if (seleccion == null || seleccion.isEmpty() || busqueda == null || busqueda.isEmpty()) {
+
+                    mostrarWarning("Campos vacios", "", "Favor de llenar los campos correspondientes");
+
+                } else {
+                    seleccion = seleccion.toLowerCase();
+                    buscarCliente(seleccion, busqueda);
+                }
+
+            }
+
+        });
+
+        buscarClienteBuscador.setOnKeyReleased(event -> {
+
+            delayQuery.setOnFinished(e -> {
+
+                String seleccion = atributoBusquedaClientes.getValue(), busqueda = buscarClienteBuscador.getText();
+
+                if ((seleccion != null) && !(busqueda.isEmpty()))
+                    buscarCliente(seleccion.toLowerCase(), busqueda);
+                else
+                    cargarClientes();
+            });
+
+            delayQuery.playFromStart();
 
         });
 
@@ -209,7 +365,6 @@ public class ClienteController {
         ));
 
 
-
         //colApellido.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getApellido() + " " + data.getValue().getSegundoApellido()));
         colTelefono.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNumTelefono() != null ? data.getValue().getNumTelefono() : "N/A"));
         colEstado.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEstado() != null ? data.getValue().getEstado() : "N/A"));
@@ -217,31 +372,7 @@ public class ClienteController {
         colDomicilio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDomicilio() != null ? data.getValue().getDomicilio() : "N/A"));
         colCurp.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHobbie() != null ? data.getValue().getHobbie() : "N/A"));
         colRFC.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRfc() != null ? data.getValue().getRfc() : "N/A"));
-        //colVehiculo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVehiculo().getMarca().toString() + data.getValue().getVehiculo().getModelo().toString() + data.getValue().getVehiculo().getAnio().toString()));
-        // Validacion de si hay o no hay vehiculos
-        /*colVehiculo.setCellValueFactory(data -> {
-            var vehiculos = data.getValue().getVehiculos(); // lista de Vehiculo
 
-            if (vehiculos == null || vehiculos.isEmpty()) {
-                return new SimpleStringProperty("Sin vehículos");
-            }
-
-            StringBuilder descripcion = new StringBuilder();
-
-            for (var v : vehiculos) {
-                String marca = v.getMarca().getNombreMarca() != null ? v.getMarca().getNombreMarca() : "Sin marca";
-                String modelo = v.getModelo().getNombreModelo() != null ? v.getModelo().getNombreModelo() : "Sin modelo";
-                String anio = v.getAnio() != null ? v.getAnio().toString() : "Sin año";
-                descripcion.append(marca).append(" ").append(modelo).append(" ").append(anio).append(" | ");
-            }
-
-            // Quitar el último " | "
-            if (descripcion.length() > 3) {
-                descripcion.setLength(descripcion.length() - 3);
-            }
-
-            return new SimpleStringProperty(descripcion.toString());
-        });*/
         colVehiculo.setCellValueFactory(data -> {
             var vehiculos = data.getValue().getVehiculos();
 
@@ -264,14 +395,64 @@ public class ClienteController {
 
             return new SimpleStringProperty(descripcion.toString());
         });
+        cargarDatosClientes();
 
-        // Listado de los clientes
-        tablaClientes.getItems().setAll(clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString()));
-    }
 
-    private void buscarCliente() {
+    }//cargarClientes
 
-    }
+    private void cargarDatosClientes() {
+        try {
+            // Listado de los clientes
+            tablaClientes.getItems().setAll(clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString()));
+
+        } catch (Exception e) {
+            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+        }
+
+    }//cargarDatosClientes
+
+    private void buscarCliente(String seleccion, String busqueda) {
+
+
+        switch (seleccion) {
+            case "nombre" -> {
+
+                String nombre = busqueda;
+
+                List<Cliente> clientesPorNombre = clienteService.buscarClientePorNombre(StatusCliente.ACTIVE.toString(),nombre);
+                tablaClientes.setItems(FXCollections.observableList(clientesPorNombre));
+
+            }
+            case "telefono" -> {
+
+                if (busqueda.matches("\\d")){
+                    try {
+
+                        Integer numTelefono = Integer.parseInt(busqueda);
+
+                        List<Cliente> clientesPorNumero = clienteService.buscarClientePorNumTelefono(StatusCliente.ACTIVE.toString(),numTelefono);
+                        tablaClientes.setItems(FXCollections.observableList(clientesPorNumero));
+
+                    }catch (NumberFormatException e){e.printStackTrace();}
+                }
+
+
+
+            }
+            case "estado" -> {
+            }
+            case "ciudad" -> {
+            }
+            case "domicilio" -> {
+            }
+            case "hobbie" -> {
+            }
+            case "rfc" -> {
+            }
+
+        }//switch
+
+    }//buscarCliente
 
 
 }//clase
