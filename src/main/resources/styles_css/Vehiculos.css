@@ -1,0 +1,22 @@
+
+.popup-table{
+-fx-background-color:  #1A1A1A;
+-fx-border-color: #8EB83D;
+-fx-border-width:2;
+-fx-padding:5;
+-fx-font-size:12;
+-fx-cell-size:30px;
+-fx-text-fill: #FFFFFF;
+
+}
+
+.popup-table .list-cell:hover{
+-fx-background-color: #8EB83D;
+-fx-text-fill: #1A1A1A;
+}
+
+.popup-table .list-cell:selected{
+-fx-background-color: #8EB83D;
+-fx-text-fill: #1A1A1A;
+
+}
