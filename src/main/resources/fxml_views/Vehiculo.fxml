@@ -2,8 +2,10 @@
 
 <?import java.lang.*?>
 <?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.VehiculoController">
 
@@ -56,11 +58,20 @@
                   <TableColumn fx:id="colPlacas" prefWidth="150" text="Placas" />
                   <TableColumn fx:id="colNumeroSerie" prefWidth="150" text="Numero Serie" />
                   <TableColumn fx:id="colKilometraje" prefWidth="150" text="Kilometraje" />
+                   <TableColumn fx:id="colObservaciones" prefWidth="150" text="Observaciones" />
                   <TableColumn fx:id="colUltimoServicio" prefWidth="150" text="Ultimo Servicio" />
                   <TableColumn fx:id="colFechaRegistro" prefWidth="150" text="Fecha Registro" />
 
                </columns>
             </TableView>
+            <Label fx:id="statusLabel" prefHeight="60.0" prefWidth="220.0" text="Label" textFill="WHITE" visible="false">
+               <VBox.margin>
+                  <Insets left="480.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Roboto Bold" size="12.0" />
+               </font>
+            </Label>
 
 
          </VBox>

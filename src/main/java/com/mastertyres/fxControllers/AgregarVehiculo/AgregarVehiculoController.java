@@ -1,11 +1,9 @@
 package com.mastertyres.fxControllers.AgregarVehiculo;
 
-
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
-import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
@@ -19,16 +17,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import javafx.fxml.FXML;
 
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
+
+import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.MensajesAlert.mostrarWarning;
 
 @Component
 public class AgregarVehiculoController {
@@ -289,31 +289,27 @@ public class AgregarVehiculoController {
         Cliente clienteSeleccionado = listaClientes.getSelectionModel().getSelectedItem();
 
         if (clienteSeleccionado == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Cliente no seleccionado", "Por favor selecciona un cliente.");
+            mostrarWarning("Cliente no seleccionado","","Por favor selecciona un cliente.");
             return;
         }
 
         if (listaVehiculos.isEmpty()) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Sin vehículos", "Agrega al menos un vehículo antes de guardar.");
+            mostrarWarning("Sin vehículos","","Agrega al menos un vehículo antes de guardar.");
             return;
         }
 
         try {
             vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Éxito", "Vehículos guardados correctamente.");
+
+            mostrarInformacion("Éxito","","Vehículos guardados correctamente.");
             listaVehiculos.clear();
             limpiarCamposVehiculo();
         } catch (Exception e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudieron guardar los vehículos: " + e.getMessage());
+            mostrarWarning("Error","","No se pudieron guardar los vehículos");
+
         }
     }
 
-    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensaje);
-        alerta.showAndWait();
-    }
+
 
 }
