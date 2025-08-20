@@ -42,6 +42,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "LOWER(c.ciudad) LIKE LOWER(CONCAT('%', :filtro, '%')) OR " +
             "LOWER(c.estado) LIKE LOWER(CONCAT('%', :filtro, '%')))")
     List<Cliente> buscarClientes(@Param("filtro") String filtro);
+
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER( CONCAT( CONCAT(CONCAT(c.nombre, ' '), " +
             "COALESCE(c.apellido, '')), CONCAT(' ', COALESCE(c.segundoApellido, '')) ) ) " +
             "LIKE LOWER(CONCAT('%', :nombre, '%'))")
