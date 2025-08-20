@@ -2,6 +2,7 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 
 import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.NavigatorManager;
 import com.mastertyres.fxControllers.cliente.ClienteController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Component;
 import java.awt.*;
 import java.io.IOException;
 
+import static com.mastertyres.common.NavigatorManager.goBack;
+
 
 @Component
 public class VentanaPrincipalController {
@@ -43,6 +46,8 @@ public class VentanaPrincipalController {
     private ImageView LogoPrincipal;
     @FXML
     private Label cambiarPaginaEtiqueta;
+    @FXML
+    private ImageView irAtras;
 
     @Autowired
     private ApplicationContext springContex;
@@ -74,6 +79,10 @@ public class VentanaPrincipalController {
         LogoPrincipal.setOnMouseClicked(event -> {
             regresarInicio("/fxml_views/RegresarMenu.fxml");
             cambiarPaginaEtiqueta.setText("Inicio");
+        });
+
+        irAtras.setOnMouseClicked(event -> {
+            goBack();
         });
 
 
@@ -114,6 +123,10 @@ public class VentanaPrincipalController {
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent contenido = loader.load();
             Object controller = loader.getController();
+
+
+
+
             if (controller instanceof ClienteController) {
                 ((ClienteController) controller).setVentanaPrincipalController(this);
             }
