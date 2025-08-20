@@ -99,7 +99,18 @@
                             <Button fx:id="btnBuscarCliente" minWidth="150.0" prefWidth="150.0" styleClass="boton-accion" text="Buscar" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
                             <!-- ListView de clientes -->
-                            <ListView fx:id="listaClientes" styleClass="ListaClientes" minWidth="500.0" prefHeight="200" prefWidth="500.0" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+<!--                            <ListView fx:id="listaClientes" styleClass="ListaClientes" minWidth="500.0" prefHeight="200" prefWidth="500.0" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1" />-->
+                            <TableView fx:id="tablaClientes" minWidth="500.0" prefHeight="200" prefWidth="500.0"
+                                       GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+
+                                <!-- Columna para el nombre completo -->
+                                <columns>
+                                    <TableColumn fx:id="colNombreCompleto" text="Cliente" prefWidth="300.0"/>
+                                    <TableColumn fx:id="colTipoCliente" text="Tipo" prefWidth="100.0"/>
+                                    <TableColumn fx:id="colRfc" text="RFC" prefWidth="150.0"/>
+                                    <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="150.0"/>
+                                </columns>
+                            </TableView>
 
                             <!-- Etiquetas de selección -->
                             <Label text="Cliente Seleccionado:" GridPane.columnIndex="0" GridPane.rowIndex="2" />

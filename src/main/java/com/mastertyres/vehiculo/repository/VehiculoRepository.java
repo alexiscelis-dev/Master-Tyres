@@ -185,4 +185,24 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     List<VehiculoDTO> buscarVehiculoPorRegistro(@Param("active") String active, @Param("fechaInicio") LocalDate fechaRegistro, @Param("fechaFin") LocalDate fechaFin);
 
 
+    @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND (v.placas = :placas OR v.numSerie = :numSerie)")
+    boolean existeVehiculoPorPlacasONumeroSerie(@Param("placas") String placas, @Param("numSerie") String numSerie);
+
+
+    @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND (v.placas = :placas OR v.numSerie = :numSerie)")
+    boolean existeVehiculoPorNumeroSerie(@Param("numSerie") String numSerie);
+
+
+    @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND (v.placas = :placas OR v.numSerie = :numSerie)")
+    boolean existeVehiculoPorPlacas(@Param("placas") String placas);
+
+    @Query("SELECT v FROM Vehiculo v " +
+            "WHERE v.active = :active " +
+            "AND v.marca.marcaId = :marcaId " +
+            "AND v.modelo.modeloId = :modeloId")
+    List<Vehiculo> listarVehiculosPorMarcaYModelo(@Param("active") String active,
+                                                  @Param("marcaId") Integer marcaId,
+                                                  @Param("modeloId") Integer modeloId);
+
+
 }//interface
