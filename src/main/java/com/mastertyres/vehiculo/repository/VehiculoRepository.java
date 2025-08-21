@@ -204,5 +204,21 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
                                                   @Param("marcaId") Integer marcaId,
                                                   @Param("modeloId") Integer modeloId);
 
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+            "v.fechaRegistro ) FROM Vehiculo v JOIN v.marca m JOIN v.modelo mo JOIN v.cliente c JOIN v.categoria ca " +
+            " WHERE v.active = :status AND " +
+            "LOWER (COALESCE(c.nombre, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
+            "LOWER (COALESCE(c.apellido, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
+            "LOWER (COALESCE(c.segundoApellido, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
+            "LOWER (COALESCE(m.nombreMarca, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
+            "LOWER (COALESCE(mo.nombreModelo, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
+            "LOWER (COALESCE(ca.nombreCategoria, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
+            "LOWER (COALESCE(v.color, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
+            "CAST (v.anio AS STRING) LIKE CONCAT('%', :busqueda , '%') OR " +
+            "LOWER (COALESCE(v.numSerie, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
+            "CAST (v.kilometros AS STRING) LIKE CONCAT('%', :busqueda , '%') OR " +
+            "LOWER (COALESCE(v.placas, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) ")
+    List<VehiculoDTO>buscadorVehiculos(@Param("status")String status,@Param("busqueda")String busqueda);
+
 
 }//interface
