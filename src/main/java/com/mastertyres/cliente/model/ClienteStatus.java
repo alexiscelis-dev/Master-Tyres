@@ -1,6 +1,6 @@
 package com.mastertyres.cliente.model;
 
-public enum StatusCliente {
+public enum ClienteStatus {
     ACTIVE,
     INACTIVE,
     DELETE,
