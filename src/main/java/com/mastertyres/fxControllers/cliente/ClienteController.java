@@ -1,7 +1,7 @@
 package com.mastertyres.fxControllers.cliente;
 
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.model.ClienteStatus;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
@@ -30,7 +31,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 
 
 @Component
@@ -80,6 +82,8 @@ public class ClienteController {
     private ChoiceBox<String> atributoBusquedaClientes;
     @FXML
     private Label statusLabel;
+    @FXML
+    private Label choiceBoxLabel;
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
@@ -231,16 +235,11 @@ public class ClienteController {
                                                         .append(" ")
                                                         .append("| ");
 
-
                                             }
                                             if (vehiculosStr.length() > 1) {
                                                 vehiculosStr.setLength(vehiculosStr.length() - 1);
                                             }
-
-
                                         }
-
-
                                         String filaCopiada = item.getTipoCliente() + " " + (item.getNombre() != null ? item.getNombre() : "") + " " + (item.getApellido() != null ? item.getApellido() : "") + " " +
                                                 (item.getSegundoApellido() != null ? item.getSegundoApellido() : "") + " " + (item.getNumTelefono() != null ? item.getNumTelefono() : "") + " " +
                                                 (item.getEstado() != null ? item.getEstado() : "") + " " + (item.getCiudad() != null ? item.getCiudad() : "") + " " +
@@ -266,18 +265,12 @@ public class ClienteController {
                                             });
 
                                         }).start();
-
                                     }
-
-
                                 }
-
 
                             }//switch
                             listViewPopup.hide();
                         }
-
-
                     });
                     Point2D coordenadasPantalla = fila.localToScreen(event.getX(), event.getY()); //convertir las coordenadas relativas a las obsolutas de la pantalla para que la lista aparezca justo donde click
 
@@ -293,37 +286,43 @@ public class ClienteController {
         //Enter buscar
         buscarClienteBuscador.setOnKeyPressed(event -> {
 
-            if (event.getCode() == KeyCode.ENTER) {
+            if (event.getCode() == KeyCode.ENTER){
                 String seleccion = atributoBusquedaClientes.getValue(), busqueda = buscarClienteBuscador.getText();
-                if (seleccion == null || seleccion.isEmpty() || busqueda == null || busqueda.isEmpty()) {
 
-                    mostrarWarning("Campos vacios", "", "Favor de llenar los campos correspondientes");
-
-                } else {
-                    seleccion = seleccion.toLowerCase();
-                    buscarCliente(seleccion, busqueda);
+                if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty()) {
+                    buscarCliente(seleccion.toLowerCase(),busqueda);
                 }
-
             }
 
+
         });
+
+        //buscar mientras escribes
 
         buscarClienteBuscador.setOnKeyReleased(event -> {
 
-            delayQuery.setOnFinished(e -> {
+            if (event.getCode() != KeyCode.ENTER) {
+                delayQuery.setOnFinished(e -> {
+                    String seleccion = atributoBusquedaClientes.getValue();
+                    String busqueda = buscarClienteBuscador.getText();
 
-                String seleccion = atributoBusquedaClientes.getValue(), busqueda = buscarClienteBuscador.getText();
+                    if (seleccion == null && busqueda != null && !busqueda.isEmpty())
+                        buscarCliente(busqueda);
+                     else if (seleccion == null)
+                        cargarClientes();
 
-                if ((seleccion != null) && !(busqueda.isEmpty()))
-                    buscarCliente(seleccion.toLowerCase(), busqueda);
-                else
-                    cargarClientes();
-            });
-
-            delayQuery.playFromStart();
-
+                });
+                delayQuery.playFromStart();
+            }
         });
 
+        //pone en null la lista de ChoiceBox
+        choiceBoxLabel.setOnMouseClicked(event -> {
+
+            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
+                atributoBusquedaClientes.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
+
+        });
 
     }// initialize
 
@@ -356,11 +355,9 @@ public class ClienteController {
         colTipoCliente.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTipoCliente().toString() != null ? data.getValue().getTipoCliente().toString() : "N/A"));
         colNombre.setCellValueFactory(data -> new SimpleStringProperty(
 
-
                 (data.getValue().getNombre() != null ? data.getValue().getNombre() : "") + " " +
                         (data.getValue().getApellido() != null ? data.getValue().getApellido() : "") + " " +
                         (data.getValue().getSegundoApellido() != null ? data.getValue().getSegundoApellido() : "")
-
 
         ));
 
@@ -403,7 +400,7 @@ public class ClienteController {
     private void cargarDatosClientes() {
         try {
             // Listado de los clientes
-            tablaClientes.getItems().setAll(clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString()));
+            tablaClientes.getItems().setAll(clienteService.listarClientesConVehiculos(ClienteStatus.ACTIVE.toString()));
 
         } catch (Exception e) {
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
@@ -411,48 +408,74 @@ public class ClienteController {
 
     }//cargarDatosClientes
 
-    private void buscarCliente(String seleccion, String busqueda) {
+    private void buscarCliente( String seleccion, String busqueda) {
 
 
-        switch (seleccion) {
-            case "nombre" -> {
+            switch (seleccion) {
+                case "nombre" -> {
 
-                String nombre = busqueda;
+                    String nombre = busqueda;
 
-                List<Cliente> clientesPorNombre = clienteService.buscarClientePorNombre(StatusCliente.ACTIVE.toString(),nombre);
-                tablaClientes.setItems(FXCollections.observableList(clientesPorNombre));
+                    List<Cliente> clientesPorNombre = clienteService.buscarClientePorNombre(ClienteStatus.ACTIVE.toString(), nombre);
+                    tablaClientes.setItems(FXCollections.observableList(clientesPorNombre));
 
-            }
-            case "telefono" -> {
+                }
+                case "telefono" -> {
+                            String numTelefono = busqueda;
 
-                if (busqueda.matches("\\d")){
-                    try {
+                            List<Cliente> clientesPorNumero = clienteService.buscarClientePorNumTelefono(ClienteStatus.ACTIVE.toString(), numTelefono);
+                            tablaClientes.setItems(FXCollections.observableList(clientesPorNumero));
 
-                        Integer numTelefono = Integer.parseInt(busqueda);
+                }
+                case "estado" -> {
+                    String estado = busqueda;
 
-                        List<Cliente> clientesPorNumero = clienteService.buscarClientePorNumTelefono(StatusCliente.ACTIVE.toString(),numTelefono);
-                        tablaClientes.setItems(FXCollections.observableList(clientesPorNumero));
+                    List<Cliente> clientesPorEstado = clienteService.buscarClientePorEstado(ClienteStatus.ACTIVE.toString(),estado);
+                    tablaClientes.setItems(FXCollections.observableList(clientesPorEstado));
 
-                    }catch (NumberFormatException e){e.printStackTrace();}
+                }
+                case "ciudad" -> {
+                    String ciudad = busqueda;
+
+                    List<Cliente> clientesPorCiudad = clienteService.buscarClientePorCiudad(ClienteStatus.ACTIVE.toString(),ciudad);
+                    tablaClientes.setItems(FXCollections.observableList(clientesPorCiudad));
+
+
+                }
+                case "domicilio" -> {
+                    String domicilio = busqueda;
+
+                    List<Cliente> clientesPorDomicilio = clienteService.buscarClientePorDomicilio(ClienteStatus.ACTIVE.toString(),domicilio);
+                    tablaClientes.setItems(FXCollections.observableList(clientesPorDomicilio));
+
+                }
+                case "hobbie" -> {
+                    String hobbie = busqueda;
+
+                    List<Cliente> clientesPorHobbie = clienteService.buscarClientePorHobbie(ClienteStatus.ACTIVE.toString(),hobbie);
+                    tablaClientes.setItems(FXCollections.observableList(clientesPorHobbie));
+                }
+                case "rfc" -> {
+                    String rfc = busqueda;
+
+                    List<Cliente> clientesPorRfc = clienteService.buscarClientePorRfc(ClienteStatus.ACTIVE.toString(),rfc);
+                    tablaClientes.setItems(FXCollections.observableList(clientesPorRfc));
                 }
 
-
-
-            }
-            case "estado" -> {
-            }
-            case "ciudad" -> {
-            }
-            case "domicilio" -> {
-            }
-            case "hobbie" -> {
-            }
-            case "rfc" -> {
-            }
-
-        }//switch
+            }//switch
 
     }//buscarCliente
+
+
+    public void buscarCliente(String busqueda){
+
+        List<Cliente> clientes = clienteService.buscadorClientes(ClienteStatus.ACTIVE.toString(),busqueda);
+        tablaClientes.setItems(FXCollections.observableList(clientes));
+
+
+    }//buscarCliente
+
+
 
 
 }//clase

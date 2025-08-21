@@ -196,5 +196,12 @@ public class VehiculoService implements IVehiculoService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<VehiculoDTO> buscadorVehiculo(String status, String busqueda) {
+        return vehiculoRepository.buscadorVehiculos(status,busqueda);
+    }
+
+
 
 }//clase

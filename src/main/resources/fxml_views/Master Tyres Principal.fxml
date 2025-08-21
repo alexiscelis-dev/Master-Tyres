@@ -120,13 +120,13 @@
                             <children>
                                 <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
-                                        <Image url="@../icons/add-line.png" />
+                                        <Image url="@../icons/box-3-fill.png" />
                                     </image>
                                     <HBox.margin>
                                         <Insets left="25.0" right="15.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <Label styleClass="menu-label" text="Inventario" textFill="WHITE">
+                                <Label styleClass="menu-label" text="Inventario Llantas" textFill="WHITE">
                                     <font>
                                         <Font size="14.0" />
                                     </font>
