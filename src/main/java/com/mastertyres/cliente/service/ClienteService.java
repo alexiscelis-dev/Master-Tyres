@@ -80,7 +80,8 @@ public class ClienteService implements IClienteService {
     }//eliminarCliente
 
 
-    public List<Cliente> buscarClientes(String filtro) {
+    @Transactional(readOnly = true)
+    public List<Cliente> buscarClientes( String filtro) {
         return clienteRepository.buscarClientes(filtro);
     }
 
@@ -126,7 +127,7 @@ public class ClienteService implements IClienteService {
 
 
     @Transactional(readOnly = true)
-    public List<Cliente> buscarClientePorNumTelefono(String active, Integer numTelefono) {
+    public List<Cliente> buscarClientePorNumTelefono(String active, String numTelefono) {
         List<Cliente> clientes = clienteRepository.buscarClientePorNumTelefono(active,numTelefono);
 
         if (clientes.isEmpty()) return clientes;
@@ -152,6 +153,177 @@ public class ClienteService implements IClienteService {
         return clientes;
 
     }//buscarClientePorNumTelefono
+
+
+    @Transactional(readOnly = true)
+    public List<Cliente> buscarClientePorEstado(String active, String estado) {
+        List<Cliente> clientes = clienteRepository.buscarClientePorEstado(active,estado);
+
+        if (clientes.isEmpty()) return clientes;
+
+        for (Cliente cliente : clientes) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorEstado
+
+    @Transactional(readOnly = true)
+    public List<Cliente> buscarClientePorCiudad(String active, String ciudad) {
+        List<Cliente> clientes = clienteRepository.buscarClientePorCiudad(active,ciudad);
+
+        if (clientes.isEmpty()) return clientes;
+
+        for (Cliente cliente : clientes) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorCiudad
+
+    @Transactional(readOnly = true)
+    public List<Cliente> buscarClientePorHobbie(String active, String hobbie) {
+        List<Cliente> clientes = clienteRepository.buscarClientePorHobbie(active,hobbie);
+
+        if (clientes.isEmpty()) return clientes;
+
+        for (Cliente cliente : clientes) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorHobbie
+
+    @Transactional(readOnly = true)
+    public List<Cliente> buscarClientePorDomicilio(String active, String domicilio) {
+        List<Cliente> clientes = clienteRepository.buscarClientePorDomicilio(active,domicilio);
+
+        if (clientes.isEmpty()) return clientes;
+
+        for (Cliente cliente : clientes) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorDomicilio
+
+    @Transactional(readOnly = true)
+    public List<Cliente> buscarClientePorRfc(String active, String rfc) {
+        List<Cliente> clientes = clienteRepository.buscarClientePorRfc(active,rfc);
+
+        if (clientes.isEmpty()) return clientes;
+
+        for (Cliente cliente : clientes) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorRfc
+
+
+    @Transactional(readOnly = true)
+    public List<Cliente> buscadorClientes(String status, String busqueda) {
+        List<Cliente> clientes = clienteRepository.buscadorClientes(status,busqueda);
+
+        if (clientes.isEmpty()) return clientes;
+
+        for (Cliente cliente : clientes) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscadorClientes
+
 
 
 

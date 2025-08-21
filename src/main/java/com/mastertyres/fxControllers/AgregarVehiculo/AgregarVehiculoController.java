@@ -3,14 +3,13 @@ package com.mastertyres.fxControllers.AgregarVehiculo;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.model.ClienteStatus;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
 import com.mastertyres.vehiculo.model.Vehiculo;
-import com.mastertyres.vehiculo.model.VehiculoStatus;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;
@@ -380,7 +379,7 @@ public class AgregarVehiculoController {
         );
 
         // Llenar tabla
-        List<Cliente> clientes = clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString());
+        List<Cliente> clientes = clienteService.listarClientesConVehiculos(ClienteStatus.ACTIVE.toString());
         tablaClientes.setItems(FXCollections.observableArrayList(clientes));
 
 
