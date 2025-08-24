@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocion">
+    <children>
+        <VBox layoutX="274.0" layoutY="147.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../styles_css/NuevaPromocion.css">
+            <children>
+                <HBox alignment="CENTER" prefHeight="33.0" prefWidth="460.0">
+                    <children>
+                        <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="272.0" styleClass="seccion-titulo" text="Nueva Promocion" textFill="WHITE" />
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox prefHeight="28.0" prefWidth="333.0">
+                    <children>
+                        <Label text="Nombre de la promocion" textFill="WHITE">
+                            <HBox.margin>
+                                <Insets left="40.0" right="88.0" />
+                            </HBox.margin>
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                        </Label>
+                    </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+                </HBox>
+                <HBox prefHeight="34.0" prefWidth="376.0">
+                    <children>
+                        <TextField fx:id="nombrePromocion" prefHeight="26.0" prefWidth="348.0" styleClass="buscador">
+                            <HBox.margin>
+                                <Insets left="40.0" right="50.0" />
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
+                </HBox>
+                <VBox prefHeight="115.0" prefWidth="432.0" spacing="6.0">
+                    <children>
+                        <Label text="Descripcion" textFill="WHITE">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <padding>
+                                <Insets left="40.0" />
+                            </padding>
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                        </Label>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="432.0">
+                            <children>
+                                <TextField fx:id="descripcion" prefHeight="45.0" prefWidth="348.0" styleClass="buscador" />
+                            </children>
+                        </HBox>
+                    </children>
+                    <padding>
+                        <Insets top="5.0" />
+                    </padding>
+                </VBox>
+
+                <HBox prefHeight="34.0" prefWidth="432.0">
+                    <children>
+                        <Label text="Tipo de descuento" textFill="WHITE">
+                            <padding>
+                                <Insets bottom="5.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets left="40.0" right="56.0" />
+                            </HBox.margin>
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                        </Label>
+                        <Label text="Monto descuento " textFill="WHITE">
+                            <HBox.margin>
+                                <Insets left="40.0" />
+                            </HBox.margin>
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                        </Label>
+                    </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+                </HBox>
+                <HBox prefHeight="40.0" prefWidth="432.0">
+                    <children>
+                        <ChoiceBox fx:id="tipoDescuento" prefWidth="150.0" styleClass="choicebox-mini2">
+                            <HBox.margin>
+                                <Insets left="40.0" right="38.0" />
+                            </HBox.margin>
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Porcentaje" />
+                                    <String fx:value="Precio Fijo" />
+                                    <String fx:value="2x1" />
+                                    <String fx:value="GRATIS" />
+                                    <String fx:value="OTRO" />
+                                </FXCollections>
+                            </items>
+
+
+                        </ChoiceBox>
+                        <TextField fx:id="montoDescuento" disable="true" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="15.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox prefHeight="44.0" prefWidth="393.0">
+                    <children>
+                        <VBox alignment="CENTER" prefHeight="44.0" prefWidth="392.0">
+                            <children>
+                                <Slider fx:id="porcentajeDescuento" disable="true" prefHeight="14.0" prefWidth="340.0">
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" />
+                                    </VBox.margin>
+                                    <padding>
+                                        <Insets left="40.0" />
+                                    </padding>
+                                </Slider>
+                                <Label fx:id="descuentoLabel" text="Descuento 0% " textFill="WHITE">
+                                    <VBox.margin>
+                                        <Insets left="30.0" />
+                                    </VBox.margin>
+                           <font>
+                              <Font name="Roboto Bold" size="12.0" />
+                           </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" />
+                    </VBox.margin>
+                </HBox>
+
+
+
+
+                <HBox prefHeight="26.0" prefWidth="432.0">
+                    <children>
+                        <Label prefHeight="18.0" prefWidth="212.0" text="Fecha de inicio" textFill="WHITE">
+                            <padding>
+                                <Insets left="40.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets right="25.0" />
+                            </HBox.margin>
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                        </Label>
+                        <Label prefHeight="18.0" prefWidth="120.0" text="Fecha fin" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font></Label>
+                    </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+                </HBox>
+                <HBox prefHeight="49.0" prefWidth="432.0">
+                    <children>
+                        <DatePicker fx:id="fechaInicio" disable="true" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
+                            <HBox.margin>
+                                <Insets right="35.0" />
+                            </HBox.margin>
+                        </DatePicker>
+                        <DatePicker fx:id="fechaFin" disable="true" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
+                    </children>
+                    <VBox.margin>
+                        <Insets left="40.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="78.0" prefWidth="432.0">
+                    <children>
+                        <Button fx:id="btnRegistrar" disable="true" mnemonicParsing="false" styleClass="boton-accion" text="Registrar">
+                            <HBox.margin>
+                                <Insets right="8.0" />
+                            </HBox.margin>
+                        </Button>
+                        <Button fx:id="btnCancelar" mnemonicParsing="false" styleClass="boton-accion" text="Cancelar" />
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
