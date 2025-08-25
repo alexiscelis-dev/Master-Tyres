@@ -42,6 +42,8 @@ public interface IVehiculoService {
 
     List<VehiculoDTO> buscarVehiculoPorRegistro(String activo, LocalDate fechaInicio, LocalDate fechaFin);
 
+    List<VehiculoDTO> buscadorVehiculo(String status, String busqueda);
+
 
 }//interface
 
