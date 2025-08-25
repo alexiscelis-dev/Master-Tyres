@@ -77,7 +77,7 @@
                                 <TableColumn fx:id="colKilometros" text="Kilometros" />
                                 <TableColumn fx:id="colultimoServicio" text="Ultimo Servicio" />
                                 <TableColumn fx:id="colObservaciones" text="Observaciones" />
-                                <TableColumn fx:id="colEliminar" text="Acción" />
+                                <TableColumn fx:id="colEliminar" text="Acción" style="-fx-alignment: CENTER;"/>
                             </columns>
                         </TableView>
 
