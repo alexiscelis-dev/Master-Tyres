@@ -20,10 +20,11 @@
                <TextField fx:id="buscarVehiculoBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                  <Label text="Buscar por: " />
+                  <Label fx:id="choiceBoxLabel" text="Buscar por: " />
                   <ChoiceBox fx:id="atributoBusquedaVehiculos" prefWidth="150.0" styleClass="choicebox-mini2">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
+
                            <String fx:value="Propietario" />
                            <String fx:value="Marca" />
                            <String fx:value="Modelo" />

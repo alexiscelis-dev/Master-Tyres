@@ -49,13 +49,36 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     List<Cliente> buscarClientePorNombre(@Param("active")String active, @Param("nombre")String nombre);
 
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.numTelefono = :numTelefono")
-    List<Cliente> buscarClientePorNumTelefono(@Param("active")String active, @Param("numTelefono")Integer numTelefono);
+    List<Cliente> buscarClientePorNumTelefono(@Param("active")String active, @Param("numTelefono")String numTelefono);
 
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.numTelefono = :numTelefono")
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :estado , '%'))")
     List<Cliente> buscarClientePorEstado(@Param("active")String active, @Param("estado")String estado);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :ciudad , '%'))")
+    List<Cliente> buscarClientePorCiudad(@Param("active")String active, @Param("ciudad")String ciudad);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :domicilio , '%'))")
+    List<Cliente> buscarClientePorDomicilio(@Param("active")String active, @Param("domicilio")String domicilio);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.hobbie, '')) LIKE LOWER (CONCAT('%', :hobbie , '%'))")
+    List<Cliente> buscarClientePorHobbie(@Param("active")String active, @Param("hobbie")String hobbie);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
+    List<Cliente> buscarClientePorRfc(@Param("active")String active, @Param("rfc")String rfc);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :status AND " +
+            "(LOWER (COALESCE(c.nombre, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.apellido, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.segundoApellido, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.hobbie, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.numTelefono, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
+            "(LOWER (COALESCE(c.tipoCliente, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) ")
+
+    List<Cliente>buscadorClientes(@Param("status")String status,@Param("busqueda") String busqueda);
 
 
 

@@ -20,7 +20,7 @@
                <TextField fx:id="buscarClienteBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar cliente..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                  <Label text="Buscar por:" />
+                  <Label fx:id="choiceBoxLabel" text="Buscar por:" />
                   <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="choicebox-mini2">
                   <items>
                         <FXCollections fx:factory="observableArrayList">
