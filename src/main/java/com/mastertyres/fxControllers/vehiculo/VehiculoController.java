@@ -363,7 +363,7 @@ public class VehiculoController {
             String nombre = data.getValue().getNombreCliente() != null ? data.getValue().getNombreCliente() : "";
             String apellido = data.getValue().getApellido() != null ? data.getValue().getApellido() : "";
             String segundoApellido = data.getValue().getSegundoApellido() != null ? data.getValue().getSegundoApellido() : "";
-            String propietario = nombre + " " + " " + apellido + " " + segundoApellido;
+            String propietario = nombre + " "  + apellido + " " + segundoApellido;
 
             return new SimpleStringProperty(propietario);
         });

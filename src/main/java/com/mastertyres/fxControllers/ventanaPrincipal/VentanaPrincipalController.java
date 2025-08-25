@@ -79,8 +79,10 @@ public class VentanaPrincipalController {
                 }
         );
         HBoxPromociones.setOnMouseClicked(event -> {
-            viewContent(event,"/fxml_views/NuevaPromocion.fxml","Nuevas Promociones");
-        });
+                    viewContent(event, "/fxml_views/PromocionesActivas.fxml", "Promociones");
+                    cambiarPaginaEtiqueta.setText("Promociones");
+                }
+        );
         LogoPrincipal.setOnMouseClicked(event -> {
             regresarInicio("/fxml_views/RegresarMenu.fxml");
             cambiarPaginaEtiqueta.setText("Inicio");

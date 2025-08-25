@@ -18,6 +18,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,8 @@ import java.time.Year;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class AgregarClienteController {
@@ -136,15 +140,33 @@ public class AgregarClienteController {
         colKilometros.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getKilometros())));
         colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
         colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
-
         // Botón eliminar
         colEliminar.setCellFactory(col -> new TableCell<>() {
-            private final Button btn = new Button("Eliminar");
+            private final Button btn = new Button();
 
             {
+                // Quitar texto y agregar imagen
+                Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
+                ImageView iv = new ImageView(img);
+                iv.setFitWidth(18);   // tamaño icono
+                iv.setFitHeight(18);
+                btn.setGraphic(iv);
+
                 btn.setOnAction(e -> {
                     Vehiculo v = getTableView().getItems().get(getIndex());
                     listaVehiculos.remove(v);
+                });
+
+                // (opcional) estilo para que sea redondo o plano
+                btn.setStyle("-fx-background-color: white;");
+
+                btn.hoverProperty().addListener((obs, wasHovered, isNowHovered) -> {
+                    if (isNowHovered) {
+                        btn.setStyle("-fx-scale-x: 1.1;\n" +
+                                "    -fx-scale-y: 1.1;");
+                    } else {
+                        btn.setStyle("-fx-background-color: white;");
+                    }
                 });
             }
 
@@ -154,6 +176,7 @@ public class AgregarClienteController {
                 setGraphic(empty ? null : btn);
             }
         });
+
     }
 
     private void configurarValidaciones() {
@@ -360,8 +383,6 @@ public class AgregarClienteController {
         return resultado.toString().trim();
     }
 
-
-
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
@@ -496,7 +517,7 @@ public class AgregarClienteController {
     private void GuardarCliente(ActionEvent event) {
 
         if (!rfcValido.get() ||  !telefonoValido.get() ) {
-            mostrarAlerta("Error en campos", "Por favor, corrige los campos marcados en rojo antes de guardar.");
+            mostrarError("Error en campos", "","Por favor, corrige los campos marcados en rojo antes de guardar.");
             return;
         }
 
@@ -504,7 +525,7 @@ public class AgregarClienteController {
         String rfc = txtRFC.getText();
         if (rfc != null && !rfc.isBlank()) {
             if (clienteService.existeClientePorRFC(rfc)) {
-                mostrarAlerta("RFC duplicado", "Ya existe un cliente activo con este RFC.");
+                mostrarWarning("RFC duplicado","", "Ya existe un cliente activo con este RFC.");
                 return;
             }
         }
@@ -516,15 +537,15 @@ public class AgregarClienteController {
 
             if (placas != null && !placas.isBlank()){
                 if (vehiculoService.existeVehiculoPorPlacas(placas)){
-                    mostrarAlerta( "Vehículo duplicado",
+                    mostrarWarning( "Vehículo duplicado","",
                             "Ya existe un vehículo activo con las mismas placas.");
                     return;
                 }
             }
 
-            if (numSerie != null && !placas.isBlank()){
-                if (vehiculoService.existeVehiculoPorNumeroSerie(placas)){
-                    mostrarAlerta( "Vehículo duplicado",
+            if (numSerie != null && !numSerie.isBlank()){
+                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)){
+                    mostrarWarning( "Vehículo duplicado","",
                             "Ya existe un vehículo activo con el mismo numero de serie.");
                     return;
                 }
@@ -538,7 +559,7 @@ public class AgregarClienteController {
             String numSerie = v.getNumSerie() != null ? v.getNumSerie() : "";
             String key = placas + "|" + numSerie;
             if (!placasSerieSet.add(key)) {
-                mostrarAlerta("Vehículos repetidos",
+                mostrarWarning("Vehículos repetidos","",
                         "Hay vehículos repetidos en la lista antes de guardar. Revíselos.");
                 return;
             }
@@ -582,16 +603,23 @@ public class AgregarClienteController {
         }
         cliente.setVehiculos(listaVehiculos);
 
-        // Guardar usando el servicio
-        clienteService.guardarCliente(cliente);
+        try{
+            // Guardar usando el servicio
+            clienteService.guardarCliente(cliente);
 
-        // Limpiar formulario
-        limpiarCamposVehiculo();
-        LimpiarCamposClientes();
-        listaVehiculos.clear();
+            // Limpiar formulario
+            limpiarCamposVehiculo();
+            LimpiarCamposClientes();
+            listaVehiculos.clear();
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Cliente guardado con éxito", ButtonType.OK);
-        alert.showAndWait();
+            mostrarInformacion("Cliente guardado con éxito","", "El cliente guardado con éxito");
+        }catch (Exception e){
+            mostrarError("Error","Cliente NO guardado", "El cliente NO pudo ser guardado");
+        }
+
+
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Cliente guardado con éxito", ButtonType.OK);
+//        alert.showAndWait();
     }
 
 }
