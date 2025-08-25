@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
@@ -73,10 +74,12 @@ public class VehiculoController {
     private ChoiceBox<String> atributoBusquedaVehiculos;
     @FXML
     private Label statusLabel;
+    @FXML
+    private Label choiceBoxLabel;
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
-                                                                                        //presiona una tecla hace un delay
+    //presiona una tecla hace un delay
     private VentanaPrincipalController ventanaPrincipalController;
 
 
@@ -298,44 +301,40 @@ public class VehiculoController {
         //Enter buscar
         buscarVehiculoBuscador.setOnKeyPressed(event -> {
 
-            String seleccion = atributoBusquedaVehiculos.getValue(), busqueda = buscarVehiculoBuscador.getText();
+            if (event.getCode() == KeyCode.ENTER){
+                String seleccion = atributoBusquedaVehiculos.getValue(), busqueda = buscarVehiculoBuscador.getText();
 
-
-            if (event.getCode() == KeyCode.ENTER)
-
-                if (seleccion == null || seleccion.isEmpty() || busqueda == null || busqueda.isEmpty()) {
-
-                    mostrarWarning("Campos vacios", "", "Favor de llenar los campos correspondientes");
-
-
-                    buscarVehiculoBuscador.setText("");
-                    atributoBusquedaVehiculos.setValue("");
-                } else {
-                    seleccion = seleccion.toLowerCase();
-
-                    buscarVehiculo(true, seleccion, busqueda);
-
+                if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty()) {
+                    buscarVehiculo(seleccion.toLowerCase(),busqueda);
                 }
-
-
+            }
         });
-
 
 
         //Buscar mientras escribes
         buscarVehiculoBuscador.setOnKeyReleased(event -> {
 
-            delayQuery.setOnFinished( e->{
+           if (event.getCode() != KeyCode.ENTER)
+               delayQuery.setOnFinished(e -> {
+                   String seleccion = atributoBusquedaVehiculos.getValue();
+                   String busqueda = buscarVehiculoBuscador.getText();
 
-                String seleccion = atributoBusquedaVehiculos.getValue(), busqueda = buscarVehiculoBuscador.getText();
+                   if (seleccion == null && busqueda != null && !busqueda.isEmpty())
+                       buscarVehiculo(busqueda);
+                   else if (seleccion == null)
+                       cargarVehiculos();
+               });
+           delayQuery.playFromStart();
+        });
 
-                if (seleccion != null && !(seleccion.isEmpty()))
-                    buscarVehiculo(false, seleccion.toLowerCase(), busqueda);
-                else
-                    cargarVehiculos();
+        //pone en null la lista de ChoiceBox
+        choiceBoxLabel.setOnMouseClicked(event -> {
 
-            });
-            delayQuery.playFromStart();
+            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2 )
+                atributoBusquedaVehiculos.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
+
+
+
         });
 
 
@@ -459,21 +458,14 @@ public class VehiculoController {
 
     }//cargarDatosVehiculo
 
-    private void buscarVehiculo(boolean enter, String seleccion, String busqueda) { // porque se va a buscar, vehiculo a buscar
-
-        //enter es la variable que dice si la busqueda fue hecha por presionar enter o por escritura
-        // en la condicion else se le quita la busqueda por anio, y las fechas que necesitan formatos especificos
-        // para no causar errores
-
-        if (enter) {
-
+    private void buscarVehiculo(String seleccion, String busqueda) { // porque se va a buscar, vehiculo a buscar
 
             switch (seleccion) {
 
                 case "propietario" -> {
                     String nombre = busqueda;
 
-                    List<VehiculoDTO> vehiculoPorNombre = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(),nombre);
+                    List<VehiculoDTO> vehiculoPorNombre = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(), nombre);
                     tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNombre));
 
                 }
@@ -688,7 +680,7 @@ public class VehiculoController {
 
                     } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
 
-                        String[] fecha =  busqueda.split(",");
+                        String[] fecha = busqueda.split(",");
                         String consultaInicio = "", consultaFinal = "";
 
 
@@ -735,85 +727,20 @@ public class VehiculoController {
                     mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
 
                 }
-
-
             }//switch
-
-        } else { // busqueda por escritura (sin precionar enter)
-
-
-            switch (seleccion) {
-
-                case "propietario" -> {
-                    String nombre = busqueda;
-
-                    List<VehiculoDTO> vehiculoPorNombre = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(),nombre);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNombre));
-
-                }
-                case "marca" -> {
-
-                    List<VehiculoDTO> vehiculosPorMarca = vehiculoService.buscarVehiculoPorMarca(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorMarca));
-
-                }
-                case "modelo" -> {
-
-                    List<VehiculoDTO> vehiculoPorModelo = vehiculoService.buscarVehiculoPorModelo(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorModelo));
-
-                }
-                case "categoria" -> {
-
-                    List<VehiculoDTO> vehiculoPorCategoria = vehiculoService.buscarVehiculoPorCategoria(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorCategoria));
-
-                }
-                case "color" -> {
-
-                    List<VehiculoDTO> vehiculoPorColor = vehiculoService.buscarVehiculoPorColor(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorColor));
-
-                }
-
-                case "placas" -> {
-
-                    String placas = busqueda;
-                    placas.toUpperCase();
-                    List<VehiculoDTO> vehicululoPorPlacas = vehiculoService.buscarVehiculoPorPlacas(VehiculoStatus.ACTIVE.toString(), placas);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehicululoPorPlacas));
-
-                }
-                case "numero serie" -> {
-                    busqueda.toUpperCase();
-
-                    List<VehiculoDTO> vehiculoPorNumSerie = vehiculoService.buscarVehiculoPorNumSerie(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNumSerie));
-
-
-                }
-                case "año", "kilometraje", "ultimo servicio", "fecha registro" -> {
-
-                }
-
-
-                default -> {
-                    mostrarError("Informacion no valida", "Asegurese de buscar por el campo correspondiente.", "");
-
-                }
-
-
-            }//switch
-
-
-        }//if-else enter
-
 
     }//buscarVehiculo
+
+
+    public void buscarVehiculo(String busqueda) {
+        List<VehiculoDTO> vehiculos = vehiculoService.buscadorVehiculo(VehiculoStatus.ACTIVE.toString(),busqueda);
+        tablaVehiculos.setItems(FXCollections.observableList(vehiculos));
+
+    }
+
 
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }//setVentanaPrincipalController
 
-
-}//clase
+ }//clase
