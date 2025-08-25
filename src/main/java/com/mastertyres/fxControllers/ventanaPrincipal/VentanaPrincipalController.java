@@ -41,6 +41,8 @@ public class VentanaPrincipalController {
     @FXML
     private HBox HBoxClientes;
     @FXML
+    private HBox HBoxPromociones;
+    @FXML
     private Pane panelMenu;
     @FXML
     private ImageView LogoPrincipal;
@@ -74,6 +76,11 @@ public class VentanaPrincipalController {
         HBoxClientes.setOnMouseClicked(event -> {
                     viewContent(event, "/fxml_views/Cliente.fxml", "Clientes");
                     cambiarPaginaEtiqueta.setText("Clientes");
+                }
+        );
+        HBoxPromociones.setOnMouseClicked(event -> {
+                    viewContent(event, "/fxml_views/PromocionesActivas.fxml", "Promociones");
+                    cambiarPaginaEtiqueta.setText("Promociones");
                 }
         );
         LogoPrincipal.setOnMouseClicked(event -> {

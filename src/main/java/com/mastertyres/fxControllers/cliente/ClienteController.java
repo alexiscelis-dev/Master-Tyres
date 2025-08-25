@@ -470,6 +470,7 @@ public class ClienteController {
     public void buscarCliente(String busqueda){
 
         List<Cliente> clientes = clienteService.buscadorClientes(ClienteStatus.ACTIVE.toString(),busqueda);
+
         tablaClientes.setItems(FXCollections.observableList(clientes));
 
 
