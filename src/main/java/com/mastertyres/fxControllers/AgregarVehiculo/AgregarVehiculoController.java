@@ -13,6 +13,7 @@ import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoStatus;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
+import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,13 +23,19 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 import static com.mastertyres.common.MensajesAlert.mostrarWarning;
@@ -97,7 +104,6 @@ public class AgregarVehiculoController {
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
     @FXML private Button btnBuscarCliente;
 
-
     private BooleanProperty serieValido = new SimpleBooleanProperty(true);
     private BooleanProperty placasValido = new SimpleBooleanProperty(true);
     private BooleanProperty kilometrosValido = new SimpleBooleanProperty(true);
@@ -136,13 +142,33 @@ public class AgregarVehiculoController {
         colKilometros.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getKilometros())));
         colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
         colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
+        // Botón eliminar
         colEliminar.setCellFactory(col -> new TableCell<>() {
-            private final Button btn = new Button("Eliminar");
+            private final Button btn = new Button();
 
             {
+                // Quitar texto y agregar imagen
+                Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
+                ImageView iv = new ImageView(img);
+                iv.setFitWidth(18);   // tamaño icono
+                iv.setFitHeight(18);
+                btn.setGraphic(iv);
+
                 btn.setOnAction(e -> {
                     Vehiculo v = getTableView().getItems().get(getIndex());
                     listaVehiculos.remove(v);
+                });
+
+                // (opcional) estilo para que sea redondo o plano
+                btn.setStyle("-fx-background-color: white;");
+
+                btn.hoverProperty().addListener((obs, wasHovered, isNowHovered) -> {
+                    if (isNowHovered) {
+                        btn.setStyle("-fx-scale-x: 1.1;\n" +
+                                "    -fx-scale-y: 1.1;");
+                    } else {
+                        btn.setStyle("-fx-background-color: white;");
+                    }
                 });
             }
 
@@ -168,12 +194,13 @@ public class AgregarVehiculoController {
             }
         });
 
+
+
     }
 
     private void configurarValidaciones() {
 
-
-// Placas
+        // Placas
         txtPlacas.textProperty().addListener((obs, oldText, newText) -> {
             String texto = newText.toUpperCase();
             txtPlacas.setText(texto);
@@ -190,7 +217,7 @@ public class AgregarVehiculoController {
         });
 
 
-// Número de serie (VIN)
+        // Número de serie (VIN)
         txtSerie.textProperty().addListener((obs, oldText, newText) -> {
             String texto = newText.toUpperCase();
             txtSerie.setText(texto);
@@ -252,7 +279,8 @@ public class AgregarVehiculoController {
                         .or(placasValido.not())
                         .or(kilometrosValido.not())
         );
-         //Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
+
+        //Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
         btnGuardar.disableProperty().bind(
                 Bindings.isEmpty(listaVehiculos)
                         .or(tablaClientes.getSelectionModel().selectedItemProperty().isNull())
@@ -379,39 +407,56 @@ public class AgregarVehiculoController {
                 new SimpleStringProperty(cellData.getValue().getNumTelefono())
         );
 
+
+
+        txtBuscarCliente.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                buscarCliente();
+            }
+        });
+
+        PauseTransition pause = new PauseTransition(Duration.millis(400));
+
+        txtBuscarCliente.textProperty().addListener((obs, oldValue, newValue) -> {
+            pause.setOnFinished(e -> buscarCliente());
+            pause.playFromStart();
+        });
+
+        //  Listener del botón buscar
+        btnBuscarCliente.setOnAction(e -> {
+            buscarCliente();
+        });
+    }
+
+    private void buscarCliente(){
         // Llenar tabla
         List<Cliente> clientes = clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString());
-        tablaClientes.setItems(FXCollections.observableArrayList(clientes));
+        //tablaClientes.setItems(FXCollections.observableArrayList(clientes));
 
 
         ObservableList<Cliente> listaClientesOriginal = FXCollections.observableArrayList(clientes);
+        String filtro = txtBuscarCliente.getText().trim().toLowerCase();
 
-
-        // 🔹 Listener del botón buscar
-        btnBuscarCliente.setOnAction(e -> {
-            String filtro = txtBuscarCliente.getText().trim().toLowerCase();
-
-            if (filtro.isEmpty()) {
-                tablaClientes.setItems(listaClientesOriginal);
-            } else {
-                ObservableList<Cliente> filtrados = listaClientesOriginal.filtered(cliente ->
-                        (cliente.getNombre() != null && cliente.getNombre().toLowerCase().contains(filtro)) ||
-                                (cliente.getApellido() != null && cliente.getApellido().toLowerCase().contains(filtro)) ||
-                                (cliente.getSegundoApellido() != null && cliente.getSegundoApellido().toLowerCase().contains(filtro)) ||
-                                (cliente.getRfc() != null && cliente.getRfc().toLowerCase().contains(filtro)) ||
-                                (cliente.getNumTelefono() != null && cliente.getNumTelefono().toLowerCase().contains(filtro)) ||
-                                (cliente.getTipoCliente() != null && cliente.getTipoCliente().toLowerCase().contains(filtro)) ||
-                                (cliente.getCiudad() != null && cliente.getCiudad().toLowerCase().contains(filtro)) ||
-                                (cliente.getEstado() != null && cliente.getEstado().toLowerCase().contains(filtro)) ||
-                                (cliente.getHobbie() != null && cliente.getHobbie().toLowerCase().contains(filtro)) ||
-                                (cliente.getDomicilio() != null && cliente.getDomicilio().toLowerCase().contains(filtro)) ||
-                                (cliente.getCreated_at() != null && cliente.getCreated_at().toLowerCase().contains(filtro)) ||
-                                (cliente.getUpdated_at() != null && cliente.getUpdated_at().toLowerCase().contains(filtro)) ||
-                                (cliente.getFechaCumple() != null && cliente.getFechaCumple().toLowerCase().contains(filtro))
-                );
-                tablaClientes.setItems(filtrados);
-            }
-        });
+        if (filtro.isEmpty()) {
+            tablaClientes.setItems(listaClientesOriginal);
+        } else {
+            ObservableList<Cliente> filtrados = listaClientesOriginal.filtered(cliente ->
+                    (cliente.getNombre() != null && cliente.getNombre().toLowerCase().contains(filtro)) ||
+                            (cliente.getApellido() != null && cliente.getApellido().toLowerCase().contains(filtro)) ||
+                            (cliente.getSegundoApellido() != null && cliente.getSegundoApellido().toLowerCase().contains(filtro)) ||
+                            (cliente.getRfc() != null && cliente.getRfc().toLowerCase().contains(filtro)) ||
+                            (cliente.getNumTelefono() != null && cliente.getNumTelefono().toLowerCase().contains(filtro)) ||
+                            (cliente.getTipoCliente() != null && cliente.getTipoCliente().toLowerCase().contains(filtro)) ||
+                            (cliente.getCiudad() != null && cliente.getCiudad().toLowerCase().contains(filtro)) ||
+                            (cliente.getEstado() != null && cliente.getEstado().toLowerCase().contains(filtro)) ||
+                            (cliente.getHobbie() != null && cliente.getHobbie().toLowerCase().contains(filtro)) ||
+                            (cliente.getDomicilio() != null && cliente.getDomicilio().toLowerCase().contains(filtro)) ||
+                            (cliente.getCreated_at() != null && cliente.getCreated_at().toLowerCase().contains(filtro)) ||
+                            (cliente.getUpdated_at() != null && cliente.getUpdated_at().toLowerCase().contains(filtro)) ||
+                            (cliente.getFechaCumple() != null && cliente.getFechaCumple().toLowerCase().contains(filtro))
+            );
+            tablaClientes.setItems(filtrados);
+        }
     }
 
     private void limpiarCamposVehiculo() {
@@ -436,15 +481,15 @@ public class AgregarVehiculoController {
 
             if (placas != null && !placas.isBlank()){
                 if (vehiculoService.existeVehiculoPorPlacas(placas)){
-                    mostrarAlerta(Alert.AlertType.WARNING, "Vehículo duplicado",
+                    mostrarWarning( "Vehículo duplicado","",
                             "Ya existe un vehículo activo con las mismas placas.");
                     return;
                 }
             }
 
-            if (numSerie != null && !placas.isBlank()){
-                if (vehiculoService.existeVehiculoPorNumeroSerie(placas)){
-                    mostrarAlerta(Alert.AlertType.WARNING, "Vehículo duplicado",
+            if (numSerie != null && !numSerie.isBlank()){
+                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)){
+                    mostrarWarning("Vehículo duplicado","",
                             "Ya existe un vehículo activo con el mismo numero de serie.");
                     return;
                 }
@@ -463,6 +508,19 @@ public class AgregarVehiculoController {
             return;
         }
 
+        // Validar que no haya duplicados en la lista antes de guardar
+        Set<String> placasSerieSet = new HashSet<>();
+        for (Vehiculo v : listaVehiculos) {
+            String placas = v.getPlacas() != null ? v.getPlacas() : "";
+            String numSerie = v.getNumSerie() != null ? v.getNumSerie() : "";
+            String key = placas + "|" + numSerie;
+            if (!placasSerieSet.add(key)) {
+                mostrarWarning("Vehículos repetidos","",
+                        "Hay vehículos con placas o numero de serie repetidos en la lista. ");
+                return;
+            }
+        }
+
         try {
             vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
 
@@ -474,15 +532,6 @@ public class AgregarVehiculoController {
             mostrarWarning("Error","","No se pudieron guardar los vehículos");
 
         }
-    }
-
-    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
-        mostrarError(titulo,tipo.toString(),mensaje);
-//        Alert alerta = new Alert(tipo);
-//        alerta.setTitle(titulo);
-//        alerta.setHeaderText(null);
-//        alerta.setContentText(mensaje);
-//        alerta.showAndWait();
     }
 
 }

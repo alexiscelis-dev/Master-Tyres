@@ -76,7 +76,7 @@
                                 <Insets bottom="-30.0" top="-10.0" />
                             </VBox.margin>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                        <HBox  prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
                                 <ImageView fx:id="iconoPromociones" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
@@ -96,7 +96,7 @@
                                 <Insets bottom="-10.0" top="-30.0" />
                             </VBox.margin>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                        <HBox fx:id="HBoxPromociones" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
                                 <ImageView fx:id="iconoCrearPromociones" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
