@@ -26,7 +26,7 @@
                                 <Insets left="40.0" right="88.0" />
                             </HBox.margin>
                      <font>
-                        <Font name="Roboto Bold" size="12.0" />
+                        <Font name="System Bold" size="12.0" />
                      </font>
                         </Label>
                     </children>
@@ -56,7 +56,7 @@
                                 <Insets left="40.0" />
                             </padding>
                      <font>
-                        <Font name="Roboto Bold" size="12.0" />
+                        <Font name="System Bold" size="12.0" />
                      </font>
                         </Label>
                         <HBox alignment="CENTER" prefHeight="67.0" prefWidth="432.0">
@@ -73,23 +73,23 @@
                 <HBox prefHeight="34.0" prefWidth="432.0">
                     <children>
                         <Label text="Tipo de descuento" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
                             <padding>
                                 <Insets bottom="5.0" />
                             </padding>
                             <HBox.margin>
                                 <Insets left="40.0" right="56.0" />
                             </HBox.margin>
-                     <font>
-                        <Font name="Roboto Bold" size="12.0" />
-                     </font>
                         </Label>
-                        <Label text="Monto descuento " textFill="WHITE">
+                        <Label text="Precio sin descuento" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
                             <HBox.margin>
                                 <Insets left="40.0" />
                             </HBox.margin>
-                     <font>
-                        <Font name="Roboto Bold" size="12.0" />
-                     </font>
                         </Label>
                     </children>
                <VBox.margin>
@@ -105,16 +105,13 @@
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="Porcentaje" />
-                                    <String fx:value="Precio Fijo" />
-                                    <String fx:value="2x1" />
-                                    <String fx:value="GRATIS" />
                                     <String fx:value="OTRO" />
                                 </FXCollections>
                             </items>
 
 
                         </ChoiceBox>
-                        <TextField fx:id="montoDescuento" disable="true" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
+                        <TextField fx:id="precioSinDescuento" disable="true" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -140,12 +137,12 @@
                                     </padding>
                                 </Slider>
                                 <Label fx:id="descuentoLabel" text="Descuento 0% " textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
                                     <VBox.margin>
                                         <Insets left="30.0" />
                                     </VBox.margin>
-                           <font>
-                              <Font name="Roboto Bold" size="12.0" />
-                           </font>
                                 </Label>
                             </children>
                         </VBox>
@@ -161,20 +158,23 @@
                 <HBox prefHeight="26.0" prefWidth="432.0">
                     <children>
                         <Label prefHeight="18.0" prefWidth="212.0" text="Fecha de inicio" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
                             <padding>
                                 <Insets left="40.0" />
                             </padding>
                             <HBox.margin>
                                 <Insets right="25.0" />
                             </HBox.margin>
-                     <font>
-                        <Font name="Roboto Bold" size="12.0" />
-                     </font>
                         </Label>
+
                         <Label prefHeight="18.0" prefWidth="120.0" text="Fecha fin" textFill="WHITE">
                      <font>
-                        <Font name="Roboto Bold" size="12.0" />
+                        <Font name="System Bold" size="12.0" />
                      </font></Label>
+
+
                     </children>
                <VBox.margin>
                   <Insets bottom="5.0" />
@@ -186,7 +186,7 @@
                 </HBox>
 
 
-                <HBox prefHeight="49.0" prefWidth="432.0">
+                <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../styles_css/ClientesStyles.css">
                     <children>
                         <DatePicker fx:id="fechaInicio" disable="true" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
                             <HBox.margin>
@@ -237,9 +237,9 @@
 
                          <!-- Columna para el nombre completo -->
                          <columns>
-                             <TableColumn fx:id="colNombreCompleto" prefWidth="300.0" text="Cliente" />
-                             <TableColumn fx:id="colTipoCliente" prefWidth="100.0" text="Tipo" />
-                             <TableColumn fx:id="colRfc" prefWidth="150.0" text="RFC" />
+                             <TableColumn fx:id="colNombreCompleto" prefWidth="241.0" text="Marca" />
+                             <TableColumn fx:id="colTipoCliente" prefWidth="159.0" text="Modelo" />
+                             <TableColumn fx:id="colRfc" prefWidth="150.0" text="Año" />
                              <TableColumn fx:id="colTelefono" prefWidth="150.0" text="Teléfono" />
                          </columns>
                      </TableView>
@@ -260,8 +260,8 @@
                      </VBox.margin></Label>
                   <TableView prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
+                      <TableColumn prefWidth="75.0" text="Nombre" />
+                      <TableColumn prefWidth="75.0" text="Descripcion" />
                     </columns>
                   </TableView>
                </children>

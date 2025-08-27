@@ -11,7 +11,7 @@ public class NuevaPromocion {
     @FXML
     private Label descuentoLabel;
     @FXML
-    private TextField montoDescuento;
+    private TextField precioSinDescuento;
     @FXML
     private DatePicker fechaInicio;
     @FXML
@@ -51,7 +51,7 @@ public class NuevaPromocion {
     private void limpiar(){
         nombrePromocion.setText("");
         descripcion.setText("");
-        montoDescuento.setText("");
+        precioSinDescuento.setText("");
         porcentajeDescuento.setValue(0);
         descuentoLabel.setText("Descuento 0%");
         fechaInicio.setValue(null);
@@ -83,7 +83,7 @@ public class NuevaPromocion {
 
             case "porcentaje" -> {
             limpiar();
-            montoDescuento.setDisable(false);
+            precioSinDescuento.setDisable(false);
             porcentajeDescuento.setDisable(false);
             fechaInicio.setDisable(false);
             fechaFin.setDisable(false);
@@ -91,7 +91,7 @@ public class NuevaPromocion {
             }
             case "precio fijo" -> {
                 limpiar();
-                montoDescuento.setDisable(false);
+                precioSinDescuento.setDisable(false);
                 porcentajeDescuento.setDisable(true);
                 fechaInicio.setDisable(false);
                 fechaFin.setDisable(false);
@@ -99,7 +99,7 @@ public class NuevaPromocion {
             }
             case "2x1" -> {
                 limpiar();
-                montoDescuento.setDisable(true);
+                precioSinDescuento.setDisable(true);
                 porcentajeDescuento.setDisable(true);
                 fechaInicio.setDisable(false);
                 fechaFin.setDisable(false);
@@ -109,7 +109,7 @@ public class NuevaPromocion {
             case "gratis" -> {
                 limpiar();
                 porcentajeDescuento.setDisable(true);
-                montoDescuento.setDisable(true);
+                precioSinDescuento.setDisable(true);
                 fechaInicio.setDisable(false);
                 fechaFin.setDisable(false);
                 descuentoLabel.setText("Descuento 100%");
@@ -118,7 +118,7 @@ public class NuevaPromocion {
             }
             case "otro" -> {
                 limpiar();
-                montoDescuento.setDisable(false);
+                precioSinDescuento.setDisable(false);
                 porcentajeDescuento.setDisable(false);
                 fechaInicio.setDisable(false);
                 fechaFin.setDisable(false);
