@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.NavigatorManager;
+import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController;
 import com.mastertyres.fxControllers.cliente.ClienteController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
@@ -132,7 +133,9 @@ public class VentanaPrincipalController {
             Object controller = loader.getController();
 
 
-
+            if (controller instanceof PromocionesActivasController) {
+                ((PromocionesActivasController) controller).setVentanaPrincipalController(this);
+            }
 
             if (controller instanceof ClienteController) {
                 ((ClienteController) controller).setVentanaPrincipalController(this);
