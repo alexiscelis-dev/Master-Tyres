@@ -1,0 +1,267 @@
+
+.formulario{
+-fx-background-color: #2A2A2A;
+-fx-background-radius: 20px;
+-fx-padding: 20px;
+-fx-background-color: rgba(26, 26, 26, 0.85);
+
+}
+
+/* Estilo para un ChoiceBox más pequeño y oscuro */
+.choicebox-mini2 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 157px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable más compacto */
+.choicebox-mini2 .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 130px;
+    -fx-pref-height: 170px;
+}
+
+/* Ítems del menú */
+.choicebox-mini2 .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #F2F2F2;
+}
+
+.choice-box .menu-item {
+    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
+    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
+    -fx-pref-height: 30px; /* altura preferida para la celda */
+}
+
+
+/* Hover en ítems */
+.choicebox-mini2 .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+.choicebox-mini .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+
+.buscador {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+}
+
+.buscador:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+.buscador-textarea {
+    -fx-control-inner-background: #2A2A2A; /* Fondo interno donde se escribe */
+    -fx-background-color: #2A2A2A;        /* Fondo del contenedor */
+    -fx-text-fill: white;                  /* Color del texto */
+    -fx-prompt-text-fill: #BBBBBB;        /* Color del placeholder */
+    -fx-border-color: #444;               /* Color del borde */
+    -fx-border-radius: 5;                 /* Bordes redondeados */
+    -fx-background-radius: 5;             /* Bordes del fondo redondeados */
+    -fx-padding: 6 10;                    /* Espaciado interno */
+}
+
+.boton-accion {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.boton-accion:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-background-color: #AEE83A;
+}
+
+
+/*
+DatePicker
+*/
+
+
+.date-picker {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-font-size: 13px;
+}
+
+.date-picker:focused {
+    -fx-border-color: #8EB83D;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: #8EB83D;
+}
+
+.date-picker .calendar-popup {
+    -fx-background-color: #1A1A1A;
+    -fx-border-color: #8EB83D;
+}
+
+.date-picker .calendar-popup .month-year-pane,
+.date-picker .calendar-popup .day-cell {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell:hover {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .calendar-popup .selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .text-field {
+    -fx-text-fill: #F2F2F2;
+    -fx-background-color: transparent;
+    -fx-prompt-text-fill: #BBBBBB;
+}
+
+.date-picker .calendar-popup {
+    -fx-background-color: #000000;
+    -fx-border-color: #99CC33;
+}
+
+.date-picker .calendar-popup .month-year-pane {
+    -fx-background-color: #000000;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell {
+    -fx-background-color: #000000;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell:hover {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .calendar-popup .selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+
+
+/*
+SpinnerAnnio
+*/
+
+.spinner {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: #F2F2F2;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 13px;
+    -fx-padding: 6 10;
+}
+
+.spinner:focused {
+    -fx-border-color: #8EB83D;
+}
+
+.spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-font-weight: bold;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #8EB83D;
+}
+
+/*  Slider === */
+
+.slider .thumb {
+    -fx-background-color: #8EB83D;
+    -fx-background-radius: 50%;
+    -fx-padding: 8;
+}
+
+.seccion-titulo {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-text-alignment: center;
+}
+.label, .button, .choice-box, .text-field {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+
+}
+
+
+/* Tabla */
+.table-view {
+    -fx-background-color: #1A1A1A;
+    -fx-table-cell-border-color: #080808;
+    -fx-padding: 5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #1A1A1A;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white; /* Cambia a blanco u otro color con buen contraste */
+    -fx-font-weight: bold; /* Opcional: texto más grueso */
+}
+
+.table-view .column-header-background .label {
+    -fx-text-fill: white; /* O el color que prefieras */
+    -fx-font-weight: bold;
+}
+

@@ -1,17 +1,26 @@
 package com.mastertyres.fxControllers.PromocionActiva;
 
+import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -27,6 +36,7 @@ public class PromocionesActivasController {
     @FXML private Label lblPrecio;
     @FXML private Label lblFechaInicio;
     @FXML private Label lblFechaFin;
+    @FXML private Button btnAgregarPromocion;
 
     @FXML
     private TextField txtBuscar;
@@ -36,6 +46,8 @@ public class PromocionesActivasController {
 
     @FXML
     private ListView<String> ListaVehiculosPromocion;
+
+    private VentanaPrincipalController ventanaPrincipalController;
 
     @Autowired
     private VehiculoPromocionService vehiculoPromocionService;
@@ -58,7 +70,38 @@ public class PromocionesActivasController {
             }
         });
 
+        btnAgregarPromocion.setOnAction( event -> agregarPromociones(event));
+
+    }//initialize
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
     }
+
+    @FXML
+    private void agregarPromociones(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/NuevaPromocion.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            Pane panel = ventanaPrincipalController.getPanelMenu();
+            panel.getChildren().setAll(root);
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
 
     private void cargarPromocionesFiltradas(String filtro) {
         List<Promocion> promociones = promocionService.buscarPromociones(filtro);
@@ -66,19 +109,23 @@ public class PromocionesActivasController {
     }
 
     private void cargarPromociones() {
+        System.out.println("esta entrando");
         List<Promocion> promociones = promocionService.obtenerPromocionesActivas();
         mostrarPromociones(promociones);
     }
 
     private void mostrarPromociones(List<Promocion> promociones) {
+        System.out.println("Entro e mostrar promociones");
         contenedorPromociones.getChildren().clear();
         for (Promocion p : promociones) {
+            System.out.println("Estaentrando al for");
             VBox card = crearCardPromocion(p);
             contenedorPromociones.getChildren().add(card);
         }
     }
 
     private VBox crearCardPromocion(Promocion p) {
+        System.out.println("Entro en crear promociones");
         VBox card = new VBox(5);
         card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
         card.setPrefSize(500, 100);

@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.AgregarCliente;
+package com.mastertyres.fxControllers.agregarCliente;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;

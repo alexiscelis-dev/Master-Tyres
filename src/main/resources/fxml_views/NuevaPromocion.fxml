@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocion">
+    <children>
+        <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../styles_css/NuevaPromocion.css">
+            <children>
+                <HBox alignment="CENTER" prefHeight="33.0" prefWidth="460.0">
+                    <children>
+                        <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="272.0" styleClass="seccion-titulo" text="Nueva Promocion" textFill="WHITE" />
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox prefHeight="28.0" prefWidth="333.0">
+                    <children>
+                        <Label text="Nombre de la promocion" textFill="WHITE">
+                            <HBox.margin>
+                                <Insets left="40.0" right="88.0" />
+                            </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                        </Label>
+                    </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+                </HBox>
+                <HBox prefHeight="34.0" prefWidth="376.0">
+                    <children>
+                        <TextField fx:id="nombrePromocion" prefHeight="26.0" prefWidth="348.0" styleClass="buscador">
+                            <HBox.margin>
+                                <Insets left="40.0" right="50.0" />
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="10.0" />
+                    </VBox.margin>
+                </HBox>
+                <VBox prefHeight="115.0" prefWidth="432.0" spacing="6.0">
+                    <children>
+                        <Label text="Descripcion" textFill="WHITE">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <padding>
+                                <Insets left="40.0" />
+                            </padding>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                        </Label>
+                        <HBox alignment="CENTER" prefHeight="67.0" prefWidth="432.0">
+                            <children>
+                                <TextField fx:id="descripcion" prefHeight="45.0" prefWidth="348.0" styleClass="buscador" />
+                            </children>
+                        </HBox>
+                    </children>
+                    <padding>
+                        <Insets top="5.0" />
+                    </padding>
+                </VBox>
+
+                <HBox prefHeight="34.0" prefWidth="432.0">
+                    <children>
+                        <Label text="Tipo de descuento" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                            <padding>
+                                <Insets bottom="5.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets left="40.0" right="56.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Label text="Precio sin descuento" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets left="40.0" />
+                            </HBox.margin>
+                        </Label>
+                    </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+                </HBox>
+                <HBox prefHeight="40.0" prefWidth="432.0">
+                    <children>
+                        <ChoiceBox fx:id="tipoDescuento" prefWidth="150.0" styleClass="choicebox-mini2">
+                            <HBox.margin>
+                                <Insets left="40.0" right="38.0" />
+                            </HBox.margin>
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Porcentaje" />
+                                    <String fx:value="OTRO" />
+                                </FXCollections>
+                            </items>
+
+
+                        </ChoiceBox>
+                        <TextField fx:id="precioSinDescuento" disable="true" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="15.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox prefHeight="44.0" prefWidth="393.0">
+                    <children>
+                        <VBox alignment="CENTER" prefHeight="44.0" prefWidth="392.0">
+                            <children>
+                                <Slider fx:id="porcentajeDescuento" disable="true" prefHeight="14.0" prefWidth="340.0">
+                                    <VBox.margin>
+                                        <Insets bottom="5.0" />
+                                    </VBox.margin>
+                                    <padding>
+                                        <Insets left="40.0" />
+                                    </padding>
+                                </Slider>
+                                <Label fx:id="descuentoLabel" text="Descuento 0% " textFill="WHITE">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                    <VBox.margin>
+                                        <Insets left="30.0" />
+                                    </VBox.margin>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" />
+                    </VBox.margin>
+                </HBox>
+
+
+
+
+                <HBox prefHeight="26.0" prefWidth="432.0">
+                    <children>
+                        <Label prefHeight="18.0" prefWidth="212.0" text="Fecha de inicio" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                            <padding>
+                                <Insets left="40.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets right="25.0" />
+                            </HBox.margin>
+                        </Label>
+
+                        <Label prefHeight="18.0" prefWidth="120.0" text="Fecha fin" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+
+
+                    </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+
+
+
+
+               </VBox.margin>
+                </HBox>
+
+
+                <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../styles_css/ClientesStyles.css">
+                    <children>
+                        <DatePicker fx:id="fechaInicio" disable="true" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
+                            <HBox.margin>
+                                <Insets right="35.0" />
+                            </HBox.margin>
+                        </DatePicker>
+                        <DatePicker fx:id="fechaFin" disable="true" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
+                    </children>
+                    <VBox.margin>
+                        <Insets left="40.0" />
+                    </VBox.margin>
+                </HBox>
+
+
+                <HBox alignment="CENTER" prefHeight="78.0" prefWidth="432.0">
+                    <children>
+                        <Button fx:id="btnRegistrar" disable="true" mnemonicParsing="false" styleClass="boton-accion" text="Agregar">
+                            <HBox.margin>
+                                <Insets right="8.0" />
+                            </HBox.margin>
+                        </Button>
+                        <Button fx:id="btnCancelar" mnemonicParsing="false" styleClass="boton-accion" text="Limpiar" />
+                    </children>
+                </HBox>
+
+            </children>
+        </VBox>
+      <VBox layoutX="650.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../styles_css/NuevaPromocion.css">
+         <children>
+
+             <VBox alignment="TOP_CENTER" minWidth="500.0" prefWidth="500.0" spacing="15.0" styleClass="secciones">
+
+                 <Label styleClass="seccion-titulo" text="Vehiculos participantes" />
+                 <GridPane hgap="10" minWidth="500.0" prefWidth="500.0" vgap="10">
+                     <columnConstraints>
+                         <ColumnConstraints percentWidth="33.0" />
+                         <ColumnConstraints percentWidth="33.0" />
+                         <ColumnConstraints halignment="RIGHT" percentWidth="33.0" />
+                     </columnConstraints>
+
+                     <!-- Búsqueda -->
+                     <TextField fx:id="txtBuscarCliente" promptText="Buscar vehiculo" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+                     <Button fx:id="btnBuscarCliente" minWidth="150.0" prefWidth="150.0" styleClass="boton-accion" text="Buscar" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+                     <!-- ListView de clientes -->
+                     <!--                            <ListView fx:id="listaClientes" styleClass="ListaClientes" minWidth="500.0" prefHeight="200" prefWidth="500.0" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1" />-->
+                     <TableView fx:id="tablaClientes" minWidth="500.0" prefHeight="200" prefWidth="500.0" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+
+                         <!-- Columna para el nombre completo -->
+                         <columns>
+                             <TableColumn fx:id="colNombreCompleto" prefWidth="241.0" text="Marca" />
+                             <TableColumn fx:id="colTipoCliente" prefWidth="159.0" text="Modelo" />
+                             <TableColumn fx:id="colRfc" prefWidth="150.0" text="Año" />
+                             <TableColumn fx:id="colTelefono" prefWidth="150.0" text="Teléfono" />
+                         </columns>
+                     </TableView>
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                  </rowConstraints>
+
+
+
+                 </GridPane>
+             </VBox>
+            <VBox prefHeight="188.0" prefWidth="500.0">
+               <children>
+                  <Label styleClass="seccion-titulo" text="Promociones">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin></Label>
+                  <TableView prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Nombre" />
+                      <TableColumn prefWidth="75.0" text="Descripcion" />
+                    </columns>
+                  </TableView>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin></VBox>
+            <HBox alignment="CENTER" prefHeight="99.0" prefWidth="500.0">
+               <children>
+                  <Button contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar promocion" />
+               </children>
+            </HBox>
+
+
+
+
+
+
+
+
+
+         </children></VBox>
+    </children>
+</AnchorPane>
