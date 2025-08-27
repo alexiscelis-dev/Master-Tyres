@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.RegresarMenu;
+package com.mastertyres.fxControllers.regresarMenu;
 
 import javafx.fxml.FXML;
 import org.springframework.stereotype.Component;

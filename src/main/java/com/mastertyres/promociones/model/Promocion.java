@@ -28,7 +28,7 @@ public class Promocion {
     @Column(name = "tipo_descuento")
     private String tipoDescuento;
 
-    @Column(name = "valor_descuento")
+    @Column(name = "porcentaje")
     private float valorDescuento;
 
     private float precio;

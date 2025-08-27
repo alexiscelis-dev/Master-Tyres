@@ -270,16 +270,9 @@ public class VehiculoController {
                                                         statusLabel.setVisible(false);
                                                     }
                                             );
-
-
                                         }).start();
-
-
                                     }
-
                                 }
-
-
                             }//switch
                             listViewPopup.hide();
                         }
