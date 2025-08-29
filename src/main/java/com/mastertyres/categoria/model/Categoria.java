@@ -16,4 +16,10 @@ public class Categoria {
     private Integer categoriaId;
     @Column(name = "nombre")
     private String nombreCategoria;
+
+    @Override
+    public String toString(){
+        return nombreCategoria;
+    }
+
 }

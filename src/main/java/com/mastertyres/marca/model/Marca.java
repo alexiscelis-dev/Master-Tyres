@@ -20,4 +20,10 @@ public class Marca {
     @Column(name = "nombre")
     private String nombreMarca;
 
+    @Override
+    public String toString(){
+        return nombreMarca;
+    }
+
+
 }//clase

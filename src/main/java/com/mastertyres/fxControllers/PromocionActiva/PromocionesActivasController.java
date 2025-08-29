@@ -138,9 +138,9 @@ public class PromocionesActivasController {
 
         Label lblValorDesc;
         if (p.getTipoDescuento().equals("PORCENTAJE")){
-            lblValorDesc = new Label("Descuento: " + p.getValorDescuento() + "%");
+            lblValorDesc = new Label("Descuento: " + p.getPorcentaje() + "%");
         }else{
-            lblValorDesc = new Label("Descuento: -$" + p.getValorDescuento());
+            lblValorDesc = new Label("Descuento: -$" + p.getPorcentaje());
         }
 
         lblValorDesc.setStyle("-fx-text-fill: white;");
@@ -178,7 +178,7 @@ public class PromocionesActivasController {
         lblNombre.setText(p.getNombre());
         lblDescripcion.setText(p.getDescripcion());
         lblTipoDescuento.setText(p.getTipoDescuento());
-        lblValorDescuento.setText(p.getValorDescuento()+"");
+        lblValorDescuento.setText(p.getPorcentaje()+"");
         lblPrecio.setText(p.getPrecio()+"");
         lblFechaInicio.setText(p.getFechaInicio());
         lblFechaFin.setText(p.getFechaFin());

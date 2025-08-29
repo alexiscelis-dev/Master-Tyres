@@ -1,6 +1,9 @@
 package com.mastertyres.common;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+
+import java.util.Optional;
 
 public class MensajesAlert {
 
@@ -32,6 +35,22 @@ public class MensajesAlert {
         ventana.setContentText(warning);
         ventana.showAndWait();
 
+    }
+
+    public static  boolean mostrarConfirmacion(String title, String header, String mensaje, String txtButton1, String txtButton2){
+
+        Alert ventana = new Alert(Alert.AlertType.CONFIRMATION);
+        ventana.setTitle(title);
+        ventana.setHeaderText(header);
+        ventana.setContentText(mensaje);
+
+        ButtonType button1 = new ButtonType(txtButton1);
+        ButtonType button2 = new ButtonType(txtButton2);
+
+        ventana.getButtonTypes().setAll(button1,button2);
+        Optional<ButtonType> resultado = ventana.showAndWait();
+
+        return resultado.isPresent() && resultado.get() == button1; // devuelve true si preciona la primera opcion
     }
 
 

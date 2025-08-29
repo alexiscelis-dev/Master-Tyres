@@ -23,7 +23,7 @@
 .choicebox-mini2 .context-menu {
     -fx-background-color: #080808;
     -fx-pref-width: 130px;
-    -fx-pref-height: 170px;
+    -fx-pref-height: 80px;
 }
 
 /* Ítems del menú */
@@ -64,6 +64,7 @@
     -fx-border-color: #8EB83D;
     -fx-border-width: 2;
 }
+
 .buscador-textarea {
     -fx-control-inner-background: #2A2A2A; /* Fondo interno donde se escribe */
     -fx-background-color: #2A2A2A;        /* Fondo del contenedor */
@@ -237,6 +238,9 @@ SpinnerAnnio
     -fx-background-color: #1A1A1A;
     -fx-table-cell-border-color: #080808;
     -fx-padding: 5px;
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 0.5px;
+    -fx-border-radius: 5px;
 }
 
 .table-view .column-header-background {
@@ -264,4 +268,46 @@ SpinnerAnnio
     -fx-text-fill: white; /* O el color que prefieras */
     -fx-font-weight: bold;
 }
+
+
+
+
+
+
+/* Estilo para un ChoiceBox más pequeño y oscuro */
+.vehiculosParticipantes {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 180px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable más compacto */
+.vehiculosParticipantes .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 130px;
+    -fx-pref-height: 180px;
+}
+
+/* Ítems del menú */
+.vehiculosParticipantes .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #F2F2F2;
+}
+
+
+/* Hover en ítems */
+.vehiculosParticipantes .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+
+
+
+
 
