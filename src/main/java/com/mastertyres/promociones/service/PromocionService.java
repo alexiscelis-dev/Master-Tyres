@@ -1,4 +1,8 @@
 package com.mastertyres.promociones.service;
+
+import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.marca.model.Marca;
+import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.repository.PromocionesRepository;
 import org.springframework.stereotype.Service;
@@ -8,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class PromocionService {
+public class PromocionService implements IPromocionService {
 
     private final PromocionesRepository promocionRepository;
 
@@ -31,4 +35,36 @@ public class PromocionService {
         promocionRepository.desactivarPromocion(id);
     }
 
-}
+    @Transactional(readOnly = true)
+    @Override
+    public List<Marca> listarMarcas() {
+        return promocionRepository.listarMarcas();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Modelo> listarModelos() {
+        return promocionRepository.listarModelos();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Categoria> listarCategorias() {
+        return promocionRepository.listarCategorias();
+    }
+
+
+    @Transactional
+    @Override
+    public void guardarPromocion(Promocion promocion) {
+        promocionRepository.save(promocion);
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public Promocion buscarPromocionId(Integer id) {
+        Promocion promocion = promocionRepository.findById(id).orElse(null);
+        return  promocion;
+    }
+}//PromocionService

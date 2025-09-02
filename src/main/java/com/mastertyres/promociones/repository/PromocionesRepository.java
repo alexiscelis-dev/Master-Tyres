@@ -1,5 +1,8 @@
 package com.mastertyres.promociones.repository;
 
+import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.marca.model.Marca;
+import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -36,7 +38,7 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
             " LOWER(p.nombre) LIKE LOWER(CONCAT('%', :texto, '%')) OR " +
             " LOWER(p.descripcion) LIKE LOWER(CONCAT('%', :texto, '%')) OR " +
             " LOWER(p.tipoDescuento) LIKE LOWER(CONCAT('%', :texto, '%')) OR " +
-            " CAST(p.valorDescuento AS string) LIKE CONCAT('%', :texto, '%') OR " +
+            " CAST(p.porcentaje AS string) LIKE CONCAT('%', :texto, '%') OR " +
             " CAST(p.fechaInicio AS string) LIKE CONCAT('%', :texto, '%') OR " +
             " CAST(p.fechaFin AS string) LIKE CONCAT('%', :texto, '%') OR " +
             " CAST(p.precio AS string) LIKE CONCAT('%', :texto, '%') OR " +
@@ -47,4 +49,19 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
     List<Promocion> buscarPromocionesActivas(
             @Param("hoy") String hoy,
             @Param("texto") String texto);
-}
+
+    @Query("SELECT DISTINCT m FROM Marca m")
+    List<Marca> listarMarcas();
+
+    @Query("SELECT DISTINCT m FROM Modelo m")
+    List<Modelo> listarModelos();
+
+    @Query("SELECT DISTINCT c FROM Categoria c")
+    List<Categoria> listarCategorias();
+
+
+
+
+
+
+}//interface
