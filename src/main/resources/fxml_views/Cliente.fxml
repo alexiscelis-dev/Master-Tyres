@@ -47,12 +47,15 @@
                   <TableColumn fx:id="colTipoCliente" prefWidth="150" text="Tipo Cliente" />
                   <TableColumn fx:id="colNombre" prefWidth="150" text="Nombre" />
                  <TableColumn fx:id="colTelefono" prefWidth="150" text="Teléfono" />
+                  <TableColumn fx:id="colRFC" prefWidth="150" text="RFC" />
                  <TableColumn fx:id="colEstado" prefWidth="150" text="Estado" />
                  <TableColumn fx:id="colCiudad" prefWidth="150" text="Ciudad" />
                  <TableColumn fx:id="colDomicilio" prefWidth="150" text="Domicilio" />
-                 <TableColumn fx:id="colCurp" prefWidth="150" text="Hobbie" />
+                 <TableColumn fx:id="colCumpleanos" prefWidth="150" text="Cumpleaños" />
+                 <TableColumn fx:id="colGenero" prefWidth="150" text="Genero" />
+                 <TableColumn fx:id="colHobbie" prefWidth="150" text="Hobbie" />
                  <TableColumn fx:id="colVehiculo" prefWidth="150" text="Vehículo" />
-                  <TableColumn fx:id="colRFC" prefWidth="150" text="RFC" />
+                  <TableColumn fx:id="colRegistro" prefWidth="150" text="Fecha registro" />
            </columns>
         </TableView>
 

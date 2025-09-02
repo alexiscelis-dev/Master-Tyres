@@ -44,6 +44,7 @@ public class Cliente {
     private String created_at;
     private String updated_at;
     private String active;
+    private String genero;
 
 
     //relaciones
