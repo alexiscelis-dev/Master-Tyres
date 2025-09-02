@@ -510,16 +510,31 @@ public class AgregarVehiculoController {
 
         // Validar que no haya duplicados en la lista antes de guardar
         Set<String> placasSerieSet = new HashSet<>();
+
         for (Vehiculo v : listaVehiculos) {
-            String placas = v.getPlacas() != null ? v.getPlacas() : "";
-            String numSerie = v.getNumSerie() != null ? v.getNumSerie() : "";
+            String placas = v.getPlacas();
+            String numSerie = v.getNumSerie();
+
+            // Si ambos están vacíos o nulos, lo dejamos pasar
+            if ((placas == null || placas.isBlank()) && (numSerie == null || numSerie.isBlank())) {
+                continue;
+            }
+
+            // Normalizamos valores nulos a vacío
+            placas = placas != null ? placas.trim() : "";
+            numSerie = numSerie != null ? numSerie.trim() : "";
+
             String key = placas + "|" + numSerie;
+
             if (!placasSerieSet.add(key)) {
-                mostrarWarning("Vehículos repetidos","",
-                        "Hay vehículos con placas o numero de serie repetidos en la lista. ");
+                mostrarWarning(
+                        "Vehículos repetidos", "",
+                        "Hay vehículos con placas o número de serie repetidos en la lista."
+                );
                 return;
             }
         }
+
 
         try {
             vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);

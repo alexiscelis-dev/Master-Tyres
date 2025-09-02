@@ -44,4 +44,6 @@ public class Promocion {
     private String created_at;
 
     private String updated_at;
+
+    private String img;
 }

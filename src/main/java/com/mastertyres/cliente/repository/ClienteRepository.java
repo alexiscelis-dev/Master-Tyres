@@ -66,7 +66,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
     List<Cliente> buscarClientePorRfc(@Param("active")String active, @Param("rfc")String rfc);
 
-    @Query("SELECT c FROM Cliente c WHERE c.active = :status AND " +
+    @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND ( " +
             "(LOWER (COALESCE(c.nombre, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
             "(LOWER (COALESCE(c.apellido, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
             "(LOWER (COALESCE(c.segundoApellido, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
@@ -76,7 +76,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "(LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
             "(LOWER (COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
             "(LOWER (COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
-            "(LOWER (COALESCE(c.tipoCliente, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) ")
+            "(LOWER (COALESCE(c.tipoCliente, '')) LIKE LOWER (CONCAT('%', :busqueda , '%')))) ")
 
     List<Cliente>buscadorClientes(@Param("status")String status,@Param("busqueda") String busqueda);
 
