@@ -2,6 +2,7 @@ package com.mastertyres.promociones.service;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.repository.PromocionesRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +24,11 @@ public class PromocionService {
 
     public List<Promocion> buscarPromociones(String texto) {
         return promocionRepository.buscarPromocionesActivas(hoy, texto);
+    }
+
+    @Transactional
+    public void desactivarPromocion(Integer id) {
+        promocionRepository.desactivarPromocion(id);
     }
 
 }

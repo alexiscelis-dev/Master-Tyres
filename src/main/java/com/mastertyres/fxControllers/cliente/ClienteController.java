@@ -52,6 +52,15 @@ public class ClienteController {
     private TableColumn<Cliente, String> colTipoCliente;
 
     @FXML
+    private TableColumn<Cliente, String> colGenero;
+
+    @FXML
+    private TableColumn<Cliente, String> colCumpleanos;
+
+    @FXML
+    private TableColumn<Cliente, String> colRegistro;
+
+    @FXML
     private TableColumn<Cliente, String> colNombre;
 
     @FXML
@@ -70,7 +79,7 @@ public class ClienteController {
     private TableColumn<Cliente, String> colDomicilio;
 
     @FXML
-    private TableColumn<Cliente, String> colCurp;
+    private TableColumn<Cliente, String> colHobbie;
 
     @FXML
     private TableColumn<Cliente, String> colVehiculo;
@@ -367,8 +376,11 @@ public class ClienteController {
         colEstado.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEstado() != null ? data.getValue().getEstado() : "N/A"));
         colCiudad.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCiudad() != null ? data.getValue().getCiudad() : "N/A"));
         colDomicilio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDomicilio() != null ? data.getValue().getDomicilio() : "N/A"));
-        colCurp.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHobbie() != null ? data.getValue().getHobbie() : "N/A"));
+        colHobbie.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHobbie() != null ? data.getValue().getHobbie() : "N/A"));
         colRFC.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRfc() != null ? data.getValue().getRfc() : "N/A"));
+        colGenero.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getGenero() != null ? data.getValue().getGenero() : "N/A"));
+        colRegistro.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCreated_at() != null ? data.getValue().getCreated_at() : "N/A"));
+        colCumpleanos.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFechaCumple() != null ? data.getValue().getFechaCumple() : "N/A"));
 
         colVehiculo.setCellValueFactory(data -> {
             var vehiculos = data.getValue().getVehiculos();

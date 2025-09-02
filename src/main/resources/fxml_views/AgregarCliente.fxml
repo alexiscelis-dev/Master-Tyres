@@ -27,23 +27,8 @@
                               <ColumnConstraints percentWidth="33" />
                           </columnConstraints>
 
-                          <TextField fx:id="txtNombre" promptText="*Nombre" styleClass="buscador" GridPane.columnIndex="0" />
-                          <TextField fx:id="txtApellido" promptText="*Primer Apellido" styleClass="buscador" GridPane.columnIndex="1" />
-                          <TextField fx:id="txtSegundoApellido" promptText="Segundo Apellido" styleClass="buscador" GridPane.columnIndex="2" />
-
-                          <TextField fx:id="txtDomicilio" promptText="Domicilio" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1" />
-
-                          <TextField fx:id="txtCiudad" promptText="Ciudad" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                          <TextField fx:id="txtEstado" promptText="Estado" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-
-                          <TextField fx:id="txtTelefono" promptText="*Teléfono" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                          <TextField fx:id="txtRFC" promptText="RFC" styleClass="buscador" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-
-                          <TextField fx:id="txtHobbie" promptText="Hobbie" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-
-                          <DatePicker fx:id="pickerCumpleanos" promptText="Cumpleaños" styleClass="date-picker" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                          <Label text="*Tipo de cliente:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                          <ChoiceBox fx:id="choiceTipoCliente" style="-fx-text-alignment: right;" styleClass="choicebox-mini" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                          <Label text="*Tipo de cliente:" />
+                          <ChoiceBox fx:id="choiceTipoCliente" prefHeight="26.0" prefWidth="151.0" style="-fx-text-alignment: right;" styleClass="choicebox-mini" GridPane.columnIndex="1">
 
                               <items>
                                   <FXCollections fx:factory="observableArrayList">
@@ -52,7 +37,36 @@
                                   </FXCollections>
                               </items>
                           </ChoiceBox>
+
+                          <Label text="Genero: " GridPane.rowIndex="1" />
+                          <ChoiceBox fx:id="choiceGenero" prefHeight="26.0" prefWidth="151.0" style="-fx-text-alignment: right;" styleClass="choicebox-mini"  GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <items>
+                                  <FXCollections fx:factory="observableArrayList">
+                                      <String fx:value="Masculino" />
+                                      <String fx:value="Femenino" />
+                                      <String fx:value="Otro" />
+                                  </FXCollections>
+                            </items>
+                          </ChoiceBox>
+                          <DatePicker fx:id="pickerCumpleanos" promptText="Cumpleaños" styleClass="date-picker" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+                          <TextField fx:id="txtNombre" promptText="*Nombre" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                          <TextField fx:id="txtApellido" promptText="*Primer Apellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                          <TextField fx:id="txtSegundoApellido" promptText="Segundo Apellido" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+                          <TextField fx:id="txtDomicilio" promptText="Domicilio" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+
+                          <TextField fx:id="txtCiudad" promptText="Ciudad" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                          <TextField fx:id="txtEstado" promptText="Estado" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+
+                          <TextField fx:id="txtTelefono" promptText="*Teléfono" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                          <TextField fx:id="txtRFC" promptText="RFC" styleClass="buscador" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+
+                          <TextField fx:id="txtHobbie" promptText="Hobbie" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="6" />
+
                      <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
                         <RowConstraints />
                         <RowConstraints />
                         <RowConstraints />
@@ -125,7 +139,7 @@
                               <TableColumn fx:id="colKilometros" text="Kilometros" />
                               <TableColumn fx:id="colultimoServicio" text="Ultimo Servicio" />
                               <TableColumn fx:id="colObservaciones" text="Observaciones" />
-                              <TableColumn fx:id="colEliminar" text="Acción" style="-fx-alignment: CENTER;" />
+                              <TableColumn fx:id="colEliminar" style="-fx-alignment: CENTER;" text="Acción" />
                           </columns>
                       </TableView>
                   </VBox>
