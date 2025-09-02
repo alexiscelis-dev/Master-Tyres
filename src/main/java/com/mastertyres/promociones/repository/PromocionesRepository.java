@@ -5,13 +5,21 @@ import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
 public interface PromocionesRepository extends JpaRepository<Promocion, Integer> {
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Promocion p SET p.active = 'INACTIVE' WHERE p.promocionId = :id")
+    void desactivarPromocion(@Param("id") Integer id);
 
     @Query("SELECT p FROM Promocion p " +
             "WHERE p.active = 'ACTIVE' " +
