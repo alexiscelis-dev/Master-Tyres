@@ -30,6 +30,11 @@ public class PromocionService implements IPromocionService {
         return promocionRepository.buscarPromocionesActivas(hoy, texto);
     }
 
+    @Transactional
+    public void desactivarPromocion(Integer id) {
+        promocionRepository.desactivarPromocion(id);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<Marca> listarMarcas() {
