@@ -77,6 +77,7 @@ public class AgregarClienteController {
     @FXML private TextField txtRFC;
     @FXML private DatePicker pickerCumpleanos;
     @FXML private ChoiceBox<String> choiceTipoCliente;
+    @FXML private ChoiceBox<String> choiceGenero;
 
     // Campos Vehiculo
     @FXML private ChoiceBox<Marca> choiceMarca;
@@ -554,16 +555,31 @@ public class AgregarClienteController {
 
 // Validar que no haya duplicados en la lista antes de guardar
         Set<String> placasSerieSet = new HashSet<>();
+
         for (Vehiculo v : listaVehiculos) {
-            String placas = v.getPlacas() != null ? v.getPlacas() : "";
-            String numSerie = v.getNumSerie() != null ? v.getNumSerie() : "";
+            String placas = v.getPlacas();
+            String numSerie = v.getNumSerie();
+
+            // Si ambos están vacíos o nulos, lo dejamos pasar
+            if ((placas == null || placas.isBlank()) && (numSerie == null || numSerie.isBlank())) {
+                continue;
+            }
+
+            // Normalizamos valores nulos a vacío
+            placas = placas != null ? placas.trim() : "";
+            numSerie = numSerie != null ? numSerie.trim() : "";
+
             String key = placas + "|" + numSerie;
+
             if (!placasSerieSet.add(key)) {
-                mostrarWarning("Vehículos repetidos","",
-                        "Hay vehículos repetidos en la lista antes de guardar. Revíselos.");
+                mostrarWarning(
+                        "Vehículos repetidos", "",
+                        "Hay vehículos con placas o número de serie repetidos en la lista."
+                );
                 return;
             }
         }
+
 
 
         // Crear Cliente
@@ -584,6 +600,14 @@ public class AgregarClienteController {
         }
         cliente.setActive("ACTIVE");
         cliente.setCreated_at(LocalDate.now().toString());
+
+        if (choiceGenero.getValue() != null) {
+            switch (choiceGenero.getValue()) {
+                case "Masculino" -> cliente.setGenero("M");
+                case "Femenino" -> cliente.setGenero("F");
+                case "Otro"     -> cliente.setGenero("O");
+            }
+        }
 
         // Asignar los vehículos
         for (Vehiculo v : listaVehiculos) {
