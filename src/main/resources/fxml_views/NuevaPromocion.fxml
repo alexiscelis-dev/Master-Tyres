@@ -103,10 +103,7 @@
                                 <Insets left="40.0" right="38.0" />
                             </HBox.margin>
                             <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Porcentaje" />
-                                    <String fx:value="OTRO" />
-                                </FXCollections>
+
                             </items>
 
 
@@ -225,25 +222,25 @@
                         <HBox.margin>
                            <Insets right="2.0" />
                         </HBox.margin></ChoiceBox>
-                     <ChoiceBox fx:id="choiceCategoria" prefWidth="150.0" styleClass="vehiculosParticipantes" />
                      <ChoiceBox fx:id="choiceAnio" prefWidth="150.0" styleClass="vehiculosParticipantes">
                         <HBox.margin>
                            <Insets left="2.0" />
                         </HBox.margin>
                      </ChoiceBox>
                   </children></HBox>
+               <Button fx:id="btnAgregarVehiculo" mnemonicParsing="false" prefHeight="34.0" prefWidth="165.0" styleClass="boton-accion" text="Agregar" />
                <VBox id="panel para tabla" prefHeight="200.0" prefWidth="100.0">
                   <children>
       
       
-                       <TableView fx:id="tablavehiculosParticipantes" minWidth="500.0" prefHeight="261.0" prefWidth="500.0">
+                       <TableView fx:id="tableVehiculosParticipantes" minWidth="500.0" prefHeight="261.0" prefWidth="500.0">
       
       
                            <columns>
-                               <TableColumn fx:id="colMarca" prefWidth="122.5999755859375" text="Marca" />
-                               <TableColumn fx:id="colModelo" minWidth="50" prefWidth="134.199951171875" text="Modelo" />
-                               <TableColumn fx:id="colCategoria" prefWidth="123.4000244140625" text="Categoria" />
-                               <TableColumn fx:id="colAnio" minWidth="0.0" prefWidth="116.99993896484375" text="Año" />
+                               <TableColumn fx:id="colMarca" prefWidth="166.20001220703125" text="Marca" />
+                               <TableColumn fx:id="colModelo" minWidth="50" prefWidth="174.60003662109375" text="Modelo" />
+                               <TableColumn fx:id="colAnio" minWidth="0.0" prefWidth="160.20001220703125" text="Año" />
+                               <TableColumn fx:id="colEliminar" text="Acción" style="-fx-alignment: CENTER;"/>
       
                            </columns>
                        </TableView>

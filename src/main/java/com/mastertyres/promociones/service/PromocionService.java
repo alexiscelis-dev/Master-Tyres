@@ -47,4 +47,19 @@ public class PromocionService implements IPromocionService {
     public List<Categoria> listarCategorias() {
         return promocionRepository.listarCategorias();
     }
+
+
+    @Transactional
+    @Override
+    public void guardarPromocion(Promocion promocion) {
+        promocionRepository.save(promocion);
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public Promocion buscarPromocionId(Integer id) {
+        Promocion promocion = promocionRepository.findById(id).orElse(null);
+        return  promocion;
+    }
 }//PromocionService

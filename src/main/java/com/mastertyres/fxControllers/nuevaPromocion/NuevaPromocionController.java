@@ -1,12 +1,20 @@
 package com.mastertyres.fxControllers.nuevaPromocion;
 
-import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.model.StatusPromocion;
+import com.mastertyres.promociones.model.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
+import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
+import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +22,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mastertyres.common.MensajesAlert.mostrarConfirmacion;
-import static com.mastertyres.common.MensajesAlert.mostrarWarning;
+import static com.mastertyres.common.MensajesAlert.*;
+import static javafx.collections.FXCollections.observableList;
 
 @Component
 public class NuevaPromocionController {
@@ -44,19 +52,40 @@ public class NuevaPromocionController {
     @FXML
     private ChoiceBox<Modelo> choiceModelo;
     @FXML
-    private ChoiceBox<Categoria> choiceCategoria;
-    @FXML
     private ChoiceBox<String> choiceAnio;
+    @FXML
+    private TableView tableVehiculosParticipantes;
+    @FXML
+    private TableColumn<VehiculoPromocion, String> colMarca;
+    @FXML
+    private TableColumn<VehiculoPromocion, String> colModelo;
+    @FXML
+    private TableColumn<VehiculoPromocion, String> colAnio;
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private TableColumn<VehiculoPromocion, Void> colEliminar;
+
+    private ObservableList<VehiculoPromocion> vehiculos = FXCollections.observableList(FXCollections.observableArrayList());
+
     @Autowired
     private PromocionService promocionService;
+    @Autowired
+    private VehiculoPromocionService vehiculoPromocionService;
 
 
     @FXML
     public void initialize() {
 
+        cargarPorcentaje();
+        tableVehiculosParticipantes.setItems(vehiculos);
+
+
+        cargartabla();
+
         //Abre y cierra el popup del choiceBox para que aparezca en la posicion correcta y no debajo de la tabla
         choiceAnio.setOnMousePressed(event -> {
-            if(!choiceAnio.isShowing()){
+            if (!choiceAnio.isShowing()) {
                 choiceAnio.show();
                 choiceAnio.hide();
             }
@@ -90,8 +119,53 @@ public class NuevaPromocionController {
 
         btnRegistrar.setOnAction(event -> registrarPromocion());
 
+        btnAgregarVehiculo.setOnAction(event -> agregarTabla());
+
+        colEliminar.setCellFactory(col -> new TableCell<>() {
+            private final Button btn = new Button();
+
+            {
+                // Quitar texto y agregar imagen
+                Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
+                ImageView iv = new ImageView(img);
+                iv.setFitWidth(18);   // tamaño icono
+                iv.setFitHeight(18);
+                btn.setGraphic(iv);
+
+                btn.setOnAction(e -> {
+                    VehiculoPromocion v = getTableView().getItems().get(getIndex());
+                    vehiculos.remove(v);
+                });
+
+                // (opcional) estilo para que sea redondo o plano
+                btn.setStyle("-fx-background-color: white;");
+
+                btn.hoverProperty().addListener((obs, wasHovered, isNowHovered) -> {
+                    if (isNowHovered) {
+                        btn.setStyle("-fx-scale-x: 1.1;\n" +
+                                "    -fx-scale-y: 1.1;");
+                    } else {
+                        btn.setStyle("-fx-background-color: white;");
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btn);
+            }
+        });
+
 
     }//initialize
+
+    private void cargarPorcentaje() {
+        List<String> tiposDescuentos = new ArrayList<>();
+        tiposDescuentos.add(TipoDescuento.PORCENTAJE.toString());
+        tiposDescuentos.add(TipoDescuento.OTRO.toString());
+        tipoDescuento.setItems(FXCollections.observableList(tiposDescuentos));
+    }
 
     private void clean() {
         nombrePromocion.setText("");
@@ -102,9 +176,12 @@ public class NuevaPromocionController {
         fechaInicio.setValue(null);
         fechaFin.setValue(null);
         tipoDescuento.setValue(null);
-        vehiculosParticipantesInitialize();
-    }
 
+        choiceAnio.setValue(null);
+        choiceMarca.setValue(null);
+        choiceModelo.setValue(null);
+        tableVehiculosParticipantes.getItems().clear();
+    }
 
     private void obtenerPorcentaje(Double valNuevo) {
 
@@ -154,15 +231,15 @@ public class NuevaPromocionController {
 
     private void vehiculosParticipantesInitialize() {
 
-        choiceMarca.setItems(FXCollections.observableList(promocionService.listarMarcas()));
-        choiceModelo.setItems(FXCollections.observableList(promocionService.listarModelos()));
-        choiceCategoria.setItems(FXCollections.observableList(promocionService.listarCategorias()));
+        choiceMarca.setItems(observableList(promocionService.listarMarcas()));
+        choiceModelo.setItems(observableList(promocionService.listarModelos()));
+
         List<String> anios = new ArrayList<>();
 
         int anioActual = LocalDate.now().getYear();
 
-        for (int i = anioActual; i >= 1950 ; i--) {
-            anios.add(i+"");
+        for (int i = anioActual; i >= 1950; i--) {
+            anios.add(i + "");
         }
         choiceAnio.getItems().setAll(anios);
 
@@ -172,8 +249,9 @@ public class NuevaPromocionController {
     private boolean empty() {
         boolean empty = false;
         if (nombrePromocion.getText() == null || descripcion.getText() == null || tipoDescuento.getValue() == null || precioSinDescuento.getText() == null ||
-                fechaInicio.getValue() == null || fechaFin.getValue() == null || choiceMarca.getValue() == null || choiceModelo.getValue() == null || choiceCategoria.getValue() == null ||
-                nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() || precioSinDescuento.getText().isEmpty())
+                fechaInicio.getValue() == null || fechaFin.getValue() == null || choiceMarca.getValue() == null || choiceModelo.getValue() == null ||
+                nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() || precioSinDescuento.getText().isEmpty()
+                || tableVehiculosParticipantes.getItems() == null)
 
             empty = true;
 
@@ -186,9 +264,10 @@ public class NuevaPromocionController {
 
     private boolean registrarPromocion() {
 
-        if (!empty() && validarFecha(fechaInicio.getValue(),fechaFin.getValue())) {
+        if (!empty() && validarFecha(fechaInicio.getValue(), fechaFin.getValue())) {
 
-            String nombre,descripcion,tipoDescuento,precio,porcentaje,inicioPromo,finPromo;
+            String nombre, descripcion, tipoDescuento, precio, porcentaje, inicioPromo, finPromo;
+            insertarPromocion();
 
         } else if (empty())
             mostrarWarning("Campos vacios", "", "Favor de completar cada uno de los campos solicitados.");
@@ -203,7 +282,7 @@ public class NuevaPromocionController {
             fechaValida = true;
 
         } else if (fechaFinLD.isBefore(fechaInicioLD)) {
-            mostrarWarning("Fecha incorrecta","","Le fecha de fin no puede ser antes que la fecha de inicio, vuelva a intentarlo");
+            mostrarWarning("Fecha incorrecta", "", "Le fecha de fin no puede ser antes que la fecha de inicio, vuelva a intentarlo");
 
             fechaValida = false;
 
@@ -214,5 +293,96 @@ public class NuevaPromocionController {
         }
         return fechaValida;
     }//validarFecha
+
+    private void cargartabla() {
+
+        colMarca.setCellValueFactory(data -> {
+            return new SimpleObjectProperty<>(data.getValue().getMarca().getNombreMarca());
+        });
+        colModelo.setCellValueFactory(data -> {
+            return new SimpleObjectProperty<>(data.getValue().getModelo().getNombreModelo());
+        });
+
+        colAnio.setCellValueFactory(data -> {
+            return new SimpleObjectProperty<>(data.getValue().getAnnio());
+        });
+    }//cargartabla
+
+    private void agregarTabla() {
+        Marca marca = choiceMarca.getValue();
+        Modelo modelo = choiceModelo.getValue();
+        String anio = choiceAnio.getValue();
+
+        if (marca != null && modelo != null && anio != null) {
+            VehiculoPromocion vehiculo = new VehiculoPromocion();
+            vehiculo.setMarca(marca);
+            vehiculo.setModelo(modelo);
+            vehiculo.setAnnio(anio);
+
+            if (choiceMarca != null && choiceModelo != null && choiceAnio != null && !vehiculos.contains(vehiculo))
+                vehiculos.add(vehiculo);
+        }
+
+    }//agregarVehiculo
+
+    //metodo se manda llamar en registrar promocion
+
+    private void insertarPromocion() {
+
+        Promocion promocion = Promocion.builder()
+                .nombre(nombrePromocion.getText())
+                .descripcion(descripcion.getText())
+                .tipoDescuento(tipoDescuento.getValue())
+                .precio(Float.parseFloat(precioSinDescuento.getText()))
+                .porcentaje((float) porcentajeDescuento.getValue())
+                .fechaInicio(String.valueOf(fechaInicio.getValue()))
+                .fechaFin(String.valueOf(fechaFin.getValue()))
+                .active(StatusPromocion.ACTIVE.toString())
+                .img("")
+                .build();
+
+
+        try {
+            promocionService.guardarPromocion(promocion);
+
+            if (promocion.getPromocionId() == null) {
+                mostrarError("Error", "", "Error al insertar promocion");
+                return;
+            }
+            ObservableList<VehiculoPromocion> vehiculos = tableVehiculosParticipantes.getItems();
+
+            for (VehiculoPromocion vehiculoPromocionSeleccionado : vehiculos) {
+
+                Integer marcaId = vehiculoPromocionSeleccionado.getMarca().getMarcaId();
+                Integer modeloId = vehiculoPromocionSeleccionado.getModelo().getModeloId();
+                String anio = vehiculoPromocionSeleccionado.getAnnio();
+
+                Marca marca = new Marca();
+                marca.setMarcaId(marcaId);
+
+                Modelo modelo = new Modelo();
+                modelo.setModeloId(modeloId);
+
+                VehiculoPromocion vehiculosCompatibles = VehiculoPromocion.builder()
+                        .marca(marca)
+                        .modelo(modelo)
+                        .promocion(promocion)
+                        .annio(anio)
+                        .build();
+                vehiculoPromocionService.guardarVehiculosAplicables(vehiculosCompatibles);
+
+            }//for
+
+            mostrarInformacion("Promocion registrada", "", "La promocion se registro exitosamente");
+
+
+        } catch (Exception e) {
+            mostrarError("Error al crear promocion", "Ha ocurrido un error al crear la promocion", e.getMessage());
+            System.out.println(e.getMessage());
+        }
+
+
+    }//insertarPromocion
+
 
 }//clase

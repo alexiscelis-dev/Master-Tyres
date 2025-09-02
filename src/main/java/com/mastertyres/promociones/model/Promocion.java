@@ -2,10 +2,14 @@ package com.mastertyres.promociones.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "promociones")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "vehiculo_promocion")
@@ -40,9 +44,14 @@ public class Promocion {
 
     private String active;
 
-    private String created_at;
+    //Es necesario cambiar a local date para poder insertar
+   @Column(name = "created_at", updatable = false)
+   @CreationTimestamp
+    private LocalDate created_at;
 
-    private String updated_at;
+   @Column(name = "updated_at")
+   @CreationTimestamp
+    private LocalDate updated_at;
 
     private String img;
 

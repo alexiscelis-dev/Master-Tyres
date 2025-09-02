@@ -20,4 +20,5 @@ public interface VehiculoPromocionRepository extends JpaRepository<VehiculoPromo
            where vp.promocion.promocionId = :promocionId
            """)
     List<VehiculoPromocion> findAllByPromocionIdWithMarcaModelo(@Param("promocionId") Integer promocionId);
-}
+
+}//interface

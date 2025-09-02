@@ -17,9 +17,4 @@ public class Categoria {
     @Column(name = "nombre")
     private String nombreCategoria;
 
-    @Override
-    public String toString(){
-        return nombreCategoria;
-    }
-
 }

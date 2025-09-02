@@ -227,8 +227,8 @@ SpinnerAnnio
     -fx-text-alignment: center;
 }
 .label, .button, .choice-box, .text-field {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
+    -fx-text-fill:white;
+    -fx-font-weight:bold;
 
 }
 
