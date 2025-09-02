@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class VehiculoPromocionService {
+public class VehiculoPromocionService implements   IVehiculoPromocionService{
 
     private final VehiculoPromocionRepository repo;
 
@@ -21,6 +21,20 @@ public class VehiculoPromocionService {
         return repo.findAllByPromocionIdWithMarcaModelo(promocionId);
         // Si prefieres la simple: return repo.findByPromocion_PromocionId(promocionId);
     }
-}
+
+    @Transactional
+    @Override
+    public void guardarVehiculosAplicables(VehiculoPromocion vehiculoPromocion) {
+        repo.save(vehiculoPromocion);
+
+    }
+
+
+
+
+
+
+
+}//clase
 
 
