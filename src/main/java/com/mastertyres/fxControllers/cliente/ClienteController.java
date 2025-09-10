@@ -339,7 +339,7 @@ public class ClienteController {
     @FXML
     private void agregarCliente(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/AgregarCliente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarCliente.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 

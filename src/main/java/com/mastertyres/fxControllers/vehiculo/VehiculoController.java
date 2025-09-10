@@ -7,6 +7,7 @@ import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.model.VehiculoStatus;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -195,7 +196,7 @@ public class VehiculoController {
                                                 } catch (InterruptedException exception) {
                                                     exception.printStackTrace();
                                                 }
-                                                javafx.application.Platform.runLater(() -> statusLabel.setText(""));
+                                                Platform.runLater(() -> statusLabel.setText(""));
 
                                             }).start();
 
@@ -265,7 +266,7 @@ public class VehiculoController {
                                             } catch (InterruptedException exception) {
                                                 exception.printStackTrace();
                                             }
-                                            javafx.application.Platform.runLater(() -> {
+                                            Platform.runLater(() -> {
                                                         statusLabel.setText("");
                                                         statusLabel.setVisible(false);
                                                     }
@@ -294,12 +295,12 @@ public class VehiculoController {
         //Enter buscar
         buscarVehiculoBuscador.setOnKeyPressed(event -> {
 
-            if (event.getCode() == KeyCode.ENTER){
+            if (event.getCode() == KeyCode.ENTER) {
                 String seleccion = atributoBusquedaVehiculos.getValue(), busqueda = buscarVehiculoBuscador.getText();
 
-                if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty()) {
-                    buscarVehiculo(seleccion.toLowerCase(),busqueda);
-                }
+                if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty())
+                    buscarVehiculo(seleccion.toLowerCase(), busqueda);
+
             }
         });
 
@@ -307,25 +308,24 @@ public class VehiculoController {
         //Buscar mientras escribes
         buscarVehiculoBuscador.setOnKeyReleased(event -> {
 
-           if (event.getCode() != KeyCode.ENTER)
-               delayQuery.setOnFinished(e -> {
-                   String seleccion = atributoBusquedaVehiculos.getValue();
-                   String busqueda = buscarVehiculoBuscador.getText();
+            if (event.getCode() != KeyCode.ENTER)
+                delayQuery.setOnFinished(e -> {
+                    String seleccion = atributoBusquedaVehiculos.getValue();
+                    String busqueda = buscarVehiculoBuscador.getText();
 
-                   if (seleccion == null && busqueda != null && !busqueda.isEmpty())
-                       buscarVehiculo(busqueda);
-                   else if (seleccion == null)
-                       cargarVehiculos();
-               });
-           delayQuery.playFromStart();
+                    if (seleccion == null && busqueda != null && !busqueda.isEmpty())
+                        buscarVehiculo(busqueda);
+                    else if (seleccion == null)
+                        cargarVehiculos();
+                });
+            delayQuery.playFromStart();
         });
 
         //pone en null la lista de ChoiceBox
         choiceBoxLabel.setOnMouseClicked(event -> {
 
-            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2 )
+            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
                 atributoBusquedaVehiculos.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
-
 
 
         });
@@ -337,7 +337,7 @@ public class VehiculoController {
     private void agregarVehiculo(ActionEvent event) {
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/AgregarVehiculo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarVehiculo.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
@@ -363,7 +363,7 @@ public class VehiculoController {
             String nombre = data.getValue().getNombreCliente() != null ? data.getValue().getNombreCliente() : "";
             String apellido = data.getValue().getApellido() != null ? data.getValue().getApellido() : "";
             String segundoApellido = data.getValue().getSegundoApellido() != null ? data.getValue().getSegundoApellido() : "";
-            String propietario = nombre + " "  + apellido + " " + segundoApellido;
+            String propietario = nombre + " " + apellido + " " + segundoApellido;
 
             return new SimpleStringProperty(propietario);
         });
@@ -428,7 +428,6 @@ public class VehiculoController {
                     return new SimpleStringProperty(texto);
                 }
 
-                //      new SimpleStringProperty(data.getValue().getFechaRegistro())
         );
 
         cargarDatosVehiculo();
@@ -453,280 +452,281 @@ public class VehiculoController {
 
     private void buscarVehiculo(String seleccion, String busqueda) { // porque se va a buscar, vehiculo a buscar
 
-            switch (seleccion) {
+        switch (seleccion) {
 
-                case "propietario" -> {
-                    String nombre = busqueda;
+            case "propietario" -> {
+                String nombre = busqueda;
 
-                    List<VehiculoDTO> vehiculoPorNombre = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(), nombre);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNombre));
+                List<VehiculoDTO> vehiculoPorNombre = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(), nombre);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNombre));
+
+            }
+            case "marca" -> {
+
+                List<VehiculoDTO> vehiculosPorMarca = vehiculoService.buscarVehiculoPorMarca(VehiculoStatus.ACTIVE.toString(), busqueda);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorMarca));
+
+            }
+            case "modelo" -> {
+
+                List<VehiculoDTO> vehiculoPorModelo = vehiculoService.buscarVehiculoPorModelo(VehiculoStatus.ACTIVE.toString(), busqueda);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorModelo));
+
+            }
+            case "categoria" -> {
+
+                List<VehiculoDTO> vehiculoPorCategoria = vehiculoService.buscarVehiculoPorCategoria(VehiculoStatus.ACTIVE.toString(), busqueda);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorCategoria));
+
+            }
+            case "color" -> {
+
+                List<VehiculoDTO> vehiculoPorColor = vehiculoService.buscarVehiculoPorColor(VehiculoStatus.ACTIVE.toString(), busqueda);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorColor));
+
+            }
+            case "año" -> {
+
+                String[] anios;
+                Integer anio;
+
+
+                if (busqueda.matches("\\d{4}")) { // yyyy
+                    anio = Integer.parseInt(busqueda);
+
+                    List<VehiculoDTO> vehiculoPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), anio);
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorAnio));
+
+
+                } else if (busqueda.matches("\\d{4},\\d{4}")) { //yyyy,yyyy
+                    anios = busqueda.split(",");
+
+                    Arrays.stream(anios).sorted();
+                    //ordenar años para realizar la consulta siempre con el menor primero
+                    String[] aniosOrdenados = Arrays.stream(anios).sorted().toArray(String[]::new);
+
+                    List<VehiculoDTO> vehiculosPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), Integer.parseInt(aniosOrdenados[0]), Integer.parseInt(aniosOrdenados[1]));
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorAnio));
+
+                } else {
+                    List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
+                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato de texto correcto", "Por ejemplo yyyy, o bien yyyy,yyyy para buscar por un rango de fechas.");
 
                 }
-                case "marca" -> {
+            }
+            case "placas" -> {
 
-                    List<VehiculoDTO> vehiculosPorMarca = vehiculoService.buscarVehiculoPorMarca(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorMarca));
+                String placas = busqueda;
+                placas.toUpperCase();
+                List<VehiculoDTO> vehicululoPorPlacas = vehiculoService.buscarVehiculoPorPlacas(VehiculoStatus.ACTIVE.toString(), placas);
+                tablaVehiculos.setItems(FXCollections.observableList(vehicululoPorPlacas));
+
+            }
+            case "numero serie" -> {
+                busqueda.toUpperCase();
+
+                List<VehiculoDTO> vehiculoPorNumSerie = vehiculoService.buscarVehiculoPorNumSerie(VehiculoStatus.ACTIVE.toString(), busqueda);
+                tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNumSerie));
+
+
+            }
+            case "kilometraje" -> {
+
+                String[] kilometraje;
+
+                if (busqueda.matches("\\d+")) {
+                    Integer vehiculoBuscadoInt = Integer.parseInt(busqueda);
+                    List<VehiculoDTO> vehiculoPorkilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(), vehiculoBuscadoInt);
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorkilometros));
+
+                } else if (busqueda.matches("\\d+,\\d+")) {
+                    kilometraje = busqueda.split(",");
+
+                    //ordenar por el kilometro menor para realizar la consulta
+                    Arrays.stream(kilometraje).sorted();
+
+                    String[] kilometrajeOrdenado = Arrays.stream(kilometraje).sorted().toArray(String[]::new);
+
+                    List<VehiculoDTO> vehiculoPorKilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(), Integer.parseInt(kilometrajeOrdenado[0]), Integer.parseInt(kilometrajeOrdenado[1]));
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorKilometros));
+                } else {
+
+                    List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
+                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo 1000 o bien 0,1000 " +
+                            " si desea buscar por un rango de kilometros");
 
                 }
-                case "modelo" -> {
 
-                    List<VehiculoDTO> vehiculoPorModelo = vehiculoService.buscarVehiculoPorModelo(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorModelo));
+            }
+            case "ultimo servicio" -> {
 
-                }
-                case "categoria" -> {
-
-                    List<VehiculoDTO> vehiculoPorCategoria = vehiculoService.buscarVehiculoPorCategoria(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorCategoria));
-
-                }
-                case "color" -> {
-
-                    List<VehiculoDTO> vehiculoPorColor = vehiculoService.buscarVehiculoPorColor(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorColor));
-
-                }
-                case "año" -> {
-
-                    String[] anios;
-                    Integer anio;
+                boolean consultar = false;
 
 
-                    if (busqueda.matches("\\d{4}")) { // yyyy
-                        anio = Integer.parseInt(busqueda);
+                //forma dd-mm-yyyy
+                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+                    String fecha = busqueda;
+                    String fechaConsulta = "";
 
-                        List<VehiculoDTO> vehiculoPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), anio);
-                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorAnio));
 
+                    try {
+                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-                    } else if (busqueda.matches("\\d{4},\\d{4}")) { //yyyy,yyyy
-                        anios = busqueda.split(",");
+                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
 
-                        Arrays.stream(anios).sorted();
-                        //ordenar años para realizar la consulta siempre con el menor primero
-                        String[] aniosOrdenados = Arrays.stream(anios).sorted().toArray(String[]::new);
+                        fechaConsulta = fechaLD.format(formatterConsulta);
 
-                        List<VehiculoDTO> vehiculosPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), Integer.parseInt(aniosOrdenados[0]), Integer.parseInt(aniosOrdenados[1]));
-                        tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorAnio));
+                        consultar = true;
 
-                    } else {
-                        List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-                        mostrarWarning("Formato incorrecto", "Favor de ingresar un formato de texto correcto", "Por ejemplo yyyy, o bien yyyy,yyyy para buscar por un rango de fechas.");
+                    } catch (DateTimeParseException e) {
+                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                        consultar = false;
 
                     }
-                }
-                case "placas" -> {
+                    if (consultar) {
+                        List<VehiculoDTO> vehiculoPorUltimoServicio = vehiculoService.buscarVehiculoPorUltimoServicio(VehiculoStatus.ACTIVE.toString(), fechaConsulta);
+                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorUltimoServicio));
 
-                    String placas = busqueda;
-                    placas.toUpperCase();
-                    List<VehiculoDTO> vehicululoPorPlacas = vehiculoService.buscarVehiculoPorPlacas(VehiculoStatus.ACTIVE.toString(), placas);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehicululoPorPlacas));
-
-                }
-                case "numero serie" -> {
-                    busqueda.toUpperCase();
-
-                    List<VehiculoDTO> vehiculoPorNumSerie = vehiculoService.buscarVehiculoPorNumSerie(VehiculoStatus.ACTIVE.toString(), busqueda);
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNumSerie));
-
-
-                }
-                case "kilometraje" -> {
-
-                    String[] kilometraje;
-
-                    if (busqueda.matches("\\d+")) {
-                        Integer vehiculoBuscadoInt = Integer.parseInt(busqueda);
-                        List<VehiculoDTO> vehiculoPorkilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(), vehiculoBuscadoInt);
-                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorkilometros));
-
-                    } else if (busqueda.matches("\\d+,\\d+")) {
-                        kilometraje = busqueda.split(",");
-
-                        //ordenar por el kilometro menor para realizar la consulta
-                        Arrays.stream(kilometraje).sorted();
-
-                        String[] kilometrajeOrdenado = Arrays.stream(kilometraje).sorted().toArray(String[]::new);
-
-                        List<VehiculoDTO> vehiculoPorKilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(), Integer.parseInt(kilometrajeOrdenado[0]), Integer.parseInt(kilometrajeOrdenado[1]));
-                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorKilometros));
-                    } else {
-
-                        List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-                        mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo 1000 o bien 0,1000 " +
-                                " si desea buscar por un rango de kilometros");
-
-                    }
-
-                }
-                case "ultimo servicio" -> {
-
-                    boolean consultar = false;
-
-
-                    //forma dd-mm-yyyy
-                    if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                        String fecha = busqueda;
-                        String fechaConsulta = "";
-
-
-                        try {
-                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                            LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-
-                            fechaConsulta = fechaLD.format(formatterConsulta);
-
-                            consultar = true;
-
-                        } catch (DateTimeParseException e) {
-                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                            consultar = false;
-
-                        }
-                        if (consultar) {
-                            List<VehiculoDTO> vehiculoPorUltimoServicio = vehiculoService.buscarVehiculoPorUltimoServicio(VehiculoStatus.ACTIVE.toString(), fechaConsulta);
-                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorUltimoServicio));
-
-
-                        }
-
-                        // forma dd-mm-yyyy,dd-mm-yyyy
-                    } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-                        String[] fecha = busqueda.split(",");
-                        String consultaInicio = "", consultaFinal = "";
-
-                        try {
-                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                            LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                            LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                            //ordenar fecha mayor al inicio para hacer la consulta
-                            if (fecha1.isAfter(fecha2)) {
-                                LocalDate aux = fecha1;
-                                fecha1 = fecha2;
-                                fecha2 = aux;
-
-                            }
-                            consultaInicio = fecha1.format(formatterConsulta);
-                            consultaFinal = fecha2.format(formatterConsulta);
-
-                            consultar = true;
-
-                        } catch (DateTimeParseException e) {
-                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                            consultar = false;
-                        }
-
-                        if (consultar) {
-
-                            List<VehiculoDTO> vehiculoPorUltimoServicio = vehiculoService.buscarVehiculoPorUltimoServicio(VehiculoStatus.ACTIVE.toString(), consultaInicio, consultaFinal);
-                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorUltimoServicio));
-
-                        }
-
-                    } else {
-                        List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-                        mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                                " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
-
-                    }
-                }
-
-                case "fecha registro" -> {
-
-                    boolean consultar = false;
-
-                    if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                        String fecha = busqueda;
-                        LocalDate fechaConsulta;
-
-
-                        try {
-                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                            LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-                            fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
-
-                            consultar = true;
-
-                            if (consultar) {
-
-                                List<VehiculoDTO> vehiculosPorFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(), fechaConsulta);
-                                tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorFechaRegistro));
-
-                            }
-
-
-                        } catch (DateTimeParseException e) {
-                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                            consultar = false;
-
-                        }
-
-                    } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-
-                        String[] fecha = busqueda.split(",");
-                        String consultaInicio = "", consultaFinal = "";
-
-
-                        try {
-                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                            LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                            LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                            //ordenar fecha mayor al inicio para hacer la consulta
-                            if (fecha1.isAfter(fecha2)) {
-                                LocalDate aux = fecha1;
-                                fecha1 = fecha2;
-                                fecha2 = aux;
-                            }
-
-                            consultaInicio = fecha1.format(formatterConsulta);
-                            consultaFinal = fecha2.format(formatterConsulta);
-
-                            consultar = true;
-
-                        } catch (DateTimeParseException e) {
-                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                            consultar = false;
-                        }
-
-                        if (consultar) {
-                            List<VehiculoDTO> vehiculoPorFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal));
-                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorFechaRegistro));
-                        }
-
-
-                    } else {
-                        List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-                        mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                                " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
 
                     }
 
-                }
-                default -> {
-                    mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+                    // forma dd-mm-yyyy,dd-mm-yyyy
+                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
+                    String[] fecha = busqueda.split(",");
+                    String consultaInicio = "", consultaFinal = "";
+
+                    try {
+                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+
+                        //ordenar fecha mayor al inicio para hacer la consulta
+                        if (fecha1.isAfter(fecha2)) {
+                            LocalDate aux = fecha1;
+                            fecha1 = fecha2;
+                            fecha2 = aux;
+
+                        }
+                        consultaInicio = fecha1.format(formatterConsulta);
+                        consultaFinal = fecha2.format(formatterConsulta);
+
+                        consultar = true;
+
+                    } catch (DateTimeParseException e) {
+                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                        consultar = false;
+                    }
+
+                    if (consultar) {
+
+                        List<VehiculoDTO> vehiculoPorUltimoServicio = vehiculoService.buscarVehiculoPorUltimoServicio(VehiculoStatus.ACTIVE.toString(), consultaInicio, consultaFinal);
+                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorUltimoServicio));
+
+                    }
+
+                } else {
+                    List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
+                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
 
                 }
-            }//switch
+            }
+
+            case "fecha registro" -> {
+
+                boolean consultar = false;
+
+                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+                    String fecha = busqueda;
+                    LocalDate fechaConsulta = null;
+
+
+                    try {
+                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+
+                        consultar = true;
+                        
+
+
+                    } catch (DateTimeParseException e) {
+                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                        consultar = false;
+
+                    }
+
+                    if (consultar) {
+
+                        List<VehiculoDTO> vehiculosPorFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(), fechaConsulta);
+                        tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorFechaRegistro));
+
+                    }
+
+                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
+
+                    String[] fecha = busqueda.split(",");
+                    String consultaInicio = "", consultaFinal = "";
+
+
+                    try {
+                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+
+                        //ordenar fecha mayor al inicio para hacer la consulta
+                        if (fecha1.isAfter(fecha2)) {
+                            LocalDate aux = fecha1;
+                            fecha1 = fecha2;
+                            fecha2 = aux;
+                        }
+
+                        consultaInicio = fecha1.format(formatterConsulta);
+                        consultaFinal = fecha2.format(formatterConsulta);
+
+                        consultar = true;
+
+                    } catch (DateTimeParseException e) {
+                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                        consultar = false;
+                    }
+
+                    if (consultar) {
+                        List<VehiculoDTO> vehiculoPorFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal));
+                        tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorFechaRegistro));
+                    }
+
+
+                } else {
+                    List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
+                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
+                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+
+                }
+
+            }
+            default -> {
+                mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+
+            }
+        }//switch
 
     }//buscarVehiculo
 
 
-    public void buscarVehiculo(String busqueda) {
-        List<VehiculoDTO> vehiculos = vehiculoService.buscadorVehiculo(VehiculoStatus.ACTIVE.toString(),busqueda);
+    private void buscarVehiculo(String busqueda) {
+        List<VehiculoDTO> vehiculos = vehiculoService.buscadorVehiculo(VehiculoStatus.ACTIVE.toString(), busqueda);
         tablaVehiculos.setItems(FXCollections.observableList(vehiculos));
 
     }
@@ -736,4 +736,4 @@ public class VehiculoController {
         this.ventanaPrincipalController = controller;
     }//setVentanaPrincipalController
 
- }//clase
+}//clase

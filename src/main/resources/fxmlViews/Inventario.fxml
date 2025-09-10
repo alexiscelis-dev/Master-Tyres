@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.inventario.InventarioController">
+
+    <children>
+
+        <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+
+            <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+
+                <!-- Zona superior: Búsqueda y botón agregar -->
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <TextField fx:id="buscarInventarioBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar llantas..." styleClass="buscador" />
+
+                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                        <Label fx:id="choiceBoxLabel" text="Buscar por:" />
+                        <ChoiceBox fx:id="atributoBusquedaInventario" prefWidth="150.0" styleClass="choicebox-mini2">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Codigo de barras" />
+                                    <String fx:value="Dot" />
+                                    <String fx:value="Marca" />
+                                    <String fx:value="Modelo" />
+                                    <String fx:value="Medida" />
+                                    <String fx:value="Fecha de registro" />
+                                </FXCollections>
+                            </items>
+                        </ChoiceBox>
+                    </HBox>
+
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button fx:id="btnAgregarCliente"  styleClass="boton-accion" text="Agregar llanta" />
+                </HBox>
+
+
+                <!-- Tabla de clientes -->
+
+                <TableView  fx:id="tablaInventario" prefHeight="500.0">
+                    <columns>
+                        <TableColumn fx:id="colCodBarras" prefWidth="80" text="Codigo de Barras"/>
+                        <TableColumn fx:id="colDot" prefWidth="80" text="Dot" />
+                        <TableColumn fx:id="colMarca" prefWidth="80" text="Marca" />
+                        <TableColumn fx:id="colModelo" prefWidth="80" text="Modelo" />
+                        <TableColumn fx:id="colMedida" prefWidth="80" text="Medida" />
+                        <TableColumn fx:id="colIndiceCar" prefWidth="80" text="Indice carga" />
+                        <TableColumn fx:id="colIndiceVel" prefWidth="80" text="Indice velocidad" />
+                        <TableColumn fx:id="colStock" prefWidth="80" text="Stock" />
+                        <TableColumn fx:id="colPrecioCom" prefWidth="80" text="Precio compra" />
+                        <TableColumn fx:id="colPrecioVen" prefWidth="80" text="Precio venta" />
+                        <TableColumn fx:id="colObservaciones" prefWidth="80" text="Observaciones" />
+                        <TableColumn fx:id="colImg" prefWidth="80" text="Imagen" />
+                        <TableColumn fx:id="colFechaReg" prefWidth="80" text="Fecha registro" />
+                    </columns>
+                </TableView>
+
+
+                <Label fx:id="statusLabel" prefHeight="60.0" prefWidth="365.0" text="Label" textFill="WHITE" visible="false">
+                    <VBox.margin>
+                        <Insets left="460.0" />
+                    </VBox.margin>
+                    <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                    </font>
+                </Label>
+
+
+            </VBox>
+
+
+        </AnchorPane>
+
+    </children>
+</AnchorPane>

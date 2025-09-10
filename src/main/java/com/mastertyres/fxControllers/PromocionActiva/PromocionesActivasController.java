@@ -94,7 +94,7 @@ public class PromocionesActivasController {
     @FXML
     private void agregarPromociones(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/NuevaPromocion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/NuevaPromocion.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
@@ -116,16 +116,13 @@ public class PromocionesActivasController {
     }
 
     private void cargarPromociones() {
-        System.out.println("esta entrando");
         List<Promocion> promociones = promocionService.obtenerPromocionesActivas();
         mostrarPromociones(promociones);
     }
 
     private void mostrarPromociones(List<Promocion> promociones) {
-        System.out.println("Entro e mostrar promociones");
         contenedorPromociones.getChildren().clear();
         for (Promocion p : promociones) {
-            System.out.println("Estaentrando al for");
             VBox card = crearCardPromocion(p);
             contenedorPromociones.getChildren().add(card);
         }
@@ -174,9 +171,9 @@ public class PromocionesActivasController {
 
         Label lblValorDesc;
         if ("PORCENTAJE".equals(p.getTipoDescuento())) {
-            lblValorDesc = new Label("Descuento: " + p.getPorcentaje() + "%");
+            lblValorDesc = new Label("Descuento: " + String.format("%.0f",p.getPorcentaje())+ "%");
         } else {
-            lblValorDesc = new Label("Descuento: -$" + p.getPorcentaje());
+            lblValorDesc = new Label("Descuento: -$" +   String.format("%.0f",p.getPorcentaje()) );
         }
         lblValorDesc.setStyle("-fx-text-fill: white;");
 
@@ -222,11 +219,10 @@ public class PromocionesActivasController {
         btnClientesPromocion.setDisable(false);
 
 
-        //System.out.println("Seleccionaste la promocion: " + p.getNombre());
         lblNombre.setText(p.getNombre());
         lblDescripcion.setText(p.getDescripcion());
         lblTipoDescuento.setText(p.getTipoDescuento());
-        lblValorDescuento.setText(p.getPorcentaje()+"");
+        lblValorDescuento.setText( String.format("%.0f",p.getPorcentaje())  +"%");
         lblPrecio.setText(p.getPrecio()+"");
         lblFechaInicio.setText(p.getFechaInicio());
         lblFechaFin.setText(p.getFechaFin());
