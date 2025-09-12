@@ -75,18 +75,13 @@ public class VehiculoService implements IVehiculoService {
         int filasEliminadas = vehiculoRepository.eliminarVehiculo(eliminar, idVehiculo);
 
 
-        if (filasEliminadas > 0) {
-
+        if (filasEliminadas > 0)
             mostrarInformacion("Vehiculo eliminado","Vehiculo eliminado","Vehiculo eliminado exitosamente.");
 
-        } else {
-
-            mostrarError("Error al eliminar vehicul","Algo salio mal","No se pudo eliminar el vehiculo seleccionado.");
-
-        }
+        else
+            mostrarError("Error al eliminar vehiculo","Algo salio mal","No se pudo eliminar el vehiculo seleccionado.");
 
         return filasEliminadas;
-
 
     }//eliminar vehiculo
 

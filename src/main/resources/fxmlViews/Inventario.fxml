@@ -16,7 +16,7 @@
             <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
 
                 <!-- Zona superior: Búsqueda y botón agregar -->
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <HBox fx:id="limpiarChoiceBox" alignment="CENTER_LEFT" spacing="10.0">
                     <TextField fx:id="buscarInventarioBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar llantas..." styleClass="buscador" />
 
                     <HBox alignment="CENTER_RIGHT" spacing="5.0">
@@ -36,15 +36,15 @@
                     </HBox>
 
                     <Pane HBox.hgrow="ALWAYS" />
-                    <Button fx:id="btnAgregarCliente"  styleClass="boton-accion" text="Agregar llanta" />
+                    <Button fx:id="btnAgregarCliente" styleClass="boton-accion" text="Agregar llanta" />
                 </HBox>
 
 
                 <!-- Tabla de clientes -->
 
-                <TableView  fx:id="tablaInventario" prefHeight="500.0">
+                <TableView fx:id="tablaInventario" prefHeight="500.0">
                     <columns>
-                        <TableColumn fx:id="colCodBarras" prefWidth="80" text="Codigo de Barras"/>
+                        <TableColumn fx:id="colCodBarras" prefWidth="80" text="Codigo de Barras" />
                         <TableColumn fx:id="colDot" prefWidth="80" text="Dot" />
                         <TableColumn fx:id="colMarca" prefWidth="80" text="Marca" />
                         <TableColumn fx:id="colModelo" prefWidth="80" text="Modelo" />

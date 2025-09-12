@@ -23,6 +23,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import javafx.util.Duration;
@@ -76,7 +77,7 @@ public class VehiculoController {
     @FXML
     private Label statusLabel;
     @FXML
-    private Label choiceBoxLabel;
+    private HBox limpiarChoiceBox;
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
@@ -152,7 +153,6 @@ public class VehiculoController {
 
                                     if (resultado.isPresent() && resultado.get() == buttonEliminar) {
 
-                                        System.out.println("vehiculoId = " + vehiculoId);
 
                                         vehiculoService.eliminarVehiculo(VehiculoStatus.INACTIVE.toString(), vehiculoId);
 
@@ -173,6 +173,7 @@ public class VehiculoController {
 
                                 case "Copiar" -> {
                                     var selectedCell = tablaVehiculos.getSelectionModel().getSelectedCells();
+
 
                                     if (!selectedCell.isEmpty()) {
                                         TablePosition<?, ?> position = selectedCell.get(0);
@@ -201,9 +202,8 @@ public class VehiculoController {
                                             }).start();
 
 
-                                        } else {
+                                        } else
                                             System.out.println("No hay celda seleccionada");
-                                        }
 
                                     }
 
@@ -285,7 +285,7 @@ public class VehiculoController {
 
                     listViewPopup.show(fila.getScene().getWindow(), coordenadasPantalla.getX(), coordenadasPantalla.getY());
 
-                }
+                }//if if empty
             });
 
             return fila;
@@ -322,11 +322,10 @@ public class VehiculoController {
         });
 
         //pone en null la lista de ChoiceBox
-        choiceBoxLabel.setOnMouseClicked(event -> {
+        limpiarChoiceBox.setOnMouseClicked(event -> {
 
             if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
                 atributoBusquedaVehiculos.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
-
 
         });
 

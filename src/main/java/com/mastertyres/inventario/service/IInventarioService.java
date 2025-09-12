@@ -23,4 +23,8 @@ public interface IInventarioService {
 
     List<Inventario>buscarPorFecha(String active, LocalDate fecha);
 
+    List<Inventario>buscarPorFecha(String active, LocalDate fechaInicio, LocalDate fechaFin);
+
+    int eliminarInventario(String inactive, Integer idInventario);
+
 }//interface
