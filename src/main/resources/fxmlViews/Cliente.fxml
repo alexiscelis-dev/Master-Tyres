@@ -16,11 +16,11 @@
          <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
 
             <!-- Zona superior: Búsqueda y botón agregar -->
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <HBox fx:id="limpiarChoiceBox" alignment="CENTER_LEFT" spacing="10.0">
                <TextField fx:id="buscarClienteBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar cliente..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                  <Label fx:id="choiceBoxLabel" text="Buscar por:" />
+                  <Label text="Buscar por:" />
                   <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="choicebox-mini2">
                   <items>
                         <FXCollections fx:factory="observableArrayList">

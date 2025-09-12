@@ -45,5 +45,7 @@ public interface IVehiculoService {
     List<VehiculoDTO> buscadorVehiculo(String status, String busqueda);
 
 
+
+
 }//interface
 

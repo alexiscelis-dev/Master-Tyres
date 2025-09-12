@@ -2,7 +2,6 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 
 import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.NavigatorManager;
 import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController;
 import com.mastertyres.fxControllers.cliente.ClienteController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
@@ -25,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.io.IOException;
 
 import static com.mastertyres.common.NavigatorManager.goBack;
@@ -43,6 +41,8 @@ public class VentanaPrincipalController {
     private HBox HBoxClientes;
     @FXML
     private HBox HBoxPromociones;
+    @FXML
+    private HBox HBoxInventario;
     @FXML
     private Pane panelMenu;
     @FXML
@@ -66,26 +66,31 @@ public class VentanaPrincipalController {
 
 
         // iconoMenu.setOnMouseClicked(event -> toggleSidebar());
-        HBoxLogOut.setOnMouseClicked(event -> logOut(event, "/fxml_views/Login.fxml"));
+        HBoxLogOut.setOnMouseClicked(event -> logOut(event, "/fxmlViews/Login.fxml"));
 
         HBoxVehiculos.setOnMouseClicked(event -> {
-                    viewContent(event, "/fxml_views/Vehiculo.fxml", "Vehiculos");
+                    viewContent(event, "/fxmlViews/Vehiculo.fxml", "Vehiculos");
                     cambiarPaginaEtiqueta.setText("Vehiculos");
 
                 }
         );
         HBoxClientes.setOnMouseClicked(event -> {
-                    viewContent(event, "/fxml_views/Cliente.fxml", "Clientes");
+                    viewContent(event, "/fxmlViews/Cliente.fxml", "Clientes");
                     cambiarPaginaEtiqueta.setText("Clientes");
                 }
         );
         HBoxPromociones.setOnMouseClicked(event -> {
-                    viewContent(event, "/fxml_views/PromocionesActivas.fxml", "Promociones");
+                    viewContent(event, "/fxmlViews/PromocionesActivas.fxml", "Promociones");
                     cambiarPaginaEtiqueta.setText("Promociones");
                 }
         );
+        HBoxInventario.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/Inventario.fxml", "Inventario de llantas");
+            cambiarPaginaEtiqueta.setText("Inventario de llantas");
+        });
+
         LogoPrincipal.setOnMouseClicked(event -> {
-            regresarInicio("/fxml_views/RegresarMenu.fxml");
+            regresarInicio("/fxmlViews/RegresarMenu.fxml");
             cambiarPaginaEtiqueta.setText("Inicio");
         });
 

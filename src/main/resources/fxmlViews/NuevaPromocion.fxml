@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -190,12 +188,19 @@
                                 <Insets right="35.0" />
                             </HBox.margin>
                         </DatePicker>
-                        <DatePicker fx:id="fechaFin" editable="false" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
+                        <DatePicker fx:id="fechaFin" disable="true" editable="false" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
                     </children>
                     <VBox.margin>
                         <Insets left="40.0" />
                     </VBox.margin>
                 </HBox>
+            <HBox alignment="CENTER" prefHeight="98.0" prefWidth="432.0">
+               <children>
+                  <TextField fx:id="textFieldImg" disable="true" prefHeight="26.0" prefWidth="204.0" promptText=" Elige una foto (Opcional)" styleClass="buscador-img" />
+
+                  <Button fx:id="btnImagen" disable="true" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0" styleClass="boton-img" text="..." />
+               </children>
+            </HBox>
 
             </children>
         </VBox>
@@ -240,13 +245,11 @@
                                <TableColumn fx:id="colMarca" prefWidth="166.20001220703125" text="Marca" />
                                <TableColumn fx:id="colModelo" minWidth="50" prefWidth="174.60003662109375" text="Modelo" />
                                <TableColumn fx:id="colAnio" minWidth="0.0" prefWidth="160.20001220703125" text="Año" />
-                               <TableColumn fx:id="colEliminar" text="Acción" style="-fx-alignment: CENTER;"/>
+                               <TableColumn fx:id="colEliminar" style="-fx-alignment: CENTER;" text="Acción" />
       
                            </columns>
                        </TableView>
                   </children></VBox>
-
-
 
              </VBox>
             <HBox alignment="BOTTOM_CENTER" prefHeight="140.0" prefWidth="500.0">
@@ -259,17 +262,7 @@
                </children>
 
 
-
-
             </HBox>
-
-
-
-
-
-
-
-
 
          </children></VBox>
     </children>
