@@ -2,8 +2,10 @@ package com.mastertyres.vehiculoPromocion.repository;
 
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,8 +19,13 @@ public interface VehiculoPromocionRepository extends JpaRepository<VehiculoPromo
            from VehiculoPromocion vp
            join fetch vp.marca m
            join fetch vp.modelo mo
-           where vp.promocion.promocionId = :promocionId
+           where vp.promocion.promocionId = :promocionId 
            """)
     List<VehiculoPromocion> findAllByPromocionIdWithMarcaModelo(@Param("promocionId") Integer promocionId);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM VehiculoPromocion vp WHERE vp.promocion.promocionId = :id")
+    void eliminarPorPromocionId(@Param("id") Integer id);
 
 }//interface

@@ -400,4 +400,25 @@ SpinnerAnnio
     -fx-border-radius: 15px;
 }
 
+/*  Slider === */
+
+.slider .thumb {
+    -fx-background-color: #8EB83D;
+    -fx-background-radius: 50%;
+    -fx-padding: 8;
+}
+
+.seccion-titulo {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-text-alignment: center;
+}
+.label, .button, .choice-box, .text-field {
+    -fx-text-fill:white;
+    -fx-font-weight:bold;
+
+}
 
