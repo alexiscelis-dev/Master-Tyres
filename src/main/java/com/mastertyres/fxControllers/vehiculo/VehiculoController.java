@@ -2,6 +2,7 @@ package com.mastertyres.fxControllers.vehiculo;
 
 
 import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.model.VehiculoStatus;
@@ -16,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
@@ -26,6 +28,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -107,7 +110,7 @@ public class VehiculoController {
                     Integer vehiculoId = vehiculoSeleccionado.getId();
 
                     ListView<String> listaOpciones = new ListView<>();
-                    listaOpciones.getItems().addAll("Copiar", "Copiar fila completa", "Editar", "Eliminar");
+                    listaOpciones.getItems().addAll("Ver informacion", "Copiar", "Copiar fila completa", "Editar", "Eliminar");
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
 
@@ -167,8 +170,39 @@ public class VehiculoController {
                                 }
 
                                 case "Editar" -> {
-                                    System.out.println("Editado");
+                                    try {
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarVehiculo.fxml"));
+                                        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                                        Parent root = loader.load();
 
+                                        EditarVehiculoController controller = loader.getController();
+                                        controller.setVehiculo(vehiculoSeleccionado);
+
+                                        Stage stage = new Stage();
+                                        stage.setTitle("Editar Cliente");
+                                        stage.setScene(new Scene(root));
+                                        stage.showAndWait();
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                }
+
+                                case "Ver informacion" -> {
+                                    try {
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleVehiculo.fxml"));
+                                        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                                        Parent root = loader.load();
+
+                                        detalleVehiculo controller = loader.getController();
+                                        controller.setVehiculo(vehiculoSeleccionado);
+
+                                        Stage stage = new Stage();
+                                        stage.setTitle("Informacion Vehiculo");
+                                        stage.setScene(new Scene(root));
+                                        stage.showAndWait();
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
+                                    }
                                 }
 
                                 case "Copiar" -> {

@@ -1,6 +1,8 @@
 package com.mastertyres.fxControllers.PromocionActiva;
 
 import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.fxControllers.EditarControllers.EditarPromocionController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
@@ -9,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -16,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -81,6 +85,8 @@ public class PromocionesActivasController {
         });
 
         btnAgregarPromocion.setOnAction( event -> agregarPromociones(event));
+
+        EditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
 
         EliminarPromocion.setOnAction(event -> eliminarPromocion());
 
@@ -210,6 +216,25 @@ public class PromocionesActivasController {
         }
     }
 
+    @FXML
+    private void abrirVentanaEditarPromocion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/EditarPromocion.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            EditarPromocionController controller = loader.getController();
+            controller.setPromocion(promocionSeleccionada);
+
+            Stage stage = new Stage();
+            stage.setTitle("Editar Promoción");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void mostrarDetallePromocion(Promocion p) {
 
         promocionSeleccionada = p;
@@ -233,9 +258,31 @@ public class PromocionesActivasController {
     private void eliminarPromocion() {
         if (promocionSeleccionada != null) {
 
-            mostrarInformacion("Promocion Eliminada","","Promocion Eliminada con exito.");
+            //  Confirmación antes de actualizar
+            boolean confirmar = MensajesAlert.mostrarConfirmacion(
+                    "Confirmar eliminacion.",
+                    "¿Desea eliminar la promoción?",
+                    "Se eliminara la promoción seleccionada.",
+                    "Sí, eliminar",
+                    "Cancelar"
+            );
 
-            promocionService.desactivarPromocion(promocionSeleccionada.getPromocionId());
+            if (!confirmar) {
+                return; // Usuario canceló
+            }
+
+            try {
+                promocionService.desactivarPromocion(promocionSeleccionada.getPromocionId());
+                mostrarInformacion("Eliminado","Promocion Eliminada","Promocion Eliminada con exito.");
+            }catch (Exception e) {
+                MensajesAlert.mostrarError(
+                        "Error al Eliminar",
+                        "No se pudo eliminar la promoción",
+                        "Detalles: " + e.getMessage()
+                );
+                e.printStackTrace();
+            }
+
             cargarPromociones(); // Recargamos la lista para reflejar cambios
             limpiarDetallePromocion(); // Opcional: limpiar labels después
         }

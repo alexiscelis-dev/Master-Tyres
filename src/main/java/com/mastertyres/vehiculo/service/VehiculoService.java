@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;
@@ -28,6 +29,7 @@ public class VehiculoService implements IVehiculoService {
         this.vehiculoRepository = vehiculoRepository;
 
     }
+
 
     public void guardarVehiculos(Cliente cliente, List<Vehiculo> vehiculos) {
         if (cliente == null || vehiculos == null || vehiculos.isEmpty()) {
@@ -49,6 +51,27 @@ public class VehiculoService implements IVehiculoService {
 
             vehiculoRepository.save(v);
         }
+    }
+
+    @Transactional
+    public Vehiculo actualizarVehiculo(Integer id, Vehiculo datosActualizados) {
+        Vehiculo existente = vehiculoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Vehículo no encontrado con id " + id));
+
+        // 🔹 Actualizar campos
+        existente.setMarca(datosActualizados.getMarca());
+        existente.setModelo(datosActualizados.getModelo());
+        existente.setCategoria(datosActualizados.getCategoria());
+        existente.setAnio(datosActualizados.getAnio());
+        existente.setKilometros(datosActualizados.getKilometros());
+        existente.setColor(datosActualizados.getColor());
+        existente.setPlacas(datosActualizados.getPlacas());
+        existente.setNumSerie(datosActualizados.getNumSerie());
+        existente.setObservaciones(datosActualizados.getObservaciones());
+        existente.setUltimoServicio(datosActualizados.getUltimoServicio());
+        existente.setUpdated_at(LocalDateTime.now().toString());
+
+        return vehiculoRepository.save(existente); // save() hace update si ya existe
     }
 
     public boolean existeVehiculoPorPlacas(String placas) {

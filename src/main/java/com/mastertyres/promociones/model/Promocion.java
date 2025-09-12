@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "promociones")
@@ -51,7 +52,7 @@ public class Promocion {
 
    @Column(name = "updated_at")
    @CreationTimestamp
-    private LocalDate updated_at;
+    private LocalDateTime updated_at;
 
     private String img;
 
