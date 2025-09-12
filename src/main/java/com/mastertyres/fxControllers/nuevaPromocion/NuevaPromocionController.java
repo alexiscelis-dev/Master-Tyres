@@ -15,9 +15,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +66,10 @@ public class NuevaPromocionController {
     private TableColumn<VehiculoPromocion, String> colAnio;
     @FXML
     private Button btnAgregarVehiculo;
+    @FXML
+    private Button btnImagen;
+    @FXML
+    private TextField textFieldImg;
     @FXML
     private TableColumn<VehiculoPromocion, Void> colEliminar;
 
@@ -157,8 +164,11 @@ public class NuevaPromocionController {
             }
         });
 
+        btnImagen.setOnAction(event -> seleccionarImg());
+
 
     }//initialize
+
 
     private void cargarPorcentaje() {
         List<String> tiposDescuentos = new ArrayList<>();
@@ -181,12 +191,14 @@ public class NuevaPromocionController {
         choiceMarca.setValue(null);
         choiceModelo.setValue(null);
         tableVehiculosParticipantes.getItems().clear();
+        textFieldImg.setText("");
     }
 
     private void obtenerPorcentaje(Double valNuevo) {
 
         double porcentaje = (valNuevo.doubleValue() - porcentajeDescuento.getMin()) /
                 (porcentajeDescuento.getMax() - porcentajeDescuento.getMin());
+
 
         String styleTrack = String.format(
                 "-fx-background-color: linear-gradient(to right, #8EB83D %.0f%%, #cccccc %.0f%%);",
@@ -195,12 +207,14 @@ public class NuevaPromocionController {
         );
         int porcentajeInt = (int) (porcentaje * 100);
 
+
+
         if (porcentajeDescuento.lookup(".track") != null) {
             porcentajeDescuento.lookup(".track").setStyle(styleTrack);
             descuentoLabel.setText("Descuento " + porcentajeInt + "%");
 
         }
-    }
+    }//obtenerPorcentaje
 
     private void tipoDescuento(String tipo) {
 
@@ -211,7 +225,12 @@ public class NuevaPromocionController {
                 porcentajeDescuento.setDisable(false);
                 LocalDate fecha = LocalDate.now();
                 fechaInicio.setValue(fecha);
+                fechaFin.setValue(fecha);
                 fechaFin.setDisable(false);
+                fechaInicio.setDisable(false);
+                btnImagen.setDisable(false);
+                textFieldImg.setDisable(false);
+
 
             }
             case "otro" -> {
@@ -219,12 +238,13 @@ public class NuevaPromocionController {
                 porcentajeDescuento.setDisable(false);
                 LocalDate fecha = LocalDate.now();
                 fechaInicio.setValue(fecha);
+                fechaFin.setValue(fecha);
                 fechaFin.setDisable(false);
+                fechaInicio.setDisable(false);
+                btnImagen.setDisable(false);
+                textFieldImg.setDisable(false);
 
             }
-            default -> {
-            }
-
         }//switch
 
     }
@@ -251,7 +271,7 @@ public class NuevaPromocionController {
         if (nombrePromocion.getText() == null || descripcion.getText() == null || tipoDescuento.getValue() == null || precioSinDescuento.getText() == null ||
                 fechaInicio.getValue() == null || fechaFin.getValue() == null || choiceMarca.getValue() == null || choiceModelo.getValue() == null ||
                 nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() || precioSinDescuento.getText().isEmpty()
-                || tableVehiculosParticipantes.getItems() == null)
+                || tableVehiculosParticipantes.getItems() == null )
 
             empty = true;
 
@@ -287,8 +307,13 @@ public class NuevaPromocionController {
             fechaValida = false;
 
         } else if (fechaFinLD.equals(fechaInicioLD)) {
-            fechaValida = false;
-            mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
+
+          fechaValida =  mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
+
+          if (fechaValida)
+              insertarPromocion();
+          else
+              fechaValida = false;
 
         }
         return fechaValida;
@@ -338,7 +363,7 @@ public class NuevaPromocionController {
                 .fechaInicio(String.valueOf(fechaInicio.getValue()))
                 .fechaFin(String.valueOf(fechaFin.getValue()))
                 .active(StatusPromocion.ACTIVE.toString())
-                .img("")
+                .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
                 .build();
 
 
@@ -374,15 +399,35 @@ public class NuevaPromocionController {
             }//for
 
             mostrarInformacion("Promocion registrada", "", "La promocion se registro exitosamente");
+            clean();
 
 
         } catch (Exception e) {
-            mostrarError("Error al crear promocion", "Ha ocurrido un error al crear la promocion", e.getMessage());
+            mostrarError("Error al crear promocion", "","Ha ocurrido un error al crear la promocion vuelva a iintentarlo mas tarde");
+            clean();
             System.out.println(e.getMessage());
         }
 
 
     }//insertarPromocion
+
+    private  void  seleccionarImg(){
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Archivos de imagen","*.png","*.jpg","*.jpeg")
+        );
+
+        Stage stage = (Stage) btnImagen.getScene().getWindow();
+        File archivo = fileChooser.showOpenDialog(stage);
+
+        if (archivo != null){
+            String url = archivo.getAbsolutePath();
+            textFieldImg.setText(url);
+
+        }
+
+    }//seleccionarImg
 
 
 }//clase

@@ -23,6 +23,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -95,7 +96,7 @@ public class ClienteController {
     @FXML
     private Label statusLabel;
     @FXML
-    private Label choiceBoxLabel;
+    private HBox limpiarChoiceBox;
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
@@ -190,7 +191,7 @@ public class ClienteController {
 
                                 case "Editar" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/EditarCliente.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarCliente.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
@@ -208,7 +209,7 @@ public class ClienteController {
 
                                 case "Ver informacion" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/DetalleCliente.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleCliente.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
@@ -361,7 +362,7 @@ public class ClienteController {
         });
 
         //pone en null la lista de ChoiceBox
-        choiceBoxLabel.setOnMouseClicked(event -> {
+        limpiarChoiceBox.setOnMouseClicked(event -> {
 
             if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
                 atributoBusquedaClientes.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
@@ -374,7 +375,7 @@ public class ClienteController {
     @FXML
     private void agregarCliente(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/AgregarCliente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarCliente.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
