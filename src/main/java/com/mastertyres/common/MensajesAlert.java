@@ -1,6 +1,7 @@
 package com.mastertyres.common;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
 import java.util.Optional;
@@ -44,8 +45,8 @@ public class MensajesAlert {
         ventana.setHeaderText(header);
         ventana.setContentText(mensaje);
 
-        ButtonType button1 = new ButtonType(txtButton1);
-        ButtonType button2 = new ButtonType(txtButton2);
+        ButtonType button1 = new ButtonType(txtButton1, ButtonBar.ButtonData.OK_DONE);
+        ButtonType button2 = new ButtonType(txtButton2, ButtonBar.ButtonData.CANCEL_CLOSE);
 
         ventana.getButtonTypes().setAll(button1,button2);
         Optional<ButtonType> resultado = ventana.showAndWait();

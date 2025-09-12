@@ -218,7 +218,6 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             "LOWER (COALESCE(v.color, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
             "CAST (v.anio AS STRING) LIKE CONCAT('%', :busqueda , '%') OR " +
             "LOWER (COALESCE(v.numSerie, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
-            "CAST (v.kilometros AS STRING) LIKE CONCAT('%', :busqueda , '%') OR " +
             "LOWER (COALESCE(v.placas, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) ")
     List<VehiculoDTO>buscadorVehiculos(@Param("status")String status,@Param("busqueda")String busqueda);
 

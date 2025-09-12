@@ -22,7 +22,7 @@ public class LoginController {
 
     @FXML
     private void logIn(ActionEvent event){
-        cambiarVistaPrincipal(event, "/fxml_views/Master Tyres Principal.fxml");
+        cambiarVistaPrincipal(event, "/fxmlViews/Master Tyres Principal.fxml");
     }
 
     private void cambiarVistaPrincipal(ActionEvent event,String archivoFXML){
