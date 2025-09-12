@@ -119,17 +119,14 @@ public class AgregarClienteController {
 
 
         tablaVehiculos.setItems(listaVehiculos);
-
         colMarca.setCellValueFactory(data -> {
             Marca marca = data.getValue().getMarca();
             return new SimpleStringProperty(marca != null ? marca.getNombreMarca() : "");
         });
-
         colModelo.setCellValueFactory(data -> {
             Modelo modelo = data.getValue().getModelo();
             return new SimpleStringProperty(modelo != null ? modelo.getNombreModelo() : "");
         });
-
         colCategoria.setCellValueFactory(data -> {
             Categoria categoria = data.getValue().getCategoria();
             return new SimpleStringProperty(categoria != null ? categoria.getNombreCategoria() : "");

@@ -4,6 +4,7 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.ClienteStatus;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoStatus;
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -23,6 +25,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -122,7 +125,7 @@ public class ClienteController {
                     Integer clienteId = clienteSeleccionado.getClienteId();
 
                     ListView<String> listaOpciones = new ListView<>();
-                    listaOpciones.getItems().addAll("Copiar", "Copiar fila completa", "Editar", "Eliminar");
+                    listaOpciones.getItems().addAll("Ver informacion","Copiar", "Copiar fila completa", "Editar", "Eliminar");
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
 
@@ -186,9 +189,41 @@ public class ClienteController {
                                 }
 
                                 case "Editar" -> {
-                                    System.out.println("Editado");
+                                    try {
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/EditarCliente.fxml"));
+                                        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                                        Parent root = loader.load();
 
+                                        EditarClienteController controller = loader.getController();
+                                        controller.setCliente(clienteSeleccionado); // pasa el cliente actual
+
+                                        Stage stage = new Stage();
+                                        stage.setTitle("Editar Cliente");
+                                        stage.setScene(new Scene(root));
+                                        stage.showAndWait();
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
+                                    }
                                 }
+
+                                case "Ver informacion" -> {
+                                    try {
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/DetalleCliente.fxml"));
+                                        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                                        Parent root = loader.load();
+
+                                        detalleCliente controller = loader.getController();
+                                        controller.setCliente(clienteSeleccionado); // pasa el cliente actual
+
+                                        Stage stage = new Stage();
+                                        stage.setTitle("Informacion Cliente");
+                                        stage.setScene(new Scene(root));
+                                        stage.showAndWait();
+                                    } catch (IOException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                }
+
 
                                 case "Copiar" -> {
                                     var selectedCell = tablaClientes.getSelectionModel().getSelectedCells();
