@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefWidth="600" prefHeight="500" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarClienteController"
+            style="-fx-background-color: #080808;"
+            stylesheets="/styles_css/ClientesStyles.css">
+
+    <children>
+        <VBox spacing="10" alignment="CENTER" prefWidth="600" prefHeight="500" styleClass="secciones">
+
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Editar Cliente"  styleClass="seccion-titulo" />
+
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" prefWidth="150"/>
+                    <ColumnConstraints prefWidth="300"/>
+                </columnConstraints>
+
+                <!-- Nombre -->
+                <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtNombre" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="buscador"/>
+
+                <!-- Primer Apellido -->
+                <Label text="Primer Apellido:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtApellido" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="buscador"/>
+
+                <!-- Segundo Apellido -->
+                <Label text="Segundo Apellido:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtSegundoApellido" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="buscador" />
+
+                <!-- Teléfono -->
+                <Label text="Teléfono:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtTelefono" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="buscador"  />
+
+                <!-- Hobbie -->
+                <Label text="Hobbie:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtHobbie" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="buscador" />
+
+                <!-- RFC -->
+                <Label text="RFC:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtRfc" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="buscador" />
+
+                <!-- Domicilio -->
+                <Label text="Domicilio:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtDomicilio" GridPane.rowIndex="6" GridPane.columnIndex="1"  styleClass="buscador" />
+
+                <!-- Estado -->
+                <Label text="Estado:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtEstado" GridPane.rowIndex="7" GridPane.columnIndex="1" styleClass="buscador" />
+
+                <!-- Ciudad -->
+                <Label text="Ciudad:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtCiudad" GridPane.rowIndex="8" GridPane.columnIndex="1" styleClass="buscador" />
+
+                <!-- Género -->
+                <Label text="Género:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+                <ChoiceBox fx:id="choiceGenero" GridPane.rowIndex="9" GridPane.columnIndex="1" styleClass="choicebox-mini" />
+
+                <!-- Tipo Cliente -->
+                <Label text="Tipo Cliente:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+                <ChoiceBox fx:id="choiceTipoCliente" GridPane.rowIndex="10" GridPane.columnIndex="1" styleClass="choicebox-mini" />
+
+                <!-- Fecha Cumpleaños -->
+                <Label text="Cumpleaños:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="dateCumpleanos" GridPane.rowIndex="11" GridPane.columnIndex="1" styleClass="date-picker"  />
+            </GridPane>
+
+            <!-- Botones -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Cancelar" onAction="#cerrarVentana" styleClass="boton-accion" />
+                <Button text="Cambiar" fx:id="btnCambiar"  styleClass="boton-accion" onAction="#cambiarCliente" />
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>

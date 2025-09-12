@@ -29,10 +29,10 @@ public class VehiculoPromocionService implements   IVehiculoPromocionService{
 
     }
 
-
-
-
-
+    @Transactional
+    public void eliminarPorPromocionId(Integer promocionId) {
+        repo.eliminarPorPromocionId(promocionId);
+    }
 
 
 }//clase
