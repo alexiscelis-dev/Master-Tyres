@@ -91,7 +91,7 @@
       
                           <Button fx:id="btnAgregarPromocion" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text=" Agregar Promoción" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
                      <Button fx:id="EliminarPromocion" disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Eliminar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.rowSpan="2" />
-                     <Button fx:id="EditarPromocion" disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Editar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                     <Button fx:id="EditarPromocion"  disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Editar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
 
                             <columnConstraints>
                                 <ColumnConstraints minWidth="-Infinity" prefWidth="140.0" />

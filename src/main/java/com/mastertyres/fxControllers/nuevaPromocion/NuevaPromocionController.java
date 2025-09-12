@@ -334,7 +334,7 @@ public class NuevaPromocionController {
                 .descripcion(descripcion.getText())
                 .tipoDescuento(tipoDescuento.getValue())
                 .precio(Float.parseFloat(precioSinDescuento.getText()))
-                .porcentaje((float) porcentajeDescuento.getValue())
+                .porcentaje((int) porcentajeDescuento.getValue())
                 .fechaInicio(String.valueOf(fechaInicio.getValue()))
                 .fechaFin(String.valueOf(fechaFin.getValue()))
                 .active(StatusPromocion.ACTIVE.toString())
