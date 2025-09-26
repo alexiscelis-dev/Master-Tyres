@@ -110,6 +110,7 @@ public class PromocionesActivasController {
             AnchorPane.setRightAnchor(root, 0.0);
             AnchorPane.setBottomAnchor(root, 0.0);
             AnchorPane.setLeftAnchor(root, 0.0);
+            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -177,9 +178,9 @@ public class PromocionesActivasController {
 
         Label lblValorDesc;
         if ("PORCENTAJE".equals(p.getTipoDescuento())) {
-            lblValorDesc = new Label("Descuento: " + String.format("%.0f",p.getPorcentaje())+ "%");
+            lblValorDesc = new Label("Descuento: " + p.getPorcentaje());
         } else {
-            lblValorDesc = new Label("Descuento: -$" +   String.format("%.0f",p.getPorcentaje()) );
+            lblValorDesc = new Label("Descuento:  $" + p.getPorcentaje() );
         }
         lblValorDesc.setStyle("-fx-text-fill: white;");
 
@@ -219,7 +220,7 @@ public class PromocionesActivasController {
     @FXML
     private void abrirVentanaEditarPromocion() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/EditarPromocion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarPromocion.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
@@ -247,7 +248,7 @@ public class PromocionesActivasController {
         lblNombre.setText(p.getNombre());
         lblDescripcion.setText(p.getDescripcion());
         lblTipoDescuento.setText(p.getTipoDescuento());
-        lblValorDescuento.setText( String.format("%.0f",p.getPorcentaje())  +"%");
+        lblValorDescuento.setText( p.getPorcentaje()  +"%");
         lblPrecio.setText(p.getPrecio()+"");
         lblFechaInicio.setText(p.getFechaInicio());
         lblFechaFin.setText(p.getFechaFin());

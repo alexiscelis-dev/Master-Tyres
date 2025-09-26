@@ -4,6 +4,7 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController;
 import com.mastertyres.fxControllers.cliente.ClienteController;
+import com.mastertyres.fxControllers.inventario.InventarioController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static com.mastertyres.common.NavigatorManager.goBack;
+
 
 
 @Component
@@ -48,7 +49,7 @@ public class VentanaPrincipalController {
     @FXML
     private ImageView LogoPrincipal;
     @FXML
-    private Label cambiarPaginaEtiqueta;
+    public Label cambiarPaginaEtiqueta;
     @FXML
     private ImageView irAtras;
 
@@ -94,9 +95,7 @@ public class VentanaPrincipalController {
             cambiarPaginaEtiqueta.setText("Inicio");
         });
 
-        irAtras.setOnMouseClicked(event -> {
-            goBack();
-        });
+
 
 
     }
@@ -137,16 +136,18 @@ public class VentanaPrincipalController {
             Parent contenido = loader.load();
             Object controller = loader.getController();
 
-
+//verifica a que instancia pertenece el objeto para mostrar un panel(evita el error NullPointerException) por mandar un Panel null
             if (controller instanceof PromocionesActivasController) {
                 ((PromocionesActivasController) controller).setVentanaPrincipalController(this);
             }
-
             if (controller instanceof ClienteController) {
                 ((ClienteController) controller).setVentanaPrincipalController(this);
             }
             if (controller instanceof VehiculoController) {
                 ((VehiculoController) controller).setVentanaPrincipalController(this);
+            }
+            if (controller instanceof InventarioController) {
+                ((InventarioController) controller).setVentanaPrincipalController(this);
             }
             panelMenu.getChildren().clear();
             panelMenu.getChildren().add(contenido);
