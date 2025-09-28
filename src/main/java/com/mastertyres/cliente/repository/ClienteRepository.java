@@ -12,11 +12,29 @@ import java.util.List;
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
 
+    @Query("""
+        SELECT DISTINCT c 
+        FROM Cliente c
+        JOIN c.vehiculos v
+        JOIN VehiculoPromocion vp ON vp.marca = v.marca 
+                                AND vp.modelo = v.modelo
+                                AND vp.annio = v.anio
+        WHERE vp.promocion.promocionId = :promocionId
+          AND c.active = 'ACTIVE'
+          AND v.active = 'ACTIVE'
+    """)
+    List<Cliente> findClientesAplicables(@Param("promocionId") Integer promocionId);
+
+
+
     //@Query("SELECT DISTINCT c FROM Cliente c LEFT JOIN FETCH c.vehiculos v LEFT JOIN FETCH v.marca LEFT JOIN FETCH v.modelo WHERE c.active = :active")
     //List<Cliente> listarCliente(@Param("active") String active);
 
     @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.active = 'ACTIVE' AND c.rfc = :rfc")
     boolean existeClientePorRFC(@Param("rfc") String rfc);
+
+    @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.active = 'ACTIVE' AND c.rfc = :rfc and c.clienteId <> :idCliente")
+    boolean existeClienteRFC_Editar(@Param("rfc") String rfc, @Param("idCliente") Integer idCliente);
 
     // Consulta base: solo clientes activos
     @Query("SELECT c FROM Cliente c WHERE c.active = :active")

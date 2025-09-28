@@ -23,10 +23,14 @@ public class ClienteService implements IClienteService {
     @Autowired
     private VehiculoRepository vehiculoRepository;
 
-
     @Autowired
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
+    }
+
+    public List<Cliente> obtenerClientesAplicables(Integer promocionId) {
+        List<Cliente> clientes = clienteRepository.findClientesAplicables(promocionId);
+        return clientes;
     }
 
     @Transactional(readOnly = true)
@@ -59,7 +63,6 @@ public class ClienteService implements IClienteService {
         return clientes;
     }
 
-
     @Transactional
     @Override
     public int eliminarCliente(String eliminar, Integer idCliente) {
@@ -79,7 +82,6 @@ public class ClienteService implements IClienteService {
 
     }//eliminarCliente
 
-
     @Transactional(readOnly = true)
     public List<Cliente> buscarClientes( String filtro) {
         return clienteRepository.buscarClientes(filtro);
@@ -95,7 +97,9 @@ public class ClienteService implements IClienteService {
         return clienteRepository.existeClientePorRFC(rfc);
     }
 
-
+    public boolean existeClienteRFC_Editar(String rfc, Integer id) {
+        return clienteRepository.existeClienteRFC_Editar(rfc,id);
+    }
 
     @Transactional(readOnly = true)
     public List<Cliente> buscarClientePorNombre(String active, String nombre) {
@@ -125,7 +129,6 @@ public class ClienteService implements IClienteService {
 
     }//buscarClientePorNombre
 
-
     @Transactional(readOnly = true)
     public List<Cliente> buscarClientePorNumTelefono(String active, String numTelefono) {
         List<Cliente> clientes = clienteRepository.buscarClientePorNumTelefono(active,numTelefono);
@@ -153,7 +156,6 @@ public class ClienteService implements IClienteService {
         return clientes;
 
     }//buscarClientePorNumTelefono
-
 
     @Transactional(readOnly = true)
     public List<Cliente> buscarClientePorEstado(String active, String estado) {
@@ -295,7 +297,6 @@ public class ClienteService implements IClienteService {
 
     }//buscarClientePorRfc
 
-
     @Transactional(readOnly = true)
     public List<Cliente> buscadorClientes(String status, String busqueda) {
         List<Cliente> clientes = clienteRepository.buscadorClientes(status,busqueda);
@@ -323,8 +324,5 @@ public class ClienteService implements IClienteService {
         return clientes;
 
     }//buscadorClientes
-
-
-
 
 }//clase

@@ -2,7 +2,10 @@ package com.mastertyres.fxControllers.EditarControllers;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.fxControllers.cliente.ClienteController;
+import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -14,6 +17,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -25,6 +29,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static com.mastertyres.common.MensajesAlert.mostrarWarning;
 
 @Component
 public class EditarVehiculoController {
@@ -102,7 +108,7 @@ public class EditarVehiculoController {
             if (texto.isEmpty()) {
                 placasValido.set(true);
                 txtPlacas.setStyle("");
-            } else if (!texto.matches("^[A-Z0-9]{1,7}(-[A-Z0-9]{1,4})?$")) {
+            } else if (!texto.matches("^[A-Z0-9]+(-[A-Z0-9]+)*$")) {
                 placasValido.set(false);
                 txtPlacas.setStyle("-fx-border-color: red;");
             } else {
@@ -313,9 +319,29 @@ public class EditarVehiculoController {
             return; // Usuario canceló
         }
 
+        String placas = txtPlacas.getText();
+        String numSerie = txtNumSerie.getText();
+        Integer id = vehiculo.getId();
+
+        if (placas != null && !placas.isBlank()){
+            if (vehiculoService.existeVehiculoPlacas_Editar(placas, id)){
+                MensajesAlert.mostrarError( "Error al actualizar","Vehículo duplicado",
+                        "Ya existe un vehículo activo con las mismas placas.");
+                return;
+            }
+        }
+
+        if (numSerie != null && !numSerie.isBlank()){
+            if (vehiculoService.existeVehiculoNumeroSerie_Editar(numSerie, id)){
+                MensajesAlert.mostrarError( "Error al actualizar","Vehículo duplicado",
+                        "Ya existe un vehículo activo con el mismo numero de serie.");
+                return;
+            }
+        }
+
         try {
             Vehiculo v = new Vehiculo();
-            v.setVehiculoId(vehiculo.getId()); // id viene del DTO
+            v.setVehiculoId(vehiculo.getId());
             v.setMarca(choiceMarca.getValue());
             v.setModelo(choiceModelo.getValue());
             v.setCategoria(choiceCategoria.getValue());
