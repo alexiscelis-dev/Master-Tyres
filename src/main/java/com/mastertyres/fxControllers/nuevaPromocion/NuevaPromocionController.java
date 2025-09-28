@@ -424,7 +424,6 @@ public class NuevaPromocionController {
         if (archivo != null){
             String url = archivo.getAbsolutePath();
             textFieldImg.setText(url);
-
         }
 
     }//seleccionarImg
