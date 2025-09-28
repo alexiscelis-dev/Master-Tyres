@@ -1,6 +1,5 @@
 package com.mastertyres;
 
-import com.mastertyres.common.NavigatorManager;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +31,6 @@ public class MasterTyresApplication extends Application {
 	public void start(Stage ventanaPrincipal) throws Exception {
 		hostServices = getHostServices();
 
-        NavigatorManager.setStage(ventanaPrincipal); //sirve para ir hacia atras entre ventanas
 
 		//Cargar ventana para ajustar tamaño
 
@@ -46,8 +44,6 @@ public class MasterTyresApplication extends Application {
 
 		try {
 			root = loader.load();
-            rooNavigator = loaderNavigator.load();
-            NavigatorManager.navigateTo(rooNavigator);
 
 		} catch (Exception e) {
 			e.printStackTrace();

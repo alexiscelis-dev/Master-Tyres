@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.AgregarInventario.AgregarInventarioController">
+    <children>
+
+        <VBox layoutX="320.0" layoutY="150.0" prefHeight="620.0" prefWidth="600.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../styles_css/Inventario.css">
+
+            <children>
+
+
+                <HBox alignment="CENTER" prefHeight="33.0" prefWidth="460.0">
+                    <children>
+                        <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="272.0" styleClass="seccion-titulo" text="Agregar llanta" textFill="WHITE" />
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="30.0" />
+                    </VBox.margin>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+                    <children>
+                        <Label style="-fx-pref-width: 140;" text="Codigo de barras">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="20.0" right="10.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtCodBarras" styleClass="buscador-codigo">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                        </TextField>
+
+                        <Label style="-fx-pref-width: 60;" styleClass="label-codigo" text="Dot">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="15.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtDot" styleClass="buscador-codigo" />
+
+
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" />
+                    </padding>
+                </HBox>
+
+
+                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+                    <children>
+                        <Label style="-fx-pref-width: 118;" styleClass="label-formulario" text="Marca">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="20.0" right="42.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtMarca" styleClass="buscador-marca" />
+
+                        <Label style="-fx-pref-width: 80;" text="Modelo">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="10.0" right="8.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtModelo" styleClass="buscador-marca" />
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" />
+                    </padding>
+                </HBox>
+
+
+                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+                    <children>
+                        <Label styleClass="label-formulario" text="Medida">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="20.0" right="55.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtMedida1" styleClass="buscador-medida" />
+                        <Label text="  /">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets right="8.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtMedida2" styleClass="buscador-medida" />
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" />
+                    </padding>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+                    <children>
+                        <Label style="-fx-pref-width: 165;" text="Indice carga">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="20.0" />
+                            </HBox.margin>
+                        </Label>
+                        <ChoiceBox fx:id="cbIndiceCarga" prefWidth="150.0" styleClass="choicebox-mini3">
+
+
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets right="20.0" />
+                            </HBox.margin>
+                        </ChoiceBox>
+
+                        <Label style="-fx-pref-width: 125;" text="Indice de velocidad">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Label>
+                        <ChoiceBox fx:id="cbIndiceVelocidad" prefWidth="150.0" styleClass="choicebox-mini3">
+
+                        </ChoiceBox>
+
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" />
+                    </padding>
+                </HBox>
+
+
+                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+                    <children>
+                        <Label styleClass="label-formulario" text="Stock">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="20.0" right="15.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtStock" styleClass="buscador-medida" />
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" />
+                    </padding>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+                    <children>
+                        <Label styleClass="label-formulario" text="Precio de compra">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="20.0" right="15.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtPrecioC" styleClass="buscador-medida">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets right="25.0" />
+                            </HBox.margin>
+                        </TextField>
+
+                        <Label styleClass="label-formulario" text="Precio de venta">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="15.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtPrecioV" styleClass="buscador-medida" />
+
+
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" />
+                    </padding>
+                    <opaqueInsets>
+                        <Insets bottom="25.0" />
+                    </opaqueInsets>
+                </HBox>
+
+
+                <HBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label styleClass="label-formulario" text="Observaciones">
+                            <HBox.margin>
+                                <Insets left="20.0" />
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txtObservaciones" prefHeight="45" promptText="Características, observaciones etc..." styleClass="buscador-observaciones" HBox.hgrow="ALWAYS" />
+                    </children>
+                    <padding>
+                        <Insets bottom="20.0" />
+                    </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+                </HBox>
+
+
+                <HBox alignment="CENTER" prefHeight="30.0" prefWidth="560.0">
+                    <children>
+                        <TextField fx:id="txtImg" disable="false" prefHeight="26.0" prefWidth="204.0" promptText="Seleccionar imagen (Opcional)" styleClass="buscador-img" />
+
+                        <Button fx:id="btnImagen" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0" styleClass="boton-img" text="..." />
+                    </children>
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                    <VBox.margin>
+                        <Insets bottom="20.0" />
+                    </VBox.margin>
+                </HBox>
+
+                <HBox alignment="CENTER" prefHeight="91.0" prefWidth="560.0">
+                    <children>
+                        <Button fx:id="btnLimpiar" mnemonicParsing="false" styleClass="boton-accion" text="Limpiar">
+                            <HBox.margin>
+                                <Insets right="15.0" />
+                            </HBox.margin>
+                        </Button>
+                        <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar" />
+                    </children>
+
+
+                </HBox>
+
+
+            </children>
+
+
+        </VBox>
+
+
+    </children>
+
+
+</AnchorPane>
