@@ -421,4 +421,29 @@ SpinnerAnnio
     -fx-font-weight:bold;
 
 }
+.buscador-img {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 2;
+    -fx-background-radius: 5;
+    -fx-padding: 4 8;
+}
+.boton-img {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-background-radius: 2px;
+    -fx-cursor: hand;
+    -fx-pref-width: 4px;
+    -fx-pref-height: 4px;
+}
 
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #080808;
+}

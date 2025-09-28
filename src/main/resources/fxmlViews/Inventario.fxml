@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.inventario.InventarioController">
+<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/Inventario.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.inventario.InventarioController">
 
     <children>
 
-        <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+        <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/Inventario.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
             <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
 
@@ -21,7 +21,8 @@
 
                     <HBox alignment="CENTER_RIGHT" spacing="5.0">
                         <Label fx:id="choiceBoxLabel" text="Buscar por:" />
-                        <ChoiceBox fx:id="atributoBusquedaInventario" prefWidth="150.0" styleClass="choicebox-mini2">
+                        <ChoiceBox fx:id="atributoBusquedaInventario" prefWidth="150.0" styleClass="choicebox-buscarpor">
+
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="Codigo de barras" />
@@ -30,13 +31,15 @@
                                     <String fx:value="Modelo" />
                                     <String fx:value="Medida" />
                                     <String fx:value="Fecha de registro" />
+                                    <String fx:value="Sin stock" />
                                 </FXCollections>
                             </items>
+
                         </ChoiceBox>
                     </HBox>
 
                     <Pane HBox.hgrow="ALWAYS" />
-                    <Button fx:id="btnAgregarCliente" styleClass="boton-accion" text="Agregar llanta" />
+                    <Button fx:id="btnAgregarInventario" onAction="#agregarInventario" styleClass="boton-accion" text="Agregar llanta" />
                 </HBox>
 
 
@@ -55,7 +58,7 @@
                         <TableColumn fx:id="colPrecioCom" prefWidth="80" text="Precio compra" />
                         <TableColumn fx:id="colPrecioVen" prefWidth="80" text="Precio venta" />
                         <TableColumn fx:id="colObservaciones" prefWidth="80" text="Observaciones" />
-                        <TableColumn fx:id="colImg" prefWidth="80" text="Imagen" />
+
                         <TableColumn fx:id="colFechaReg" prefWidth="80" text="Fecha registro" />
                     </columns>
                 </TableView>

@@ -58,8 +58,8 @@
                     <!-- Imagen -->
                     <Label text="Imagen:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
                     <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                        <TextField fx:id="txtRutaImagen" editable="false" prefHeight="26.0" prefWidth="253.0" styleClass="buscador" />
-                        <Button fx:id="btnSeleccionarImagen" onAction="#seleccionarImagen" prefHeight="26.0" prefWidth="106.0" styleClass="date-picker" text="Seleccionar..." />
+                        <TextField fx:id="txtRutaImagen" editable="false" prefHeight="26.0" prefWidth="253.0" promptText="Seleccionar imagen (Opcional)" styleClass="buscador-img" />
+                        <Button fx:id="btnSeleccionarImagen" onAction="#seleccionarImagen" prefHeight="26.0" prefWidth="111.0" styleClass="boton-img" text="..." />
                     </HBox>
                     <rowConstraints>
                         <RowConstraints />
