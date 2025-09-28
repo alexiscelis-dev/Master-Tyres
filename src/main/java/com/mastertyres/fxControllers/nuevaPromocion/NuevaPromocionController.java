@@ -55,7 +55,7 @@ public class NuevaPromocionController {
     @FXML
     private ChoiceBox<Modelo> choiceModelo;
     @FXML
-    private ChoiceBox<String> choiceAnio;
+    private ChoiceBox<Integer> choiceAnio;
     @FXML
     private TableView tableVehiculosParticipantes;
     @FXML
@@ -63,7 +63,7 @@ public class NuevaPromocionController {
     @FXML
     private TableColumn<VehiculoPromocion, String> colModelo;
     @FXML
-    private TableColumn<VehiculoPromocion, String> colAnio;
+    private TableColumn<VehiculoPromocion, Integer> colAnio;
     @FXML
     private Button btnAgregarVehiculo;
     @FXML
@@ -145,14 +145,14 @@ public class NuevaPromocionController {
                 });
 
                 // (opcional) estilo para que sea redondo o plano
-                btn.setStyle("-fx-background-color: white;");
+                btn.setStyle("-fx-background-color: red;");
 
                 btn.hoverProperty().addListener((obs, wasHovered, isNowHovered) -> {
                     if (isNowHovered) {
                         btn.setStyle("-fx-scale-x: 1.1;\n" +
                                 "    -fx-scale-y: 1.1;");
                     } else {
-                        btn.setStyle("-fx-background-color: white;");
+                        btn.setStyle("-fx-background-color: red;");
                     }
                 });
             }
@@ -254,12 +254,12 @@ public class NuevaPromocionController {
         choiceMarca.setItems(observableList(promocionService.listarMarcas()));
         choiceModelo.setItems(observableList(promocionService.listarModelos()));
 
-        List<String> anios = new ArrayList<>();
+        List<Integer> anios = new ArrayList<>();
 
         int anioActual = LocalDate.now().getYear();
 
         for (int i = anioActual; i >= 1950; i--) {
-            anios.add(i + "");
+            anios.add(i);
         }
         choiceAnio.getItems().setAll(anios);
 
@@ -336,7 +336,7 @@ public class NuevaPromocionController {
     private void agregarTabla() {
         Marca marca = choiceMarca.getValue();
         Modelo modelo = choiceModelo.getValue();
-        String anio = choiceAnio.getValue();
+        Integer anio = choiceAnio.getValue();
 
         if (marca != null && modelo != null && anio != null) {
             VehiculoPromocion vehiculo = new VehiculoPromocion();
@@ -380,7 +380,7 @@ public class NuevaPromocionController {
 
                 Integer marcaId = vehiculoPromocionSeleccionado.getMarca().getMarcaId();
                 Integer modeloId = vehiculoPromocionSeleccionado.getModelo().getModeloId();
-                String anio = vehiculoPromocionSeleccionado.getAnnio();
+                Integer anio = vehiculoPromocionSeleccionado.getAnnio();
 
                 Marca marca = new Marca();
                 marca.setMarcaId(marcaId);
