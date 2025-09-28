@@ -311,7 +311,7 @@ public class NuevaPromocionController {
           fechaValida =  mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
 
           if (fechaValida)
-              insertarPromocion();
+              fechaValida = true;
           else
               fechaValida = false;
 
@@ -424,7 +424,6 @@ public class NuevaPromocionController {
         if (archivo != null){
             String url = archivo.getAbsolutePath();
             textFieldImg.setText(url);
-
         }
 
     }//seleccionarImg

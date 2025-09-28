@@ -1,5 +1,7 @@
 package com.mastertyres.fxControllers.inventario;
 
+import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -7,28 +9,29 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +43,8 @@ import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class InventarioController {
+
+
     @FXML
     private TableView<Inventario> tablaInventario;
     @FXML
@@ -65,8 +70,6 @@ public class InventarioController {
     @FXML
     private TableColumn<Inventario, String> colObservaciones;
     @FXML
-    private TableColumn<Inventario, ImageView> colImg;
-    @FXML
     private TableColumn<Inventario, String> colFechaReg;
     @FXML
     private TextField buscarInventarioBuscador;
@@ -76,6 +79,11 @@ public class InventarioController {
     private HBox limpiarChoiceBox;
     @FXML
     private Label statusLabel;
+    @FXML
+    private Button btnAgregarInventario;
+    private VentanaPrincipalController ventanaPrincipalController;
+
+
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
@@ -86,6 +94,7 @@ public class InventarioController {
 
     @FXML
     private void initialize() {
+
         cargarInventario();
 
         //Buscar mientras escribes
@@ -131,7 +140,7 @@ public class InventarioController {
                     Integer inventarioId = seleccionado.getInventarioId();
 
                     ListView<String> listaOpciones = new ListView<>();
-                    listaOpciones.getItems().addAll("Copiar", "Copiar fila completa", "Editar", "Eliminar");
+                    listaOpciones.getItems().addAll("Ver informacion", "Copiar", "Copiar fila completa", "Editar", "Eliminar");
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
 
@@ -145,6 +154,29 @@ public class InventarioController {
 
                         if (seleccion != null) {
                             switch (seleccion) {
+
+
+                                case "Ver informacion" -> {
+                                    try {
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleInventario.fxml"));
+                                        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
+                                        Parent root = loader.load();
+                                        DetalleInventarioController detalleInventario = loader.getController();
+                                        detalleInventario.InformacionInventario(seleccionado);
+
+
+                                        Stage stage = new Stage();
+                                        stage.setTitle("Informacion del inventario");
+                                        stage.setScene(new Scene(root));
+                                        stage.showAndWait();
+
+
+                                    } catch (IOException ex) {
+                                        mostrarError("Error", "", "Ocurrio un error");
+                                    }
+
+                                }
 
                                 case "Eliminar" -> {
 
@@ -256,61 +288,6 @@ public class InventarioController {
             return fila;
         });
 
-
-        colImg.setCellFactory(col -> {
-            return new TableCell<Inventario, ImageView>()  {
-                private final ImageView imageView = new ImageView();
-
-                {
-                    imageView.setFitWidth(50);
-                    imageView.setFitHeight(50);
-                    imageView.setPreserveRatio(true);
-
-                    imageView.setOnMouseClicked(event -> {
-                        if (getItem() != null)
-                            //  expandirImagen(getItem());
-                            System.out.println();
-                    });
-
-                }//ImageView
-
-                @Override
-                protected void updateItem(ImageView item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null)
-                        setGraphic(null);
-                    else {
-                      setGraphic(item);
-
-                        item.setOnMouseClicked(event -> {
-                            ImageView grande = new ImageView(item.getImage());
-                            grande.setPreserveRatio(true);
-                            grande.setFitWidth(600);
-                            grande.setFitHeight(600);
-
-                            StackPane root = new StackPane(grande);
-                            root.setPadding(new Insets(10));
-
-                            Popup popup = new Popup();
-                            popup.getContent().add(root);
-
-                            // Mostrar sobre la ventana principal
-                            popup.show(getScene().getWindow());
-
-                            // Para cerrar al hacer clic en cualquier lugar del popup
-                            root.setOnMouseClicked(e -> popup.hide());
-
-
-                        });
-
-                    }
-
-                }//updatedItem
-
-
-            };
-        });
-
     }//initialize
 
 
@@ -369,48 +346,6 @@ public class InventarioController {
 
         colObservaciones.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getObservaciones())
-        );
-        colImg.setCellValueFactory(data ->
-        {
-            String ruta = data.getValue().getImagen();
-            ImageView imagenView = new ImageView();
-
-            try {
-                if (ruta != null && !ruta.isEmpty() && new File(ruta).exists()) {
-                    Image image = new Image("file:" + ruta, 100, 100, true, true);
-                    imagenView.setImage(image);
-
-                } else {
-                    InputStream is = getClass().getResourceAsStream("/icons/imagenPorDefecto.jpg");
-
-                    if (is != null) {
-                        Image defaultImage = new Image(is, 100, 100, true, true);
-                        imagenView.setImage(defaultImage);
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }//try catch
-            imagenView.setFitWidth(100);
-            imagenView.setFitHeight(100);
-            imagenView.setPreserveRatio(true);
-
-            return new SimpleObjectProperty<>(imagenView);
-        });
-
-        colImg.setCellFactory(column -> new TableCell<Inventario, ImageView>() {
-                    @Override
-                    protected void updateItem(final ImageView item, final boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(item);
-                        }
-                    }
-                }
-
         );
 
         cargarDatosInventario();
@@ -541,5 +476,34 @@ public class InventarioController {
         }//switch
 
     }//buscarInventario
+
+    @FXML
+    private void agregarInventario(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarInventario.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            Pane panel = ventanaPrincipalController.getPanelMenu();
+
+
+            panel.getChildren().setAll(root);
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar llanta");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarError("Error", "", "Ocurrio un error al mostrar la ventana.");
+        }
+
+
+    }//agregarInventario
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
 }//clase

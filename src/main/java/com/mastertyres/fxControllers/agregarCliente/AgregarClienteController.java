@@ -52,49 +52,85 @@ public class AgregarClienteController {
     private VehiculoService vehiculoService;
 
     // Columnas de tabla vehiculos
-    @FXML private TableView<Vehiculo> tablaVehiculos;
-    @FXML private TableColumn<Vehiculo, String> colMarca;
-    @FXML private TableColumn<Vehiculo, String> colCategoria;
-    @FXML private TableColumn<Vehiculo, String> colColor;
-    @FXML private TableColumn<Vehiculo, String> colPlacas;
-    @FXML private TableColumn<Vehiculo, String> colAnnio;
-    @FXML private TableColumn<Vehiculo, String> colModelo;
-    @FXML private TableColumn<Vehiculo, String> colNumSerie;
-    @FXML private TableColumn<Vehiculo, String> colKilometros;
-    @FXML private TableColumn<Vehiculo, String> colultimoServicio;
-    @FXML private TableColumn<Vehiculo, String> colObservaciones;
-    @FXML private TableColumn<Vehiculo, Void> colEliminar;
+    @FXML
+    private TableView<Vehiculo> tablaVehiculos;
+    @FXML
+    private TableColumn<Vehiculo, String> colMarca;
+    @FXML
+    private TableColumn<Vehiculo, String> colCategoria;
+    @FXML
+    private TableColumn<Vehiculo, String> colColor;
+    @FXML
+    private TableColumn<Vehiculo, String> colPlacas;
+    @FXML
+    private TableColumn<Vehiculo, String> colAnnio;
+    @FXML
+    private TableColumn<Vehiculo, String> colModelo;
+    @FXML
+    private TableColumn<Vehiculo, String> colNumSerie;
+    @FXML
+    private TableColumn<Vehiculo, String> colKilometros;
+    @FXML
+    private TableColumn<Vehiculo, String> colultimoServicio;
+    @FXML
+    private TableColumn<Vehiculo, String> colObservaciones;
+    @FXML
+    private TableColumn<Vehiculo, Void> colEliminar;
 
     //Campos Cliente
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtApellido;
-    @FXML private TextField txtSegundoApellido;
-    @FXML private TextField txtTelefono;
-    @FXML private TextField txtDomicilio;
-    @FXML private TextField txtCiudad;
-    @FXML private TextField txtEstado;
-    @FXML private TextField txtHobbie;
-    @FXML private TextField txtRFC;
-    @FXML private DatePicker pickerCumpleanos;
-    @FXML private ChoiceBox<String> choiceTipoCliente;
-    @FXML private ChoiceBox<String> choiceGenero;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtApellido;
+    @FXML
+    private TextField txtSegundoApellido;
+    @FXML
+    private TextField txtTelefono;
+    @FXML
+    private TextField txtDomicilio;
+    @FXML
+    private TextField txtCiudad;
+    @FXML
+    private TextField txtEstado;
+    @FXML
+    private TextField txtHobbie;
+    @FXML
+    private TextField txtRFC;
+    @FXML
+    private DatePicker pickerCumpleanos;
+    @FXML
+    private ChoiceBox<String> choiceTipoCliente;
+    @FXML
+    private ChoiceBox<String> choiceGenero;
 
     // Campos Vehiculo
-    @FXML private ChoiceBox<Marca> choiceMarca;
-    @FXML private ChoiceBox<Modelo> choiceModelo;
-    @FXML private ChoiceBox<Categoria> choiceCategoria;
-    @FXML private TextField txtColor;
-    @FXML private TextField txtPlacas;
-    @FXML private Spinner<Integer> spinnerAnio;
-    @FXML private TextField txtSerie;
-    @FXML private TextField txtKilometros;
-    @FXML private DatePicker pickerUltimoServicio;
-    @FXML private TextField txtObservaciones;
+    @FXML
+    private ChoiceBox<Marca> choiceMarca;
+    @FXML
+    private ChoiceBox<Modelo> choiceModelo;
+    @FXML
+    private ChoiceBox<Categoria> choiceCategoria;
+    @FXML
+    private TextField txtColor;
+    @FXML
+    private TextField txtPlacas;
+    @FXML
+    private Spinner<Integer> spinnerAnio;
+    @FXML
+    private TextField txtSerie;
+    @FXML
+    private TextField txtKilometros;
+    @FXML
+    private DatePicker pickerUltimoServicio;
+    @FXML
+    private TextField txtObservaciones;
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
 
     // Botones Principales
-    @FXML private Button btnAgregarVehiculo;
-    @FXML private Button btnGuardar;
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private Button btnGuardar;
 
     //Validaciones:
     private BooleanProperty rfcValido = new SimpleBooleanProperty(true);
@@ -114,7 +150,7 @@ public class AgregarClienteController {
 
         cargarOpciones();
         int currentYear = Year.now().getValue();
-        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear , currentYear);
+        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
         spinnerAnio.setValueFactory(yearFactory);
 
 
@@ -405,6 +441,7 @@ public class AgregarClienteController {
             public String toString(Marca marca) {
                 return marca != null ? marca.getNombreMarca() : "";
             }
+
             @Override
             public Marca fromString(String string) {
                 return null;
@@ -416,6 +453,7 @@ public class AgregarClienteController {
             public String toString(Modelo modelo) {
                 return modelo != null ? modelo.getNombreModelo() : "";
             }
+
             @Override
             public Modelo fromString(String string) {
                 return null;
@@ -427,6 +465,7 @@ public class AgregarClienteController {
             public String toString(Categoria categoria) {
                 return categoria != null ? categoria.getNombreCategoria() : "";
             }
+
             @Override
             public Categoria fromString(String string) {
                 return null;
@@ -449,7 +488,7 @@ public class AgregarClienteController {
     @FXML
     private void agregarVehiculo(ActionEvent event) {
 
-        if(!serieValido.get() || !kilometrosValido.get() || !placasValido.get()){
+        if (!serieValido.get() || !kilometrosValido.get() || !placasValido.get()) {
             mostrarAlerta("Error en campos", "Por favor, corrige los campos marcados en rojo antes de agregar vehiculo");
             return;
         }
@@ -497,7 +536,7 @@ public class AgregarClienteController {
         txtObservaciones.clear();
     }
 
-    private void LimpiarCamposClientes(){
+    private void LimpiarCamposClientes() {
         txtNombre.clear();
         txtApellido.clear();
         txtSegundoApellido.clear();
@@ -514,8 +553,8 @@ public class AgregarClienteController {
     @FXML
     private void GuardarCliente(ActionEvent event) {
 
-        if (!rfcValido.get() ||  !telefonoValido.get() ) {
-            mostrarError("Error en campos", "","Por favor, corrige los campos marcados en rojo antes de guardar.");
+        if (!rfcValido.get() || !telefonoValido.get()) {
+            mostrarError("Error en campos", "", "Por favor, corrige los campos marcados en rojo antes de guardar.");
             return;
         }
 
@@ -523,7 +562,7 @@ public class AgregarClienteController {
         String rfc = txtRFC.getText();
         if (rfc != null && !rfc.isBlank()) {
             if (clienteService.existeClientePorRFC(rfc)) {
-                mostrarWarning("RFC duplicado","", "Ya existe un cliente activo con este RFC.");
+                mostrarWarning("RFC duplicado", "", "Ya existe un cliente activo con este RFC.");
                 return;
             }
         }
@@ -533,17 +572,17 @@ public class AgregarClienteController {
             String placas = v.getPlacas();
             String numSerie = v.getNumSerie();
 
-            if (placas != null && !placas.isBlank()){
-                if (vehiculoService.existeVehiculoPorPlacas(placas)){
-                    mostrarWarning( "Vehículo duplicado","",
+            if (placas != null && !placas.isBlank()) {
+                if (vehiculoService.existeVehiculoPorPlacas(placas)) {
+                    mostrarWarning("Vehículo duplicado", "",
                             "Ya existe un vehículo activo con las mismas placas.");
                     return;
                 }
             }
 
-            if (numSerie != null && !numSerie.isBlank()){
-                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)){
-                    mostrarWarning( "Vehículo duplicado","",
+            if (numSerie != null && !numSerie.isBlank()) {
+                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)) {
+                    mostrarWarning("Vehículo duplicado", "",
                             "Ya existe un vehículo activo con el mismo numero de serie.");
                     return;
                 }
@@ -578,7 +617,6 @@ public class AgregarClienteController {
         }
 
 
-
         // Crear Cliente
         Cliente cliente = new Cliente();
         cliente.setUpdated_at(LocalDate.now().toString());  // <<< AGREGADO
@@ -602,7 +640,7 @@ public class AgregarClienteController {
             switch (choiceGenero.getValue()) {
                 case "Masculino" -> cliente.setGenero("M");
                 case "Femenino" -> cliente.setGenero("F");
-                case "Otro"     -> cliente.setGenero("O");
+                case "Otro" -> cliente.setGenero("O");
             }
         }
 
@@ -615,16 +653,16 @@ public class AgregarClienteController {
             if (v.getCreated_at() == null) {
                 v.setCreated_at(LocalDate.now().toString());  // Asignar fecha creación aquí
             }
-            if (v.getUpdated_at() == null){
+            if (v.getUpdated_at() == null) {
                 v.setUpdated_at(LocalDate.now().toString());
             }
-            if (v.getFechaRegistro() == null){
+            if (v.getFechaRegistro() == null) {
                 v.setFechaRegistro(LocalDate.now().toString());
             }
         }
         cliente.setVehiculos(listaVehiculos);
 
-        try{
+        try {
             // Guardar usando el servicio
             clienteService.guardarCliente(cliente);
 
@@ -633,14 +671,11 @@ public class AgregarClienteController {
             LimpiarCamposClientes();
             listaVehiculos.clear();
 
-            mostrarInformacion("Cliente guardado con éxito","", "El cliente guardado con éxito");
-        }catch (Exception e){
-            mostrarError("Error","Cliente NO guardado", "El cliente NO pudo ser guardado");
+            mostrarInformacion("Cliente guardado con éxito", "", "El cliente guardado con éxito");
+        } catch (Exception e) {
+            mostrarError("Error", "Cliente NO guardado", "El cliente NO pudo ser guardado");
         }
 
-
-//        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Cliente guardado con éxito", ButtonType.OK);
-//        alert.showAndWait();
     }
 
 }

@@ -54,4 +54,5 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
 
 
 
+
 }//interface
