@@ -1,7 +1,9 @@
 package com.mastertyres.fxControllers.PromocionActiva;
 
+import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.fxControllers.ClientesPromocionesController.ClientesPromocionesController;
 import com.mastertyres.fxControllers.EditarControllers.EditarPromocionController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.promociones.model.Promocion;
@@ -19,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -126,6 +129,33 @@ public class PromocionesActivasController {
         mostrarPromociones(promociones);
     }
 
+    @FXML
+    private void AbrirClientesAplicables() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/ClientesAplicablesPromocion.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            ClientesPromocionesController controller = loader.getController();
+
+            // 👇 Aquí pasas el HostServices desde tu Application
+            controller.setHostServices(MasterTyresApplication.getAppHostServices());
+
+            controller.LlenarTabla(promocionSeleccionada);
+
+            Stage stage = new Stage();
+            stage.setTitle("Clientes aplicables a la promoción");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.showAndWait();
+            cargarPromociones();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
     private void mostrarPromociones(List<Promocion> promociones) {
         contenedorPromociones.getChildren().clear();
         for (Promocion p : promociones) {
@@ -135,7 +165,6 @@ public class PromocionesActivasController {
     }
 
     private VBox crearCardPromocion(Promocion p) {
-        System.out.println("Entro en crear promociones");
         VBox card = new VBox();
         card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
         card.setPrefSize(500, 100);
@@ -177,9 +206,9 @@ public class PromocionesActivasController {
 
         Label lblValorDesc;
         if ("PORCENTAJE".equals(p.getTipoDescuento())) {
-            lblValorDesc = new Label("Descuento: " + String.format("%.0f",p.getPorcentaje())+ "%");
+            lblValorDesc = new Label("Descuento: " + p.getPorcentaje() + "%");
         } else {
-            lblValorDesc = new Label("Descuento: -$" +   String.format("%.0f",p.getPorcentaje()) );
+            lblValorDesc = new Label("Descuento: -$" +   p.getPorcentaje() );
         }
         lblValorDesc.setStyle("-fx-text-fill: white;");
 
@@ -219,7 +248,7 @@ public class PromocionesActivasController {
     @FXML
     private void abrirVentanaEditarPromocion() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml_views/EditarPromocion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarPromocion.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
@@ -229,7 +258,11 @@ public class PromocionesActivasController {
             Stage stage = new Stage();
             stage.setTitle("Editar Promoción");
             stage.setScene(new Scene(root));
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+
             stage.showAndWait();
+            cargarPromociones();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -247,7 +280,7 @@ public class PromocionesActivasController {
         lblNombre.setText(p.getNombre());
         lblDescripcion.setText(p.getDescripcion());
         lblTipoDescuento.setText(p.getTipoDescuento());
-        lblValorDescuento.setText( String.format("%.0f",p.getPorcentaje())  +"%");
+        lblValorDescuento.setText( p.getPorcentaje()  +"%");
         lblPrecio.setText(p.getPrecio()+"");
         lblFechaInicio.setText(p.getFechaInicio());
         lblFechaFin.setText(p.getFechaFin());
@@ -303,4 +336,9 @@ public class PromocionesActivasController {
         btnClientesPromocion.setDisable(true);
     }
 
+    public void actualizar(ActionEvent actionEvent) {
+        txtBuscar.setText("");
+        limpiarDetallePromocion();
+        cargarPromociones();
+    }
 }

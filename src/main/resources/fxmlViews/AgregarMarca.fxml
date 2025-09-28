@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.EditarMarcasModelosCategorias.AgregarMarcaController">
+
+    <children>
+        <HBox alignment="TOP_CENTER" spacing="20">
+
+            <!-- FORMULARIO Marca -->
+            <VBox alignment="CENTER" prefHeight="500" prefWidth="600" spacing="10" styleClass="secciones">
+
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
+
+                <Label styleClass="seccion-titulo" text="Agregar Marca" />
+
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" prefWidth="150" />
+                        <ColumnConstraints prefWidth="350.0" />
+                    </columnConstraints>
+
+                    <!-- Nombre -->
+                    <Label alignment="CENTER" text="Nombre de la Marca:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="txtMarca" promptText="Nombre de la marca" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
+
+
+                </GridPane>
+
+                <!-- Botones -->
+                <HBox alignment="CENTER" spacing="20">
+                    <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar" />
+                    <Button fx:id="btnAgregar" onAction="#GuardarMarca" styleClass="boton-accion" text="Agregar Marca" />
+                </HBox>
+            </VBox>
+
+            <!-- VEHÍCULOS PARTICIPANTES -->
+            <VBox alignment="CENTER" minWidth="400.0" prefHeight="500.0" prefWidth="600.0" spacing="15.0" styleClass="secciones">
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
+
+                <Label styleClass="seccion-titulo" text="Agrega por lo menos un modelo con la marca:" />
+
+                <HBox alignment="TOP_CENTER" spacing="5">
+                    <TextField fx:id="txtModelo" prefWidth="160.0" promptText="Modelo" styleClass="buscador" />
+                    <Label text="   Categoria:    " />
+                    <ChoiceBox fx:id="choiceCategoria" prefWidth="160.0" styleClass="choicebox-mini2" />
+                </HBox>
+
+                <!-- Botón Agregar -->
+                <Button fx:id="btnAgregarVehiculo" onAction="#agregarVehiculo" styleClass="boton-accion" text="Agregar Modelo" />
+
+                <!-- Tabla -->
+                <TableView fx:id="tablaVehiculos" maxWidth="385.0" prefHeight="222.0" prefWidth="385.0">
+                    <columns>
+                        <TableColumn fx:id="colModelo" prefWidth="140.0" text="Modelo" />
+                        <TableColumn fx:id="colCategoria" prefWidth="140.0" text="Categoria" />
+                        <TableColumn fx:id="colEliminar" prefWidth="51.0" style="-fx-alignment:CENTER;" text="Eliminar" />
+                    </columns>
+                </TableView>
+            </VBox>
+
+        </HBox>
+
+    </children>
+</AnchorPane>

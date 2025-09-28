@@ -2,11 +2,15 @@ package com.mastertyres.fxControllers.cliente;
 
 
 import com.mastertyres.cliente.model.Cliente;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 @Component
@@ -41,7 +45,13 @@ public class detalleCliente {
         txtGenero.setText(txtGenero.getText() + " " + clienteSeleccionado.getGenero());
         txtTipoCliente.setText(txtTipoCliente.getText() + " " + clienteSeleccionado.getTipoCliente());
         txtFechaCumple.setText(txtFechaCumple.getText() + " " + clienteSeleccionado.getFechaCumple());
-        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + clienteSeleccionado.getCreated_at());
+
+        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String fechaStr = clienteSeleccionado.getCreated_at();
+        LocalDate fecha = LocalDate.parse(fechaStr, formatterEntrada);
+        String texto = fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));  //mostrar solo fecha sin la hora del registro
+        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + texto);
+
         txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + clienteSeleccionado.getUpdated_at());
 
     }

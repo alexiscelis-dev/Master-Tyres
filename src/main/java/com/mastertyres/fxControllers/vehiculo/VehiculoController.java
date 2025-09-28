@@ -27,6 +27,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -181,7 +182,11 @@ public class VehiculoController {
                                         Stage stage = new Stage();
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
+
+                                        stage.initModality(Modality.APPLICATION_MODAL);
+
                                         stage.showAndWait();
+                                        cargarVehiculos();
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
                                     }
@@ -199,6 +204,7 @@ public class VehiculoController {
                                         Stage stage = new Stage();
                                         stage.setTitle("Informacion Vehiculo");
                                         stage.setScene(new Scene(root));
+                                        stage.initModality(Modality.APPLICATION_MODAL);
                                         stage.showAndWait();
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -367,6 +373,13 @@ public class VehiculoController {
     }//initialize
 
     @FXML
+    public void actualizar(ActionEvent actionEvent) {
+        buscarVehiculoBuscador.setText("");
+        atributoBusquedaVehiculos.setValue(null);
+        cargarVehiculos();
+    }
+
+    @FXML
     private void agregarVehiculo(ActionEvent event) {
 
         try {
@@ -388,8 +401,7 @@ public class VehiculoController {
 
     }
 
-
-    private void cargarVehiculos() {
+    public void cargarVehiculos() {
 
         colCliente.setCellValueFactory(data -> {
 
@@ -467,7 +479,6 @@ public class VehiculoController {
 
 
     }//cargarVehiculos
-
 
     private void cargarDatosVehiculo() {
 
@@ -757,16 +768,34 @@ public class VehiculoController {
 
     }//buscarVehiculo
 
-
     private void buscarVehiculo(String busqueda) {
         List<VehiculoDTO> vehiculos = vehiculoService.buscadorVehiculo(VehiculoStatus.ACTIVE.toString(), busqueda);
         tablaVehiculos.setItems(FXCollections.observableList(vehiculos));
 
     }
 
-
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }//setVentanaPrincipalController
 
+    public void ModificarMarcaModeloCategoria(ActionEvent actionEvent) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarMarcas_Modelos_Categorias.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            Pane panel = ventanaPrincipalController.getPanelMenu();
+            panel.getChildren().setAll(root);
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
 }//clase

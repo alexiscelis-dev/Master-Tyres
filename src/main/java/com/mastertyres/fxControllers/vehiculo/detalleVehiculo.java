@@ -2,10 +2,16 @@ package com.mastertyres.fxControllers.vehiculo;
 
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.vehiculo.service.VehiculoService;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class detalleVehiculo {
@@ -24,7 +30,12 @@ public class detalleVehiculo {
     @FXML private Label txtFechaRegistro;
     @FXML private Label txtFechaActualizacion;
 
+    @Autowired
+    private VehiculoService vehiculoService;
+
     public void setVehiculo(VehiculoDTO vehiculoSeleccionado){
+
+        Vehiculo v = vehiculoService.Vehiculo_SinDTO(vehiculoSeleccionado.getId());
 
         txtMarca.setText(txtMarca.getText() + " " + vehiculoSeleccionado.getNombreMarca());
         txtModelo.setText(txtModelo.getText() + " " + vehiculoSeleccionado.getNombreModelo());
@@ -36,8 +47,14 @@ public class detalleVehiculo {
         txtNumeroSerie.setText(txtNumeroSerie.getText() + " " + vehiculoSeleccionado.getNumSerie());
         txtObservaciones.setText(txtObservaciones.getText() + " " + vehiculoSeleccionado.getObservaciones());
         txtUltimoServicio.setText(txtUltimoServicio.getText() + " " + vehiculoSeleccionado.getUltimoServicio());
-        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + vehiculoSeleccionado.getFechaRegistro());
-        txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + vehiculoSeleccionado.getUpdated_at());
+
+        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String fechaStr = vehiculoSeleccionado.getFechaRegistro();
+        LocalDate fecha = LocalDate.parse(fechaStr, formatterEntrada);
+        String texto = fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));  //mostrar solo fecha sin la hora del registro
+        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + texto);
+
+        txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + v.getUpdated_at());
 
     }
 

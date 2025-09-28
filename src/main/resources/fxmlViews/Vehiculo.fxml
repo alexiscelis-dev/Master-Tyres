@@ -4,6 +4,7 @@
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -17,10 +18,10 @@
 
             <!-- Zona superior: Búsqueda y botón agregar -->
             <HBox fx:id="limpiarChoiceBox" alignment="CENTER_LEFT" spacing="10.0">
-               <TextField fx:id="buscarVehiculoBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
+               <TextField fx:id="buscarVehiculoBuscador" prefHeight="26.0" prefWidth="448.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                  <Label  text="Buscar por: " />
+                  <Label prefWidth="79.0" text="Buscar por: " />
                   <ChoiceBox fx:id="atributoBusquedaVehiculos" prefWidth="150.0" styleClass="choicebox-mini2">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
@@ -41,8 +42,23 @@
                   </ChoiceBox>
                </HBox>
 
-               <Pane style="-fx-background-color: #080808;" HBox.hgrow="ALWAYS" />
-               <Button fx:id="btnAgregarVehiculo" onAction="#agregarVehiculo" styleClass="boton-accion" text="Agregar Vehiculo" />
+               <Pane style="-fx-background-color: #080808;" HBox.hgrow="ALWAYS">
+                  <children>
+                     <Button fx:id="btnModificarMarcaModeloCategoria" layoutX="1.0" layoutY="1.0" onAction="#ModificarMarcaModeloCategoria" prefHeight="25.0" prefWidth="181.0" styleClass="boton-accion" text="Agregar Marca o Modelo" />
+                     <Button fx:id="btnAgregarVehiculo" layoutX="195.0" layoutY="1.0" onAction="#agregarVehiculo" prefHeight="25.0" prefWidth="150.0" styleClass="boton-accion" text="Agregar Vehiculo" />
+                     <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
+
+                        <graphic>
+                           <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                              <image>
+                                 <Image url="@/icons/refresh.png" />
+                              </image>
+                           </ImageView>
+                        </graphic>
+                     </Button>
+                  </children>
+               </Pane>
+
 
             </HBox>
 
@@ -59,7 +75,7 @@
                   <TableColumn fx:id="colPlacas" prefWidth="150" text="Placas" />
                   <TableColumn fx:id="colNumeroSerie" prefWidth="150" text="Numero Serie" />
                   <TableColumn fx:id="colKilometraje" prefWidth="150" text="Kilometraje" />
-                   <TableColumn fx:id="colObservaciones" prefWidth="150" text="Observaciones" />
+                  <TableColumn fx:id="colObservaciones" prefWidth="150" text="Observaciones" />
                   <TableColumn fx:id="colUltimoServicio" prefWidth="150" text="Ultimo Servicio" />
                   <TableColumn fx:id="colFechaRegistro" prefWidth="150" text="Fecha Registro" />
 

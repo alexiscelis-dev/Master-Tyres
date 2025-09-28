@@ -18,6 +18,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -25,6 +27,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -104,6 +107,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @FXML private Button refrescar;
 
     @FXML
     private void initialize() {
@@ -129,6 +133,8 @@ public class ClienteController {
                     listaOpciones.getItems().addAll("Ver informacion","Copiar", "Copiar fila completa", "Editar", "Eliminar");
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
+
+
 
                     Popup listViewPopup = new Popup();
                     listViewPopup.getContent().add(listaOpciones);
@@ -201,7 +207,11 @@ public class ClienteController {
                                         Stage stage = new Stage();
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
+
+                                        stage.initModality(Modality.APPLICATION_MODAL);
+
                                         stage.showAndWait();
+                                        cargarClientes();
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
                                     }
@@ -219,6 +229,7 @@ public class ClienteController {
                                         Stage stage = new Stage();
                                         stage.setTitle("Informacion Cliente");
                                         stage.setScene(new Scene(root));
+                                        stage.initModality(Modality.APPLICATION_MODAL);
                                         stage.showAndWait();
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -391,7 +402,7 @@ public class ClienteController {
         }
     }
 
-    private void cargarClientes() {
+    public void cargarClientes() {
 
         //Ajuste de tamaño de las columnas
         //  tablaClientes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -524,7 +535,11 @@ public class ClienteController {
 
     }//buscarCliente
 
+    @FXML
+    public void actualizar(ActionEvent actionEvent) {
+        buscarClienteBuscador.setText("");
+        atributoBusquedaClientes.setValue(null);
+        cargarClientes();
 
-
-
+    }
 }//clase
