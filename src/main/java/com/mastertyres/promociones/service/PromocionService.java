@@ -67,4 +67,5 @@ public class PromocionService implements IPromocionService {
         Promocion promocion = promocionRepository.findById(id).orElse(null);
         return  promocion;
     }
+
 }//PromocionService

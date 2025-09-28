@@ -90,4 +90,10 @@ public class InventarioService implements IInventarioService{
 
     }
 
+    @Transactional
+    @Override
+    public void guardarInventario(Inventario inventario) {
+        inventarioRepository.save(inventario);
+    }
+
 }//clase

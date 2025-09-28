@@ -27,4 +27,6 @@ public interface IInventarioService {
 
     int eliminarInventario(String inactive, Integer idInventario);
 
+    void guardarInventario(Inventario inventario);
+
 }//interface
