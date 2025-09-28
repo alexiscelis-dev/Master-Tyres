@@ -1,26 +1,24 @@
-package com.mastertyres.vehiculoPromocion.model;
+package com.mastertyres.detalleCategoria.model;
 
-
+import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
-import com.mastertyres.promociones.model.Promocion;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "vehiculo_promocion")
+@Table(name = "detalle_categoria")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @ToString
 @EqualsAndHashCode
-public class VehiculoPromocion {
+@Builder
+public class DetalleCategoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vehiculo_promocion_id")
-    private Integer vehiculoPromocionID;
+    private Integer detalle_categoria_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "marca_id")
@@ -31,10 +29,6 @@ public class VehiculoPromocion {
     private Modelo modelo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promocion_id")
-    private Promocion promocion;
-
-
-    @Column(name = "anio")
-    private Integer annio;
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 }
