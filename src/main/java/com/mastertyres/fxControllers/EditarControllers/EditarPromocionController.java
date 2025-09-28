@@ -10,6 +10,7 @@ import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,12 +71,12 @@ public class EditarPromocionController {
 
     @FXML private ChoiceBox<Marca> choiceMarca;
     @FXML private ChoiceBox<Modelo> choiceModelo;
-    @FXML private ChoiceBox<String> choiceAnio;
+    @FXML private ChoiceBox<Integer> choiceAnio;
     @FXML private Button btnAgregarVehiculo;
     @FXML private TableView<VehiculoPromocion> tableVehiculosParticipantes;
     @FXML private TableColumn<VehiculoPromocion, String> colMarca;
     @FXML private TableColumn<VehiculoPromocion, String> colModelo;
-    @FXML private TableColumn<VehiculoPromocion, String> colAnio;
+    @FXML private TableColumn<VehiculoPromocion, Integer> colAnio;
     @FXML private TableColumn<VehiculoPromocion, Void> colEliminar;
 
     private ObservableList<VehiculoPromocion> vehiculosPromocionList = FXCollections.observableArrayList();
@@ -102,7 +103,7 @@ public class EditarPromocionController {
         // Inicializar columnas
         colMarca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMarca().getNombreMarca()));
         colModelo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getModelo().getNombreModelo()));
-        colAnio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAnnio()));
+        colAnio.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getAnnio()).asObject());
         // Columna eliminar
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
@@ -122,14 +123,14 @@ public class EditarPromocionController {
                 });
 
                 // (opcional) estilo para que sea redondo o plano
-                btn.setStyle("-fx-background-color: white;");
+                btn.setStyle("-fx-background-color: red;");
 
                 btn.hoverProperty().addListener((obs, wasHovered, isNowHovered) -> {
                     if (isNowHovered) {
                         btn.setStyle("-fx-scale-x: 1.1;\n" +
                                 "    -fx-scale-y: 1.1;");
                     } else {
-                        btn.setStyle("-fx-background-color: white;");
+                        btn.setStyle("-fx-background-color: red;");
                     }
                 });
             }
@@ -269,7 +270,7 @@ public class EditarPromocionController {
     private void agregarVehiculo() {
         Marca marca = choiceMarca.getValue();
         Modelo modelo = choiceModelo.getValue();
-        String anio = choiceAnio.getValue();
+        Integer anio = choiceAnio.getValue();
 
         if (marca != null && modelo != null && anio != null) {
             VehiculoPromocion vehiculo = new VehiculoPromocion();
@@ -287,14 +288,26 @@ public class EditarPromocionController {
     private void vehiculosParticipantesInitialize() {
 
         choiceMarca.setItems(observableList(promocionService.listarMarcas()));
-        choiceModelo.setItems(observableList(promocionService.listarModelos()));
+        List<Modelo> modelos = promocionService.listarModelos();
+        choiceModelo.setItems(observableList(modelos));
 
-        List<String> anios = new ArrayList<>();
+        // Listener para filtrar modelos según la marca seleccionada
+        choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
+            if (newMarca != null) {
+                List<Modelo> modelosFiltrados = modelos.stream()
+                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+                        .toList();
+                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+            } else {
+                choiceModelo.getItems().clear();
+            }
+        });
+        List<Integer> anios = new ArrayList<>();
 
         int anioActual = LocalDate.now().getYear();
 
         for (int i = anioActual; i >= 1950; i--) {
-            anios.add(i + "");
+            anios.add(i);
         }
         choiceAnio.getItems().setAll(anios);
 
