@@ -22,6 +22,10 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active ")
     List<VehiculoDTO> listarVehiculos(@Param("active") String activo);
 
+    @Query("SELECT v FROM Vehiculo v " +
+            " WHERE v.active = 'ACTIVE' AND v.vehiculoId = :vehiculoId")
+    Vehiculo Vehiculo_SinDTO(@Param("vehiculoId") Integer vehiculoId);
+
 
     @Transactional
     @Modifying
@@ -193,9 +197,15 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND v.numSerie = :numSerie")
     boolean existeVehiculoPorNumeroSerie(@Param("numSerie") String numSerie);
 
+    @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND v.numSerie = :numSerie AND v.vehiculoId <> :vehiculoId")
+    boolean existeVehiculoNumeroSerie_Editar(@Param("numSerie") String numSerie, @Param("vehiculoId") Integer vehiculoId);
+
     // 3. Verificar solo por placas
     @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND v.placas = :placas")
     boolean existeVehiculoPorPlacas(@Param("placas") String placas);
+
+    @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND v.placas = :placas AND v.vehiculoId <> :vehiculoId")
+    boolean existeVehiculoPlacas_Editar(@Param("placas") String placas, @Param("vehiculoId") Integer vehiculoId);
 
 
     @Query("SELECT v FROM Vehiculo v " +

@@ -1,5 +1,6 @@
 package com.mastertyres.marca.services;
 
+import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.repository.MarcaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,10 @@ public class MarcaService implements IMarcaServices {
     @Autowired
     public MarcaService(MarcaRepository marcaRepository) {
         this.marcaRepository = marcaRepository;
+    }
+
+    public Marca guardarMarca(Marca marca) {
+        return marcaRepository.save(marca);
     }
 
     @Override

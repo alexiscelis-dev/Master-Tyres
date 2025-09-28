@@ -4,6 +4,7 @@
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -20,7 +21,7 @@
                <TextField fx:id="buscarClienteBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar cliente..." styleClass="buscador" />
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                  <Label text="Buscar por:" />
+                  <Label prefHeight="18.0" prefWidth="79.0" text="Buscar por:" />
                   <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="choicebox-mini2">
                   <items>
                         <FXCollections fx:factory="observableArrayList">
@@ -36,8 +37,22 @@
                   </ChoiceBox>
                </HBox>
 
-               <Pane HBox.hgrow="ALWAYS" />
-               <Button fx:id="btnAgregarCliente" onAction="#agregarCliente" styleClass="boton-accion" text="Agregar Cliente" />
+               <Pane HBox.hgrow="ALWAYS">
+                  <children>
+
+                      <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
+
+                          <graphic>
+                              <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                  <image>
+                                      <Image url="@/icons/refresh.png" />
+                                  </image>
+                              </ImageView>
+                          </graphic>
+                      </Button>
+
+                      <Button fx:id="btnAgregarCliente" layoutX="184.0" layoutY="3.0" onAction="#agregarCliente" prefHeight="25.0" prefWidth="150.0" styleClass="boton-accion" text="Agregar Cliente" />
+                  </children></Pane>
             </HBox>
 
 

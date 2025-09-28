@@ -160,14 +160,14 @@ public class AgregarVehiculoController {
                 });
 
                 // (opcional) estilo para que sea redondo o plano
-                btn.setStyle("-fx-background-color: white;");
+                btn.setStyle("-fx-background-color: red;");
 
                 btn.hoverProperty().addListener((obs, wasHovered, isNowHovered) -> {
                     if (isNowHovered) {
                         btn.setStyle("-fx-scale-x: 1.1;\n" +
                                 "    -fx-scale-y: 1.1;");
                     } else {
-                        btn.setStyle("-fx-background-color: white;");
+                        btn.setStyle("-fx-background-color: red;");
                     }
                 });
             }
@@ -207,7 +207,7 @@ public class AgregarVehiculoController {
             if (texto.isEmpty()) {
                 placasValido.set(true);
                 txtPlacas.setStyle("");
-            } else if (!texto.matches("^[A-Z0-9]{1,7}(-[A-Z0-9]{1,4})?$")) {
+            } else if (!texto.matches("^[A-Z0-9]+(-[A-Z0-9]+)*$")) {
                 placasValido.set(false);
                 txtPlacas.setStyle("-fx-border-color: red;");
             } else {
