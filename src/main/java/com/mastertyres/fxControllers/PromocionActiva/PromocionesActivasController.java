@@ -113,6 +113,7 @@ public class PromocionesActivasController {
             AnchorPane.setRightAnchor(root, 0.0);
             AnchorPane.setBottomAnchor(root, 0.0);
             AnchorPane.setLeftAnchor(root, 0.0);
+            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -208,7 +209,7 @@ public class PromocionesActivasController {
         if ("PORCENTAJE".equals(p.getTipoDescuento())) {
             lblValorDesc = new Label("Descuento: " + p.getPorcentaje() + "%");
         } else {
-            lblValorDesc = new Label("Descuento: -$" +   p.getPorcentaje() );
+            lblValorDesc = new Label("Descuento:  $" + p.getPorcentaje() );
         }
         lblValorDesc.setStyle("-fx-text-fill: white;");
 

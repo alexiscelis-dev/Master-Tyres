@@ -6,6 +6,10 @@
 -fx-background-color: rgba(26, 26, 26, 0.85);
 
 }
+.label-formulario{
+-fx-pref-width:110px;
+}
+
 
 /* Estilo para un ChoiceBox más pequeño y oscuro */
 .choicebox-mini2 {
@@ -33,6 +37,26 @@
     -fx-text-fill: #F2F2F2;
 }
 
+
+.choicebox-mini2 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 157px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable más compacto */
+
+
+
+
+
+
+
 .choice-box .menu-item {
     -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
     -fx-font-size: 15px;   /* tamaño del texto (opcional) */
@@ -58,10 +82,47 @@
     -fx-border-radius: 5;
     -fx-background-radius: 5;
     -fx-padding: 6 10;
-
+    -fx-pref-width: 300px;
+    -fx-pref-height:30px;
 }
 
 .buscador:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+
+.buscador-codigo {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 200px;
+    -fx-pref-height:30px;
+}
+
+.buscador-codigo:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+
+
+
+.buscador-medida {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 100px;
+    -fx-pref-height:30px;
+}
+
+.buscador-medida:focused {
     -fx-border-color: #8EB83D;
     -fx-border-width: 2;
 }
@@ -231,6 +292,7 @@ SpinnerAnnio
     -fx-text-fill:white;
     -fx-font-weight:bold;
 
+
 }
 
 
@@ -269,9 +331,6 @@ SpinnerAnnio
     -fx-text-fill: white; /* O el color que prefieras */
     -fx-font-weight: bold;
 }
-
-
-
 
 
 
@@ -327,5 +386,233 @@ SpinnerAnnio
     -fx-padding: 4 8;
 }
 
+.scroll-pane {
+    -fx-background-color: transparent;
+}
 
+.scroll-pane .viewport {
+    -fx-background-color: #080808;
+}
+
+
+
+/* Choice para indices de carga  y velocidad */
+.choicebox-mini3 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 157px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable más compacto */
+.choicebox-mini3 .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 130px;
+    -fx-pref-height: 80px;
+}
+
+/* Ítems del menú */
+.choicebox-mini3 .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #F2F2F2;
+}
+
+
+.choicebox-mini3 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 100px;
+    -fx-font-size: 12px;
+}
+
+
+
+/* Hover en ítems */
+.choicebox-mini3 .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+
+
+
+/* Choice para indices de carga  y velocidad */
+.choicebox-mini3 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 157px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable más compacto */
+.choicebox-mini3 .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 180px;
+}
+
+/* Ítems del menú */
+.choicebox-mini3 .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #F2F2F2;
+}
+
+
+.choicebox-mini3 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 100px;
+    -fx-font-size: 12px;
+}
+
+
+
+/* Hover en ítems */
+.choicebox-mini3 .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+/* Choice para indices de carga  y velocidad */
+.choicebox-mini3 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 157px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable más compacto */
+.choicebox-mini3 .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 130px;
+    -fx-pref-height: 180px;
+}
+
+/* Ítems del menú */
+.choicebox-mini3 .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #F2F2F2;
+}
+
+
+.choicebox-mini3 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 100px;
+    -fx-font-size: 12px;
+}
+
+
+
+/* Hover en ítems */
+.choicebox-mini3 .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+
+
+
+/* Choice para inventario en principal */
+.choicebox-buscarpor {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 157px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable */
+.choicebox-buscarpor .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 180px;
+}
+
+/* Ítems del menú */
+.choicebox-buscarpor .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #F2F2F2;
+}
+
+
+.choicebox-buscarpor {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 100px;
+    -fx-font-size: 12px;
+}
+
+
+
+/* Hover en ítems */
+.choicebox-buscarpor .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+.buscador-marca {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 210px;
+    -fx-pref-height:30px;
+}
+
+.buscador-marca:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+
+
+.buscador-observaciones {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+
+}
+
+.buscador-marca:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
 

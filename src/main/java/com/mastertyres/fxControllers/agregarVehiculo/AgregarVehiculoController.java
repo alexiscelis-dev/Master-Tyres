@@ -3,7 +3,6 @@ package com.mastertyres.fxControllers.agregarVehiculo;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.ClienteStatus;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
@@ -39,8 +38,6 @@ import java.util.Set;
 
 import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 import static com.mastertyres.common.MensajesAlert.mostrarWarning;
-
-import static com.mastertyres.common.MensajesAlert.mostrarError;
 
 @Component
 public class AgregarVehiculoController {
@@ -375,19 +372,6 @@ public class AgregarVehiculoController {
             }
         });
 
-       /* choiceModelo.getSelectionModel().selectedItemProperty().addListener((obs, oldModelo, newModelo) -> {
-            Marca marcaSeleccionada = choiceMarca.getSelectionModel().getSelectedItem();
-            if (marcaSeleccionada != null && newModelo != null) {
-                List<Categoria> categoriasFiltradas = vehiculoService.listarCategoriasPorMarcaYModelo(
-                        "ACTIVE",
-                        marcaSeleccionada.getMarcaId(),
-                        newModelo.getModeloId()
-                );
-                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
-            } else {
-                choiceCategoria.getItems().clear();
-            }
-        });*/
 
         // Configurar columnas del TableView
         colNombreCompleto.setCellValueFactory(cellData ->

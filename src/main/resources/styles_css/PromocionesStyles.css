@@ -19,7 +19,7 @@
 
 .buscador {
     -fx-background-color: #2A2A2A;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-prompt-text-fill: #BBBBBB;
     -fx-border-color: #444;
     -fx-border-radius: 5;
@@ -104,35 +104,5 @@
     -fx-background-radius: 15px;
 }
 
-/* Tabla */
-.table-view {
-    -fx-background-color: #1A1A1A;
-    -fx-table-cell-border-color: #080808;
-    -fx-padding: 5px;
-}
 
-.table-view .column-header-background {
-    -fx-background-color: #8EB83D;
-}
 
-.table-view .column-header, .table-view .filler {
-    -fx-background-color: transparent;
-}
-
-.table-view .table-row-cell {
-    -fx-background-color: #1A1A1A;
-}
-
-.table-view .table-row-cell:filled:selected {
-    -fx-background-color: #8EB83D;
-}
-
-.table-view .table-cell {
-    -fx-text-fill: white; /* Cambia a blanco u otro color con buen contraste */
-    -fx-font-weight: bold; /* Opcional: texto más grueso */
-}
-
-.table-view .column-header-background .label {
-    -fx-text-fill: white; /* O el color que prefieras */
-    -fx-font-weight: bold;
-}

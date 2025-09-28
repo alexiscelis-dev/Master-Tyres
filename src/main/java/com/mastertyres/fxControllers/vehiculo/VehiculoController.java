@@ -393,6 +393,7 @@ public class VehiculoController {
             AnchorPane.setRightAnchor(root, 0.0);
             AnchorPane.setBottomAnchor(root, 0.0);
             AnchorPane.setLeftAnchor(root, 0.0);
+            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
 
         } catch (IOException e) {
             e.printStackTrace();

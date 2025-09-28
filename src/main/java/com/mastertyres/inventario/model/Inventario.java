@@ -3,6 +3,7 @@ package com.mastertyres.inventario.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "inventario_llantas")
@@ -31,8 +32,13 @@ public class Inventario {
     private float precioVenta;
     private String observaciones;
     private String imagen;
+    @Column(name = "active",insertable = false,updatable = false)
     private String active;
+    @Column(name = "created_at")
+    @CreationTimestamp
     private String created_at;
+    @Column(name = "updated_at")
+    @CreationTimestamp
     private String updated_at;
     @Column(name = "codigo_barras")
     private String codigoBarras;
