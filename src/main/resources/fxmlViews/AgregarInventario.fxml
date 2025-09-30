@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.AgregarInventario.AgregarInventarioController">
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.AgregarInventario.AgregarInventarioController">
     <children>
 
         <VBox layoutX="320.0" layoutY="150.0" prefHeight="620.0" prefWidth="600.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../styles_css/Inventario.css">
@@ -24,7 +24,7 @@
 
                 <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
                     <children>
-                        <Label style="-fx-pref-width: 140;" text="Codigo de barras">
+                        <Label style="-fx-pref-width: 140;" text="Codigo de barras *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -38,7 +38,7 @@
                             </opaqueInsets>
                         </TextField>
 
-                        <Label style="-fx-pref-width: 60;" styleClass="label-codigo" text="Dot">
+                        <Label style="-fx-pref-width: 60;" styleClass="label-codigo" text="Dot *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -58,7 +58,7 @@
 
                 <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
                     <children>
-                        <Label style="-fx-pref-width: 118;" styleClass="label-formulario" text="Marca">
+                        <Label style="-fx-pref-width: 118;" styleClass="label-formulario" text="Marca *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -86,7 +86,7 @@
 
                 <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
                     <children>
-                        <Label styleClass="label-formulario" text="Medida">
+                        <Label styleClass="label-formulario" text="Medida *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -152,7 +152,7 @@
 
                 <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
                     <children>
-                        <Label styleClass="label-formulario" text="Stock">
+                        <Label styleClass="label-formulario" text="Stock *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -169,7 +169,7 @@
 
                 <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
                     <children>
-                        <Label styleClass="label-formulario" text="Precio de compra">
+                        <Label styleClass="label-formulario" text="Precio de compra *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -186,7 +186,7 @@
                             </HBox.margin>
                         </TextField>
 
-                        <Label styleClass="label-formulario" text="Precio de venta">
+                        <Label styleClass="label-formulario" text="Precio de venta *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>

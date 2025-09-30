@@ -4,8 +4,6 @@ package com.mastertyres.fxControllers.EditarControllers;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.MensajesAlert;
-import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -173,7 +171,7 @@ public class EditarClienteController {
         return resultado.toString().trim();
     }
 
-    public void setCliente(Cliente cliente) {
+    public void editarCliente(Cliente cliente) {
         this.cliente = cliente;
 
         // Prellenar campos con los valores del cliente
@@ -202,7 +200,7 @@ public class EditarClienteController {
         }
 
 
-    }
+    }//editarCliente
 
     @FXML
     private  void cambiarCliente(){

@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.AgregarInventario;
 
+import com.mastertyres.common.TextFieldSetting;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import javafx.fxml.FXML;
@@ -7,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class AgregarInventarioController {
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TextField txtCodBarras;
     @FXML
@@ -58,6 +62,8 @@ public class AgregarInventarioController {
 
     @FXML
     private void initialize() {
+        TextFieldSetting.disableMenuTextField(rootPane); //Quita el menu contextual del clic derecho
+
         indicesChoiceBox();
         btnLimpiar.setOnAction(event -> clean());
 
@@ -81,20 +87,20 @@ public class AgregarInventarioController {
             else
                 return null;
         }));
-        txtPrecioV.setTextFormatter(new TextFormatter<>(texto ->{
+        txtPrecioV.setTextFormatter(new TextFormatter<>(texto -> {
             if (texto.getControlNewText().matches("\\d*(\\.\\d{0,2})?"))
                 return texto;
             else
                 return null;
 
         }));
-        txtStock.setTextFormatter(new TextFormatter<>(texto ->{
+        txtStock.setTextFormatter(new TextFormatter<>(texto -> {
             if (texto.getControlNewText().matches("\\d*"))
                 return texto;
             else
                 return null;
         }));
-        txtCodBarras.setTextFormatter(new TextFormatter<>(texto ->{
+        txtCodBarras.setTextFormatter(new TextFormatter<>(texto -> {
             if (texto.getControlNewText().matches("\\d*"))
                 return texto;
             else
@@ -139,11 +145,22 @@ public class AgregarInventarioController {
         txtImg.setText("");
         txtObservaciones.setText("");
 
+        txtCodBarras.setStyle("-fx-border-color:#444444; -fx-border-width:2px;");
+        txtDot.setStyle("-fx-border-color:#444444; -fx-border-width:2px;");
+        txtMarca.setStyle("-fx-border-color:#444444; -fx-border-width:2px;");
+        txtMedida1.setStyle("-fx-border-color:#444444; -fx-border-width:2px;");
+        txtMedida2.setStyle("-fx-border-color:#444444; -fx-border-width:2px;");
+        txtPrecioC.setStyle("-fx-border-color:#444444; -fx-border-width:2px;");
+        txtPrecioV.setStyle("-fx-border-color:#444444; -fx-border-width:2px;");
+
+
+
+
     }//clean
 
     private void registrar() {
 
-        String medida = txtMedida1.getText().replaceAll("\\s","") + "/" + txtMedida2.getText().replaceAll("\\s","");
+        String medida = txtMedida1.getText().replaceAll("\\s", "") + "/" + txtMedida2.getText().replaceAll("\\s", "");
         String indiceCarga = "", indiceVelocidad = "";
 
         if (cbIndiceCarga.getValue() != null)
@@ -155,7 +172,6 @@ public class AgregarInventarioController {
             indiceVelocidad = cbIndiceVelocidad.getValue();
         else
             indiceVelocidad = "";
-
 
 
         if (!empty()) {
@@ -172,15 +188,15 @@ public class AgregarInventarioController {
                     .precioCompra(Float.parseFloat(txtPrecioC.getText()))
                     .precioVenta(Float.parseFloat(txtPrecioV.getText()))
                     .observaciones(txtObservaciones.getText())
-                    .imagen(txtImg.getText() != null ? txtImg.getText(): "")
+                    .imagen(txtImg.getText() != null ? txtImg.getText() : "")
                     .build();
 
             try {
                 inventarioService.guardarInventario(inventario);
-                mostrarInformacion("Nueva llanta agregada","","Se agrego nueva llanta al inventario correctamente.");
+                mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
                 clean();
-            }catch (Exception e){
-                mostrarError("Error al agregar llanta","","Ha ocurrido un error al agregar al inventario,vuelva a intentarlo mas tarde.");
+            } catch (Exception e) {
+                mostrarError("Error al agregar elemento", "", "Ha ocurrido un error al agregar al inventario,vuelva a intentarlo mas tarde.");
             }
 
         } else {
@@ -192,26 +208,61 @@ public class AgregarInventarioController {
     // solo verifica si los campos necesarios estan vacios (marca,medida,stock,precios,codigo de barras y dot)
 
     private boolean empty() {
-        if (txtMarca.getText().isEmpty() || txtMedida1.getText().isEmpty() || txtMedida2.getText().isEmpty() ||
-                txtStock.getText().isEmpty() || txtPrecioC.getText().isEmpty() || txtPrecioV.getText().isEmpty() ||
-                txtCodBarras.getText().isEmpty() || txtDot.getText().isEmpty())
-            return true;
-        else
-            return false;
+        boolean empty = false;
 
+        if (txtCodBarras.getText().isEmpty()) {
+            txtCodBarras.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtDot.getText().isEmpty()) {
+            txtDot.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtMarca.getText().isEmpty()) {
+            txtMarca.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtMarca.getText().isEmpty()) {
+            txtMarca.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtMedida1.getText().isEmpty()) {
+            txtMedida1.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtMedida2.getText().isEmpty()) {
+            txtMedida2.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtPrecioC.getText().isEmpty()) {
+            txtPrecioC.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtPrecioV.getText().isEmpty()) {
+            txtPrecioV.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+
+
+
+
+
+
+
+        return empty;
     }// empty
 
-    private void seleccionarImg(){
+    private void seleccionarImg() {
         FileChooser fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter(
-                "Archivos de imagen","*.png","*.jpg","*.jpeg"
+                "Archivos de imagen", "*.png", "*.jpg", "*.jpeg"
         ));
 
         Stage stage = (Stage) btnImagen.getScene().getWindow();
         File archivo = fileChooser.showOpenDialog(stage);
 
-        if (archivo != null){
+        if (archivo != null) {
             String url = archivo.getAbsolutePath();
             txtImg.setText(url);
         }

@@ -196,7 +196,7 @@ public class ClienteController {
                                         Parent root = loader.load();
 
                                         EditarClienteController controller = loader.getController();
-                                        controller.setCliente(clienteSeleccionado); // pasa el cliente actual
+                                        controller.editarCliente(clienteSeleccionado); // pasa el cliente actual
 
                                         Stage stage = new Stage();
                                         stage.setTitle("Editar Cliente");
@@ -389,7 +389,7 @@ public class ClienteController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            mostrarError("Error","","Ocurrio un error al mostrar la ventana.");
+            mostrarError("Error", "", "Ocurrio un error al mostrar la ventana.");
         }
     }//agregarCliente
 

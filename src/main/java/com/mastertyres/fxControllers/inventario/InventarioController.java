@@ -84,7 +84,6 @@ public class InventarioController {
     private VentanaPrincipalController ventanaPrincipalController;
 
 
-
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
 
@@ -96,6 +95,7 @@ public class InventarioController {
     private void initialize() {
 
         cargarInventario();
+
 
         //Buscar mientras escribes
         buscarInventarioBuscador.setOnKeyReleased(event -> {
@@ -126,6 +126,8 @@ public class InventarioController {
                     buscarInventario(seleccion.toLowerCase(), busqueda);
             }
         });
+
+        //Clic derecho
         limpiarChoiceBox.setOnMouseClicked(event -> {
             if ((event.getButton() == MouseButton.MIDDLE || event.getButton() == MouseButton.PRIMARY) && event.getClickCount() == 2)
                 atributoBusquedaInventario.setValue(null);
@@ -196,7 +198,16 @@ public class InventarioController {
 
                                 }
                                 case "Editar" -> {
-                                    System.out.println("Editar");
+                                    try {
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleInventario.fxml"));
+                                        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
+                                        Parent root = loader.load();
+                                        DetalleInventarioController detalleInventario = loader.getController();
+
+                                    } catch (IOException ex) {
+                                        mostrarError("Ocurrio un error", "", "Ocurrio un error al mostrar la ventana");
+                                    }
                                 }
                                 case "Copiar" -> {
                                     var selectedCell = tablaInventario.getSelectionModel().getSelectedCells();
@@ -287,6 +298,10 @@ public class InventarioController {
 
             return fila;
         });
+
+        colObservaciones.setPrefWidth(400);
+        colObservaciones.setMinWidth(100);
+
 
     }//initialize
 
