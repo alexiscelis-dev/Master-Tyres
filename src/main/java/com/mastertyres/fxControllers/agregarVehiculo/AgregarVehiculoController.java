@@ -4,7 +4,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.TextFieldSetting;
+import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -115,7 +115,7 @@ public class AgregarVehiculoController {
 
     @FXML
     private void initialize() {
-        TextFieldSetting.disableMenuTextField(rootPane);
+        MenuContextSetting.disableMenu(rootPane);
 
         cargarOpciones();
         configurarValidaciones();

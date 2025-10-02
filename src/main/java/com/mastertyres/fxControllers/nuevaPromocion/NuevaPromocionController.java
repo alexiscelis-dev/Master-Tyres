@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.nuevaPromocion;
 
-import com.mastertyres.common.TextFieldSetting;
+import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
@@ -87,8 +87,8 @@ public class NuevaPromocionController {
 
     @FXML
     public void initialize() {
-        TextFieldSetting.disableMenuTextField(rootPane);
-        TextFieldSetting.disableMenuDatePicker(rootPane);
+        MenuContextSetting.disableMenu(rootPane);
+        MenuContextSetting.disableMenuDatePicker(rootPane);
 
         cargarPorcentaje();
         tableVehiculosParticipantes.setItems(vehiculos);

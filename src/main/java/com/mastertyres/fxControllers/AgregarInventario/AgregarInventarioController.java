@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.AgregarInventario;
 
-import com.mastertyres.common.TextFieldSetting;
+import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import javafx.fxml.FXML;
@@ -62,7 +62,7 @@ public class AgregarInventarioController {
 
     @FXML
     private void initialize() {
-        TextFieldSetting.disableMenuTextField(rootPane); //Quita el menu contextual del clic derecho
+        MenuContextSetting.disableMenu(rootPane); //Quita el menu contextual del clic derecho
 
         indicesChoiceBox();
         btnLimpiar.setOnAction(event -> clean());

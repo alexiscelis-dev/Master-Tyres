@@ -52,6 +52,11 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
     @Query("UPDATE Inventario i SET i.active = :inactive WHERE i.inventarioId = :idInventario")
     int eliminarInventario(@Param("inactive")String inactive,@Param("idInventario")Integer idInventario);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE Inventario i SET i.updated_at = :now WHERE i.inventarioId = :idInventario ")
+    void updatedAt(@Param("now")String now,@Param("idInventario")Integer idInventario);
+
 
 
 

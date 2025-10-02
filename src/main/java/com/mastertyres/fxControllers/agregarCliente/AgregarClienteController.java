@@ -4,7 +4,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.TextFieldSetting;
+import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -80,8 +80,7 @@ public class AgregarClienteController {
     private TableColumn<Vehiculo, Void> colEliminar;
 
     //Campos Cliente
-    @FXML
-    private AnchorPane rootPane;
+
     @FXML
     private AnchorPane ventanaAgregarCliente;
     @FXML
@@ -151,8 +150,7 @@ public class AgregarClienteController {
 
     @FXML
     private void initialize() {
-        TextFieldSetting.disableMenuTextField(ventanaAgregarCliente);
-        TextFieldSetting.disableMenuTextField(rootPane);
+        MenuContextSetting.disableMenu(ventanaAgregarCliente);
 
         configurarValidaciones();
 

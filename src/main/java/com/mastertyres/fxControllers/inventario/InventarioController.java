@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.inventario;
 
 import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.fxControllers.EditarControllers.EditarInventarioController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
@@ -28,6 +29,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +43,7 @@ import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.*;
 
+@NoArgsConstructor
 @Component
 public class InventarioController {
 
@@ -199,14 +202,20 @@ public class InventarioController {
                                 }
                                 case "Editar" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleInventario.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarInventario.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
 
                                         Parent root = loader.load();
-                                        DetalleInventarioController detalleInventario = loader.getController();
+                                        EditarInventarioController controller = loader.getController();
+                                        controller.editarInventario(seleccionado);
+                                        Stage stage = new Stage();
+                                        stage.setTitle("Editar inventario");
+                                        stage.setScene(new Scene(root));
+                                        stage.showAndWait();
 
                                     } catch (IOException ex) {
                                         mostrarError("Ocurrio un error", "", "Ocurrio un error al mostrar la ventana");
+                                        ex.printStackTrace();
                                     }
                                 }
                                 case "Copiar" -> {
@@ -304,7 +313,6 @@ public class InventarioController {
 
 
     }//initialize
-
 
     private void cargarInventario() {
 

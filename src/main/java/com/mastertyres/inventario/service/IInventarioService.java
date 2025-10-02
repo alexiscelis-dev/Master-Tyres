@@ -29,4 +29,6 @@ public interface IInventarioService {
 
     void guardarInventario(Inventario inventario);
 
+    void uptatedAt(String now, Integer idInventario);
+
 }//interface

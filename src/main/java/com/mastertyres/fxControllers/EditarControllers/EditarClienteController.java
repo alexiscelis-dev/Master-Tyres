@@ -19,19 +19,32 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class EditarClienteController {
 
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtApellido;
-    @FXML private TextField txtSegundoApellido;
-    @FXML private TextField txtTelefono;
-    @FXML private TextField txtHobbie;
-    @FXML private TextField txtRfc;
-    @FXML private TextField txtDomicilio;
-    @FXML private TextField txtEstado;
-    @FXML private TextField txtCiudad;
-    @FXML private ChoiceBox<String> choiceGenero;
-    @FXML private ChoiceBox<String> choiceTipoCliente;
-    @FXML private DatePicker dateCumpleanos;
-    @FXML private Button btnCambiar;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtApellido;
+    @FXML
+    private TextField txtSegundoApellido;
+    @FXML
+    private TextField txtTelefono;
+    @FXML
+    private TextField txtHobbie;
+    @FXML
+    private TextField txtRfc;
+    @FXML
+    private TextField txtDomicilio;
+    @FXML
+    private TextField txtEstado;
+    @FXML
+    private TextField txtCiudad;
+    @FXML
+    private ChoiceBox<String> choiceGenero;
+    @FXML
+    private ChoiceBox<String> choiceTipoCliente;
+    @FXML
+    private DatePicker dateCumpleanos;
+    @FXML
+    private Button btnCambiar;
 
     private Cliente cliente;
 
@@ -45,6 +58,7 @@ public class EditarClienteController {
     private BooleanProperty apellidoValido = new SimpleBooleanProperty(true);
 
     public void initialize() {
+
         configurarValidaciones();
     }
 
@@ -146,7 +160,7 @@ public class EditarClienteController {
 
         // Deshabilitar botón "Guardar" hasta que se llenen los campos requeridos y haya al menos un vehículo
         btnCambiar.disableProperty().bind(
-                        (txtNombre.textProperty().isEmpty())
+                (txtNombre.textProperty().isEmpty())
                         .or(txtApellido.textProperty().isEmpty())
                         .or(txtTelefono.textProperty().isEmpty())
                         .or(choiceTipoCliente.valueProperty().isNull())
@@ -203,7 +217,7 @@ public class EditarClienteController {
     }//editarCliente
 
     @FXML
-    private  void cambiarCliente(){
+    private void actualizarCliente() {
 
         if (cliente == null) {
             MensajesAlert.mostrarError(
@@ -213,7 +227,6 @@ public class EditarClienteController {
             );
             return;
         }
-
 
 
         if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
@@ -250,53 +263,52 @@ public class EditarClienteController {
                 "Cancelar"
         );
 
-        if (!confirmar) {
-            return; // Usuario canceló
-        }
+        if (confirmar) {
 
-        try {
-            // 🔹 Actualizar datos generales
-            cliente.setNombre(txtNombre.getText().trim());
-            cliente.setApellido(txtApellido.getText().trim());
-            cliente.setSegundoApellido(txtSegundoApellido.getText().trim());
-            cliente.setTipoCliente(choiceTipoCliente.getValue());
-            cliente.setHobbie(txtHobbie.getText().trim());
-            cliente.setEstado(txtEstado.getText().trim());
-            cliente.setCiudad(txtCiudad.getText().trim());
-            cliente.setDomicilio(txtDomicilio.getText().trim());
-            cliente.setFechaCumple(dateCumpleanos.getValue().toString());
-            cliente.setRfc(txtRfc.getText().trim());
-            cliente.setNumTelefono(txtTelefono.getText().trim());
-            if (choiceGenero.getValue().equals("Masculino")){
-                cliente.setGenero("M");
-            }else if (choiceGenero.getValue().equals("Femenino")) {
-                cliente.setGenero("F");
-            }else{
-                cliente.setGenero("O");
-            }
-            cliente.setUpdated_at(LocalDateTime.now().toString());
+            try {
+                // 🔹 Actualizar datos generales
+                cliente.setNombre(txtNombre.getText().trim());
+                cliente.setApellido(txtApellido.getText().trim());
+                cliente.setSegundoApellido(txtSegundoApellido.getText().trim());
+                cliente.setTipoCliente(choiceTipoCliente.getValue());
+                cliente.setHobbie(txtHobbie.getText().trim());
+                cliente.setEstado(txtEstado.getText().trim());
+                cliente.setCiudad(txtCiudad.getText().trim());
+                cliente.setDomicilio(txtDomicilio.getText().trim());
+                cliente.setFechaCumple(dateCumpleanos.getValue().toString());
+                cliente.setRfc(txtRfc.getText().trim());
+                cliente.setNumTelefono(txtTelefono.getText().trim());
 
-            // 🔹 Guardar cambios en la promoción
-            clienteService.guardarCliente(cliente);
+                if (choiceGenero.getValue().equals("Masculino")) {
+                    cliente.setGenero("M");
+                } else if (choiceGenero.getValue().equals("Femenino")) {
+                    cliente.setGenero("F");
+                } else {
+                    cliente.setGenero("O");
+                }
+                cliente.setUpdated_at(LocalDateTime.now().toString());
 
+                // 🔹 Guardar cambios en la promoción
+                clienteService.guardarCliente(cliente);
 
 
-            MensajesAlert.mostrarInformacion("Éxito", "Cliente actualizado", "El cliente se actualizó correctamente.");
-            cerrarVentana();
+                MensajesAlert.mostrarInformacion("Éxito", "Cliente actualizado", "El cliente se actualizó correctamente.");
+                cerrarVentana();
 
-        } catch (Exception e) {
-            // Cualquier error en la BD o lógica cae aquí
-            MensajesAlert.mostrarError(
-                    "Error al actualizar",
-                    "No se pudo actualizar el cliente",
-                    "Detalles: " + e.getMessage()
-            );
-            e.printStackTrace();
-        }
+            } catch (Exception e) {
+                // Cualquier error en la BD o lógica cae aquí
+                MensajesAlert.mostrarError(
+                        "Error al actualizar",
+                        "No se pudo actualizar el cliente",
+                        "Detalles: " + e.getMessage()
+                );
+                e.printStackTrace();
+            }//try-catch
 
+        }//if
 
+    }//actualizarCliente
 
-    }
 
     @FXML
     private void cerrarVentana() {

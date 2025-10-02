@@ -96,4 +96,12 @@ public class InventarioService implements IInventarioService{
         inventarioRepository.save(inventario);
     }
 
+    @Transactional
+    @Override
+    public void uptatedAt(String now, Integer idInventario) {
+        inventarioRepository.updatedAt(now,idInventario);
+
+    }
+
+
 }//clase
