@@ -112,7 +112,7 @@
 
                 <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
                     <children>
-                        <Label style="-fx-pref-width: 165;" text="Indice carga">
+                        <Label style="-fx-pref-width: 165;" text="Indice carga *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
@@ -131,7 +131,7 @@
                             </HBox.margin>
                         </ChoiceBox>
 
-                        <Label style="-fx-pref-width: 125;" text="Indice de velocidad">
+                        <Label style="-fx-pref-width: 125;" text="Indice de velocidad *">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>

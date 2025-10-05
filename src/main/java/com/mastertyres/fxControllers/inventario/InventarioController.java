@@ -99,6 +99,25 @@ public class InventarioController {
 
         cargarInventario();
 
+        atributoBusquedaInventario.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+
+            if (newValue != null) {
+
+                if (newValue.toLowerCase().equals("sin stock"))
+                    buscarInventarioBuscador.setEditable(false);
+
+                else
+                    buscarInventarioBuscador.setEditable(true);
+
+                switch (newValue.toLowerCase()) {
+                    case "sin stock" -> {
+                        List<Inventario> inventarios = inventarioService.listarInventario(StatusInventario.SIN_STOCK.toString());
+                        tablaInventario.setItems(FXCollections.observableList(inventarios));
+                    }
+
+                }
+            }
+        }));
 
         //Buscar mientras escribes
         buscarInventarioBuscador.setOnKeyReleased(event -> {
@@ -396,7 +415,6 @@ public class InventarioController {
     private void buscarInventario(String seleccion, String busqueda) {
 
         switch (seleccion) {
-
 
             case "codigo de barras" -> {
                 List<Inventario> inventarios = inventarioService.buscarPorCodBarras(StatusInventario.ACTIVE.toString(), busqueda);

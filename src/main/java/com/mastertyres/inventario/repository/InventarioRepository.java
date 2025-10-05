@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface InventarioRepository extends JpaRepository<Inventario,Integer> {
 
@@ -55,8 +56,19 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
     @Transactional
     @Modifying
     @Query("UPDATE Inventario i SET i.updated_at = :now WHERE i.inventarioId = :idInventario ")
-    void updatedAt(@Param("now")String now,@Param("idInventario")Integer idInventario);
+    void actualizarUpdatedAt(@Param("now")String now,@Param("idInventario")Integer idInventario);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE Inventario i SET i.created_at = :now WHERE i.inventarioId = :idInventario ")
+    void actualizaCreatedAt(@Param("now")String now,@Param("idInventario")Integer idInventario);
+
+
+
+
+    Optional<Inventario> findByCodigoBarras(String codBarras);
+
+    Optional<Inventario> findByDot(String dot);
 
 
 
