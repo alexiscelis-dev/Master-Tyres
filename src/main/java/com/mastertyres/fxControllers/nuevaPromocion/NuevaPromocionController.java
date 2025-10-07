@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.nuevaPromocion;
 
+import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
@@ -15,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ import static javafx.collections.FXCollections.observableList;
 
 @Component
 public class NuevaPromocionController {
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private Slider porcentajeDescuento;
     @FXML
@@ -83,6 +87,8 @@ public class NuevaPromocionController {
 
     @FXML
     public void initialize() {
+        MenuContextSetting.disableMenu(rootPane);
+        MenuContextSetting.disableMenuDatePicker(rootPane);
 
         cargarPorcentaje();
         tableVehiculosParticipantes.setItems(vehiculos);

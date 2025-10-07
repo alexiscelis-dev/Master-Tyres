@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.inventario;
 
 import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.fxControllers.EditarControllers.EditarInventarioController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
@@ -28,6 +29,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +43,7 @@ import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.*;
 
+@NoArgsConstructor
 @Component
 public class InventarioController {
 
@@ -84,7 +87,6 @@ public class InventarioController {
     private VentanaPrincipalController ventanaPrincipalController;
 
 
-
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
 
@@ -96,6 +98,26 @@ public class InventarioController {
     private void initialize() {
 
         cargarInventario();
+
+        atributoBusquedaInventario.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+
+            if (newValue != null) {
+
+                if (newValue.toLowerCase().equals("sin stock"))
+                    buscarInventarioBuscador.setEditable(false);
+
+                else
+                    buscarInventarioBuscador.setEditable(true);
+
+                switch (newValue.toLowerCase()) {
+                    case "sin stock" -> {
+                        List<Inventario> inventarios = inventarioService.listarInventario(StatusInventario.SIN_STOCK.toString());
+                        tablaInventario.setItems(FXCollections.observableList(inventarios));
+                    }
+
+                }
+            }
+        }));
 
         //Buscar mientras escribes
         buscarInventarioBuscador.setOnKeyReleased(event -> {
@@ -126,6 +148,8 @@ public class InventarioController {
                     buscarInventario(seleccion.toLowerCase(), busqueda);
             }
         });
+
+        //Clic derecho
         limpiarChoiceBox.setOnMouseClicked(event -> {
             if ((event.getButton() == MouseButton.MIDDLE || event.getButton() == MouseButton.PRIMARY) && event.getClickCount() == 2)
                 atributoBusquedaInventario.setValue(null);
@@ -196,7 +220,22 @@ public class InventarioController {
 
                                 }
                                 case "Editar" -> {
-                                    System.out.println("Editar");
+                                    try {
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarInventario.fxml"));
+                                        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
+                                        Parent root = loader.load();
+                                        EditarInventarioController controller = loader.getController();
+                                        controller.editarInventario(seleccionado);
+                                        Stage stage = new Stage();
+                                        stage.setTitle("Editar inventario");
+                                        stage.setScene(new Scene(root));
+                                        stage.showAndWait();
+
+                                    } catch (IOException ex) {
+                                        mostrarError("Ocurrio un error", "", "Ocurrio un error al mostrar la ventana");
+                                        ex.printStackTrace();
+                                    }
                                 }
                                 case "Copiar" -> {
                                     var selectedCell = tablaInventario.getSelectionModel().getSelectedCells();
@@ -288,8 +327,11 @@ public class InventarioController {
             return fila;
         });
 
-    }//initialize
+        colObservaciones.setPrefWidth(400);
+        colObservaciones.setMinWidth(100);
 
+
+    }//initialize
 
     private void cargarInventario() {
 
@@ -373,7 +415,6 @@ public class InventarioController {
     private void buscarInventario(String seleccion, String busqueda) {
 
         switch (seleccion) {
-
 
             case "codigo de barras" -> {
                 List<Inventario> inventarios = inventarioService.buscarPorCodBarras(StatusInventario.ACTIVE.toString(), busqueda);
