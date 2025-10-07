@@ -13,7 +13,36 @@ import java.util.List;
 
 public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("""
+    SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(
+        v.vehiculoId,
+        c.nombre,
+        c.apellido,
+        c.segundoApellido,
+        c.numTelefono,
+        m.nombreMarca,
+        mo.nombreModelo,
+        ca.nombreCategoria,
+        v.anio,
+        v.numSerie,
+        v.observaciones,
+        v.kilometros,
+        v.color,
+        v.placas,
+        v.ultimoServicio,
+        v.fechaRegistro
+    )
+    FROM Vehiculo v
+    JOIN v.marca m
+    JOIN v.modelo mo
+    JOIN v.cliente c
+    JOIN v.categoria ca
+    WHERE v.active = 'ACTIVE'
+    AND FUNCTION('DATE', v.ultimoServicio) <= :fechaLimite
+""")
+    List<VehiculoDTO> listarVehiculosConServicioVencido(@Param("fechaLimite") LocalDate fechaLimite);
+
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -42,7 +71,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     //Metodos buscador
 
     // el simbolo % (cualquier cosa aqui) se concatena para posteriormente con el like ver si hay coincidencias de palabras
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -57,7 +86,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
 
 
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie,  v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie,  v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -67,7 +96,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     List<VehiculoDTO> buscarVehiculoPorMarca(@Param("active") String active, @Param("marca") String marca);
 
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -76,7 +105,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active AND LOWER(mo.nombreModelo) LIKE LOWER(CONCAT('%', :modelo, '%')) ")
     List<VehiculoDTO> buscarVehiculoPorModelo(@Param("active") String active, @Param("modelo") String modelo);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -85,7 +114,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active AND LOWER(ca.nombreCategoria) LIKE LOWER(CONCAT('%', :categoria, '%')) ")
     List<VehiculoDTO> buscarVehiculoPorCategoria(@Param("active") String active, @Param("categoria") String categoria);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -94,7 +123,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active AND LOWER(v.color) LIKE LOWER(CONCAT('%', :color, '%')) ")
     List<VehiculoDTO> buscarVehiculoPorColor(@Param("active") String active, @Param("color") String color);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -103,7 +132,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active AND v.anio = :anio ")
     List<VehiculoDTO> buscarVehiculoPorAnio(@Param("active") String active, @Param("anio") Integer anio);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie,  v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie,  v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -113,7 +142,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     List<VehiculoDTO> buscarVehiculoPorAnio(@Param("active") String active, @Param("fechaInicio") Integer fechaInicio, @Param("fechaFin") Integer fechaFin);
 
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -122,7 +151,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active AND LOWER(v.placas) LIKE LOWER(CONCAT('%', :placas, '%'))")
     List<VehiculoDTO> buscarVehiculoPorPlacas(@Param("active") String active, @Param("placas") String placas);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -131,7 +160,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active AND LOWER(v.numSerie) LIKE LOWER(CONCAT('%', :numSerie, '%'))")
     List<VehiculoDTO> buscarVehiculoPorNumSerie(@Param("active") String active, @Param("numSerie") String numSerie);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -140,7 +169,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active AND v.kilometros = :kilometros")
     List<VehiculoDTO> buscarVehiculoPorKilometros(@Param("active") String active, @Param("kilometros") Integer kilometros);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie,  v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie,  v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -150,7 +179,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     List<VehiculoDTO> buscarVehiculoPorKilometros(@Param("active") String active, @Param("kilometroInicio") Integer fechaInicio, @Param("kilometroFin") Integer fechaFin);
 
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -160,7 +189,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     List<VehiculoDTO> buscarVehiculoPorUltimoServicio(@Param("active") String active, @Param("ultimoServicio") String ultimoServicio);
 
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -170,7 +199,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     List<VehiculoDTO> buscarVehiculoPorUltimoServicio(@Param("active") String active, @Param("servicioInicio") String servicioInicio, @Param("servicioFin") String fechaFin);
 
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -179,7 +208,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = :active AND DATE(v.created_at) = :fechaRegistro")
     List<VehiculoDTO> buscarVehiculoPorRegistro(@Param("active") String active, @Param("fechaRegistro") LocalDate fechaRegistro);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v " +
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
@@ -216,7 +245,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
                                                   @Param("marcaId") Integer marcaId,
                                                   @Param("modeloId") Integer modeloId);
 
-    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
+    @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro ) FROM Vehiculo v JOIN v.marca m JOIN v.modelo mo JOIN v.cliente c JOIN v.categoria ca " +
             " WHERE v.active = :status AND " +
             "LOWER (COALESCE(c.nombre, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) OR " +
