@@ -30,6 +30,24 @@ public class VehiculoService implements IVehiculoService {
 
     }
 
+    public List<VehiculoDTO> obtenerVehiculosConServicioVencido() {
+
+        LocalDate fechaLimite = LocalDate.now().minusMonths(6);
+
+
+        return vehiculoRepository.listarVehiculosConServicioVencido(fechaLimite);
+    }
+
+    public boolean actualizarUltimoServicio(Integer idVehiculo) {
+        return vehiculoRepository.findById(idVehiculo)
+                .map(vehiculo -> {
+                    vehiculo.setUltimoServicio(LocalDate.now()+""); // actualiza a la fecha actual
+                    vehiculoRepository.save(vehiculo); // persiste el cambio
+                    return true;
+                })
+                .orElse(false); // si no se encuentra el vehículo
+    }
+
 
     public void guardarVehiculos(Cliente cliente, List<Vehiculo> vehiculos) {
         if (cliente == null || vehiculos == null || vehiculos.isEmpty()) {

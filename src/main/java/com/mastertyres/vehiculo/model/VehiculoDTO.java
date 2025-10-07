@@ -11,6 +11,7 @@ private Integer id;
 private String nombreCliente;
 private String apellido;
 private String segundoApellido;
+private String numTelefono;
 private String nombreMarca;
 private String nombreModelo;
 private String nombreCategoria;
@@ -30,11 +31,16 @@ private String active;
 //contructor para consulta listar vehiculos
 
 
-    public VehiculoDTO(Integer id, String nombreCliente, String apellido, String segundoApellido, String nombreMarca, String nombreModelo, String nombreCategoria, Integer anio, String numSerie,String observaciones, Integer kilometros, String color, String placas, String ultimoServicio, String fechaRegistro) {
+    public VehiculoDTO(Integer id, String nombreCliente, String apellido, String segundoApellido, String numTelefono,
+                       String nombreMarca, String nombreModelo, String nombreCategoria, Integer anio,
+                       String numSerie, String observaciones, Integer kilometros, String color, String placas,
+                       String ultimoServicio, String fechaRegistro) {
+
         this.id = id;
         this.nombreCliente = nombreCliente;
         this.apellido = apellido;
         this.segundoApellido = segundoApellido;
+        this.numTelefono = numTelefono;
         this.nombreMarca = nombreMarca;
         this.nombreModelo = nombreModelo;
         this.nombreCategoria = nombreCategoria;
