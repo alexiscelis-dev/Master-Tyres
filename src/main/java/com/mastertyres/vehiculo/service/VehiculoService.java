@@ -77,18 +77,32 @@ public class VehiculoService implements IVehiculoService {
     public boolean existeVehiculoPorPlacas(String placas) {
         return vehiculoRepository.existeVehiculoPorPlacas(placas);
     }
+
+    public boolean existeVehiculoPlacas_Editar(String placas, Integer id) {
+        return vehiculoRepository.existeVehiculoPlacas_Editar(placas,id);
+    }
+
     public boolean existeVehiculoPorNumeroSerie(String numSerie) {
         return vehiculoRepository.existeVehiculoPorNumeroSerie(numSerie);
     }
+
+    public boolean existeVehiculoNumeroSerie_Editar(String numSerie, Integer id) {
+        return vehiculoRepository.existeVehiculoNumeroSerie_Editar(numSerie, id);
+    }
+
     public boolean existeVehiculoPorPlacasONumeroSerie(String placas, String numSerie) {
         return vehiculoRepository.existeVehiculoPorPlacasONumeroSerie(placas, numSerie);
     }
-
 
     @Override
     @Transactional(readOnly = true)
     public List<VehiculoDTO> listarVehiculos(String vehiculoStatus) {
         return vehiculoRepository.listarVehiculos(vehiculoStatus);
+    }
+
+    @Transactional(readOnly = true)
+    public Vehiculo Vehiculo_SinDTO(Integer id) {
+        return vehiculoRepository.Vehiculo_SinDTO(id);
     }
 
     @Transactional
@@ -115,13 +129,11 @@ public class VehiculoService implements IVehiculoService {
         return vehiculoRepository.buscarVehiculoPorPropietario(active,nombre);
     }
 
-
     @Transactional(readOnly = true)
     @Override
     public List<VehiculoDTO> buscarVehiculoPorMarca(String activo, String marca) {
         return vehiculoRepository.buscarVehiculoPorMarca(activo, marca);
     }//buscarVehiculoPorMarca
-
 
     @Transactional(readOnly = true)
     @Override
@@ -201,7 +213,6 @@ public class VehiculoService implements IVehiculoService {
         return vehiculoRepository.buscarVehiculoPorRegistro(activo,fechaInicio,fechaFin);
     }
 
-
     @Transactional(readOnly = true)
     public List<Categoria> listarCategoriasPorMarcaYModelo(String active, Integer marcaId, Integer modeloId) {
         List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorMarcaYModelo(active, marcaId, modeloId);
@@ -219,7 +230,5 @@ public class VehiculoService implements IVehiculoService {
     public List<VehiculoDTO> buscadorVehiculo(String status, String busqueda) {
         return vehiculoRepository.buscadorVehiculos(status,busqueda);
     }
-
-
 
 }//clase

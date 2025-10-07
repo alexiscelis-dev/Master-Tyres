@@ -4,87 +4,90 @@
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
-            style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.cliente.ClienteController">
+<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.cliente.ClienteController">
 
-    <children>
+   <children>
 
-        <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0"
-                    style="-fx-background-color: #080808;" styleClass="clientes-panel"
-                    stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0"
-                    AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0"
-                    xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+      <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
-            <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0"
-                  AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
 
-                <!-- Zona superior: Búsqueda y botón agregar -->
-                <HBox fx:id="limpiarChoiceBox" alignment="CENTER_LEFT" spacing="10.0">
-                    <TextField fx:id="buscarClienteBuscador" prefHeight="26.0" prefWidth="481.0"
-                               promptText="Buscar cliente..." styleClass="buscador"/>
+            <!-- Zona superior: Búsqueda y botón agregar -->
+            <HBox fx:id="limpiarChoiceBox" alignment="CENTER_LEFT" spacing="10.0">
+               <TextField fx:id="buscarClienteBuscador" prefHeight="26.0" prefWidth="481.0" promptText="Buscar cliente..." styleClass="buscador" />
 
-                    <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                        <Label text="Buscar por:"/>
-                        <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="choicebox-mini2">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Nombre"/>
-                                    <String fx:value="Telefono"/>
-                                    <String fx:value="Estado"/>
-                                    <String fx:value="Ciudad"/>
-                                    <String fx:value="Domicilio"/>
-                                    <String fx:value="Hobbie"/>
-                                    <String fx:value="RFC"/>
-                                </FXCollections>
-                            </items>
-                        </ChoiceBox>
-                    </HBox>
+               <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                  <Label prefHeight="18.0" prefWidth="79.0" text="Buscar por:" />
+                  <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="choicebox-mini2">
+                  <items>
+                        <FXCollections fx:factory="observableArrayList">
+                           <String fx:value="Nombre" />
+                           <String fx:value="Telefono" />
+                           <String fx:value="Estado" />
+                           <String fx:value="Ciudad" />
+                           <String fx:value="Domicilio" />
+                           <String fx:value="Hobbie" />
+                            <String fx:value="RFC" />
+                        </FXCollections>
+                     </items>
+                  </ChoiceBox>
+               </HBox>
 
-                    <Pane HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="btnAgregarCliente" onAction="#agregarCliente" styleClass="boton-accion"
-                            text="Agregar Cliente"/>
-                </HBox>
+               <Pane HBox.hgrow="ALWAYS">
+                  <children>
 
+                      <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
 
-                <!-- Tabla de clientes -->
-                <TableView fx:id="tablaClientes" prefHeight="500.0">
-                    <columns>
-                        <TableColumn fx:id="colTipoCliente" prefWidth="150" text="Tipo Cliente"/>
-                        <TableColumn fx:id="colNombre" prefWidth="150" text="Nombre"/>
-                        <TableColumn fx:id="colTelefono" prefWidth="150" text="Teléfono"/>
-                        <TableColumn fx:id="colRFC" prefWidth="150" text="RFC"/>
-                        <TableColumn fx:id="colEstado" prefWidth="150" text="Estado"/>
-                        <TableColumn fx:id="colCiudad" prefWidth="150" text="Ciudad"/>
-                        <TableColumn fx:id="colDomicilio" prefWidth="150" text="Domicilio"/>
-                        <TableColumn fx:id="colCumpleanos" prefWidth="150" text="Cumpleaños"/>
-                        <TableColumn fx:id="colGenero" prefWidth="150" text="Genero"/>
-                        <TableColumn fx:id="colHobbie" prefWidth="150" text="Hobbie"/>
-                        <TableColumn fx:id="colVehiculo" prefWidth="150" text="Vehículo"/>
-                        <TableColumn fx:id="colRegistro" prefWidth="150" text="Fecha registro"/>
-                    </columns>
-                </TableView>
+                          <graphic>
+                              <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                  <image>
+                                      <Image url="@/icons/refresh.png" />
+                                  </image>
+                              </ImageView>
+                          </graphic>
+                      </Button>
 
-                <Label fx:id="statusLabel" prefHeight="60.0" prefWidth="365.0" text="Label" textFill="WHITE"
-                       visible="false">
-                    <VBox.margin>
-                        <Insets left="460.0"/>
-                    </VBox.margin>
-                    <font>
-                        <Font name="Roboto Bold" size="12.0"/>
-                    </font>
-                </Label>
+                      <Button fx:id="btnAgregarCliente" layoutX="184.0" layoutY="3.0" onAction="#agregarCliente" prefHeight="25.0" prefWidth="150.0" styleClass="boton-accion" text="Agregar Cliente" />
+                  </children></Pane>
+            </HBox>
 
 
-            </VBox>
+            <!-- Tabla de clientes -->
+            <TableView fx:id="tablaClientes" prefHeight="500.0">
+               <columns>
+                  <TableColumn fx:id="colTipoCliente" prefWidth="150" text="Tipo Cliente" />
+                  <TableColumn fx:id="colNombre" prefWidth="150" text="Nombre" />
+                 <TableColumn fx:id="colTelefono" prefWidth="150" text="Teléfono" />
+                  <TableColumn fx:id="colRFC" prefWidth="150" text="RFC" />
+                 <TableColumn fx:id="colEstado" prefWidth="150" text="Estado" />
+                 <TableColumn fx:id="colCiudad" prefWidth="150" text="Ciudad" />
+                 <TableColumn fx:id="colDomicilio" prefWidth="150" text="Domicilio" />
+                 <TableColumn fx:id="colCumpleanos" prefWidth="150" text="Cumpleaños" />
+                 <TableColumn fx:id="colGenero" prefWidth="150" text="Genero" />
+                 <TableColumn fx:id="colHobbie" prefWidth="150" text="Hobbie" />
+                 <TableColumn fx:id="colVehiculo" prefWidth="150" text="Vehículo" />
+                  <TableColumn fx:id="colRegistro" prefWidth="150" text="Fecha registro" />
+           </columns>
+        </TableView>
+
+             <Label fx:id="statusLabel" prefHeight="60.0" prefWidth="365.0" text="Label" textFill="WHITE" visible="false">
+                 <VBox.margin>
+                     <Insets left="460.0" />
+                 </VBox.margin>
+                 <font>
+                     <Font name="Roboto Bold" size="12.0" />
+                 </font>
+             </Label>
 
 
-        </AnchorPane>
+         </VBox>
 
-    </children>
+
+      </AnchorPane>
+
+   </children>
 </AnchorPane>

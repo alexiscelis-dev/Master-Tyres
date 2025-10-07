@@ -2,10 +2,14 @@ package com.mastertyres.fxControllers.cliente;
 
 
 import com.mastertyres.cliente.model.Cliente;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 @Component

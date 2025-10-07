@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.ClientesPromocionesController.ClientesPromocionesController">
+
+    <children>
+        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="600" spacing="10" styleClass="secciones">
+
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+
+            <VBox>
+
+                <Label text="Clientes aplicables a la promocion" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="32.0" />
+                    </font>
+                </Label>
+
+
+            </VBox>
+
+            <VBox>
+                <HBox alignment="CENTER" spacing="20">
+
+                    <Button onAction="#SeleccionarTodos" text="Seleccionar todos" styleClass="boton-accion" prefWidth="150"></Button>
+                    <Button onAction="#DeseleccionarTodos" text="Deseleccionar todos" styleClass="boton-accion" prefWidth="150"></Button>
+
+                </HBox>
+
+            </VBox>
+
+
+            <TableView fx:id="tablaClientes">
+                <columns>
+                    <TableColumn fx:id="colCheckBox" prefWidth="70.0" text="Seleccion" style="-fx-alignment:CENTER;" />
+                    <TableColumn fx:id="colNombre" prefWidth="240.0" text="Nombre" />
+                    <TableColumn fx:id="colTelefono" prefWidth="120.0" text="Telefono" />
+                    <TableColumn fx:id="colFechaCumpleanios" prefWidth="120.0" text="Cumpleaños" />
+                </columns>
+            </TableView>
+
+
+
+            <!-- Botones -->
+            <HBox alignment="CENTER" spacing="20">
+                <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cerrar" prefWidth="150" />
+                <Button onAction="#Enviar" styleClass="boton-accion" text="Enviar promocion" prefWidth="150" />
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>
