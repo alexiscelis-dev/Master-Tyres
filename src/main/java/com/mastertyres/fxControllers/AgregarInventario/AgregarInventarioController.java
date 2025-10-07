@@ -101,22 +101,22 @@ public class AgregarInventarioController {
         btnImagen.setOnAction(event -> seleccionarImg());
 
         txtStock.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")){
-                return  change;
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
             }
             return null;
         }));
 
         txtPrecioC.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")){
-                return  change;
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
             }
             return null;
         }));
 
         txtPrecioV.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")){
-                return  change;
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
             }
             return null;
         }));
