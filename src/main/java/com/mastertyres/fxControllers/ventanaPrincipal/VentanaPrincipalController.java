@@ -1,10 +1,12 @@
 package com.mastertyres.fxControllers.ventanaPrincipal;
 
 
+import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController;
 import com.mastertyres.fxControllers.cliente.ClienteController;
 import com.mastertyres.fxControllers.inventario.InventarioController;
+import com.mastertyres.fxControllers.proximosServicios.ProximosServiciosController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -26,8 +28,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
-
+import java.util.Stack;
 
 
 @Component
@@ -45,6 +46,8 @@ public class VentanaPrincipalController {
     @FXML
     private HBox HBoxInventario;
     @FXML
+    private HBox HBoxServicios;
+    @FXML
     private Pane panelMenu;
     @FXML
     private ImageView LogoPrincipal;
@@ -60,6 +63,12 @@ public class VentanaPrincipalController {
     private double posicionMenu;
     private TranslateTransition transition;
     private TranslateTransition transitionMenu;
+
+    private final Stack<String> historialVistas = new Stack<>();
+    private final Stack<String> historialNombreVistas = new Stack<>();
+    private String vistaActual = null;
+    private String NombreVistaActual = null;
+
 
 
     @FXML
@@ -88,6 +97,10 @@ public class VentanaPrincipalController {
         HBoxInventario.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/Inventario.fxml", "Inventario de llantas");
             cambiarPaginaEtiqueta.setText("Inventario de llantas");
+        });
+        HBoxServicios.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/ProximosServicios.fxml", "Proximos Servicios");
+            cambiarPaginaEtiqueta.setText("Proximos Servicios");
         });
 
         LogoPrincipal.setOnMouseClicked(event -> {
@@ -127,9 +140,30 @@ public class VentanaPrincipalController {
     }//logOut
 
 
+    @FXML
+    private void irAtras(MouseEvent event) {
+        if (!historialVistas.isEmpty()) {
+            String vistaAnterior = historialVistas.pop();
+            vistaActual = vistaAnterior;
+            viewContent(event, vistaAnterior, historialNombreVistas.pop());
+            cambiarPaginaEtiqueta.setText(historialNombreVistas.pop());
+        }
+    }
+
+
     private void viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
 
         try {
+
+            if (vistaActual != null) {
+                historialVistas.push(vistaActual);
+            }
+            if (NombreVistaActual != null){
+                historialNombreVistas.push(NombreVistaActual);
+            }
+            vistaActual = archivoFXML;
+            NombreVistaActual = nombreVentana;
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
 
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -148,6 +182,9 @@ public class VentanaPrincipalController {
             }
             if (controller instanceof InventarioController) {
                 ((InventarioController) controller).setVentanaPrincipalController(this);
+            }
+            if (controller instanceof ProximosServiciosController) {
+                ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
             }
             panelMenu.getChildren().clear();
             panelMenu.getChildren().add(contenido);
