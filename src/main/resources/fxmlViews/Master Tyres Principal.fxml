@@ -76,7 +76,7 @@
                                 <Insets bottom="-30.0" top="-10.0" />
                             </VBox.margin>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                        <HBox fx:id="HBoxServicios" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
                                 <ImageView fx:id="iconoPromociones" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
@@ -207,7 +207,7 @@
                         <Font name="Roboto Bold" size="28.0" />
                     </font>
                 </Label>
-                <ImageView fx:id="irAtras" fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
+                <ImageView fx:id="irAtras" onMouseClicked="#irAtras" fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
                     <image>
                         <Image url="@../icons/arrow-left-s-line.png" />
                     </image>
