@@ -4,6 +4,7 @@ import com.mastertyres.inventario.model.Inventario;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface IInventarioService {
 
@@ -28,5 +29,18 @@ public interface IInventarioService {
     int eliminarInventario(String inactive, Integer idInventario);
 
     void guardarInventario(Inventario inventario);
+
+    void actualizarInventario(Inventario inventario);
+
+    void actualizarUptatedAt(String now, Integer idInventario);
+
+    Optional<Inventario> findByCodigoBarras(String codBarras);
+
+    Optional<Inventario>findByDot(String dot);
+
+    void actualizarCreatedAt(String now, Integer id);
+
+
+
 
 }//interface
