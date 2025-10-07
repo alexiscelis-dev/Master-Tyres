@@ -51,12 +51,6 @@
 
 /* Menú desplegable más compacto */
 
-
-
-
-
-
-
 .choice-box .menu-item {
     -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
     -fx-font-size: 15px;   /* tamaño del texto (opcional) */
@@ -88,7 +82,7 @@
 
 .buscador:focused {
     -fx-border-color: #8EB83D;
-    -fx-border-width: 2;
+    -fx-border-width: 2px;
 }
 
 .buscador-codigo {
@@ -609,7 +603,24 @@ SpinnerAnnio
     -fx-background-radius: 5;
     -fx-padding: 6 10;
 
+
 }
+
+
+.buscador-observaciones-editar{
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 6 10;
+    -fx-min-height: 50px;
+    -fx-pref-height: 50px;
+
+}
+
+
 
 .buscador-marca:focused {
     -fx-border-color: #8EB83D;

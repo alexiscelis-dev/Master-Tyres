@@ -30,8 +30,8 @@
                                     <String fx:value="Marca" />
                                     <String fx:value="Modelo" />
                                     <String fx:value="Medida" />
-                                    <String fx:value="Fecha de registro" />
                                     <String fx:value="Sin stock" />
+                                    <String fx:value="Fecha de registro" />
                                 </FXCollections>
                             </items>
 

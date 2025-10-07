@@ -1,12 +1,17 @@
 package com.mastertyres.fxControllers.AgregarInventario;
 
+import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,8 @@ import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class AgregarInventarioController {
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TextField txtCodBarras;
     @FXML
@@ -55,9 +62,22 @@ public class AgregarInventarioController {
     @Autowired
     InventarioService inventarioService;
 
+    private BooleanProperty codBarrasValido = new SimpleBooleanProperty(true);
+    private BooleanProperty dotValido = new SimpleBooleanProperty(true);
+    private BooleanProperty marcaValido = new SimpleBooleanProperty(true);
+    private BooleanProperty medida1Valido = new SimpleBooleanProperty(true);
+    private BooleanProperty medida2Valido = new SimpleBooleanProperty(true);
+    private BooleanProperty indiceCargaValido = new SimpleBooleanProperty(true);
+    private BooleanProperty indiceVelocidadValido = new SimpleBooleanProperty(true);
+    private BooleanProperty stockValido = new SimpleBooleanProperty(true);
+    private BooleanProperty precioCompraValido = new SimpleBooleanProperty(true);
+    private BooleanProperty precioventaValido = new SimpleBooleanProperty(true);
+
 
     @FXML
     private void initialize() {
+        MenuContextSetting.disableMenu(rootPane); //Quita el menu contextual del clic derecho
+
         indicesChoiceBox();
         btnLimpiar.setOnAction(event -> clean());
 
@@ -68,6 +88,7 @@ public class AgregarInventarioController {
                 cbIndiceCarga.hide();
             }
         });
+
         cbIndiceVelocidad.setOnMousePressed(event -> {
             if (!cbIndiceVelocidad.isShowing()) {
                 cbIndiceVelocidad.show();
@@ -75,33 +96,32 @@ public class AgregarInventarioController {
             }
         });
 
-        txtPrecioC.setTextFormatter(new TextFormatter<>(texto -> {
-            if (texto.getControlNewText().matches("\\d*(\\.\\d{0,2})?"))
-                return texto;
-            else
-                return null;
-        }));
-        txtPrecioV.setTextFormatter(new TextFormatter<>(texto ->{
-            if (texto.getControlNewText().matches("\\d*(\\.\\d{0,2})?"))
-                return texto;
-            else
-                return null;
-
-        }));
-        txtStock.setTextFormatter(new TextFormatter<>(texto ->{
-            if (texto.getControlNewText().matches("\\d*"))
-                return texto;
-            else
-                return null;
-        }));
-        txtCodBarras.setTextFormatter(new TextFormatter<>(texto ->{
-            if (texto.getControlNewText().matches("\\d*"))
-                return texto;
-            else
-                return null;
-        }));
         btnRegistrar.setOnAction(event -> registrar());
+
         btnImagen.setOnAction(event -> seleccionarImg());
+
+        txtStock.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+
+        txtPrecioC.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+
+        txtPrecioV.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+
+        configurarValidaciones();
 
     }//ininitialize
 
@@ -139,23 +159,21 @@ public class AgregarInventarioController {
         txtImg.setText("");
         txtObservaciones.setText("");
 
+        txtCodBarras.setStyle("");
+        txtDot.setStyle("");
+        txtMarca.setStyle("");
+        txtMedida1.setStyle("");
+        txtMedida2.setStyle("");
+        txtPrecioC.setStyle("");
+        txtPrecioV.setStyle("");
+        txtStock.setStyle("");
+
+
     }//clean
 
     private void registrar() {
 
-        String medida = txtMedida1.getText().replaceAll("\\s","") + "/" + txtMedida2.getText().replaceAll("\\s","");
-        String indiceCarga = "", indiceVelocidad = "";
-
-        if (cbIndiceCarga.getValue() != null)
-            indiceCarga = cbIndiceCarga.getValue();
-        else
-            indiceCarga = "";
-
-        if (cbIndiceVelocidad.getValue() != null)
-            indiceVelocidad = cbIndiceVelocidad.getValue();
-        else
-            indiceVelocidad = "";
-
+        String medida = txtMedida1.getText().replaceAll("\\s", "") + "/" + txtMedida2.getText().replaceAll("\\s", "");
 
 
         if (!empty()) {
@@ -166,21 +184,24 @@ public class AgregarInventarioController {
                     .marca(txtMarca.getText())
                     .modelo(txtModelo.getText())
                     .medida(medida)
-                    .indiceCarga(indiceCarga)
-                    .indiceVelocidad(indiceVelocidad)
+                    .indiceCarga(cbIndiceCarga.getValue() != null ? cbIndiceCarga.getValue() : "")
+                    .indiceVelocidad(cbIndiceVelocidad.getValue() != null ? cbIndiceVelocidad.getValue() : "")
                     .stock(Integer.parseInt(txtStock.getText()))
                     .precioCompra(Float.parseFloat(txtPrecioC.getText()))
                     .precioVenta(Float.parseFloat(txtPrecioV.getText()))
                     .observaciones(txtObservaciones.getText())
-                    .imagen(txtImg.getText() != null ? txtImg.getText(): "")
+                    .imagen(txtImg.getText() != null ? txtImg.getText() : "")
                     .build();
 
             try {
                 inventarioService.guardarInventario(inventario);
-                mostrarInformacion("Nueva llanta agregada","","Se agrego nueva llanta al inventario correctamente.");
+                mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
                 clean();
-            }catch (Exception e){
-                mostrarError("Error al agregar llanta","","Ha ocurrido un error al agregar al inventario,vuelva a intentarlo mas tarde.");
+            } catch (InventarioException ie) {
+                mostrarError("Error de inventario", "", ie.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+                mostrarError("Error inesperado", "", "No se pudo guardar el inventario, vuelva a intentarlo más tarde.");
             }
 
         } else {
@@ -192,31 +213,209 @@ public class AgregarInventarioController {
     // solo verifica si los campos necesarios estan vacios (marca,medida,stock,precios,codigo de barras y dot)
 
     private boolean empty() {
-        if (txtMarca.getText().isEmpty() || txtMedida1.getText().isEmpty() || txtMedida2.getText().isEmpty() ||
-                txtStock.getText().isEmpty() || txtPrecioC.getText().isEmpty() || txtPrecioV.getText().isEmpty() ||
-                txtCodBarras.getText().isEmpty() || txtDot.getText().isEmpty())
-            return true;
-        else
-            return false;
+        boolean empty = false;
 
+        if (txtCodBarras.getText().isEmpty()) {
+            txtCodBarras.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtDot.getText().isEmpty()) {
+            txtDot.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtMarca.getText().isEmpty()) {
+            txtMarca.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtMarca.getText().isEmpty()) {
+            txtMarca.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtMedida1.getText().isEmpty()) {
+            txtMedida1.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtMedida2.getText().isEmpty()) {
+            txtMedida2.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtPrecioC.getText().isEmpty()) {
+            txtPrecioC.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+        if (txtPrecioV.getText().isEmpty()) {
+            txtPrecioV.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+
+
+        return empty;
     }// empty
 
-    private void seleccionarImg(){
+    private void seleccionarImg() {
         FileChooser fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter(
-                "Archivos de imagen","*.png","*.jpg","*.jpeg"
+                "Archivos de imagen", "*.png", "*.jpg", "*.jpeg"
         ));
 
         Stage stage = (Stage) btnImagen.getScene().getWindow();
         File archivo = fileChooser.showOpenDialog(stage);
 
-        if (archivo != null){
+        if (archivo != null) {
             String url = archivo.getAbsolutePath();
             txtImg.setText(url);
         }
 
     } //seleccionarImg
+
+    private void configurarValidaciones() {
+
+        txtCodBarras.textProperty().addListener((observable, oldText, newText) -> {
+
+            if (!txtCodBarras.getText().matches("\\d{8,13}")) {
+                codBarrasValido.set(false);
+                txtCodBarras.setStyle("-fx-border-color: red;");
+            } else {
+                codBarrasValido.set(true);
+                txtCodBarras.setStyle("");
+            }
+        });
+
+        txtDot.textProperty().addListener(((observable, oldtext, newText) -> {
+            txtDot.setText(txtDot.getText().toUpperCase());
+            if (!txtDot.getText().matches("^[A-Za-z0-9]{10,13}$")) {
+                dotValido.set(false);
+                txtDot.setStyle("-fx-border-color: red;");
+            } else {
+                txtDot.setStyle("");
+                dotValido.set(true);
+            }
+        }));
+
+        txtMarca.textProperty().addListener(((observable, oldtext, newText) -> {
+            if (txtMarca.getText().isBlank()) {
+                txtMarca.setStyle("-fx-border-color: red;");
+                marcaValido.set(false);
+            } else {
+                marcaValido.set(true);
+                txtMarca.setStyle("");
+            }
+
+
+        }));
+
+        txtStock.textProperty().addListener(((observable, oldtext, newText) -> {
+            if (txtStock.getText().isBlank() || !txtStock.getText().matches("\\d*")) {
+                txtStock.setStyle("-fx-border-color: red;");
+                stockValido.set(false);
+                return;
+            }
+
+            try {
+                long valor = Long.parseLong(newText);
+                if (valor > Integer.MAX_VALUE) {
+                    txtStock.setStyle("-fx-border-color: red;");
+                    stockValido.set(false);
+                } else {
+                    txtStock.setStyle("");
+                    stockValido.set(true);
+                }
+
+            } catch (NumberFormatException e) {
+                txtStock.setStyle("-fx-border-color: red;");
+                stockValido.set(false);
+            }
+
+        }));
+
+        txtMedida1.textProperty().addListener(((observable, oldText, newText) -> {
+            if (txtMedida1.getText().length() > 10 || txtMedida1.getText().isBlank()) {
+                medida1Valido.set(false);
+                txtMedida1.setStyle("-fx-border-color: red;");
+            } else {
+                medida1Valido.set(false);
+                txtMedida1.setStyle("");
+            }
+        }));
+
+        txtMedida2.textProperty().addListener(((observable, oldText, newText) -> {
+            if (txtMedida2.getText().length() > 10 || txtMedida2.getText().isBlank()) {
+                medida2Valido.set(false);
+                txtMedida2.setStyle("-fx-border-color: red;");
+            } else {
+                medida2Valido.set(false);
+                txtMedida2.setStyle("");
+            }
+        }));
+
+
+        txtPrecioC.textProperty().addListener(((observable, oldtext, newText) -> {
+            boolean valido = true;
+
+            if (txtPrecioC.getText().isBlank() || !txtPrecioC.getText().matches("\\d*(\\.\\d{0,2})?")) {
+                valido = false;
+            } else {
+                try {
+                    float valor = Float.parseFloat(newText);
+                    if (valor > Float.MAX_VALUE) {
+                        valido = false;
+                    }
+                } catch (NumberFormatException e) {
+                    valido = false;
+                }
+            }
+            if (!valido) {
+                txtPrecioC.setStyle("-fx-border-color: red;");
+                precioCompraValido.set(false);
+            } else {
+                txtPrecioC.setStyle("");
+                precioCompraValido.set(true);
+            }
+        }));
+
+        txtPrecioV.textProperty().addListener(((observable, oldtext, newText) -> {
+            boolean valido = true;
+
+            if (txtPrecioV.getText().isBlank() || !txtPrecioV.getText().matches("\\d*(\\.\\d{0,2})?")) {
+                valido = false;
+            } else {
+                try {
+                    float valor = Float.parseFloat(newText);
+                    if (valor > Float.MAX_VALUE) {
+                        valido = false;
+                    }
+                } catch (NumberFormatException e) {
+                    valido = false;  // si no se puede convertir, también invalido
+                }
+            }
+            if (!valido) {
+                txtPrecioV.setStyle("-fx-border-color: red;");
+                precioventaValido.set(false);
+            } else {
+                txtPrecioV.setStyle("");
+                precioventaValido.set(true);
+            }
+
+        }));
+
+        btnRegistrar.disableProperty().bind(
+                (txtCodBarras.textProperty().isEmpty())
+                        .or(txtDot.textProperty().isEmpty())
+                        .or(txtMarca.textProperty().isEmpty())
+                        .or(txtMedida1.textProperty().isEmpty())
+                        .or(txtMedida2.textProperty().isEmpty())
+                        .or(txtStock.textProperty().isEmpty())
+                        .or(txtPrecioC.textProperty().isEmpty())
+                        .or(txtPrecioV.textProperty().isEmpty())
+                        .or(stockValido.not())
+                        .or(precioventaValido.not())
+                        .or(precioCompraValido.not())
+
+
+        );
+
+    }//configurarValidaciones
 
 
 }//class
