@@ -4,4 +4,5 @@ public enum StatusInventario {
     ACTIVE,
     INACTIVE,
     DELETE,
+    SIN_STOCK
 }

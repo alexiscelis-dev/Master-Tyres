@@ -4,6 +4,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -25,6 +26,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,7 @@ import static com.mastertyres.common.MensajesAlert.mostrarWarning;
 
 @Component
 public class AgregarVehiculoController {
+
     @Autowired
     private MarcaService marcaService;
 
@@ -75,6 +78,7 @@ public class AgregarVehiculoController {
     @FXML private TableColumn<Vehiculo, Void> colEliminar;
 
 // Campos vehiculo
+    @FXML private AnchorPane rootPane;
     @FXML private ChoiceBox<Marca> choiceMarca;
     @FXML private ChoiceBox<Modelo> choiceModelo;
     @FXML private ChoiceBox<Categoria> choiceCategoria;
@@ -89,6 +93,7 @@ public class AgregarVehiculoController {
     @FXML private Button btnGuardar;
 
 // Campos Cliente
+    @FXML private AnchorPane ventanaAgregarCliente;
     @FXML private TextField txtClienteNombre;
     @FXML private TextField txtClienteTipo;
     @FXML private TextField txtBuscarCliente;
@@ -110,6 +115,7 @@ public class AgregarVehiculoController {
 
     @FXML
     private void initialize() {
+        MenuContextSetting.disableMenu(rootPane);
 
         cargarOpciones();
         configurarValidaciones();

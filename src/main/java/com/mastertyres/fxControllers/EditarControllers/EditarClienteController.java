@@ -4,9 +4,6 @@ package com.mastertyres.fxControllers.EditarControllers;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.MensajesAlert;
-import com.mastertyres.fxControllers.cliente.ClienteController;
-import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -19,25 +16,35 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarWarning;
-
 @Component
 public class EditarClienteController {
 
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtApellido;
-    @FXML private TextField txtSegundoApellido;
-    @FXML private TextField txtTelefono;
-    @FXML private TextField txtHobbie;
-    @FXML private TextField txtRfc;
-    @FXML private TextField txtDomicilio;
-    @FXML private TextField txtEstado;
-    @FXML private TextField txtCiudad;
-    @FXML private ChoiceBox<String> choiceGenero;
-    @FXML private ChoiceBox<String> choiceTipoCliente;
-    @FXML private DatePicker dateCumpleanos;
-    @FXML private Button btnCambiar;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtApellido;
+    @FXML
+    private TextField txtSegundoApellido;
+    @FXML
+    private TextField txtTelefono;
+    @FXML
+    private TextField txtHobbie;
+    @FXML
+    private TextField txtRfc;
+    @FXML
+    private TextField txtDomicilio;
+    @FXML
+    private TextField txtEstado;
+    @FXML
+    private TextField txtCiudad;
+    @FXML
+    private ChoiceBox<String> choiceGenero;
+    @FXML
+    private ChoiceBox<String> choiceTipoCliente;
+    @FXML
+    private DatePicker dateCumpleanos;
+    @FXML
+    private Button btnCambiar;
 
     private Cliente cliente;
 
@@ -51,6 +58,7 @@ public class EditarClienteController {
     private BooleanProperty apellidoValido = new SimpleBooleanProperty(true);
 
     public void initialize() {
+
         configurarValidaciones();
     }
 
@@ -152,7 +160,7 @@ public class EditarClienteController {
 
         // Deshabilitar botón "Guardar" hasta que se llenen los campos requeridos y haya al menos un vehículo
         btnCambiar.disableProperty().bind(
-                        (txtNombre.textProperty().isEmpty())
+                (txtNombre.textProperty().isEmpty())
                         .or(txtApellido.textProperty().isEmpty())
                         .or(txtTelefono.textProperty().isEmpty())
                         .or(choiceTipoCliente.valueProperty().isNull())
@@ -177,7 +185,7 @@ public class EditarClienteController {
         return resultado.toString().trim();
     }
 
-    public void setCliente(Cliente cliente) {
+    public void editarCliente(Cliente cliente) {
         this.cliente = cliente;
 
         // Prellenar campos con los valores del cliente
@@ -206,33 +214,42 @@ public class EditarClienteController {
         }
 
 
-    }
+    }//editarCliente
 
     @FXML
-    private void cambiarCliente() {
+    private void actualizarCliente() {
 
         if (cliente == null) {
             MensajesAlert.mostrarError(
                     "Error",
                     "No hay cliente seleccionado",
-                    "Debe seleccionar un cliente antes de poder modificarlo."
+                    "Debe seleccione un cliente antes de poder modificarlo."
             );
             return;
         }
 
-        // 🔹 Validación de obligatorios
-        if (isEmpty(txtNombre)) {
+
+        if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
             MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre del cliente no puede estar vacío.");
             return;
         }
-        if (isEmpty(txtApellido)) {
+
+        if (txtTelefono.getText() == null || txtTelefono.getText().trim().isEmpty()) {
+            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El numero de telefono del cliente no puede estar vacío.");
+            return;
+        }
+
+        if (txtApellido.getText() == null || txtApellido.getText().trim().isEmpty()) {
             MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El primer apellido del cliente no puede estar vacío.");
             return;
         }
-        if (isEmpty(txtTelefono)) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El número de teléfono no puede estar vacío.");
+
+        if (txtTelefono.getText() == null || txtTelefono.getText().trim().isEmpty()) {
+            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El telefono del cliente no puede estar vacío.");
             return;
         }
+
+
         if (choiceTipoCliente.getValue() == null) {
             MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar un tipo de cliente.");
             return;
@@ -246,75 +263,51 @@ public class EditarClienteController {
                 "Cancelar"
         );
 
-        if (!confirmar) {
-            return; // Usuario canceló
-        }
+        if (confirmar) {
 
-        // Validar RFC de clientes
-        if (!rfcValido.get() ||  !telefonoValido.get() ) {
-            mostrarError("Error en campos", "","Por favor, corrige los campos marcados en rojo antes de guardar.");
-            return;
-        }
+            try {
+                // 🔹 Actualizar datos generales
+                cliente.setNombre(txtNombre.getText().trim());
+                cliente.setApellido(txtApellido.getText().trim());
+                cliente.setSegundoApellido(txtSegundoApellido.getText().trim());
+                cliente.setTipoCliente(choiceTipoCliente.getValue());
+                cliente.setHobbie(txtHobbie.getText().trim());
+                cliente.setEstado(txtEstado.getText().trim());
+                cliente.setCiudad(txtCiudad.getText().trim());
+                cliente.setDomicilio(txtDomicilio.getText().trim());
+                cliente.setFechaCumple(dateCumpleanos.getValue().toString());
+                cliente.setRfc(txtRfc.getText().trim());
+                cliente.setNumTelefono(txtTelefono.getText().trim());
 
-        // Validar RFC duplicado
-        String rfc = txtRfc.getText();
-        Integer id = cliente.getClienteId();
-        if (rfc != null && !rfc.isBlank()) {
-            if (clienteService.existeClienteRFC_Editar(rfc,id)) {
-                mostrarError("Error al actualizar","RFC duplicado", "Ya existe un cliente activo con este RFC.");
-                return;
-            }
-        }
-
-        try {
-            // 🔹 Actualizar datos
-            cliente.setNombre(getTextOrEmpty(txtNombre));
-            cliente.setApellido(getTextOrEmpty(txtApellido));
-            cliente.setSegundoApellido(getTextOrEmpty(txtSegundoApellido));
-            cliente.setTipoCliente(choiceTipoCliente.getValue());
-            cliente.setHobbie(getTextOrEmpty(txtHobbie));
-            cliente.setEstado(getTextOrEmpty(txtEstado));
-            cliente.setCiudad(getTextOrEmpty(txtCiudad));
-            cliente.setDomicilio(getTextOrEmpty(txtDomicilio));
-            cliente.setFechaCumple(
-                    dateCumpleanos.getValue() != null ? dateCumpleanos.getValue().toString() : null
-            );
-            cliente.setRfc(getTextOrEmpty(txtRfc));
-            cliente.setNumTelefono(getTextOrEmpty(txtTelefono));
-
-            if (choiceGenero.getValue() != null) {
-                switch (choiceGenero.getValue()) {
-                    case "Masculino" -> cliente.setGenero("M");
-                    case "Femenino" -> cliente.setGenero("F");
-                    default -> cliente.setGenero("O");
+                if (choiceGenero.getValue().equals("Masculino")) {
+                    cliente.setGenero("M");
+                } else if (choiceGenero.getValue().equals("Femenino")) {
+                    cliente.setGenero("F");
+                } else {
+                    cliente.setGenero("O");
                 }
-            }
+                cliente.setUpdated_at(LocalDateTime.now().toString());
 
-            cliente.setUpdated_at(LocalDateTime.now().toString());
+                // 🔹 Guardar cambios en la promoción
+                clienteService.guardarCliente(cliente);
 
-            // 🔹 Guardar cambios
-            clienteService.guardarCliente(cliente);
 
-            MensajesAlert.mostrarInformacion("Éxito", "Cliente actualizado", "El cliente se actualizó correctamente.");
-            cerrarVentana();
+                MensajesAlert.mostrarInformacion("Éxito", "Cliente actualizado", "El cliente se actualizó correctamente.");
+                cerrarVentana();
 
-        } catch (Exception e) {
-            MensajesAlert.mostrarError(
-                    "Error al actualizar",
-                    "No se pudo actualizar el cliente",
-                    "Detalles: " + e.getMessage()
-            );
-            e.printStackTrace();
-        }
-    }
+            } catch (Exception e) {
+                // Cualquier error en la BD o lógica cae aquí
+                MensajesAlert.mostrarError(
+                        "Error al actualizar",
+                        "No se pudo actualizar el cliente",
+                        "Detalles: " + e.getMessage()
+                );
+                e.printStackTrace();
+            }//try-catch
 
-    private boolean isEmpty(TextField txt) {
-        return txt == null || txt.getText() == null || txt.getText().trim().isEmpty();
-    }
+        }//if
 
-    private String getTextOrEmpty(TextField txt) {
-        return (txt != null && txt.getText() != null) ? txt.getText().trim() : "";
-    }
+    }//actualizarCliente
 
 
     @FXML
