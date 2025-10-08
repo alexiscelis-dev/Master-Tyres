@@ -2,6 +2,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 
 import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -81,26 +82,25 @@ public class EditarInventarioController {
         btnImagen.setOnAction(event -> seleccionarImg());
 
         txtStock.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")){
-                return  change;
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
             }
             return null;
         }));
 
         txtPrecioC.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")){
-                return  change;
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
             }
             return null;
         }));
 
         txtPrecioV.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")){
-                return  change;
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
             }
             return null;
         }));
-
 
 
         MenuContextSetting.disableMenu(rootPane); //Desabilita el menu en los componentes
@@ -140,27 +140,27 @@ public class EditarInventarioController {
         txtObservaciones.setText(inventario.getObservaciones());
 
         vBoxImg.setVisible(true);
-       txtImg.setText(inventario.getImagen());
+        txtImg.setText(inventario.getImagen());
 
-       File file = new File(txtImg.getText());
+        File file = new File(txtImg.getText());
 
-       if (file.exists()){
-           Image image = new Image(file.toURI().toString());
-           ImageView imageView = new ImageView(image);
-           imageView.setFitHeight(200);
-           imageView.setFitWidth(200);
-           imageView.setPreserveRatio(true);
-           vBoxImg.getChildren().clear();
-           vBoxImg.getChildren().add(imageView);
-       }else {
-           Image image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
-           ImageView imageView = new ImageView(image);
-           imageView.setFitHeight(200);
-           imageView.setFitWidth(200);
-           imageView.setPreserveRatio(true);
-           vBoxImg.getChildren().clear();
-           vBoxImg.getChildren().add(imageView);
-       }
+        if (file.exists()) {
+            Image image = new Image(file.toURI().toString());
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(200);
+            imageView.setFitWidth(200);
+            imageView.setPreserveRatio(true);
+            vBoxImg.getChildren().clear();
+            vBoxImg.getChildren().add(imageView);
+        } else {
+            Image image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(200);
+            imageView.setFitWidth(200);
+            imageView.setPreserveRatio(true);
+            vBoxImg.getChildren().clear();
+            vBoxImg.getChildren().add(imageView);
+        }
 
     }//editarInventario
 
@@ -184,7 +184,7 @@ public class EditarInventarioController {
     }//indicesChoiceBox
 
     private void configurarValidaciones() {
-        
+
         txtCodBarras.textProperty().addListener(((observable, oldText, newText) -> {
             if (!txtCodBarras.getText().matches("\\d{8,13}")) {
                 codBarrasValido.set(false);
@@ -221,7 +221,7 @@ public class EditarInventarioController {
 
 
         txtMedida.textProperty().addListener(((observable, oldtext, newTex) -> {
-            if (txtMedida.getText().isBlank() || !txtMedida.getText().matches("^[A-Za-z0-9,/]{0,20}$") ||
+            if (txtMedida.getText().isBlank() || !txtMedida.getText().matches("^[A-Za-z0-9,/ ]{0,20}$") ||
                     txtMedida.getText().length() > 20) {
 
                 txtMedida.setStyle("-fx-border-color: red;");
@@ -325,20 +325,26 @@ public class EditarInventarioController {
             inventario.setObservaciones(txtObservaciones.getText());
             inventario.setImagen(txtImg.getText());
 
+            if (Integer.parseInt(txtStock.getText()) == 0)
+                inventario.setActive(StatusInventario.SIN_STOCK.toString());
+
+            else if (Integer.parseInt(txtStock.getText()) > 0)
+                inventario.setActive(StatusInventario.ACTIVE.toString());
+
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String fechaActualizacion = LocalDateTime.now().format(formatter);
 
             try {
-                inventarioService.actualizarUptatedAt(fechaActualizacion.toString(),inventario.getInventarioId());
+                inventarioService.actualizarUptatedAt(fechaActualizacion.toString(), inventario.getInventarioId());
                 inventarioService.actualizarInventario(inventario);
+
                 mostrarInformacion("Inventario actualizado", "", "Inventario se actualizo correctamente");
                 cerrarVentana();
 
-
             } catch (Exception e) {
                 e.printStackTrace();
-                mostrarError("Error al actualizar", "", "No se pudo actualizar el elemento seleccionado");
+                mostrarError("Error inesperado", "", "No se pudo actualizar el lemento seleccionado, vuelva a intentarlo más tarde.");
             }
 
         }
@@ -373,8 +379,8 @@ public class EditarInventarioController {
             imageView.setFitWidth(200);
             imageView.setFitHeight(200);
             imageView.setPreserveRatio(true);
-           vBoxImg.getChildren().clear();
-           vBoxImg.getChildren().add(imageView);
+            vBoxImg.getChildren().clear();
+            vBoxImg.getChildren().add(imageView);
         }
 
     } //seleccionarImg

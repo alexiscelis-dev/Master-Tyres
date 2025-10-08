@@ -18,8 +18,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -536,7 +534,7 @@ public class ClienteController {
     }//buscarCliente
 
     @FXML
-    public void actualizar(ActionEvent actionEvent) {
+    public void actualizarTabla(ActionEvent actionEvent) {
         buscarClienteBuscador.setText("");
         atributoBusquedaClientes.setValue(null);
         cargarClientes();
