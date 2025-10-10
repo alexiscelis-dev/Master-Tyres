@@ -46,7 +46,7 @@
                   <children>
                      <Button fx:id="btnModificarMarcaModeloCategoria" layoutX="1.0" layoutY="1.0" onAction="#ModificarMarcaModeloCategoria" prefHeight="25.0" prefWidth="181.0" styleClass="boton-accion" text="Agregar Marca o Modelo" />
                      <Button fx:id="btnAgregarVehiculo" layoutX="195.0" layoutY="1.0" onAction="#agregarVehiculo" prefHeight="25.0" prefWidth="150.0" styleClass="boton-accion" text="Agregar Vehiculo" />
-                     <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
+                     <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizarTabla" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
 
                         <graphic>
                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">

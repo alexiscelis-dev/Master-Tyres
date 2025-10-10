@@ -373,7 +373,7 @@ public class VehiculoController {
     }//initialize
 
     @FXML
-    public void actualizar(ActionEvent actionEvent) {
+    public void actualizarTabla(ActionEvent actionEvent) {
         buscarVehiculoBuscador.setText("");
         atributoBusquedaVehiculos.setValue(null);
         cargarVehiculos();
