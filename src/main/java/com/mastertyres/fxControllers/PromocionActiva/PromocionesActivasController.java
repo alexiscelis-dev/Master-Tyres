@@ -37,19 +37,27 @@ public class PromocionesActivasController {
     @FXML
     private TilePane contenedorPromociones;
 
-    @FXML private Label lblNombre;
-    @FXML private Label lblDescripcion;
-    @FXML private Label lblTipoDescuento;
-    @FXML private Label lblValorDescuento;
-    @FXML private Label lblPrecio;
-    @FXML private Label lblFechaInicio;
-    @FXML private Label lblFechaFin;
-    @FXML private Button btnAgregarPromocion;
+    @FXML
+    private Label lblNombre;
+    @FXML
+    private Label lblDescripcion;
+    @FXML
+    private Label lblTipoDescuento;
+    @FXML
+    private Label lblValorDescuento;
+    @FXML
+    private Label lblPrecio;
+    @FXML
+    private Label lblFechaInicio;
+    @FXML
+    private Label lblFechaFin;
+    @FXML
+    private Button btnAgregarPromocion;
 
     @FXML
-    private Button EliminarPromocion;
+    private Button btnEliminarPromocion;
     @FXML
-    private Button EditarPromocion;
+    private Button btnEditarPromocion;
     @FXML
     private Button btnClientesPromocion;
     @FXML
@@ -75,7 +83,7 @@ public class PromocionesActivasController {
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() {
 
         cargarPromociones();
 
@@ -87,11 +95,11 @@ public class PromocionesActivasController {
             }
         });
 
-        btnAgregarPromocion.setOnAction( event -> agregarPromociones(event));
+        btnAgregarPromocion.setOnAction(event -> agregarPromociones(event));
 
-        EditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
+        btnEditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
 
-        EliminarPromocion.setOnAction(event -> eliminarPromocion());
+        btnEliminarPromocion.setOnAction(event -> eliminarPromocion());
 
 
     }//initialize
@@ -159,6 +167,7 @@ public class PromocionesActivasController {
 
     private void mostrarPromociones(List<Promocion> promociones) {
         contenedorPromociones.getChildren().clear();
+
         for (Promocion p : promociones) {
             VBox card = crearCardPromocion(p);
             contenedorPromociones.getChildren().add(card);
@@ -166,6 +175,7 @@ public class PromocionesActivasController {
     }
 
     private VBox crearCardPromocion(Promocion p) {
+
         VBox card = new VBox();
         card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
         card.setPrefSize(500, 100);
@@ -209,7 +219,7 @@ public class PromocionesActivasController {
         if ("PORCENTAJE".equals(p.getTipoDescuento())) {
             lblValorDesc = new Label("Descuento: " + p.getPorcentaje() + "%");
         } else {
-            lblValorDesc = new Label("Descuento:  $" + p.getPorcentaje() );
+            lblValorDesc = new Label("Descuento:  $" + p.getPorcentaje());
         }
         lblValorDesc.setStyle("-fx-text-fill: white;");
 
@@ -273,16 +283,16 @@ public class PromocionesActivasController {
 
         promocionSeleccionada = p;
 
-        EliminarPromocion.setDisable(false);
-        EditarPromocion.setDisable(false);
+        btnEliminarPromocion.setDisable(false);
+        btnEditarPromocion.setDisable(false);
         btnClientesPromocion.setDisable(false);
 
 
         lblNombre.setText(p.getNombre());
         lblDescripcion.setText(p.getDescripcion());
         lblTipoDescuento.setText(p.getTipoDescuento());
-        lblValorDescuento.setText( p.getPorcentaje()  +"%");
-        lblPrecio.setText(p.getPrecio()+"");
+        lblValorDescuento.setText(p.getPorcentaje() + "%");
+        lblPrecio.setText(p.getPrecio() + "");
         lblFechaInicio.setText(p.getFechaInicio());
         lblFechaFin.setText(p.getFechaFin());
 
@@ -301,25 +311,26 @@ public class PromocionesActivasController {
                     "Cancelar"
             );
 
-            if (!confirmar) {
-                return; // Usuario canceló
-            }
 
-            try {
-                promocionService.desactivarPromocion(promocionSeleccionada.getPromocionId());
-                mostrarInformacion("Eliminado","Promocion Eliminada","Promocion Eliminada con exito.");
-            }catch (Exception e) {
-                MensajesAlert.mostrarError(
-                        "Error al Eliminar",
-                        "No se pudo eliminar la promoción",
-                        "Detalles: " + e.getMessage()
-                );
-                e.printStackTrace();
-            }
+            if (confirmar) {
 
-            cargarPromociones(); // Recargamos la lista para reflejar cambios
-            limpiarDetallePromocion(); // Opcional: limpiar labels después
+                try {
+                    promocionService.desactivarPromocion(promocionSeleccionada.getPromocionId());
+                    mostrarInformacion("Eliminado", "Promocion Eliminada", "Promocion Eliminada con exito.");
+                } catch (Exception e) {
+                    MensajesAlert.mostrarError(
+                            "Error al Eliminar",
+                            "No se pudo eliminar la promoción",
+                            "Detalles: " + e.getMessage()
+                    );
+                    e.printStackTrace();
+                }
+
+                cargarPromociones(); // Recargamos la lista para reflejar cambios
+                limpiarDetallePromocion(); // Opcional: limpiar labels después
+            }
         }
+
     }
 
     private void limpiarDetallePromocion() {
@@ -332,8 +343,8 @@ public class PromocionesActivasController {
         lblFechaFin.setText("");
         ListaVehiculosPromocion.getItems().clear();
         promocionSeleccionada = null;
-        EliminarPromocion.setDisable(true);
-        EditarPromocion.setDisable(true);
+        btnEliminarPromocion.setDisable(true);
+        btnEditarPromocion.setDisable(true);
         btnClientesPromocion.setDisable(true);
     }
 

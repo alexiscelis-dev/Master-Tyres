@@ -13,7 +13,7 @@
             <children>
                 <VBox alignment="TOP_CENTER" layoutX="-8.0" layoutY="-16.0" prefHeight="509.0" prefWidth="340.0" spacing="40.0" style="-fx-background-color: #1A1A1A;" AnchorPane.bottomAnchor="-7.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-16.0">
                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                        <HBox fx:id="HBoxNotas" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
                                 <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
@@ -187,7 +187,7 @@
                 <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="200.0" AnchorPane.rightAnchor="25.0">
                     <children>
                         <Label styleClass="label-tarjeta" text="Administrador" />
-                        <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="usuario-turno">
+                        <ImageView fx:id="imgPerfil"  fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="usuario-turno">
                             <image>
                                 <Image url="@../icons/user.png" />
                             </image>
@@ -207,7 +207,7 @@
                         <Font name="Roboto Bold" size="28.0" />
                     </font>
                 </Label>
-                <ImageView fx:id="irAtras" onMouseClicked="#irAtras" fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
+                <ImageView fx:id="irAtras" fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0" onMouseClicked="#irAtras" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu" AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
                     <image>
                         <Image url="@../icons/arrow-left-s-line.png" />
                     </image>

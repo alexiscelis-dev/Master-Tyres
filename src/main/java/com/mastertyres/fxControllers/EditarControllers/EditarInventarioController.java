@@ -379,6 +379,8 @@ public class EditarInventarioController {
             imageView.setFitWidth(200);
             imageView.setFitHeight(200);
             imageView.setPreserveRatio(true);
+            imageView.setSmooth(true);
+            imageView.setCache(true);
             vBoxImg.getChildren().clear();
             vBoxImg.getChildren().add(imageView);
         }
