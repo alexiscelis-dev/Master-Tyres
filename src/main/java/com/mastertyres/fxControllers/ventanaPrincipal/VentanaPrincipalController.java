@@ -6,7 +6,7 @@ import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController;
 import com.mastertyres.fxControllers.cliente.ClienteController;
 import com.mastertyres.fxControllers.inventario.InventarioController;
-import com.mastertyres.fxControllers.proximosServicios.ProximosServiciosController;
+import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -69,16 +69,18 @@ public class VentanaPrincipalController {
     private TranslateTransition transition;
     private TranslateTransition transitionMenu;
 
-    private final Stack<String> historialVistas = new Stack<>();
-    private final Stack<String> historialNombreVistas = new Stack<>();
-    private String vistaActual = null;
-    private String NombreVistaActual = null;
+    public final Stack<String> historialVistas = new Stack<>();
+    public final Stack<String> historialNombreVistas = new Stack<>();
+    public String vistaActual = null;
+    public String NombreVistaActual = null;
 
 
 
     @FXML
     public void initialize() {
-
+        //viewContent(null, "RegresarMenu.fxml", "Menu");
+        historialVistas.push("/fxmlViews/RegresarMenu.fxml");
+        historialNombreVistas.push("Menu");
 
         // iconoMenu.setOnMouseClicked(event -> toggleSidebar());
         HBoxLogOut.setOnMouseClicked(event -> logOut(event, "/fxmlViews/Login.fxml"));
@@ -152,18 +154,43 @@ public class VentanaPrincipalController {
     }//logOut
 
 
-    @FXML
-    private void irAtras(MouseEvent event) {
-        if (!historialVistas.isEmpty()) {
-            String vistaAnterior = historialVistas.pop();
-            vistaActual = vistaAnterior;
-            viewContent(event, vistaAnterior, historialNombreVistas.pop());
-            cambiarPaginaEtiqueta.setText(historialNombreVistas.pop());
+    public void viewContentSinHistorial(MouseEvent event, String archivoFXML, String nombreVentana) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent contenido = loader.load();
+
+            Object controller = loader.getController();
+            // asignaciones...
+            panelMenu.getChildren().setAll(contenido);
+            AnchorPane.setTopAnchor(contenido, 0.0);
+            AnchorPane.setBottomAnchor(contenido, 0.0);
+            AnchorPane.setLeftAnchor(contenido, 0.0);
+            AnchorPane.setRightAnchor(contenido, 0.0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
 
-    private void viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
+
+    @FXML
+    public void irAtras(MouseEvent event) {
+        if (!historialVistas.isEmpty() && !historialNombreVistas.isEmpty()) {
+            String vistaAnterior = historialVistas.pop();
+            String nombreAnterior = historialNombreVistas.pop();
+            vistaActual = vistaAnterior;
+            NombreVistaActual = nombreAnterior;
+            viewContentSinHistorial(event, vistaAnterior, nombreAnterior);
+            cambiarPaginaEtiqueta.setText(nombreAnterior);
+        }
+    }
+
+
+
+
+    public void viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
 
         try {
 

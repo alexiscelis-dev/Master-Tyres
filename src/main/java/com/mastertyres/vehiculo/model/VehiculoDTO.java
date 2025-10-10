@@ -26,6 +26,7 @@ private String ultimoServicio;
 private String created_at;
 private String updated_at;
 private String active;
+private Integer contador_mensaje;
 
 
 //contructor para consulta listar vehiculos
@@ -34,7 +35,7 @@ private String active;
     public VehiculoDTO(Integer id, String nombreCliente, String apellido, String segundoApellido, String numTelefono,
                        String nombreMarca, String nombreModelo, String nombreCategoria, Integer anio,
                        String numSerie, String observaciones, Integer kilometros, String color, String placas,
-                       String ultimoServicio, String fechaRegistro) {
+                       String ultimoServicio, String fechaRegistro, Integer contador_mensaje) {
 
         this.id = id;
         this.nombreCliente = nombreCliente;
@@ -52,6 +53,7 @@ private String active;
         this.observaciones = observaciones;
         this.fechaRegistro = fechaRegistro;
         this.ultimoServicio = ultimoServicio;
+        this.contador_mensaje = contador_mensaje;
     }
 
 

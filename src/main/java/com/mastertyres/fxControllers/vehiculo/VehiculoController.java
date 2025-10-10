@@ -382,23 +382,30 @@ public class VehiculoController {
     @FXML
     private void agregarVehiculo(ActionEvent event) {
 
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarVehiculo.fxml"));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent root = loader.load();
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarVehiculo.fxml"));
+//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+//            Parent root = loader.load();
+//
+//            Pane panel = ventanaPrincipalController.getPanelMenu();
+//            panel.getChildren().setAll(root);
+//            AnchorPane.setTopAnchor(root, 0.0);
+//            AnchorPane.setRightAnchor(root, 0.0);
+//            AnchorPane.setBottomAnchor(root, 0.0);
+//            AnchorPane.setLeftAnchor(root, 0.0);
+//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//
+//        }
 
-            Pane panel = ventanaPrincipalController.getPanelMenu();
-            panel.getChildren().setAll(root);
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+        ventanaPrincipalController.viewContent(
+                null, // no se requiere el MouseEvent
+                "/fxmlViews/AgregarVehiculo.fxml",
+                "Agregar vehiculo"
+        );
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
 
     }
 
@@ -780,23 +787,29 @@ public class VehiculoController {
     }//setVentanaPrincipalController
 
     public void ModificarMarcaModeloCategoria(ActionEvent actionEvent) {
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarMarcas_Modelos_Categorias.fxml"));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent root = loader.load();
-
-            Pane panel = ventanaPrincipalController.getPanelMenu();
-            panel.getChildren().setAll(root);
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+//
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarMarcas_Modelos_Categorias.fxml"));
+//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+//            Parent root = loader.load();
+//
+//            Pane panel = ventanaPrincipalController.getPanelMenu();
+//            panel.getChildren().setAll(root);
+//            AnchorPane.setTopAnchor(root, 0.0);
+//            AnchorPane.setRightAnchor(root, 0.0);
+//            AnchorPane.setBottomAnchor(root, 0.0);
+//            AnchorPane.setLeftAnchor(root, 0.0);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//
+//        }
+        ventanaPrincipalController.viewContent(
+                null, // no se requiere el MouseEvent
+                "/fxmlViews/EditarMarcas_Modelos_Categorias.fxml",
+                "Agregar o editar marcas"
+        );
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar o editar marcas");
 
     }
 }//clase

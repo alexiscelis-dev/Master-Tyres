@@ -379,26 +379,37 @@ public class ClienteController {
     }// initialize
 
 
+//    @FXML
+//    private void agregarCliente(ActionEvent event) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarCliente.fxml"));
+//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+//            Parent root = loader.load();
+//
+//            Pane panel = ventanaPrincipalController.getPanelMenu();
+//            panel.getChildren().setAll(root);
+//            AnchorPane.setTopAnchor(root, 0.0);
+//            AnchorPane.setRightAnchor(root, 0.0);
+//            AnchorPane.setBottomAnchor(root, 0.0);
+//            AnchorPane.setLeftAnchor(root, 0.0);
+//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            mostrarError("Error", "", "Ocurrio un error al mostrar la ventana.");
+//        }
+//    }//agregarCliente
+
     @FXML
     private void agregarCliente(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarCliente.fxml"));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent root = loader.load();
+        ventanaPrincipalController.viewContent(
+                null, // no se requiere el MouseEvent
+                "/fxmlViews/AgregarCliente.fxml",
+                "Agregar cliente"
+        );
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
+    }
 
-            Pane panel = ventanaPrincipalController.getPanelMenu();
-            panel.getChildren().setAll(root);
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarError("Error", "", "Ocurrio un error al mostrar la ventana.");
-        }
-    }//agregarCliente
 
     private void cargarClientes() {
 
