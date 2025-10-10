@@ -1,9 +1,7 @@
-package com.mastertyres.fxControllers.proximosServicios;
+package com.mastertyres.fxControllers.ProximosServicios;
 
 
-import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.MensajesAlert;
-import com.mastertyres.fxControllers.ClientesPromocionesController.ClientesPromocionesController;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.application.HostServices;
@@ -31,6 +29,7 @@ public class ProximosServiciosController {
     @FXML private Label lblModelo;
     @FXML private Label lblAnio;
     @FXML private Label lblFechaUltimoServicio;
+    @FXML private Label lblMensajesEnviados;
 
 
 
@@ -66,7 +65,7 @@ public class ProximosServiciosController {
     private void EnviarAviso(ActionEvent actionEvent){
 
             String telefono = vehiculoSeleccion.getNumTelefono();
-            String mensaje = "Master tyres. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda que te toca hacer el servicio a tu vehiculo 🚗🔥\n\n" +"Tu ultimo servicio fue el:" + vehiculoSeleccion.getUltimoServicio();
+            String mensaje = "Master tyres. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda hacer el servicio de tu vehiculo "+ vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio() + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
 
             String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
                     java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
@@ -75,6 +74,10 @@ public class ProximosServiciosController {
                 hostServices.showDocument(url);
             }
 
+            vehiculoService.actualizarContador(vehiculoSeleccion.getId(), vehiculoSeleccion.getContador_mensaje()+1);
+            txtBuscar.setText("");
+            limpiarDetalleVehiculo();
+            cargarServicios();
     }
 
     private void cargarServicios() {
@@ -126,7 +129,6 @@ public class ProximosServiciosController {
         return card;
     }
 
-
     @FXML
     private void ActualizarServicio(ActionEvent actionEvent){
 
@@ -143,6 +145,9 @@ public class ProximosServiciosController {
         }
 
         vehiculoService.actualizarUltimoServicio(vehiculoSeleccion.getId());
+        vehiculoService.actualizarContador(vehiculoSeleccion.getId(), 0);
+        txtBuscar.setText("");
+        limpiarDetalleVehiculo();
         cargarServicios();
     }
 
@@ -159,9 +164,7 @@ public class ProximosServiciosController {
         lblModelo.setText(p.getNombreModelo());
         lblAnio.setText(p.getAnio()+"");
         lblFechaUltimoServicio.setText(p.getUltimoServicio());
-
-
-
+        lblMensajesEnviados.setText(p.getContador_mensaje()+"");
     }
 
     private void limpiarDetalleVehiculo() {
@@ -171,6 +174,7 @@ public class ProximosServiciosController {
         lblModelo.setText("");
         lblAnio.setText("");
         lblFechaUltimoServicio.setText("");
+        lblMensajesEnviados.setText("");
         vehiculoSeleccion = null;
         btnEnviarAviso.setDisable(true);
         MarcaServicioRealizado.setDisable(true);
