@@ -102,22 +102,30 @@ public class PromocionesActivasController {
 
     @FXML
     private void agregarPromociones(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/NuevaPromocion.fxml"));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent root = loader.load();
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/NuevaPromocion.fxml"));
+//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+//            Parent root = loader.load();
+//
+//            Pane panel = ventanaPrincipalController.getPanelMenu();
+//            panel.getChildren().setAll(root);
+//            AnchorPane.setTopAnchor(root, 0.0);
+//            AnchorPane.setRightAnchor(root, 0.0);
+//            AnchorPane.setBottomAnchor(root, 0.0);
+//            AnchorPane.setLeftAnchor(root, 0.0);
+//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-            Pane panel = ventanaPrincipalController.getPanelMenu();
-            panel.getChildren().setAll(root);
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
+        ventanaPrincipalController.viewContent(
+                null, // no se requiere el MouseEvent
+                "/fxmlViews/NuevaPromocion.fxml",
+                "Agregar promocion"
+        );
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void cargarPromocionesFiltradas(String filtro) {
@@ -155,7 +163,6 @@ public class PromocionesActivasController {
             ex.printStackTrace();
         }
     }
-
 
     private void mostrarPromociones(List<Promocion> promociones) {
         contenedorPromociones.getChildren().clear();
