@@ -652,6 +652,7 @@ public class AgregarClienteController {
 
         // Asignar los vehículos
         for (Vehiculo v : listaVehiculos) {
+            v.setContador_mensaje(0);
             v.setCliente(cliente); // relación bidireccional
             if (v.getActive() == null) {
                 v.setActive("ACTIVE");

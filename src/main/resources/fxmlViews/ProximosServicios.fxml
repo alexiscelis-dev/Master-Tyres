@@ -2,12 +2,11 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<AnchorPane fx:id="ventanaProximosServicios" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.proximosServicios.ProximosServiciosController">
+<AnchorPane fx:id="ventanaProximosServicios" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController">
     <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
         <BorderPane prefHeight="600" prefWidth="1186.0">
 
@@ -16,7 +15,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="10">
 
                     <TextField fx:id="txtBuscar" promptText="Buscar servicio..." styleClass="buscador" HBox.hgrow="ALWAYS" />
-                    <Button onAction="#actualizar" mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion" text="">
+                    <Button mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion" text="">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
@@ -86,12 +85,19 @@
                                 </font></Label>
                             <Label fx:id="lblFechaUltimoServicio" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-                            <Button fx:id="btnEnviarAviso" onAction="#EnviarAviso" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Enviar aviso a cleinte" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2" />
-                            <Button fx:id="MarcaServicioRealizado" onAction="#ActualizarServicio" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Marcar Servicio Realizado" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+                            <Label styleClass="titulo" text="Mensajes Enviados: " textFill="WHITE" GridPane.rowIndex="6">
+                                <font>
+                                    <Font name="System Bold" size="14.0" />
+                                </font>
+                            </Label>
+                            <Label fx:id="lblMensajesEnviados" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                            <Button fx:id="btnEnviarAviso" disable="true" onAction="#EnviarAviso" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Enviar aviso a cleinte" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2" />
+                            <Button fx:id="MarcaServicioRealizado" disable="true" onAction="#ActualizarServicio" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Marcar Servicio Realizado" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
 
                             <columnConstraints>
-                                <ColumnConstraints minWidth="-Infinity" prefWidth="140.0" />
-                                <ColumnConstraints prefWidth="250.0" />
+                                <ColumnConstraints minWidth="-Infinity" prefWidth="200.0" />
+                                <ColumnConstraints halignment="RIGHT" prefWidth="220.0" />
                                 <ColumnConstraints halignment="CENTER" minWidth="-Infinity" prefWidth="150.0" />
                             </columnConstraints>
                             <rowConstraints>
@@ -102,8 +108,6 @@
                                 <RowConstraints minHeight="30.0" />
                                 <RowConstraints minHeight="30.0" />
                                 <RowConstraints minHeight="30.0" />
-                                <RowConstraints minHeight="30.0" valignment="CENTER" />
-                                <RowConstraints minHeight="100.0" prefHeight="30.0" valignment="CENTER" />
                             </rowConstraints>
                             <padding>
                                 <Insets left="50.0" />
