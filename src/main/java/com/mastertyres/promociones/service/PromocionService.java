@@ -13,14 +13,13 @@ import java.util.List;
 
 @Service
 public class PromocionService implements IPromocionService {
-
+    private String hoy= LocalDate.now().toString();
     private final PromocionesRepository promocionRepository;
+
 
     public PromocionService(PromocionesRepository promocionRepository) {
         this.promocionRepository = promocionRepository;
     }
-
-    private String hoy= LocalDate.now().toString();
 
     public List<Promocion> obtenerPromocionesActivas() {
         return promocionRepository.findPromocionesActivas(hoy);

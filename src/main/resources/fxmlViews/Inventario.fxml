@@ -4,6 +4,7 @@
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -38,12 +39,32 @@
                         </ChoiceBox>
                     </HBox>
 
-                    <Pane HBox.hgrow="ALWAYS" />
-                    <Button fx:id="btnAgregarInventario" onAction="#agregarInventario" styleClass="boton-accion" text="Agregar llanta" />
+
+                    <HBox alignment="CENTER_RIGHT" spacing="5" HBox.hgrow="ALWAYS">
+
+                            <children>
+
+                                <Button fx:id="btnAgregarInventario" layoutX="184.0" layoutY="3.0" onAction="#agregarInventario" prefHeight="25.0" prefWidth="150.0" styleClass="boton-accion" text="Agregar Inventario" />
+
+                                <Button fx:id="btnRefrescar" onAction="#actualizarTabla" id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
+
+                                    <graphic>
+                                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                            <image>
+                                                <Image url="@/icons/refresh.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+
+
+                            </children>
+
+                    </HBox>
                 </HBox>
 
 
-                <!-- Tabla de clientes -->
+                <!-- Tabla inventario -->
 
                 <TableView fx:id="tablaInventario" prefHeight="500.0">
                     <columns>
