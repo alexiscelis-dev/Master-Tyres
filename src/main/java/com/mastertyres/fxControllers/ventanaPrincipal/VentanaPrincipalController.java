@@ -21,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class VentanaPrincipalController {
     private AnchorPane sidebar;
     @FXML
     private HBox HBoxLogOut;
+    @FXML
+    private HBox HBoxNotas;
     @FXML
     private HBox HBoxVehiculos;
     @FXML
@@ -55,6 +58,8 @@ public class VentanaPrincipalController {
     public Label cambiarPaginaEtiqueta;
     @FXML
     private ImageView irAtras;
+    @FXML
+    private ImageView imgPerfil;
 
     @Autowired
     private ApplicationContext springContex;
@@ -86,6 +91,13 @@ public class VentanaPrincipalController {
 
                 }
         );
+
+        HBoxNotas.setOnMouseClicked(event -> {
+            viewContent(event,"/fxmlViews/Nota.fxml","Notas");
+            cambiarPaginaEtiqueta.setText("Notas");
+        });
+
+
         HBoxClientes.setOnMouseClicked(event -> {
                     viewContent(event, "/fxmlViews/Cliente.fxml", "Clientes");
                     cambiarPaginaEtiqueta.setText("Clientes");
@@ -248,6 +260,7 @@ public class VentanaPrincipalController {
         }//try-catch
 
     }//regresarInicio
+
 
 
 }//clase

@@ -547,4 +547,12 @@ public class InventarioController {
         this.ventanaPrincipalController = controller;
     }
 
+    //actualiza
+    @FXML
+    private void actualizarTabla(ActionEvent actionEvent){
+        atributoBusquedaInventario.setValue(null);
+        buscarInventarioBuscador.setText("");
+        cargarInventario();
+    }
+
 }//clase

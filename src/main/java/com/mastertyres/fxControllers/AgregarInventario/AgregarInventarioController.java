@@ -59,6 +59,8 @@ public class AgregarInventarioController {
     private Button btnRegistrar;
     @FXML
     private Button btnImagen;
+    @FXML
+    private Button btnRefrescar;
     @Autowired
     InventarioService inventarioService;
 
@@ -198,6 +200,7 @@ public class AgregarInventarioController {
                 mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
                 clean();
             } catch (InventarioException ie) {
+                ie.printStackTrace();
                 mostrarError("Error de inventario", "", ie.getMessage());
             } catch (Exception e) {
                 e.printStackTrace();

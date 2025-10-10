@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="ventanaNotas" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;"
+            stylesheets="/styles_css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nota.NotaController">
+    <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0" AnchorPane.leftAnchor="50.0"
+                AnchorPane.rightAnchor="50.0">
+        <BorderPane prefHeight="600" prefWidth="1186.0">
+
+            <!-- Parte superior: buscador y botones -->
+            <top>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+
+                    <TextField fx:id="txtBuscar" promptText="Buscar notas..." styleClass="buscador"
+                               HBox.hgrow="ALWAYS"/>
+                    <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion"
+                            text="">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/refresh.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                    <padding>
+                        <Insets bottom="20.0" right="20.0" top="20.0"/>
+                    </padding>
+
+                </HBox>
+            </top>
+
+            <!-- División principal -->
+            <center>
+                <SplitPane dividerPositions="0.40694650817236255" prefHeight="296.0" prefWidth="1278.0"
+                           styleClass="seccion">
+                    <!-- Panel izquierdo: listado de servicios -->
+                    <ScrollPane fitToWidth="true"
+                                style="-fx-background-color: #080808; -fx-border-radius: 10; -fx-background-radius: 10;">
+                        <TilePane fx:id="contenedorNotas" alignment="CENTER" hgap="10" prefColumns="1"
+                                  prefTileHeight="100.0" prefTileWidth="400.0" style="-fx-background-color: #080808; "
+                                  vgap="10">
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                            </padding>
+                        </TilePane>
+                    </ScrollPane>
+
+                    <!-- Panel derecho: detalles de la promoción seleccionada -->
+                    <VBox fx:id="detallePServicio" alignment="CENTER" prefHeight="483.0" prefWidth="680.0" spacing="10"
+                          style="-fx-background-color: rgba(26, 26, 26, 0.85);">
+
+                        <Label alignment="CENTER" style="-fx-font-size: 24px; -fx-font-weight: bold;"
+                               text="Detalles de la nota" textAlignment="CENTER" textFill="WHITE"/>
+
+                        <GridPane hgap="10" prefHeight="452.0" prefWidth="686.0" vgap="10">
+                            <Label styleClass="titulo" text="Status:" textFill="WHITE" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="0">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+
+                            <Label fx:id="lblStatus"  alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1"/>
+
+                            <Label  styleClass="titulo" text="Numero de nota:" textFill="WHITE" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="1">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+                            <Label fx:id="lblNumNota" alignment="CENTER_RIGHT" styleClass="texto"
+                                   textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label styleClass="titulo" text="Numero de factura:" textFill="WHITE"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+
+                            <Label fx:id="lblNumFactura" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <Label styleClass="titulo" text="Cliente:" textFill="WHITE" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="3">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+                            <Label fx:id="lblCliente" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                            <Label styleClass="titulo" text="Vehiculo:" textFill="WHITE" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="4">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+
+                            <Label fx:id="lblVehiculo" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                            <Label styleClass="titulo" text="Fecha de emicion:" textFill="WHITE"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="5">
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+
+                            <Label fx:id="lblFechaEmicion" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                            <Label styleClass="titulo" text="Fecha limite:" textFill="WHITE" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="6">
+
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+
+                            <Label fx:id="lblFechaLimite" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                            <Label styleClass="titulo" text="Saldo a favor:" textFill="WHITE" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="7">
+
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+                            <Label fx:id="lblSaldoFavor" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                            <Label styleClass="titulo" text="Anticipo:" textFill="WHITE" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="8">
+
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+
+                            <Label fx:id="lblAnticipo" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+
+                            <Label styleClass="titulo" text="Total:" textFill="WHITE" GridPane.columnIndex="0"
+                                   GridPane.rowIndex="9">
+
+                                <font>
+                                    <Font name="System Bold" size="14.0"/>
+                                </font>
+                            </Label>
+
+                            <Label fx:id="lblTotal" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d"
+                                   wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+
+
+                            <Label alignment="CENTER_RIGHT" styleClass="texto"
+                                   textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                            <Button fx:id="btnNuevaNota" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion"
+                                    text="Nueva nota" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2"
+                                    GridPane.rowSpan="2"/>
+                            <Button fx:id="btnEditar" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion"
+                                    text="Editar" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2"
+                                    GridPane.rowIndex="2" GridPane.rowSpan="2"/>
+                            <Button fx:id="btnImprimir" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion"
+                                    text="Ver e Imprimir" textAlignment="CENTER" wrapText="true"
+                                    GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2"/>
+                            <Button fx:id="btnDarPlazo" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion"
+                                    text="Dar plazo" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2"
+                                    GridPane.rowIndex="6" GridPane.rowSpan="2"/>
+                            <Button fx:id="btnEliminar" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion"
+                                    text="Eliminar" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2"
+                                    GridPane.rowIndex="8" GridPane.rowSpan="2"/>
+
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="-Infinity" prefWidth="140.0"/>
+                                <ColumnConstraints prefWidth="250.0"/>
+                                <ColumnConstraints halignment="CENTER" minWidth="-Infinity" prefWidth="150.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0"/>
+                                <RowConstraints minHeight="30.0" valignment="CENTER"/>
+                                <RowConstraints minHeight="100.0" prefHeight="30.0" valignment="CENTER"/>
+                                <RowConstraints/>
+                            </rowConstraints>
+                            <padding>
+                                <Insets left="50.0"/>
+                            </padding>
+                        </GridPane>
+                        <padding>
+                            <Insets left="10.0"/>
+                        </padding>
+                    </VBox>
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                    </padding>
+
+                </SplitPane>
+            </center>
+            <padding>
+                <Insets right="70.0"/>
+            </padding>
+
+        </BorderPane>
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </padding>
+    </AnchorPane>
+</AnchorPane>
