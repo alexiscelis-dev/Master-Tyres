@@ -25,16 +25,11 @@ public class VehiculoService implements IVehiculoService {
 
     @Autowired
     public VehiculoService(VehiculoRepository vehiculoRepository) {
-
         this.vehiculoRepository = vehiculoRepository;
-
     }
 
     public List<VehiculoDTO> obtenerVehiculosConServicioVencido() {
-
         LocalDate fechaLimite = LocalDate.now().minusMonths(6);
-
-
         return vehiculoRepository.listarVehiculosConServicioVencido(fechaLimite);
     }
 
@@ -47,7 +42,6 @@ public class VehiculoService implements IVehiculoService {
                 })
                 .orElse(false); // si no se encuentra el vehículo
     }
-
 
     public void guardarVehiculos(Cliente cliente, List<Vehiculo> vehiculos) {
         if (cliente == null || vehiculos == null || vehiculos.isEmpty()) {
@@ -66,7 +60,7 @@ public class VehiculoService implements IVehiculoService {
             if (v.getFechaRegistro() == null){
                 v.setFechaRegistro(LocalDate.now().toString());
             }
-
+            v.setContador_mensaje(0);
             vehiculoRepository.save(v);
         }
     }
@@ -90,6 +84,16 @@ public class VehiculoService implements IVehiculoService {
         existente.setUpdated_at(LocalDateTime.now().toString());
 
         return vehiculoRepository.save(existente); // save() hace update si ya existe
+    }
+
+    public boolean actualizarContador(Integer idVehiculo, Integer contador){
+        return vehiculoRepository.findById(idVehiculo)
+                .map(vehiculo -> {
+                    vehiculo.setContador_mensaje(contador);
+                    vehiculoRepository.save(vehiculo);
+                    return true;
+                })
+                .orElse(false);
     }
 
     public boolean existeVehiculoPorPlacas(String placas) {
@@ -139,7 +143,6 @@ public class VehiculoService implements IVehiculoService {
         return filasEliminadas;
 
     }//eliminar vehiculo
-
 
     @Transactional(readOnly = true)
     @Override
