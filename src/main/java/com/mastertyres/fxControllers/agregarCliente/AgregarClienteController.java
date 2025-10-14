@@ -685,4 +685,6 @@ public class AgregarClienteController {
 
     }
 
+    public void Cancelar(ActionEvent actionEvent) {
+    }
 }
