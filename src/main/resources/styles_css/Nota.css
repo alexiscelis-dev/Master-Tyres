@@ -1,0 +1,164 @@
+.buscador {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: transparent;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.buscador:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+
+/* Botones */
+.boton-accion {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.boton-accion:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-background-color: #AEE83A;
+}
+
+
+/* Tabla */
+.table-view {
+    -fx-background-color: #1A1A1A;
+    -fx-table-cell-border-color: #080808;
+    -fx-padding: 5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #1A1A1A;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white; /* Cambia a blanco u otro color con buen contraste */
+    -fx-font-weight: bold; /* Opcional: texto más grueso */
+}
+
+.table-view .column-header-background .label {
+    -fx-text-fill: white; /* O el color que prefieras */
+    -fx-font-weight: bold;
+}
+
+/* Delinea el contorno del vbox de numero de nota*/
+
+.vBoxNumNota{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 10 0;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+}
+/* Delinea el contorno del vbox de informacion cliente y vehiculo*/
+.vBoxInfo{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 10 0;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+}
+/* Delinea el contorno del vbox de informacion cliente y vehiculo*/
+.vBoxSi-No{
+
+  -fx-background-color: white;
+  -fx-border-radius: 10px;
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+
+
+}
+
+
+
+.textfield-nota{
+
+-fx-background-color:transparent;
+-fx-background-insets:0;
+-fx-font-weight:bold;
+-fx-background-color:transparent;
+-fx-text-fill:black;
+-fx-font-size: 14px;
+-fx-prompt-text-fill: gray;
+-fx-pref-hei
+}
+
+
+.vBoxFecha{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 10 0;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+}
+
+.label-fecha{
+-fx-background-color: #63605E
+}
+
+.textfield-fecha{
+-fx-pref-width: 60px;
+-fx-background-color:transparent;
+-fx-background-insets:0;
+-fx-background-color:transparent;
+-fx-text-fill: black;
+-fx-font-font-size: 14px;
+-fx-font-weight: bold;
+}
+
+
+.text-field-nota {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
+    -fx-border-width: 0 0 2 0;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: black;
+}
+
+.text-field-nota:focused {
+    -fx-border-color: transparent transparent #63605E transparent; /* color al enfocar */
+}
+
+

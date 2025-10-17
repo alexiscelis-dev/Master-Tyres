@@ -7,7 +7,9 @@ import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasControlle
 import com.mastertyres.fxControllers.cliente.ClienteController;
 import com.mastertyres.fxControllers.inventario.InventarioController;
 import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
+import com.mastertyres.fxControllers.nota.NotaController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
+import com.mastertyres.nota.model.Nota;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -224,6 +226,9 @@ public class VentanaPrincipalController {
             }
             if (controller instanceof ProximosServiciosController) {
                 ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
+            }
+            if (controller instanceof NotaController){
+                ((NotaController) controller).setVentanaPrincipalController(this);
             }
             panelMenu.getChildren().clear();
             panelMenu.getChildren().add(contenido);

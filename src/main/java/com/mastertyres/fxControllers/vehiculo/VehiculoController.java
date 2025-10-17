@@ -24,9 +24,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -382,23 +380,6 @@ public class VehiculoController {
     @FXML
     private void agregarVehiculo(ActionEvent event) {
 
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarVehiculo.fxml"));
-//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-//            Parent root = loader.load();
-//
-//            Pane panel = ventanaPrincipalController.getPanelMenu();
-//            panel.getChildren().setAll(root);
-//            AnchorPane.setTopAnchor(root, 0.0);
-//            AnchorPane.setRightAnchor(root, 0.0);
-//            AnchorPane.setBottomAnchor(root, 0.0);
-//            AnchorPane.setLeftAnchor(root, 0.0);
-//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//
-//        }
 
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
