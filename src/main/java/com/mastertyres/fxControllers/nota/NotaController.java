@@ -190,7 +190,7 @@ public class NotaController {
 
         ventanaPrincipalController.viewContent(
                 null,
-                "/fxmlViews/NuevaNota.fxml",
+                "/fxmlViews/NotaFormulario.fxml",
                 "Agregar Nota");
 
     }//agregarNotas

@@ -104,7 +104,20 @@
 
 }
 
+/* Delinea el contorno del vbox de */
+.vBoxInfoNota{
 
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 0 10;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+}
 
 .textfield-nota{
 
@@ -113,9 +126,9 @@
 -fx-font-weight:bold;
 -fx-background-color:transparent;
 -fx-text-fill:black;
--fx-font-size: 14px;
+ -fx-font-size: 16px;
 -fx-prompt-text-fill: gray;
--fx-pref-hei
+
 }
 
 
@@ -134,7 +147,7 @@
 }
 
 .label-fecha{
--fx-background-color: #63605E
+-fx-background-color: #63605E;
 }
 
 .textfield-fecha{
@@ -160,5 +173,77 @@
 .text-field-nota:focused {
     -fx-border-color: transparent transparent #63605E transparent; /* color al enfocar */
 }
+
+
+.check-box .box {
+    -fx-pref-width: 20px;       /* tamaño del recuadro */
+    -fx-pref-height: 20px;
+    -fx-border-color: black;     /* borde negro */
+    -fx-border-width: 2;         /* grosor del borde */
+    -fx-background-color: transparent; /* fondo transparente */
+    -fx-border-radius: 2px;
+}
+/* Estilo de la palomita solo cuando está seleccionado */
+.check-box:selected .box {
+    -fx-background-color: #8EB83D; /* verde al marcar */
+    -fx-border-color: #4CAF50;
+}
+
+.vBoxFillIzquierdo{
+
+  -fx-background-color:  #63605E;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 3 0 0 3;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: #63605E;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3 0 0 3;
+    -fx-background-radius: 2px;
+}
+
+.vBoxFillDerecho{
+  -fx-background-color:  #63605E;
+
+     /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+     -fx-background-radius: 0 3 3 0;
+
+     /* Borde completo, mismo radio que el fondo para que coincida */
+     -fx-border-color: #63605E;
+     -fx-border-width: 1px;
+     -fx-border-radius: 0 3 3 0;
+     -fx-background-radius: 2px;
+ }
+
+ .vBoxFill{
+ -fx-background-color: #63605E;
+
+ }
+
+ .total{
+  -fx-background-color: #63605E;
+  -fx-border-color: #63605E;
+  -fx-background-radius: 5px;
+  -fx-border-radius: 5px;
+ }
+
+
+.showIcons {
+    -fx-background-color: white;         /* color de fondo */
+    -fx-background-radius: 50%;          /* lo hace circular */
+    -fx-padding: 10;                     /* margen interno para centrar bien la imagen */
+    -fx-cursor: hand;                    /* puntero de mano al pasar */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-alignment: center;
+}
+
+.showIcons:hover {
+    -fx-background-color: #f5f5f5;       /* un poco más gris al pasar el mouse */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
 
 
