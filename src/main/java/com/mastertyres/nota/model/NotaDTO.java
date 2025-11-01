@@ -1,9 +1,10 @@
 package com.mastertyres.nota.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-
+@Builder
 @Data
 public class NotaDTO {
 
@@ -11,7 +12,7 @@ public class NotaDTO {
                    final String observaciones, final String porcentajeGas, final String rayones, final String golpes, final String tapones,
                    final String tapetes, final String radio, final String gato, final String llave, final String llanta, final LocalDate fechaVencimiento,
                    final String statusNota, final String createdAt,final float precio, final String descripcionServicio, final int cantidad, final float precioUnitario,
-                   final float montoPagado, final String nombreCliente,final String apellido,final String segundoApellido, final String marca, final String modelo, final String categoria, final Integer anio) {
+                   final float montoPagado, final String nombreCliente,final String apellido,final String segundoApellido, final String domicilio, final String rfc, final String correo, final String marca, final String modelo, final String categoria, final Integer anio) {
 
         this.notaId = notaId;
         this.numNota = numNota;
@@ -39,6 +40,11 @@ public class NotaDTO {
         this.nombreCliente = nombreCliente;
         this.apellido = apellido;
         this.segundoApellido = segundoApellido;
+        this.domicilio = domicilio;
+        this.rfc = rfc;
+        this.correo = correo;
+
+
         this.marca = marca;
         this.modelo = modelo;
         this.categoria = categoria;
@@ -79,6 +85,9 @@ public class NotaDTO {
     private String nombreCliente;
     private String apellido;
     private String segundoApellido;
+    private String domicilio;
+    private String rfc;
+    private String correo;
 
     //vehiculo
     private String marca;

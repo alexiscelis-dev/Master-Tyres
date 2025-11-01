@@ -5,7 +5,7 @@ import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
-import com.mastertyres.vehiculo.model.VehiculoStatus;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,40 +47,23 @@ import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class VehiculoController {
-    @FXML
-    private TableView<VehiculoDTO> tablaVehiculos;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colCliente; //Columna Cliente es Columna Propietario
-    @FXML
-    private TableColumn<VehiculoDTO, String> colMarca;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colModelo;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colCategoria;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colColor;
-    @FXML
-    private TableColumn<VehiculoDTO, Integer> colAnio;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colPlacas;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colNumeroSerie;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colObservaciones;
-    @FXML
-    private TableColumn<VehiculoDTO, Integer> colKilometraje;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colUltimoServicio;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colFechaRegistro;
-    @FXML
-    private TextField buscarVehiculoBuscador;
-    @FXML
-    private ChoiceBox<String> atributoBusquedaVehiculos;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private HBox limpiarChoiceBox;
+    @FXML private TableView<VehiculoDTO> tablaVehiculos;
+    @FXML private TableColumn<VehiculoDTO, String> colCliente; //Columna Cliente es Columna Propietario
+    @FXML private TableColumn<VehiculoDTO, String> colMarca;
+    @FXML private TableColumn<VehiculoDTO, String> colModelo;
+    @FXML private TableColumn<VehiculoDTO, String> colCategoria;
+    @FXML private TableColumn<VehiculoDTO, String> colColor;
+    @FXML private TableColumn<VehiculoDTO, Integer> colAnio;
+    @FXML private TableColumn<VehiculoDTO, String> colPlacas;
+    @FXML private TableColumn<VehiculoDTO, String> colNumeroSerie;
+    @FXML private TableColumn<VehiculoDTO, String> colObservaciones;
+    @FXML private TableColumn<VehiculoDTO, Integer> colKilometraje;
+    @FXML private TableColumn<VehiculoDTO, String> colUltimoServicio;
+    @FXML private TableColumn<VehiculoDTO, String> colFechaRegistro;
+    @FXML private TextField buscarVehiculoBuscador;
+    @FXML private ChoiceBox<String> atributoBusquedaVehiculos;
+    @FXML private Label statusLabel;
+    @FXML private HBox limpiarChoiceBox;
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
@@ -94,9 +78,7 @@ public class VehiculoController {
     @FXML
     public void initialize() {
 
-
         cargarVehiculos();
-
 
         //Click derecho borrar
 
@@ -156,7 +138,7 @@ public class VehiculoController {
                                     if (resultado.isPresent() && resultado.get() == buttonEliminar) {
 
 
-                                        vehiculoService.eliminarVehiculo(VehiculoStatus.INACTIVE.toString(), vehiculoId);
+                                        vehiculoService.eliminarVehiculo(StatusVehiculo.INACTIVE.toString(), vehiculoId);
 
                                         cargarVehiculos(); //metodo que cargar los datos en la tabla
 
@@ -170,18 +152,20 @@ public class VehiculoController {
 
                                 case "Editar" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarVehiculo.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/vehiculo/EditarVehiculo.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
                                         EditarVehiculoController controller = loader.getController();
                                         controller.setVehiculo(vehiculoSeleccionado);
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
+                                        stage.setResizable(false);
 
                                         stage.initModality(Modality.APPLICATION_MODAL);
+
 
                                         stage.showAndWait();
                                         cargarVehiculos();
@@ -192,14 +176,14 @@ public class VehiculoController {
 
                                 case "Ver informacion" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleVehiculo.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/vehiculo/DetalleVehiculo.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
                                         detalleVehiculo controller = loader.getController();
                                         controller.setVehiculo(vehiculoSeleccionado);
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Informacion Vehiculo");
                                         stage.setScene(new Scene(root));
                                         stage.initModality(Modality.APPLICATION_MODAL);
@@ -383,7 +367,7 @@ public class VehiculoController {
 
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
-                "/fxmlViews/AgregarVehiculo.fxml",
+                "/fxmlViews/vehiculo/AgregarVehiculo.fxml",
                 "Agregar vehiculo"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
@@ -473,7 +457,7 @@ public class VehiculoController {
 
         //Llenar tabla con registros
         try {
-            tablaVehiculos.getItems().setAll(vehiculoService.listarVehiculos(VehiculoStatus.ACTIVE.toString()));
+            tablaVehiculos.getItems().setAll(vehiculoService.listarVehiculos(StatusVehiculo.ACTIVE.toString()));
 
         } catch (Exception e) {
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
@@ -490,31 +474,31 @@ public class VehiculoController {
             case "propietario" -> {
                 String nombre = busqueda;
 
-                List<VehiculoDTO> vehiculoPorNombre = vehiculoService.buscarVehiculoPorPropietario(VehiculoStatus.ACTIVE.toString(), nombre);
+                List<VehiculoDTO> vehiculoPorNombre = vehiculoService.buscarVehiculoPorPropietario(StatusVehiculo.ACTIVE.toString(), nombre);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNombre));
 
             }
             case "marca" -> {
 
-                List<VehiculoDTO> vehiculosPorMarca = vehiculoService.buscarVehiculoPorMarca(VehiculoStatus.ACTIVE.toString(), busqueda);
+                List<VehiculoDTO> vehiculosPorMarca = vehiculoService.buscarVehiculoPorMarca(StatusVehiculo.ACTIVE.toString(), busqueda);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorMarca));
 
             }
             case "modelo" -> {
 
-                List<VehiculoDTO> vehiculoPorModelo = vehiculoService.buscarVehiculoPorModelo(VehiculoStatus.ACTIVE.toString(), busqueda);
+                List<VehiculoDTO> vehiculoPorModelo = vehiculoService.buscarVehiculoPorModelo(StatusVehiculo.ACTIVE.toString(), busqueda);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorModelo));
 
             }
             case "categoria" -> {
 
-                List<VehiculoDTO> vehiculoPorCategoria = vehiculoService.buscarVehiculoPorCategoria(VehiculoStatus.ACTIVE.toString(), busqueda);
+                List<VehiculoDTO> vehiculoPorCategoria = vehiculoService.buscarVehiculoPorCategoria(StatusVehiculo.ACTIVE.toString(), busqueda);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorCategoria));
 
             }
             case "color" -> {
 
-                List<VehiculoDTO> vehiculoPorColor = vehiculoService.buscarVehiculoPorColor(VehiculoStatus.ACTIVE.toString(), busqueda);
+                List<VehiculoDTO> vehiculoPorColor = vehiculoService.buscarVehiculoPorColor(StatusVehiculo.ACTIVE.toString(), busqueda);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorColor));
 
             }
@@ -527,7 +511,7 @@ public class VehiculoController {
                 if (busqueda.matches("\\d{4}")) { // yyyy
                     anio = Integer.parseInt(busqueda);
 
-                    List<VehiculoDTO> vehiculoPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), anio);
+                    List<VehiculoDTO> vehiculoPorAnio = vehiculoService.buscarVehiculoPorAnio(StatusVehiculo.ACTIVE.toString(), anio);
                     tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorAnio));
 
 
@@ -538,7 +522,7 @@ public class VehiculoController {
                     //ordenar años para realizar la consulta siempre con el menor primero
                     String[] aniosOrdenados = Arrays.stream(anios).sorted().toArray(String[]::new);
 
-                    List<VehiculoDTO> vehiculosPorAnio = vehiculoService.buscarVehiculoPorAnio(VehiculoStatus.ACTIVE.toString(), Integer.parseInt(aniosOrdenados[0]), Integer.parseInt(aniosOrdenados[1]));
+                    List<VehiculoDTO> vehiculosPorAnio = vehiculoService.buscarVehiculoPorAnio(StatusVehiculo.ACTIVE.toString(), Integer.parseInt(aniosOrdenados[0]), Integer.parseInt(aniosOrdenados[1]));
                     tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorAnio));
 
                 } else {
@@ -552,14 +536,14 @@ public class VehiculoController {
 
                 String placas = busqueda;
                 placas.toUpperCase();
-                List<VehiculoDTO> vehicululoPorPlacas = vehiculoService.buscarVehiculoPorPlacas(VehiculoStatus.ACTIVE.toString(), placas);
+                List<VehiculoDTO> vehicululoPorPlacas = vehiculoService.buscarVehiculoPorPlacas(StatusVehiculo.ACTIVE.toString(), placas);
                 tablaVehiculos.setItems(FXCollections.observableList(vehicululoPorPlacas));
 
             }
             case "numero serie" -> {
                 busqueda.toUpperCase();
 
-                List<VehiculoDTO> vehiculoPorNumSerie = vehiculoService.buscarVehiculoPorNumSerie(VehiculoStatus.ACTIVE.toString(), busqueda);
+                List<VehiculoDTO> vehiculoPorNumSerie = vehiculoService.buscarVehiculoPorNumSerie(StatusVehiculo.ACTIVE.toString(), busqueda);
                 tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorNumSerie));
 
 
@@ -570,7 +554,7 @@ public class VehiculoController {
 
                 if (busqueda.matches("\\d+")) {
                     Integer vehiculoBuscadoInt = Integer.parseInt(busqueda);
-                    List<VehiculoDTO> vehiculoPorkilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(), vehiculoBuscadoInt);
+                    List<VehiculoDTO> vehiculoPorkilometros = vehiculoService.buscarVehiculoPorKilometros(StatusVehiculo.ACTIVE.toString(), vehiculoBuscadoInt);
                     tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorkilometros));
 
                 } else if (busqueda.matches("\\d+,\\d+")) {
@@ -581,7 +565,7 @@ public class VehiculoController {
 
                     String[] kilometrajeOrdenado = Arrays.stream(kilometraje).sorted().toArray(String[]::new);
 
-                    List<VehiculoDTO> vehiculoPorKilometros = vehiculoService.buscarVehiculoPorKilometros(VehiculoStatus.ACTIVE.toString(), Integer.parseInt(kilometrajeOrdenado[0]), Integer.parseInt(kilometrajeOrdenado[1]));
+                    List<VehiculoDTO> vehiculoPorKilometros = vehiculoService.buscarVehiculoPorKilometros(StatusVehiculo.ACTIVE.toString(), Integer.parseInt(kilometrajeOrdenado[0]), Integer.parseInt(kilometrajeOrdenado[1]));
                     tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorKilometros));
                 } else {
 
@@ -620,7 +604,7 @@ public class VehiculoController {
 
                     }
                     if (consultar) {
-                        List<VehiculoDTO> vehiculoPorUltimoServicio = vehiculoService.buscarVehiculoPorUltimoServicio(VehiculoStatus.ACTIVE.toString(), fechaConsulta);
+                        List<VehiculoDTO> vehiculoPorUltimoServicio = vehiculoService.buscarVehiculoPorUltimoServicio(StatusVehiculo.ACTIVE.toString(), fechaConsulta);
                         tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorUltimoServicio));
 
 
@@ -657,7 +641,7 @@ public class VehiculoController {
 
                     if (consultar) {
 
-                        List<VehiculoDTO> vehiculoPorUltimoServicio = vehiculoService.buscarVehiculoPorUltimoServicio(VehiculoStatus.ACTIVE.toString(), consultaInicio, consultaFinal);
+                        List<VehiculoDTO> vehiculoPorUltimoServicio = vehiculoService.buscarVehiculoPorUltimoServicio(StatusVehiculo.ACTIVE.toString(), consultaInicio, consultaFinal);
                         tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorUltimoServicio));
 
                     }
@@ -699,7 +683,7 @@ public class VehiculoController {
 
                     if (consultar) {
 
-                        List<VehiculoDTO> vehiculosPorFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(), fechaConsulta);
+                        List<VehiculoDTO> vehiculosPorFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta);
                         tablaVehiculos.setItems(FXCollections.observableList(vehiculosPorFechaRegistro));
 
                     }
@@ -735,7 +719,7 @@ public class VehiculoController {
                     }
 
                     if (consultar) {
-                        List<VehiculoDTO> vehiculoPorFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(VehiculoStatus.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal));
+                        List<VehiculoDTO> vehiculoPorFechaRegistro = vehiculoService.buscarVehiculoPorRegistro(StatusVehiculo.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal));
                         tablaVehiculos.setItems(FXCollections.observableList(vehiculoPorFechaRegistro));
                     }
 
@@ -758,7 +742,7 @@ public class VehiculoController {
     }//buscarVehiculo
 
     private void buscarVehiculo(String busqueda) {
-        List<VehiculoDTO> vehiculos = vehiculoService.buscadorVehiculo(VehiculoStatus.ACTIVE.toString(), busqueda);
+        List<VehiculoDTO> vehiculos = vehiculoService.buscadorVehiculo(StatusVehiculo.ACTIVE.toString(), busqueda);
         tablaVehiculos.setItems(FXCollections.observableList(vehiculos));
 
     }
@@ -787,7 +771,7 @@ public class VehiculoController {
 //        }
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
-                "/fxmlViews/EditarMarcas_Modelos_Categorias.fxml",
+                "/fxmlViews/marca/EditarMarcas_Modelos_Categorias.fxml",
                 "Agregar o editar marcas"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar o editar marcas");

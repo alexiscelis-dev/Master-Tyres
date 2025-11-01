@@ -245,5 +245,33 @@
     -fx-scale-y: 1.1;
 }
 
+.buscar-cliente{
+   -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: White;
+    -fx-border-color: transparent;
+    -fx-padding: 4px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-font-weight: bold;
+
+}
+
+.scroll-paneBuscar {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-paneBuscar > .viewport {
+    -fx-background-color: transparent;
+}
+.titulo {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-text-alignment: center;
+}
 
 

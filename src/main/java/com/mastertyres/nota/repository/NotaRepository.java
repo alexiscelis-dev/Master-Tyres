@@ -17,8 +17,8 @@ public interface NotaRepository extends JpaRepository<Nota,Integer> {
 
     @Query("(SELECT NEW com.mastertyres.nota.model.NotaDTO(n.notaId, n.numNota, n.numFactura, n.total, n.fechayHora, n.observaciones, n.porcentajeGas, " +
             "n.rayones, n.golpes, n.tapones, n.tapetes, n.radio, n.gato, n.llave, n.llanta, n.fechaVencimiento,n.statusNota,n.createdAt, nd.precio, " +
-            " nd.descripcionServicio, nd.cantidad, nd.precioUnitario, nd.montoPagado, c.nombre, c.apellido, c.segundoApellido, m.nombreMarca, " +
-            " mo.nombreModelo, ca.nombreCategoria, v.anio )" +
+            " nd.descripcionServicio, nd.cantidad, nd.precioUnitario, nd.montoPagado, c.nombre, c.apellido, c.segundoApellido, c.domicilio, c.rfc, " +
+            "c.correo, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio )" +
             "FROM Nota n " +
             "JOIN NotaDetalle nd ON n.notaId = nd.notaDetalleId " +
             "JOIN Vehiculo v ON n.vehiculo.vehiculoId = v.vehiculoId " +

@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.canvas.Canvas?>
 
-<AnchorPane fx:id="rootPane" prefHeight="570.0" prefWidth="945.0" stylesheets="@../styles_css/Nota.css" translateX="100.0"
+<AnchorPane fx:id="rootPane" prefHeight="570.0" prefWidth="945.0" stylesheets="@../../styles_css/Nota.css" translateX="100.0"
             translateY="80.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.fxControllers.agregarNota.AgregarNotaController">
 
@@ -47,12 +47,13 @@
                     <RowConstraints  prefHeight="35.0" />
                     <RowConstraints  prefHeight="35.0" />
                     <RowConstraints  prefHeight="35.0" />
+                    <RowConstraints  prefHeight="35.0" />
 
                 </rowConstraints >
 
                 <children>
 
-                    <Button  GridPane.columnIndex="0" GridPane.rowIndex="0"   prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion" >
+                    <Button onAction="#buscarCliente"  GridPane.columnIndex="0" GridPane.rowIndex="0"   prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion" >
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
@@ -62,7 +63,20 @@
                         </graphic>
 
                     </Button>
-                    <Button  GridPane.columnIndex="0" GridPane.rowIndex="1" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion"  >
+
+                    <Button fx:id="btnBuscarLlanta" onAction="#buscarLlanta" GridPane.columnIndex="0" GridPane.rowIndex="1" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion"  >
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/nota/car-wheel.png" />
+                                </image>
+                            </ImageView>
+                        </graphic>
+
+                    </Button>
+
+
+                    <Button  GridPane.columnIndex="0" GridPane.rowIndex="2" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion"  >
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
@@ -72,7 +86,7 @@
                         </graphic>
 
                     </Button>
-                    <Button  GridPane.columnIndex="0" GridPane.rowIndex="2" mnemonicParsing="false"  prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+                    <Button  GridPane.columnIndex="0" GridPane.rowIndex="3" mnemonicParsing="false"  prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
 
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
@@ -82,10 +96,6 @@
                             </ImageView>
                         </graphic>
                     </Button>
-
-
-
-
 
                 </children>
 
@@ -137,14 +147,14 @@
                                 <ImageView fitHeight="100" fitWidth="300.0" preserveRatio="false"
                                            GridPane.columnIndex="0" GridPane.rowIndex="0">
                                     <image>
-                                        <Image url="@../icons/nota/michelin.png"/>
+                                        <Image url="@../../icons/nota/michelin.png"/>
                                     </image>
                                 </ImageView>
 
                                 <ImageView fitHeight="100" fitWidth="320.0" preserveRatio="false"
                                            GridPane.columnIndex="1" GridPane.rowIndex="0">
                                     <image>
-                                        <Image url="@../icons/Master Tyres Logo.png"/>
+                                        <Image url="@../../icons/Master Tyres Logo.png"/>
                                     </image>
                                 </ImageView>
 
@@ -330,7 +340,7 @@
 
                                                 </Label>
 
-                                                <TextField prefWidth="460" styleClass="text-field-nota"
+                                                <TextField fx:id="txtNombre" prefWidth="460" styleClass="text-field-nota"
                                                            GridPane.columnIndex="1" GridPane.rowIndex="0">
 
                                                 </TextField>
@@ -353,7 +363,7 @@
                                                     </GridPane.margin>
                                                 </Label>
 
-                                                <TextField prefWidth="450" styleClass="text-field-nota"
+                                                <TextField fx:id="txtDireccion" prefWidth="450" styleClass="text-field-nota"
                                                            GridPane.columnIndex="1" GridPane.rowIndex="1">
 
                                                 </TextField>
@@ -361,7 +371,7 @@
 
                                             </HBox>
 
-                                            <TextField prefWidth="520" styleClass="text-field-nota"
+                                            <TextField fx:id="txtDireccion2" prefWidth="520" styleClass="text-field-nota"
                                                        GridPane.columnIndex="0" GridPane.columnSpan="2"
                                                        GridPane.rowIndex="2" GridPane.rowSpan="1">
 
@@ -392,7 +402,7 @@
 
                                                 </Label>
 
-                                                <TextField prefWidth="480" styleClass="text-field-nota"
+                                                <TextField fx:id="txtRfc" prefWidth="480" styleClass="text-field-nota"
                                                            GridPane.columnIndex="1" GridPane.rowIndex="3">
 
                                                 </TextField>
@@ -415,7 +425,7 @@
 
                                                 </Label>
 
-                                                <TextField prefWidth="470" styleClass="text-field-nota">
+                                                <TextField fx:id="txtCorreo" prefWidth="470" styleClass="text-field-nota">
 
                                                 </TextField>
 
@@ -460,7 +470,7 @@
 
                                                 </Label>
 
-                                                <TextField prefWidth="275" styleClass="text-field-nota "
+                                                <TextField fx:id="txtMarca" prefWidth="275" styleClass="text-field-nota "
                                                            GridPane.columnIndex="3" GridPane.rowIndex="1">
 
                                                 </TextField>
@@ -485,7 +495,7 @@
 
                                                 </Label>
 
-                                                <TextField prefWidth="270" styleClass="text-field-nota "
+                                                <TextField fx:id="txtModelo" prefWidth="270" styleClass="text-field-nota "
                                                            GridPane.columnIndex="3" GridPane.rowIndex="2">
 
                                                 </TextField>
@@ -506,7 +516,7 @@
                                                         </font>
 
                                                     </Label>
-                                                    <TextField prefWidth="80" styleClass="text-field-nota ">
+                                                    <TextField fx:id="txtAnioVehiculo" prefWidth="80" styleClass="text-field-nota ">
 
                                                     </TextField>
                                                     <Label text="Kms:">
@@ -516,7 +526,7 @@
 
                                                     </Label>
 
-                                                    <TextField prefWidth="160" styleClass="text-field-nota ">
+                                                    <TextField fx:id="txtKms" prefWidth="160" styleClass="text-field-nota ">
 
                                                     </TextField>
 
@@ -542,7 +552,7 @@
                                                 </Label>
 
 
-                                                <TextField prefWidth="280" styleClass="text-field-nota "
+                                                <TextField fx:id="txtPlacas" prefWidth="280" styleClass="text-field-nota "
                                                            GridPane.columnIndex="3" GridPane.rowIndex="4">
 
                                                 </TextField>
@@ -579,7 +589,7 @@
                                                    GridPane.rowIndex="0">
                                             <ImageView fitWidth="350" fitHeight="200" smooth="true">
                                                 <image>
-                                                    <Image url="@../icons/nota/porche.png"/>
+                                                    <Image url="@../../icons/nota/porche.png"/>
                                                 </image>
                                             </ImageView>
 
@@ -598,7 +608,7 @@
                                             <ImageView  fitWidth="150" fitHeight="150" smooth="true">
 
                                                 <image>
-                                                    <Image url="@../icons/nota/medidor_gas.png"/>
+                                                    <Image url="@../../icons/nota/medidor_gas.png"/>
                                                 </image>
                                             </ImageView>
                                             <Canvas fx:id="canvasGas" width="150" height="150"/>
@@ -881,7 +891,7 @@
 
                                 </Label>
 
-                                <TextField prefWidth="810" styleClass="text-field-nota ">
+                                <TextField fx:id="txtObservaciones" prefWidth="810" styleClass="text-field-nota ">
 
                                 </TextField>
 
@@ -889,7 +899,7 @@
 
                             </HBox>
 
-                            <TextField prefWidth="1000" styleClass="text-field-nota ">
+                            <TextField  fx:id="txtObservaciones2" prefWidth="1000" styleClass="text-field-nota ">
 
                             </TextField>
 
@@ -1095,7 +1105,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField prefWidth="520" styleClass="text-field-nota">
+                                        <TextField fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
 
                                         </TextField>
 

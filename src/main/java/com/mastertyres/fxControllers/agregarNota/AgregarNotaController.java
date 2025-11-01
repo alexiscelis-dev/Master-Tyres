@@ -1,10 +1,19 @@
 package com.mastertyres.fxControllers.agregarNota;
 
+import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.fxControllers.nota.BuscarClienteController;
+import com.mastertyres.fxControllers.nota.BuscarLlantaController;
+import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.vehiculo.model.VehiculoDTO;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,6 +27,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.springframework.stereotype.Component;
@@ -25,6 +35,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static com.mastertyres.common.MensajesAlert.mostrarError;
 
 @Component
 public class AgregarNotaController {
@@ -42,12 +54,32 @@ public class AgregarNotaController {
     @FXML private Canvas canvasGas;
     @FXML private Label lblGas;
 
+    //Datos Clientes
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtDireccion;
+    @FXML private TextField txtDireccion2;
+    @FXML private TextField txtRfc;
+    @FXML private TextField txtCorreo;
+    @FXML private TextField txtMarca;
+    @FXML private TextField txtModelo;
+    @FXML private TextField txtCategoria;
+    @FXML private TextField txtAnioVehiculo;
+    @FXML private TextField txtKms;
+    @FXML private TextField txtPlacas;
+
+    @FXML private TextField txtObservaciones;
+    @FXML private TextField getTxtObservaciones2;
+
+    //Datos nota
+    @FXML private TextField txtLlantas;
+
 
 
 
 
     @FXML
     private void initialize(){
+
         MenuContextSetting.disableMenu(rootPane);
         btnShowIcons.setOnMouseClicked(event -> showIcons());
         mostrarFechayHora();
@@ -76,16 +108,25 @@ public class AgregarNotaController {
             }
             return null;
         }));
+        txtAnioVehiculo.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d{0,4}")){
+                return change;
+            }
+            return null;
+        }));
+        txtKms.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*")){
+                return change;
+            }
+            return null;
+        } ));
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
         dibujarGasolina(50);
 
 
-
-
-
     }//initialize
 
-
+//Seccion precargar en nota
     private void showIcons(){
         final Duration TIEMPO = Duration.millis(500);
 
@@ -137,6 +178,8 @@ public class AgregarNotaController {
 
     }//mostrarFecha
 
+    //Seccion dibujar arco gasolina
+
     private void mostrarSlider(Window owner){
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -169,8 +212,6 @@ public class AgregarNotaController {
 
     }//mostrarSlider
 
-
-
     private void dibujarGasolina(double porcentaje) {
         GraphicsContext gc = canvasGas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvasGas.getWidth(), canvasGas.getHeight());
@@ -201,7 +242,104 @@ public class AgregarNotaController {
                 startAngle, length, ArcType.OPEN);
     }
 
+    @FXML
+    private void buscarCliente(ActionEvent event){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/BuscarCliente.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext() ::getBean);
+            Parent root = loader.load();
 
+            Stage stage = new Stage(StageStyle.UTILITY);
+            BuscarClienteController controller = loader.getController();
+
+
+            stage.setTitle("Buscar cliente");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+
+            stage.showAndWait();
+
+            Cliente cliente = controller.getClienteSeleccionado();
+            llenarNota(cliente);
+
+            VehiculoDTO vehiculos = controller.getVehiculoSeleccionado();
+            llenarNota(vehiculos);
+
+
+
+
+        }catch (Exception e){
+            mostrarError("Error","","Error inesperado.");
+            e.printStackTrace();
+        }
+
+    }//buscarCliente
+
+    @FXML
+    private void buscarLlanta(ActionEvent event){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/BuscarLlanta.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext() ::getBean);
+            Parent root = loader.load();
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            BuscarLlantaController controller = loader.getController();
+
+            stage.setTitle("Buscar llantas");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+
+            stage.showAndWait();
+            Inventario inventario = controller.getLlantaSeleccionada();
+            llenarNota(inventario);
+
+
+
+        }catch (Exception e){
+            mostrarError("Error","","Error inesperado.");
+            e.printStackTrace();
+        }
+
+    }//buscarCliente
+
+
+
+
+
+    private void llenarNota(Cliente cliente){
+        if (cliente != null){
+            System.out.println(cliente.getClienteId());
+            txtNombre.setText(cliente.getNombre() + " " +
+                    (cliente.getApellido() != null ? cliente.getApellido() : "") + " "  +
+                    (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : "")
+            );
+
+            txtDireccion.setText(cliente.getDomicilio() != null ? cliente.getDomicilio() : "");
+            txtRfc.setText(cliente.getRfc() != null ? cliente.getRfc() :"");
+            txtCorreo.setText(cliente.getCorreo() != null ? cliente.getCorreo() : "");
+
+        }
+
+    }//llenarNota
+
+    private void llenarNota(VehiculoDTO vehiculos){
+        if (vehiculos != null){
+            txtMarca.setText(vehiculos.getNombreMarca());
+            txtModelo.setText(vehiculos.getNombreModelo() + " " + vehiculos.getNombreCategoria());
+            txtAnioVehiculo.setText(vehiculos.getAnio() +"");
+            txtKms.setText(vehiculos.getKilometros() + "");
+            txtPlacas.setText(vehiculos.getPlacas());
+        }
+
+    }//llenarNota
+
+    private void llenarNota(Inventario inventario){
+
+        txtLlantas.setText(inventario.getMarca() + " " + inventario.getModelo() + " " + " " + inventario.getMedida());
+
+    }//llenarNota
 
 
 }//class

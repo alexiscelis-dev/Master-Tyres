@@ -1,13 +1,13 @@
 package com.mastertyres.fxControllers.cliente;
 
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.ClienteStatus;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.Vehiculo;
-import com.mastertyres.vehiculo.model.VehiculoStatus;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,12 +22,11 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,54 +49,24 @@ public class ClienteController {
         this.ventanaPrincipalController = controller;
     }
 
-    @FXML
-    private TableView<Cliente> tablaClientes;
-
-    @FXML
-    private TableColumn<Cliente, String> colTipoCliente;
-
-    @FXML
-    private TableColumn<Cliente, String> colGenero;
-
-    @FXML
-    private TableColumn<Cliente, String> colCumpleanos;
-
-    @FXML
-    private TableColumn<Cliente, String> colRegistro;
-
-    @FXML
-    private TableColumn<Cliente, String> colNombre;
-
-    @FXML
-    private TableColumn<Cliente, String> colRFC;
-
-    @FXML
-    private TableColumn<Cliente, String> colTelefono;
-
-    @FXML
-    private TableColumn<Cliente, String> colEstado;
-
-    @FXML
-    private TableColumn<Cliente, String> colCiudad;
-
-    @FXML
-    private TableColumn<Cliente, String> colDomicilio;
-
-    @FXML
-    private TableColumn<Cliente, String> colHobbie;
-
-    @FXML
-    private TableColumn<Cliente, String> colVehiculo;
-
-    @FXML
-    private TextField buscarClienteBuscador;
-
-    @FXML
-    private ChoiceBox<String> atributoBusquedaClientes;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private HBox limpiarChoiceBox;
+    @FXML private TableView<Cliente> tablaClientes;
+    @FXML private TableColumn<Cliente, String> colTipoCliente;
+    @FXML private TableColumn<Cliente, String> colGenero;
+    @FXML private TableColumn<Cliente, String> colCumpleanos;
+    @FXML private TableColumn<Cliente, String> colRegistro;
+    @FXML private TableColumn<Cliente, String> colNombre;
+    @FXML private TableColumn<Cliente, String> colRFC;
+    @FXML private TableColumn<Cliente, String> colTelefono;
+    @FXML private TableColumn<Cliente, String> colEstado;
+    @FXML private TableColumn<Cliente, String> colCiudad;
+    @FXML private TableColumn<Cliente, String> colDomicilio;
+    @FXML private TableColumn<Cliente, String> colHobbie;
+    @FXML private TableColumn<Cliente, String> colVehiculo;
+    @FXML private TextField buscarClienteBuscador;
+    @FXML private ChoiceBox<String> atributoBusquedaClientes;
+    @FXML private Label statusLabel;
+    @FXML private HBox limpiarChoiceBox;
+    @FXML private Button refrescar;
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
@@ -105,7 +74,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @FXML private Button refrescar;
+
 
     @FXML
     private void initialize() {
@@ -178,7 +147,7 @@ public class ClienteController {
 
                                         System.out.println("vehiculoId = " + clienteId);
 
-                                        clienteService.eliminarCliente(VehiculoStatus.INACTIVE.toString(), clienteId);
+                                        clienteService.eliminarCliente(StatusVehiculo.INACTIVE.toString(), clienteId);
 
 
                                         cargarClientes(); //metodo que cargar los datos en la tabla
@@ -193,20 +162,26 @@ public class ClienteController {
 
                                 case "Editar" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarCliente.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/cliente/EditarCliente.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
                                         EditarClienteController controller = loader.getController();
                                         controller.editarCliente(clienteSeleccionado); // pasa el cliente actual
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
+
+
+
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
+                                        stage.setResizable(false);
 
                                         stage.initModality(Modality.APPLICATION_MODAL);
 
                                         stage.showAndWait();
+
+
                                         cargarClientes();
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -215,14 +190,14 @@ public class ClienteController {
 
                                 case "Ver informacion" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleCliente.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/cliente/DetalleCliente.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
                                         DetalleCliente controller = loader.getController();
                                         controller.informacionCliente(clienteSeleccionado); // pasa el cliente actual
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Informacion Cliente");
                                         stage.setScene(new Scene(root));
                                         stage.initModality(Modality.APPLICATION_MODAL);
@@ -379,32 +354,12 @@ public class ClienteController {
     }// initialize
 
 
-//    @FXML
-//    private void agregarCliente(ActionEvent event) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarCliente.fxml"));
-//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-//            Parent root = loader.load();
-//
-//            Pane panel = ventanaPrincipalController.getPanelMenu();
-//            panel.getChildren().setAll(root);
-//            AnchorPane.setTopAnchor(root, 0.0);
-//            AnchorPane.setRightAnchor(root, 0.0);
-//            AnchorPane.setBottomAnchor(root, 0.0);
-//            AnchorPane.setLeftAnchor(root, 0.0);
-//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            mostrarError("Error", "", "Ocurrio un error al mostrar la ventana.");
-//        }
-//    }//agregarCliente
 
     @FXML
     private void agregarCliente(ActionEvent event) {
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
-                "/fxmlViews/AgregarCliente.fxml",
+                "/fxmlViews/cliente/AgregarCliente.fxml",
                 "Agregar cliente"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
@@ -468,7 +423,7 @@ public class ClienteController {
     private void cargarDatosClientes() {
         try {
             // Listado de los clientes
-            tablaClientes.getItems().setAll(clienteService.listarClientesConVehiculos(ClienteStatus.ACTIVE.toString()));
+            tablaClientes.getItems().setAll(clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString()));
 
         } catch (Exception e) {
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
@@ -484,28 +439,28 @@ public class ClienteController {
 
                 String nombre = busqueda;
 
-                List<Cliente> clientesPorNombre = clienteService.buscarClientePorNombre(ClienteStatus.ACTIVE.toString(), nombre);
+                List<Cliente> clientesPorNombre = clienteService.buscarClientePorNombre(StatusCliente.ACTIVE.toString(), nombre);
                 tablaClientes.setItems(FXCollections.observableList(clientesPorNombre));
 
             }
             case "telefono" -> {
                 String numTelefono = busqueda;
 
-                List<Cliente> clientesPorNumero = clienteService.buscarClientePorNumTelefono(ClienteStatus.ACTIVE.toString(), numTelefono);
+                List<Cliente> clientesPorNumero = clienteService.buscarClientePorNumTelefono(StatusCliente.ACTIVE.toString(), numTelefono);
                 tablaClientes.setItems(FXCollections.observableList(clientesPorNumero));
 
             }
             case "estado" -> {
                 String estado = busqueda;
 
-                List<Cliente> clientesPorEstado = clienteService.buscarClientePorEstado(ClienteStatus.ACTIVE.toString(), estado);
+                List<Cliente> clientesPorEstado = clienteService.buscarClientePorEstado(StatusCliente.ACTIVE.toString(), estado);
                 tablaClientes.setItems(FXCollections.observableList(clientesPorEstado));
 
             }
             case "ciudad" -> {
                 String ciudad = busqueda;
 
-                List<Cliente> clientesPorCiudad = clienteService.buscarClientePorCiudad(ClienteStatus.ACTIVE.toString(), ciudad);
+                List<Cliente> clientesPorCiudad = clienteService.buscarClientePorCiudad(StatusCliente.ACTIVE.toString(), ciudad);
                 tablaClientes.setItems(FXCollections.observableList(clientesPorCiudad));
 
 
@@ -513,20 +468,20 @@ public class ClienteController {
             case "domicilio" -> {
                 String domicilio = busqueda;
 
-                List<Cliente> clientesPorDomicilio = clienteService.buscarClientePorDomicilio(ClienteStatus.ACTIVE.toString(), domicilio);
+                List<Cliente> clientesPorDomicilio = clienteService.buscarClientePorDomicilio(StatusCliente.ACTIVE.toString(), domicilio);
                 tablaClientes.setItems(FXCollections.observableList(clientesPorDomicilio));
 
             }
             case "hobbie" -> {
                 String hobbie = busqueda;
 
-                List<Cliente> clientesPorHobbie = clienteService.buscarClientePorHobbie(ClienteStatus.ACTIVE.toString(), hobbie);
+                List<Cliente> clientesPorHobbie = clienteService.buscarClientePorHobbie(StatusCliente.ACTIVE.toString(), hobbie);
                 tablaClientes.setItems(FXCollections.observableList(clientesPorHobbie));
             }
             case "rfc" -> {
                 String rfc = busqueda;
 
-                List<Cliente> clientesPorRfc = clienteService.buscarClientePorRfc(ClienteStatus.ACTIVE.toString(), rfc);
+                List<Cliente> clientesPorRfc = clienteService.buscarClientePorRfc(StatusCliente.ACTIVE.toString(), rfc);
                 tablaClientes.setItems(FXCollections.observableList(clientesPorRfc));
             }
 
@@ -537,7 +492,7 @@ public class ClienteController {
 
     public void buscarCliente(String busqueda) {
 
-        List<Cliente> clientes = clienteService.buscadorClientes(ClienteStatus.ACTIVE.toString(), busqueda);
+        List<Cliente> clientes = clienteService.buscadorClientes(StatusCliente.ACTIVE.toString(), busqueda);
 
         tablaClientes.setItems(FXCollections.observableList(clientes));
 

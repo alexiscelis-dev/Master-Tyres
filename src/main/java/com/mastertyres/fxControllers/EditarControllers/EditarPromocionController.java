@@ -34,39 +34,17 @@ import static javafx.collections.FXCollections.observableList;
 @Component
 public class EditarPromocionController {
 
-    @FXML
-    private TextField txtNombre;
-
-    @FXML
-    private TextField txtDescripcion;
-
-    @FXML
-    private TextField txtPrecio;
-
-    @FXML
-    private ChoiceBox<String> txtTipoDescuento;
-
-    @FXML
-    private Slider porcentajeDescuento;
-
-    @FXML
-    private Label porcentaje; // 👈 el Label donde mostramos el valor
-
-    @FXML
-    private DatePicker dateInicio;
-
-    @FXML
-    private DatePicker dateFin;
-
-    @FXML
-    private TextField txtRutaImagen;
-
-    @FXML
-    private Button btnSeleccionarImagen;
-
-    @FXML
-    private Button btnCambiar;
-
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtDescripcion;
+    @FXML private TextField txtPrecio;
+    @FXML private ChoiceBox<String> txtTipoDescuento;
+    @FXML private Slider porcentajeDescuento;
+    @FXML private Label porcentaje; // 👈 el Label donde mostramos el valor
+    @FXML private DatePicker dateInicio;
+    @FXML private DatePicker dateFin;
+    @FXML private TextField txtRutaImagen;
+    @FXML private Button btnSeleccionarImagen;
+    @FXML private Button btnCambiar;
     private Promocion promocionSeleccionada;
 
     @FXML private ChoiceBox<Marca> choiceMarca;

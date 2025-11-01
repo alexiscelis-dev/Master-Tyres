@@ -21,40 +21,23 @@ import java.util.List;
 
 @Component
 public class NotaController {
-    @FXML
-    private TilePane contenedorNotas;
-    @FXML
-    private Label lblStatus;
-    @FXML
-    private Label lblNumNota;
-    @FXML
-    private Label lblNumFactura;
-    @FXML
-    private Label lblCliente;
-    @FXML
-    private Label lblVehiculo;
-    @FXML
-    private Label lblFechaEmicion;
-    @FXML
-    private Label lblFechaLimite;
-    @FXML
-    private Label lblSaldoFavor;
-    @FXML
-    private Label lblAnticipo;
-    @FXML
-    private Label lblTotal;
-    @FXML
-    private Button btnNuevaNota;
-    @FXML
-    private Button btnEditar;
-    @FXML
-    private Button btnImprimir;
-    @FXML
-    private Button btnDarPlazo;
-    @FXML
-    private Button btnEliminar;
-    @FXML
-    private TextField txtBuscar;
+    @FXML private TilePane contenedorNotas;
+    @FXML private Label lblStatus;
+    @FXML private Label lblNumNota;
+    @FXML private Label lblNumFactura;
+    @FXML private Label lblCliente;
+    @FXML private Label lblVehiculo;
+    @FXML private Label lblFechaEmicion;
+    @FXML private Label lblFechaLimite;
+    @FXML private Label lblSaldoFavor;
+    @FXML private Label lblAnticipo;
+    @FXML private Label lblTotal;
+    @FXML private Button btnNuevaNota;
+    @FXML private Button btnEditar;
+    @FXML private Button btnImprimir;
+    @FXML private Button btnDarPlazo;
+    @FXML private Button btnEliminar;
+    @FXML private TextField txtBuscar;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -190,7 +173,7 @@ public class NotaController {
 
         ventanaPrincipalController.viewContent(
                 null,
-                "/fxmlViews/NotaFormulario.fxml",
+                "/fxmlViews/nota/NotaFormulario.fxml",
                 "Agregar Nota");
 
     }//agregarNotas
