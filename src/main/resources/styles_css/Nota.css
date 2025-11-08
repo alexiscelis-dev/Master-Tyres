@@ -7,6 +7,16 @@
     -fx-background-radius: 5px;
     -fx-border-radius: 5px;
 }
+/* para campos deshabilitados */
+.buscador2 {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: transparent;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
 
 .buscador:focused {
     -fx-border-color: #8EB83D;
@@ -148,6 +158,9 @@
 
 .label-fecha{
 -fx-background-color: #63605E;
+-fx-font-weight: bold;
+ -fx-font-size: 14px;
+
 }
 
 .textfield-fecha{
@@ -161,6 +174,41 @@
 }
 
 
+/* En nota 3 se usa para que el delineado sea mas delgado, se usa en subtotal mecanica, frenos y otros */
+.text-field-nota3 {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: black;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+
+}
+
+.text-field-nota3:focused {
+    -fx-border-color: transparent transparent #63605E transparent; /* color al enfocar */
+}
+
+/* Esta centra el texto a comparacion de la normal */
+.text-field-nota2 {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
+    -fx-border-width: 0 0 2 0;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: black;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+
+}
+
+.text-field-nota2:focused {
+    -fx-border-color: transparent transparent #63605E transparent; /* color al enfocar */
+}
+
+
 .text-field-nota {
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
@@ -168,6 +216,9 @@
     -fx-font-size: 14px;
     -fx-padding: 5 0 5 0;
     -fx-text-fill: black;
+    -fx-font-weight: bold;
+
+
 }
 
 .text-field-nota:focused {

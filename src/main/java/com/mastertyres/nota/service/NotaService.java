@@ -18,6 +18,7 @@ public class  NotaService implements INotaService{
         this.notaRepository = notaRepository;
     }
 
+
     @Transactional(readOnly = true)
     @Override
     public List<NotaDTO> listarNotas(String active) {

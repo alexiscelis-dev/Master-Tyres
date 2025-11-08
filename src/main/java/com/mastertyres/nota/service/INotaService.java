@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface INotaService {
 
-    List<NotaDTO>listarNotas(String active);
+
+    List<NotaDTO> listarNotas(String active);
 
 }//interface

@@ -48,13 +48,13 @@
                         </columnConstraints>
 
                         <children>
-                            <TextField fx:id="txtNombre" disable="true" promptText="Nombre completo" styleClass="buscador" GridPane.columnSpan="3" GridPane.rowIndex="0" />
+                            <TextField fx:id="txtNombre" editable="false" promptText="Nombre completo" styleClass="buscador2" GridPane.columnSpan="3" GridPane.rowIndex="0" />
 
-                            <TextField fx:id="txtTipoCliente" disable="true" promptText="Tipo cliente" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="txtTipoCliente" editable="false" promptText="Tipo cliente" styleClass="buscador2" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
-                            <TextField fx:id="txtRfc" disable="true" promptText="RFC" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <TextField fx:id="txtRfc" editable="false" promptText="RFC" styleClass="buscador2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                            <TextField fx:id="txtNumTelefono" disable="true" promptText="Teléfono" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                            <TextField fx:id="txtNumTelefono" editable="false" promptText="Teléfono" styleClass="buscador2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         </children>
                         <rowConstraints>
                             <RowConstraints />

@@ -66,8 +66,10 @@ public class NotaController {
     }//initialize
 
     private void cargarNota() {
-        List<NotaDTO> notas = notaService.listarNotas(StatusNota.ACTIVE.toString());
+       List<NotaDTO> notas = notaService.listarNotas(StatusNota.ACTIVE.toString());
         mostrarNotas(notas);
+
+
     }//cargarNota
 
     private void mostrarNotas(List<NotaDTO> notas) {
@@ -144,7 +146,11 @@ public class NotaController {
 
 
         lblNumNota.setText(nota.getNumNota());
+
+
         lblNumFactura.setText(nota.getNumFactura() != null ? nota.getNumFactura() : "Sin facturar");
+
+
         lblCliente.setText(nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido() : "") + " " +
                 (nota.getSegundoApellido() != null ? nota.getSegundoApellido() : ""));
         lblVehiculo.setText(nota.getMarca() + " " + nota.getModelo() + " " + nota.getAnio());
@@ -152,9 +158,9 @@ public class NotaController {
 
         lblFechaEmicion.setText(fechaFormateada);
 
-        lblFechaLimite.setText(nota.getFechaVencimiento().format(formatter2));
+        lblFechaLimite.setText(nota.getFechaVencimiento());
 
-        lblAnticipo.setText("$" + nota.getMontoPagado());
+        lblAnticipo.setText("$" + nota.getTotal());
         lblTotal.setText("$" + nota.getTotal());
         var aux = nota.getTotal();
         var saldoFavor = aux - nota.getTotal();
@@ -177,6 +183,8 @@ public class NotaController {
                 "Agregar Nota");
 
     }//agregarNotas
+
+
 
 
 }//class

@@ -61,7 +61,7 @@
                                text="Detalles de la nota" textAlignment="CENTER" textFill="WHITE"/>
 
                         <GridPane hgap="10" prefHeight="452.0" prefWidth="686.0" vgap="10">
-                            <Label styleClass="titulo" text="Status:" textFill="WHITE" GridPane.columnIndex="0"
+                            <Label styleClass="titulo" text="Estado:" textFill="WHITE" GridPane.columnIndex="0"
                                    GridPane.rowIndex="0">
                                 <font>
                                     <Font name="System Bold" size="14.0"/>

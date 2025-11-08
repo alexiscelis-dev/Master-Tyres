@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.MensajesAlert.mostrarWarning;
 
 @Component
 public class BuscarLlantaController {
@@ -29,27 +31,27 @@ public class BuscarLlantaController {
     @FXML
     private TextField txtBuscador;
     @FXML
-    private TextField txtMarca;
+    private TextField txtLlanta;
     @FXML
-    private TextField txtModelo;
-    @FXML
-    private TextField txtMedida;
+    private TextField txtStock;
     @FXML
     private TableView<Inventario> tablaLlantas;
     @FXML
-    private TableColumn<Inventario,String> colMarca;
+    private TableColumn<Inventario, String> colMarca;
     @FXML
-    private TableColumn<Inventario,String> colModelo;
+    private TableColumn<Inventario, String> colModelo;
     @FXML
-    private TableColumn<Inventario,String> colMedida;
+    private TableColumn<Inventario, String> colMedida;
     @FXML
-    private TableColumn<Inventario,String> colIndiceVelocidad;
+    private TableColumn<Inventario, String> colIndiceVelocidad;
     @FXML
-    private TableColumn<Inventario,String> colIndiceCarga;
+    private TableColumn<Inventario, String> colIndiceCarga;
+    @FXML
+    private TableColumn<Inventario, Integer> colStock;
 
     private Inventario llantaSeleccionada;
 
-    public Inventario getLlantaSeleccionada(){
+    public Inventario getLlantaSeleccionada() {
         return llantaSeleccionada;
     }
 
@@ -58,36 +60,35 @@ public class BuscarLlantaController {
 
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         btnBuscar.setOnAction(event -> cargarLlantas(txtBuscador.getText()));
 
         tablaLlantas.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null){
-                txtMarca.setText(newValue.getMarca());
-                txtModelo.setText(newValue.getModelo());
-                txtMedida.setText(newValue.getMedida());
+            if (newValue != null) {
+                txtLlanta.setText(newValue.getMarca() + " " + newValue.getModelo() + " " + newValue.getMedida());
+                txtStock.setText("1");
+                txtStock.setDisable(false);
                 btnAceptar.setDisable(false);
             }
-
         });
 
     }//initialize
 
     @FXML
-    private void cancelar(ActionEvent event){
-        Stage stage = (Stage) txtMarca.getScene().getWindow();
+    private void cancelar(ActionEvent event) {
+        Stage stage = (Stage) txtLlanta.getScene().getWindow();
         stage.close();
 
     }//cancelar
 
-    private void cargarLlantas(String busqueda){
+    private void cargarLlantas(String busqueda) {
         colMarca.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getMarca()
         ));
         colModelo.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getModelo()
         ));
-        colMedida.setCellValueFactory( data -> new SimpleStringProperty(
+        colMedida.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getMedida()
         ));
         colIndiceCarga.setCellValueFactory(data -> new SimpleStringProperty(
@@ -96,23 +97,26 @@ public class BuscarLlantaController {
         colIndiceVelocidad.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getIndiceVelocidad()
         ));
+        colStock.setCellValueFactory(data -> new SimpleIntegerProperty(
+                data.getValue().getStock()).asObject());
+
 
         cargarDatosLlantas(busqueda);
 
     }//cargarLlantas
 
-    private void cargarDatosLlantas(String busqueda){
+    private void cargarDatosLlantas(String busqueda) {
         try {
-            if (busqueda != null && !busqueda.isEmpty()){
-                List<Inventario> inventarios = inventarioService.buscadorInventario(StatusInventario.ACTIVE.toString(),busqueda);
+            if (busqueda != null && !busqueda.isEmpty()) {
+                List<Inventario> inventarios = inventarioService.buscadorInventario(StatusInventario.ACTIVE.toString(), busqueda);
                 tablaLlantas.getItems().setAll(FXCollections.observableList(inventarios));
 
-            }else {
+            } else {
                 List<Inventario> inventarioVacio = new ArrayList<>();
                 tablaLlantas.getItems().setAll(FXCollections.observableList(inventarioVacio));
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
         }
@@ -120,9 +124,34 @@ public class BuscarLlantaController {
     }//cargarDatosLlantas
 
     @FXML
-    private void aceptar(ActionEvent event){
+    private void aceptar(ActionEvent event) {
+
         llantaSeleccionada = tablaLlantas.getSelectionModel().getSelectedItem();
-        btnAceptar.getScene().getWindow().hide();
+        llantaSeleccionada.setStock(Integer.parseInt(txtStock.getText()));
+
+        int solicitado = Integer.parseInt(txtStock.getText());
+        int disponible = llantaSeleccionada.getStock();
+
+        if (solicitado > disponible) {
+            String unidad = (disponible == 1) ? "unidad disponible" : "unidades disponibles";
+
+            if (Integer.parseInt(txtStock.getText()) > llantaSeleccionada.getStock()) {
+                mostrarWarning(
+                        "Stock insuficiente",
+                        "No hay suficiente stock disponible",
+                        "La llanta seleccionada: " + llantaSeleccionada.getMarca() + " " +
+                                llantaSeleccionada.getModelo() + " " + llantaSeleccionada.getMedida() + "\n" +
+                                "solo cuenta con " + disponible + " " + unidad + ".\n" +
+                                "Cantidad solicitada: " + solicitado + "."
+                );
+            }
+
+
+        }else{
+            btnAceptar.getScene().getWindow().hide();
+        }
+
+
 
     }//aceptar
 
