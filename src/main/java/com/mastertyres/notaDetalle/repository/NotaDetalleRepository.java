@@ -9,4 +9,6 @@ public interface NotaDetalleRepository extends JpaRepository <NotaDetalle, Integ
 
 
 
+
+
 }//interface

@@ -30,7 +30,7 @@ public class NotaController {
     @FXML private Label lblFechaEmicion;
     @FXML private Label lblFechaLimite;
     @FXML private Label lblSaldoFavor;
-    @FXML private Label lblAnticipo;
+    @FXML private Label lblAdeudo;
     @FXML private Label lblTotal;
     @FXML private Button btnNuevaNota;
     @FXML private Button btnEditar;
@@ -160,12 +160,12 @@ public class NotaController {
 
         lblFechaLimite.setText(nota.getFechaVencimiento());
 
-        lblAnticipo.setText("$" + nota.getTotal());
+        lblAdeudo.setText("$" + nota.getAdeudo());
         lblTotal.setText("$" + nota.getTotal());
-        var aux = nota.getTotal();
-        var saldoFavor = aux - nota.getTotal();
 
-        lblSaldoFavor.setText("$" + saldoFavor);
+
+
+        lblSaldoFavor.setText("$" + nota.getSaldoFavor());
 
 
     }//mostrarDetalleNota

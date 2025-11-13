@@ -325,4 +325,94 @@
     -fx-text-alignment: center;
 }
 
+.radio-button {
+    -fx-font-size: 14px;
+    -fx-text-fill: White; /* color del texto */
+    -fx-mark-color: #8EB83D; /* color del círculo de selección */
+    -fx-cursor: hand; /* cambia el cursor al pasar por encima */
+}
+
+
+/*
+DatePicker
+*/
+
+
+.date-picker {
+
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 2 6;
+    -fx-font-size: 13px;
+}
+
+.date-picker:focused {
+    -fx-border-color: #8EB83D;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: #8EB83D;
+}
+
+.date-picker .calendar-popup {
+    -fx-background-color: #1A1A1A;
+    -fx-border-color: #8EB83D;
+}
+
+.date-picker .calendar-popup .month-year-pane,
+.date-picker .calendar-popup .day-cell {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell:hover {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .calendar-popup .selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .text-field {
+    -fx-text-fill: #F2F2F2;
+    -fx-background-color: transparent;
+    -fx-prompt-text-fill: #BBBBBB;
+}
+
+.date-picker .calendar-popup {
+    -fx-background-color: #000000;
+    -fx-border-color: #99CC33;
+}
+
+.date-picker .calendar-popup .month-year-pane {
+    -fx-background-color: #000000;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell {
+    -fx-background-color: #000000;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell:hover {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .calendar-popup .selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+
 

@@ -40,6 +40,8 @@ public interface IInventarioService {
 
     void actualizarCreatedAt(String now, Integer id);
 
+    Inventario buscarLlantaPorId(Integer idLlanta);
+
 
 
 

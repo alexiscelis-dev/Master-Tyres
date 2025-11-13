@@ -32,11 +32,11 @@ public class Nota {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "vehiculo_id")
     private Vehiculo vehiculo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "inventario_id")
     private Inventario inventario;
 
@@ -56,6 +56,7 @@ public class Nota {
     @Column(name = "updated_at",updatable = true)
     @UpdateTimestamp
     private String updatedAt;
+    @Column(name = "active", insertable = false, updatable = true)
     private String active;
 
     private float total;

@@ -200,6 +200,11 @@ public class InventarioService implements IInventarioService {
         inventarioRepository.actualizaCreatedAt(now, id);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Inventario buscarLlantaPorId(Integer idLlanta) {
+        return inventarioRepository.findById(idLlanta).orElse(null);
+    }
 
 
 }//clase

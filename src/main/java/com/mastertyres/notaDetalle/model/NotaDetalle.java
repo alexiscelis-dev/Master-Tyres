@@ -33,6 +33,15 @@ public class NotaDetalle {
     private String gato;
     private String llave;
     private String llanta;
+
+    @Column(name = "llanta_campo")
+    private String llantaCampo;
+    @Column(name = "llanta_cantidad")
+    private int llantaCantidad;
+    @Column(name = "llanta_unitario")
+    private float llantaUnitario;
+    @Column(name = "llanta_total")
+    private float llantaTotal;
     private String alineacion;
     @Column(name = "alineacion_cantidad")
     private int alineacionCantidad;
@@ -41,7 +50,6 @@ public class NotaDetalle {
     @Column(name = "alineacion_total")
     private float alineacionTotal;
     private String balanceo;
-    private String balanceo2;
     @Column(name = "balanceo_cantidad")
     private int balanceoCantidad;
     @Column(name = "balanceo_unitario")
@@ -67,6 +75,12 @@ public class NotaDetalle {
 
     private String suspension;
     private String suspension2;
+    @Column(name = "suspension_cantidad2")
+    private int suspensionCantidad2;
+    @Column(name = "suspension_unitario2")
+    private float suspensionUnitario2;
+    @Column(name = "suspension_total2")
+    private float suspensionTotal2;
     @Column(name = "suspension_cantidad")
     private int suspensionCantidad;
     @Column(name = "suspension_unitario")
@@ -74,35 +88,57 @@ public class NotaDetalle {
     @Column(name = "suspension_total")
     private float suspensionTotal;
     private String mecanica;
-    private String mecanica2;
     @Column(name = "mecanica_cantidad")
     private int mecanicaCantidad;
     @Column(name = "mecanica_unitario")
     private float mecanicaUnitario;
     @Column(name = "mecanica_total")
     private float mecanicaTotal;
+    private String mecanica2;
+    @Column(name = "mecanica_cantidad2")
+    private int mecanicaCantidad2;
+    @Column(name = "mecanica_unitario2")
+    private float mecanicaUnitario2;
+    @Column(name = "mecanica_total2")
+    private float mecanicaTotal2;
     private String frenos;
-    private String frenos2;
     @Column(name = "frenos_cantidad")
     private int frenosCantidad;
     @Column(name = "frenos_unitario")
     private float frenosUnitario;
     @Column(name = "frenos_total")
     private float frenosTotal;
+    private String frenos2;
+    @Column(name = "frenos_cantidad2")
+    private int frenosCantidad2;
+    @Column(name = "frenos_unitario2")
+    private float frenosUnitario2;
+    @Column(name = "frenos_total2")
+    private float frenosTotal2;
     private String otros;
-    private String otros2;
     @Column(name = "otros_cantidad")
     private int otrosCantidad;
     @Column(name = "otros_unitario")
     private float otrosUnitario;
     @Column(name = "otros_total")
     private float otrosTotal;
+    private String otros2;
+    @Column(name = "otros_cantidad2")
+    private int otrosCantidad2;
+    @Column(name = "otros_unitario2")
+    private float otrosUnitario2;
+    @Column(name = "otros_total2")
+    private float otrosTotal2;
     @Column(name = "subtotal_mecanica")
     private float subTotalMecanica;
     @Column(name = "subtotal_frenos")
     private float subTotalFrenos;
     @Column(name = "subtotal_otros")
     private float subTotalOtros;
+
+    private float adeudo;
+    @Column(name = "saldo_favor")
+    private float saldoFavor;
 
 
 

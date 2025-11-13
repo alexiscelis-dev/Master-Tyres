@@ -3,9 +3,13 @@ package com.mastertyres.fxControllers.agregarNota;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.common.RegexTools;
 import com.mastertyres.fxControllers.nota.BuscarClienteController;
 import com.mastertyres.fxControllers.nota.BuscarLlantaController;
+import com.mastertyres.fxControllers.nota.VentanaRegistro;
 import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.nota.model.NotaDTO;
+import com.mastertyres.nota.model.StatatusSiNo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -255,20 +259,35 @@ public class AgregarNotaController {
 
     private Cliente clienteNota;
     private Inventario inventarioNota;
+    private VehiculoDTO vehiculosNota;
+    private int porcentajeGasNota;
+    private String rayones;
+    private String golpes;
+    private String tapones;
+    private String tapetes;
+    private String radio;
+    private String gato;
+    private String llave;
+    private String llanta;
 
 
     @FXML
     private void initialize() {
+        configuraciones();
 
+        btnShowIcons.setOnMouseClicked(event -> showIcons());
+
+/*
         txtHoraEntrega.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$")) {
                 return change;
             }
             return null;
         }));
-        MenuContextSetting.disableMenu(rootPane);
-        btnShowIcons.setOnMouseClicked(event -> showIcons());
-        mostrarFechayHora();
+
+
+
+
         // spPorcentajeGas.setOnMouseClicked( );
         txtNumNota.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d{0,6}")) {
@@ -276,6 +295,7 @@ public class AgregarNotaController {
             }
             return null;
         }));
+
         txtDia.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d{0,2}")) {
                 return change;
@@ -288,24 +308,32 @@ public class AgregarNotaController {
             }
             return null;
         }));
+
+
         txtAnio.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d{0,4}")) {
                 return change;
             }
             return null;
         }));
+
+
         txtAnioVehiculo.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d{0,4}")) {
                 return change;
             }
             return null;
         }));
+
+
         txtKms.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*")) {
                 return change;
             }
             return null;
         }));
+
+ */
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
         dibujarGasolina(50);
 
@@ -390,11 +418,69 @@ public class AgregarNotaController {
             }
         });
 
-        btnGuardar.setOnAction(event -> registrar(clienteNota));
-
+        btnGuardar.setOnAction(event -> registrar(clienteNota, vehiculosNota, inventarioNota));
 
 
     }//initialize
+
+    private void configuraciones(){
+        mostrarFechayHora();
+        MenuContextSetting.disableMenu(rootPane);
+        RegexTools.aplicarNumerosDecimal(txtTotal);
+        RegexTools.aplicar24Horas(txtHoraEntrega);
+        RegexTools.aplicar6Enteros(txtNumNota);
+        RegexTools.aplicar2Enteros(txtDia);
+        RegexTools.aplicar2Enteros(txtMes);
+        RegexTools.aplicar4Enteros(txtAnio);
+        RegexTools.aplicar4Enteros(txtAnioVehiculo);
+        RegexTools.aplicarNumeroEntero(txtKms);
+
+        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
+        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
+        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
+        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
+        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
+        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
+        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
+        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
+        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
+        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
+        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
+        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
+        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
+
+        RegexTools.aplicarNumerosDecimal(txtAlineacionUnitario);
+        RegexTools.aplicarNumerosDecimal(txtBalanceoUnitario);
+        RegexTools.aplicarNumerosDecimal(txtLlantasUnitario);
+        RegexTools.aplicarNumerosDecimal(txtAmorDelUnitario);
+        RegexTools.aplicarNumerosDecimal(txtAmorTrasUnitario);
+        RegexTools.aplicarNumerosDecimal(txtSuspensionUnitario);
+        RegexTools.aplicarNumerosDecimal(txtSuspensionUnitario2);
+        RegexTools.aplicarNumerosDecimal(txtMecanicaUnitario);
+        RegexTools.aplicarNumerosDecimal(txtMecanicaUnitario);
+        RegexTools.aplicarNumerosDecimal(txtMecanicaUnitario2);
+        RegexTools.aplicarNumerosDecimal(txtFrenosUnitario);
+        RegexTools.aplicarNumerosDecimal(txtFrenosUnitario2);
+        RegexTools.aplicarNumerosDecimal(txtOtrosUnitario);
+        RegexTools.aplicarNumerosDecimal(txtOtrosUnitario2);
+        RegexTools.aplicarNumerosDecimal(txtAlineacionTotal);
+        RegexTools.aplicarNumerosDecimal(txtBalanceoTotal);
+        RegexTools.aplicarNumerosDecimal(txtLlantasTotal);
+        RegexTools.aplicarNumerosDecimal(txtAmorDelTotal);
+        RegexTools.aplicarNumerosDecimal(txtAmorTrasTotal);
+        RegexTools.aplicarNumerosDecimal(txtSuspensionTotal);
+        RegexTools.aplicarNumerosDecimal(txtSuspensionTotal2);
+        RegexTools.aplicarNumerosDecimal(txtSubTotalFrenos);
+        RegexTools.aplicarNumerosDecimal(txtSubTotalMecanica);
+        RegexTools.aplicarNumerosDecimal(txtSubTotalOtros);
+        RegexTools.aplicarNumerosDecimal(txtMecanicaTotal);
+        RegexTools.aplicarNumerosDecimal(txtMecanicaTotal2);
+        RegexTools.aplicarNumerosDecimal(txtFrenosTotal);
+        RegexTools.aplicarNumerosDecimal(txtFrenosTotal2);
+        RegexTools.aplicarNumeroEntero(txtOtrosTotal);
+        RegexTools.aplicarNumeroEntero(txtOtrosTotal2);
+
+    }
 
     //Seccion precargar en nota
     private void showIcons() {
@@ -496,6 +582,8 @@ public class AgregarNotaController {
         gc.strokeArc(centerX - radius, centerY - radius, radius * 2, radius * 2,
                 startAngle, 180, ArcType.OPEN);
 
+        setPorcentajeGasNota((int) porcentaje);
+
         lblGas.setText(String.format("%d %%", (int) porcentaje, "%"));
 
         // Arco de porcentaje
@@ -563,7 +651,8 @@ public class AgregarNotaController {
 
 
         } catch (Exception e) {
-            mostrarError("Error", "", "Error inesperado.");
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+
             e.printStackTrace();
         }
 
@@ -595,6 +684,8 @@ public class AgregarNotaController {
             txtKms.setText(vehiculos.getKilometros() + "");
             txtPlacas.setText(vehiculos.getPlacas());
             habilitar(false, "cliente");
+
+            setVehiculo(vehiculos);
         }
 
 
@@ -650,10 +741,10 @@ public class AgregarNotaController {
 
     }//habilitar
 
-    private void registrar(Cliente cliente) {
+    private void registrar(Cliente cRegistro, VehiculoDTO vRegistro, Inventario iRegistro) {
         boolean error = false;
 
-        if (cliente == null) {
+        if (cRegistro == null) {
             mostrarWarning("Cliente y Vehículo Faltantes",
                     "",
                     "Asocie un cliente y un vehículo antes de guardar la nota.");
@@ -662,7 +753,7 @@ public class AgregarNotaController {
             return;
         }
 
-        if (txtNumNota.getText().trim().isEmpty()){
+        if (txtNumNota.getText().trim().isEmpty()) {
             mostrarWarning("Sin Número de Nota",
                     "",
                     "No se ha especificado un número de nota. Ingrese uno para continuar.");
@@ -672,26 +763,253 @@ public class AgregarNotaController {
 
         }
 
-        if (!error){
-         /*   String fechaYhora = txtAnio.getText() + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
-            NotaDTO nuevaNota = NotaDTO.builder()
-                    .numNota(txtNumNota.getText())
-                    .numFactura("")
-                    .fechaYHora(fechaYhora)
-                    .fechaVencimiento("")
-                    .statusNota()
+        if (!error) {
 
-                    .build(); */
+            checkCheckBoxes();
+            System.out.println("check");
+            System.out.println(getLlanta());
+            System.out.println(getRadio());
+
+            try {
+                System.out.println("Despues del try" + getLlanta());
+                System.out.println(getRadio());
+
+                String fechaYhora = txtAnio.getText() + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
+                NotaDTO.NotaDTOBuilder nuevaNotaBuilder = NotaDTO.builder()
+
+                       .clienteId(cRegistro.getClienteId())
+                        .vehiculoId(vRegistro.getId())
+
+                        .nombreCliente(cRegistro.getNombre())
+                        .apellido(cRegistro.getApellido())
+                        .segundoApellido(cRegistro.getSegundoApellido())
+                        .domicilio(cRegistro.getDomicilio())
+                        .rfc(cRegistro.getRfc()) //datos cliente
+                        .correo(cRegistro.getCorreo())
+                        .marca(vRegistro.getNombreMarca())
+                        .modelo(vRegistro.getNombreModelo())
+                        .categoria(vRegistro.getNombreCategoria())
+                        .anio(vRegistro.getAnio()) //datos vehiculos
+
+                        .numNota(txtNumNota.getText())
+                        .numFactura("")
+                        .fechaYHora(fechaYhora)
+                        .fechaVencimiento("")
+                        .total(toFloatSafe(txtTotal.getText())) // datos nota
+                        //obserbaciones
+                        .observaciones(txtObservaciones.getText())
+                        .observaciones2(txtObservaciones2.getText())
+                        //porcentaje gasolina
+                        .porcentajeGas(getPorcentajeGasNota())
+                        //checkBox
+                        .rayones(getRayones())
+                        .golpes(getGolpes())
+                        .tapones(getTapones())
+                        .tapetes(getTapetes())
+                        .radio(getRadio())
+                        .llave(getLlave())
+                        .llanta(getLlanta())
+                        //nota
+                        .alineacion(txtAlineacion.getText())
+                        .alineacionCantidad(toIntSafe(txtAlineacionCantidad.getText()))
+                        .alineacionUnitario(toFloatSafe(txtAlineacionUnitario.getText()))
+                        .alineacionTotal(toFloatSafe(txtAlineacionTotal.getText()))
+                        .balanceo(txtBalanceo.getText())
+                        .balanceoCantidad(toIntSafe(txtBalanceoCantidad.getText()))
+                        .balanceoUnitario(toFloatSafe(txtBalanceoUnitario.getText()))
+                        .balanceoTotal(toFloatSafe(txtBalanceoTotal.getText()))
+                        //inventario o llantas
+                        .llantaCampo(txtLlantas.getText())
+                        .llantaCantidad(toIntSafe(txtLlantasCantidad.getText()))
+                        .llantaUnitario(toFloatSafe(txtLlantasUnitario.getText()))
+                        .llantaTotal(toFloatSafe(txtLlantasTotal.getText()))
+                        //
+                        .amorDelanteros(txtAmorDelanteros.getText())
+                        .amorDelCantidad(toIntSafe(txtAmorDelCantidad.getText()))
+                        .amorDelUnitario(toFloatSafe(txtAmorDelUnitario.getText()))
+                        .amorDelTotal(toFloatSafe(txtAmorDelTotal.getText()))
+                        .amorTraseros(txtAmorTraseros.getText())
+                        .amorTrasCantidad(toIntSafe(txtAmorDelCantidad.getText()))
+                        .amorTrasUnitario(toFloatSafe(txtAmorTrasUnitario.getText()))
+                        .amorTrasTotal(toFloatSafe(txtAmorTrasTotal.getText()))
+                        .suspension(txtSuspension.getText())
+                        .suspensionCantidad(toIntSafe(txtSuspensionCantidad.getText()))
+                        .suspensionUnitario(toFloatSafe(txtSuspensionUnitario.getText()))
+                        .suspensionTotal(toFloatSafe(txtSuspensionTotal.getText()))
+                        .suspension2(txtSuspension2.getText())
+                        .suspensionCantidad2(toIntSafe(txtSuspensionCantidad2.getText()))
+                        .suspensionUnitario2(toFloatSafe(txtSuspensionUnitario2.getText()))
+                        .suspensionTotal2(toFloatSafe(txtSuspensionTotal2.getText()))
+                        .mecanica(txtMecanica.getText())
+                        .mecanicaCantidad(toIntSafe(txtMecanicaCantidad.getText()))
+                        .mecanicaUnitario(toFloatSafe(txtMecanicaUnitario.getText()))
+                        .mecanicaTotal(toFloatSafe(txtMecanicaTotal.getText()))
+                        .mecanica2(txtMecanica2.getText())
+                        .mecanicaCantidad2(toIntSafe(txtMecanicaCantidad2.getText()))
+                        .mecanicaUnitario2(toFloatSafe(txtMecanicaUnitario2.getText()))
+                        .mecanicaTotal2(toFloatSafe(txtMecanicaTotal2.getText()))
+                        .frenos(txtFrenos.getText())
+                        .frenosCantidad(toIntSafe(txtFrenosCantidad.getText()))
+                        .frenosUnitario(toFloatSafe(txtFrenosUnitario.getText()))
+                        .frenosTotal(toFloatSafe(txtFrenosTotal.getText()))
+                        .frenos2(txtFrenos2.getText())
+                        .frenosCantidad2(toIntSafe(txtFrenosCantidad2.getText()))
+                        .frenosUnitario2(toFloatSafe(txtFrenosUnitario.getText()))
+                        .frenosTotal2(toFloatSafe(txtFrenosTotal2.getText()))
+                        .otros(txtOtros.getText())
+                        .otrosCantidad(toIntSafe(txtOtrosCantidad.getText()))
+                        .otrosUnitario(toFloatSafe(txtOtrosTotal.getText()))
+                        .otrosTotal(toFloatSafe(txtOtrosTotal.getText()))
+                        .otros2(txtOtros2.getText())
+                        .otrosCantidad2(toIntSafe(txtOtrosCantidad2.getText()))
+                        .otrosUnitario2(toFloatSafe(txtOtrosUnitario2.getText()))
+                        .otrosTotal2(toFloatSafe(txtOtrosTotal2.getText()))
+                        //subtotales de la parte de la derecha
+                        .subTotalFrenos(toFloatSafe(txtSubTotalFrenos.getText()))
+                        .subTotalMecanica(toFloatSafe(txtSubTotalMecanica.getText()))
+                        .subTotalOtros(toFloatSafe(txtSubTotalOtros.getText()));
+
+                if (iRegistro != null){
+                    nuevaNotaBuilder.inventarioId(iRegistro.getInventarioId());
+                }else {
+                    nuevaNotaBuilder.inventarioId(null);
+                }
+
+                NotaDTO nuevaNota = nuevaNotaBuilder.build();
+
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/VentanaRegistro.fxml"));
+                loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                Parent root = loader.load();
+
+                VentanaRegistro controller = loader.getController();
+                controller.setNota(nuevaNota);
+
+                Stage stage = new Stage(StageStyle.UTILITY);
+
+
+                stage.setTitle("Registrar Nota");
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setResizable(false);
+                stage.showAndWait();
+
+            } catch (Exception e) {
+                mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+
+                e.printStackTrace();
+            }
+
         }
 
 
     }//registrar
 
+
+
+    private float toFloatSafe(String text) {
+        try {
+            return Float.parseFloat(text);
+        } catch (NumberFormatException e) {
+            return 0f;
+        }
+    }
+
+
+    private int toIntSafe(String texto) {
+        try {
+            if (texto == null || texto.trim().isEmpty()) {
+                return 0;
+            }
+            return (int) Double.parseDouble(texto.trim());
+
+        } catch (NumberFormatException e) {
+            return 0;
+
+        }
+    }//toFloatSafe
+
+
+    private void checkCheckBoxes() {
+        //    String rayones = "", golpes = "", tapones = "", tapetes = "", radio = "", gato = "", llave = "", llanta = "";
+
+        //rayones
+        if (cbRayonesSi.isSelected() && !cbRayonesNo.isSelected())
+            setRayones(StatatusSiNo.SI.toString());
+        else if (!cbRayonesSi.isSelected() && !cbRayonesNo.isSelected())
+            setRayones(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setRayones(StatatusSiNo.NO.toString());
+
+        //golpes
+        if (cbGolpesSi.isSelected() && !cbGolpesNo.isSelected())
+            setGolpes(StatatusSiNo.SI.toString());
+        else if (!cbGolpesSi.isSelected() && !cbGolpesNo.isSelected())
+            setGolpes(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setGolpes(StatatusSiNo.NO.toString());
+
+        //tapones
+        if (cbTaponesSi.isSelected() && !cbTaponesNo.isSelected())
+            setTapones(StatatusSiNo.SI.toString());
+        else if (!cbTaponesSi.isSelected() && !cbTaponesNo.isSelected())
+            setTapones(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setTapones(StatatusSiNo.NO.toString());
+
+
+        //tapetes
+        if (cbTapetesSi.isSelected() && !cbTapetesNo.isSelected())
+            setTapetes(StatatusSiNo.SI.toString());
+        else if (!cbTapetesSi.isSelected() && !cbTapetesNo.isSelected())
+            setTapetes(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setTapetes(StatatusSiNo.NO.toString());
+
+        //radio
+        if (cbRadioSi.isSelected() && !cbRadioNo.isSelected())
+            setRadio(StatatusSiNo.SI.toString());
+        else if (!cbRadioSi.isSelected() && !cbRadioNo.isSelected())
+            setRadio(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setRadio(StatatusSiNo.NO.toString());
+
+
+        //gato
+        if (cbGatoSi.isSelected() && !cbGatoNo.isSelected())
+            setGato(StatatusSiNo.SI.toString());
+        else if (!cbGatoSi.isSelected() && !cbGatoNo.isSelected())
+            setGato(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setGato(StatatusSiNo.NO.toString());
+
+        //llave
+        if (cbLlaveSi.isSelected() && !cbLlaveNo.isSelected())
+            setLlave(StatatusSiNo.SI.toString());
+        else if (!cbLlaveSi.isSelected() && !cbLlaveNo.isSelected())
+            setLlave(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setLlave(StatatusSiNo.NO.toString());
+
+        //llanta
+        if (cbLlantaSi.isSelected() && !cbLlantaNo.isSelected())
+            setLlanta(StatatusSiNo.SI.toString());
+        else if (!cbLlantaSi.isSelected() && !cbLlantaNo.isSelected())
+            setLlanta(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setLlanta(StatatusSiNo.NO.toString());
+
+
+    }//checkCheckBoxes
+
     @FXML
     private void refrescar(ActionEvent event) {
         clienteNota = null;
+        vehiculosNota = null;
+        inventarioNota = null;
+
         txtNumNota.setText("");
-       mostrarFechayHora();
+        mostrarFechayHora();
         txtNombre.setText("");
         txtDireccion.setText("");
         txtDireccion2.setText("");
@@ -778,17 +1096,93 @@ public class AgregarNotaController {
         txtTotal.setText("");
 
 
-        habilitar(true,"inventario");
-        habilitar(true,"cliente");
+        habilitar(true, "inventario");
+        habilitar(true, "cliente");
 
     }//refrescar
 
     private void setClienteNota(Cliente clienteNota) {
         this.clienteNota = clienteNota;
     }
-    private void setInventarioNota(Inventario inventarioNota){
+
+    private void setInventarioNota(Inventario inventarioNota) {
         this.inventarioNota = inventarioNota;
     }
 
+    private void setVehiculo(VehiculoDTO vehiculos) {
+        this.vehiculosNota = vehiculos;
+    }
 
+    //getters y setters para checkBox
+    public String getRayones() {
+        return this.rayones;
+    }
+
+    public void setRayones(final String rayones) {
+        this.rayones = rayones;
+    }
+
+    public String getGolpes() {
+        return this.golpes;
+    }
+
+    public void setGolpes(final String golpes) {
+        this.golpes = golpes;
+    }
+
+    public String getTapones() {
+        return this.tapones;
+    }
+
+    public void setTapones(final String tapones) {
+        this.tapones = tapones;
+    }
+
+    public String getTapetes() {
+        return this.tapetes;
+    }
+
+    public void setTapetes(final String tapetes) {
+        this.tapetes = tapetes;
+    }
+
+    public String getRadio() {
+        return this.radio;
+    }
+
+    public void setRadio(final String radio) {
+        this.radio = radio;
+    }
+
+    public String getGato() {
+        return this.gato;
+    }
+
+    public void setGato(final String gato) {
+        this.gato = gato;
+    }
+
+    public String getLlave() {
+        return this.llave;
+    }
+
+    public void setLlave(final String llave) {
+        this.llave = llave;
+    }
+
+    public String getLlanta() {
+        return this.llanta;
+    }
+
+    public void setLlanta(final String llanta) {
+        this.llanta = llanta;
+    }
+
+    public int getPorcentajeGasNota() {
+        return this.porcentajeGasNota;
+    }
+
+    public void setPorcentajeGasNota(final int porcentajeGasNota) {
+        this.porcentajeGasNota = porcentajeGasNota;
+    }
 }//class

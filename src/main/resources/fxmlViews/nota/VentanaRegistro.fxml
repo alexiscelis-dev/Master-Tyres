@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nota.VentanaRegistro">
+
+
+    <VBox alignment="TOP_CENTER" layoutY="1.0" prefHeight="500.0" prefWidth="600.0">
+        <Label styleClass="titulo" text="Estado de la nota ">
+            <VBox.margin>
+                <Insets top="20" />
+            </VBox.margin>
+
+        </Label>
+
+        <GridPane alignment="CENTER" hgap="25" vgap="10">
+
+            <columnConstraints>
+                <ColumnConstraints fillWidth="false" prefWidth="100.0" />
+                <ColumnConstraints fillWidth="false" prefWidth="100.0" />
+                <ColumnConstraints fillWidth="false" prefWidth="100.0" />
+                <ColumnConstraints />
+
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints prefHeight="80.0" />
+            <RowConstraints />
+
+            </rowConstraints>
+
+            <children>
+
+
+                <RadioButton fx:id="rbPagado" text="Pagado" GridPane.columnIndex="0" GridPane.rowIndex="0">
+
+                </RadioButton>
+
+                <RadioButton fx:id="rbPorPagar" text="Por pagar" GridPane.columnIndex="1" GridPane.rowIndex="0">
+
+                </RadioButton>
+
+                <RadioButton fx:id="rbAfavor" text="A favor" GridPane.columnIndex="2" GridPane.rowIndex="0">
+
+                </RadioButton>
+
+                <StackPane alignment="CENTER" translateX="30" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+
+
+                </StackPane>
+
+
+            </children>
+
+        </GridPane>
+
+        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="600.0">
+
+            <StackPane>
+                <HBox fx:id="hbAdeudo" visible="false" spacing="20" alignment="CENTER_LEFT">
+                    <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="200.0" promptText="Ingrese el monto del adeudo" styleClass="buscador" >
+
+                    </TextField>
+
+
+                    <DatePicker fx:id="dpFecha" promptText="Fecha de vencimiento"
+                                prefHeight="26.0" prefWidth="165.0" styleClass="date-picker" >
+
+                    </DatePicker>
+
+                </HBox>
+
+
+                <TextField fx:id="txtSaldoAfavor" prefHeight="26.0" prefWidth="200.0"
+                           promptText="Ingrese el monto del saldo a favor" styleClass="buscador" visible="false">
+
+                </TextField>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+            <VBox.margin>
+               <Insets bottom="30.0" />
+            </VBox.margin>
+
+            </StackPane>
+
+
+
+            <Label styleClass="titulo" text="Agregar numero de factura ">
+                <VBox.margin>
+                    <Insets bottom="20.0" />
+                </VBox.margin></Label>
+
+
+            <TextField fx:id="txtNumFactura" prefWidth="300.0" promptText="(Opcional)" styleClass="buscador">
+
+            </TextField>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+
+        </VBox>
+
+
+        <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
+            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar" />
+            <Button fx:id="btnRegistrar" styleClass="boton-accion" text="Registrar" />
+        </HBox>
+
+    </VBox>
+
+</AnchorPane>

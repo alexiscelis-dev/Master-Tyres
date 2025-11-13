@@ -9,6 +9,7 @@ import java.util.List;
 
 
 @Entity
+@Builder
 @Table(name = "cliente")
 @Data
 @AllArgsConstructor

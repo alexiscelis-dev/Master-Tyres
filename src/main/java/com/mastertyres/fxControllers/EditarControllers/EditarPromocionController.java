@@ -347,7 +347,7 @@ public class EditarPromocionController {
             return;
         }
 
-        // ✅ Validaciones básicas
+        //  Validaciones básicas
         if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
             MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre de la promoción no puede estar vacío.");
             return;
@@ -385,7 +385,7 @@ public class EditarPromocionController {
             return;
         }
 
-        // ✅ Confirmación antes de actualizar
+        //  Confirmación antes de actualizar
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
                 "¿Desea guardar los cambios en la promoción?",
@@ -399,7 +399,7 @@ public class EditarPromocionController {
         }
 
         try {
-            // 🔹 Actualizar datos generales
+            //  Actualizar datos generales
             promocionSeleccionada.setNombre(txtNombre.getText().trim());
             promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
             promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
@@ -410,13 +410,13 @@ public class EditarPromocionController {
             promocionSeleccionada.setImg(txtRutaImagen.getText());
             promocionSeleccionada.setUpdated_at(LocalDateTime.now());
 
-            // 🔹 Guardar cambios en la promoción
+            //  Guardar cambios en la promoción
             promocionService.guardarPromocion(promocionSeleccionada);
 
-            // 🔹 1. Eliminar todos los vehículos de esa promo en BD
+            //  1. Eliminar todos los vehículos de esa promo en BD
             vehiculoPromocionService.eliminarPorPromocionId(promocionSeleccionada.getPromocionId());
 
-            // 🔹 2. Guardar de nuevo los que están en la tabla
+            //  2. Guardar de nuevo los que están en la tabla
             for (VehiculoPromocion vp : vehiculosPromocionList) {
                 vp.setVehiculoPromocionID(null); // 🔹 Forzar INSERT
                 vp.setPromocion(promocionSeleccionada);

@@ -402,7 +402,7 @@ public class AgregarVehiculoController {
             }
         });
 
-        // 🔹 Listener para filtrar modelos según la marca seleccionada
+        //  Listener para filtrar modelos según la marca seleccionada
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
             if (newMarca != null) {
                 List<Modelo> modelosFiltrados = modelos.stream()

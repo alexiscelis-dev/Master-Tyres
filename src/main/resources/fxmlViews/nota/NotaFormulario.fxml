@@ -13,7 +13,6 @@
             fx:controller="com.mastertyres.fxControllers.agregarNota.AgregarNotaController">
 
 
-
     <children>
 
 
@@ -80,7 +79,8 @@
                     </Button>
 
 
-                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="2" prefHeight="25.0" prefWidth="25.0"
+                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="2" prefHeight="25.0"
+                            prefWidth="25.0"
                             styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
@@ -91,7 +91,8 @@
                         </graphic>
 
                     </Button>
-                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="3" mnemonicParsing="false" prefHeight="25.0"
+                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                            mnemonicParsing="false" prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
 
                         <graphic>
@@ -173,7 +174,7 @@
                                         <Insets right="15"/>
                                     </GridPane.margin>
 
-                                    <TextField  styleClass="textfield-nota" fx:id="txtNumNota" alignment="CENTER"
+                                    <TextField styleClass="textfield-nota" fx:id="txtNumNota" alignment="CENTER"
                                                prefHeight="25"
                                                prefWidth="150" promptText="Numero de nota"/>
 
@@ -1039,7 +1040,7 @@
 
                                         </HBox>
 
-                                        <TextField  fx:id="txtAlineacion" prefWidth="412"
+                                        <TextField fx:id="txtAlineacion" prefWidth="412"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1074,7 +1075,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtAlineacionCantidad" prefWidth="105"
+                                        <TextField fx:id="txtAlineacionCantidad" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1083,7 +1084,7 @@
 
                                     <HBox alignment="BOTTOM_CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
 
-                                        <TextField  fx:id="txtAlineacionUnitario" prefWidth="105"
+                                        <TextField fx:id="txtAlineacionUnitario" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1092,7 +1093,7 @@
 
                                     <HBox alignment="BOTTOM_CENTER" GridPane.columnIndex="4" GridPane.rowIndex="1">
 
-                                        <TextField  fx:id="txtAlineacionTotal" prefWidth="105"
+                                        <TextField fx:id="txtAlineacionTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1110,7 +1111,7 @@
 
                                     <HBox alignment="BOTTOM_CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2">
 
-                                        <TextField  fx:id="txtBalanceoUnitario" prefWidth="105"
+                                        <TextField fx:id="txtBalanceoUnitario" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1145,7 +1146,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
+                                        <TextField fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1153,7 +1154,7 @@
 
                                     <HBox GridPane.rowIndex="4" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtLlantasCantidad" prefWidth="105"
+                                        <TextField fx:id="txtLlantasCantidad" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
 
@@ -1162,7 +1163,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="4" GridPane.columnIndex="3" alignment="CENTER">
-                                        <TextField  fx:id="txtLlantasUnitario" prefWidth="105"
+                                        <TextField fx:id="txtLlantasUnitario" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1171,7 +1172,7 @@
 
                                     <HBox GridPane.rowIndex="4" GridPane.columnIndex="4" alignment="CENTER">
 
-                                        <TextField  fx:id="txtLlantasTotal" prefWidth="105"
+                                        <TextField fx:id="txtLlantasTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1199,7 +1200,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtAmorDelanteros" prefWidth="520"
+                                        <TextField fx:id="txtAmorDelanteros" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1218,7 +1219,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="6" GridPane.columnIndex="3" alignment="CENTER">
-                                        <TextField  fx:id="txtAmorDelUnitario" prefWidth="105"
+                                        <TextField fx:id="txtAmorDelUnitario" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1226,7 +1227,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="6" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtAmorDelTotal" prefWidth="105"
+                                        <TextField fx:id="txtAmorDelTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1254,7 +1255,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtAmorTraseros" prefWidth="520"
+                                        <TextField fx:id="txtAmorTraseros" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1264,7 +1265,7 @@
 
                                     <HBox GridPane.rowIndex="8" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtAmorTrasCantidad" prefWidth="105"
+                                        <TextField fx:id="txtAmorTrasCantidad" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
 
@@ -1308,7 +1309,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtSuspension" prefWidth="520"
+                                        <TextField fx:id="txtSuspension" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1317,7 +1318,7 @@
 
                                     <HBox GridPane.rowIndex="10" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtSuspensionCantidad"
+                                        <TextField fx:id="txtSuspensionCantidad"
                                                    prefWidth="105" styleClass="text-field-nota2">
 
 
@@ -1350,7 +1351,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtSuspension2" prefWidth="520"
+                                        <TextField fx:id="txtSuspension2" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1360,7 +1361,7 @@
 
                                     <HBox GridPane.rowIndex="11" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtSuspensionCantidad2"
+                                        <TextField fx:id="txtSuspensionCantidad2"
                                                    prefWidth="105" styleClass="text-field-nota2">
 
 
@@ -1369,7 +1370,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="11" GridPane.columnIndex="3" alignment="CENTER">
-                                        <TextField  fx:id="txtSuspensionUnitario2"
+                                        <TextField fx:id="txtSuspensionUnitario2"
                                                    prefWidth="105" styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1377,7 +1378,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="11" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtSuspensionTotal2" prefWidth="105"
+                                        <TextField fx:id="txtSuspensionTotal2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1387,7 +1388,7 @@
 
                                     <!-- Totales que aparecen a la derecha de la nota en mecanica, frenos y otros -->
                                     <HBox GridPane.rowIndex="15" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField fx:id="txtSubTotalMecanica"  prefWidth="105"
+                                        <TextField fx:id="txtSubTotalMecanica" prefWidth="105"
                                                    styleClass="text-field-nota3">
 
                                         </TextField>
@@ -1395,7 +1396,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="12" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField fx:id="txtSubTotalFrenos"  prefWidth="105"
+                                        <TextField fx:id="txtSubTotalFrenos" prefWidth="105"
                                                    styleClass="text-field-nota3">
 
                                         </TextField>
@@ -1429,7 +1430,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtMecanica" prefWidth="520"
+                                        <TextField fx:id="txtMecanica" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1438,7 +1439,7 @@
 
                                     <HBox GridPane.rowIndex="13" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtMecanicaCantidad" prefWidth="105"
+                                        <TextField fx:id="txtMecanicaCantidad" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1446,7 +1447,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="13" GridPane.columnIndex="3" alignment="CENTER">
-                                        <TextField  fx:id="txtMecanicaUnitario" prefWidth="105"
+                                        <TextField fx:id="txtMecanicaUnitario" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1454,7 +1455,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="13" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtMecanicaTotal" prefWidth="105"
+                                        <TextField fx:id="txtMecanicaTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1479,7 +1480,7 @@
 
                                     <HBox GridPane.rowIndex="14" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtMecanicaCantidad2" prefWidth="105"
+                                        <TextField fx:id="txtMecanicaCantidad2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1487,7 +1488,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="14" GridPane.columnIndex="3" alignment="CENTER">
-                                        <TextField  fx:id="txtMecanicaUnitario2" prefWidth="105"
+                                        <TextField fx:id="txtMecanicaUnitario2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1495,7 +1496,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="14" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtMecanicaTotal2" prefWidth="105"
+                                        <TextField fx:id="txtMecanicaTotal2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1522,7 +1523,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtFrenos" prefWidth="520"
+                                        <TextField fx:id="txtFrenos" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1531,7 +1532,7 @@
 
                                     <HBox GridPane.rowIndex="16" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtFrenosCantidad" prefWidth="105"
+                                        <TextField fx:id="txtFrenosCantidad" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
 
@@ -1548,7 +1549,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="16" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtFrenosTotal" prefWidth="105"
+                                        <TextField fx:id="txtFrenosTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1564,7 +1565,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtFrenos2" prefWidth="520"
+                                        <TextField fx:id="txtFrenos2" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1573,7 +1574,7 @@
 
                                     <HBox GridPane.rowIndex="17" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtFrenosCantidad2" prefWidth="105"
+                                        <TextField fx:id="txtFrenosCantidad2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
 
@@ -1582,7 +1583,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="17" GridPane.columnIndex="3" alignment="CENTER">
-                                        <TextField  fx:id="txtFrenosUnitario2" prefWidth="105"
+                                        <TextField fx:id="txtFrenosUnitario2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1617,7 +1618,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtOtros" prefWidth="520"
+                                        <TextField fx:id="txtOtros" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1635,7 +1636,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="19" GridPane.columnIndex="3" alignment="CENTER">
-                                        <TextField  fx:id="txtOtrosUnitario" prefWidth="105"
+                                        <TextField fx:id="txtOtrosUnitario" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1643,7 +1644,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="19" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtOtrosTotal" prefWidth="105"
+                                        <TextField fx:id="txtOtrosTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1659,7 +1660,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtOtros2" prefWidth="520"
+                                        <TextField fx:id="txtOtros2" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1668,7 +1669,7 @@
 
                                     <HBox GridPane.rowIndex="20" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField  fx:id="txtOtrosCantidad2" prefWidth="105"
+                                        <TextField fx:id="txtOtrosCantidad2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
 
@@ -1677,7 +1678,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="20" GridPane.columnIndex="3" alignment="CENTER">
-                                        <TextField  fx:id="txtOtrosUnitario2" prefWidth="105"
+                                        <TextField fx:id="txtOtrosUnitario2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1685,7 +1686,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="20" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtOtrosTotal2" prefWidth="105"
+                                        <TextField fx:id="txtOtrosTotal2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1705,7 +1706,7 @@
                                     </StackPane>
 
                                     <HBox GridPane.rowIndex="22" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtTotal" prefWidth="105"
+                                        <TextField fx:id="txtTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
