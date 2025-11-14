@@ -3,7 +3,10 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.RegexTools;
+import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
@@ -13,6 +16,8 @@ import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import com.mastertyres.vehiculo.model.Vehiculo;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,6 +25,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;
 import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
@@ -55,10 +62,12 @@ public class VentanaRegistro {
 
 
     private NotaDTO nota; // Se recibe la instancia con la informacion en el constructor para poder registrar
-    private float aFavorNota;
-    private float adeudoNota;
-    private String fechaVencimiento;
-    private String numFactura;
+
+    private BooleanProperty boolMontoAdeudo = new SimpleBooleanProperty(true);
+    private BooleanProperty boolFechaVencimiento = new SimpleBooleanProperty(true);
+    private BooleanProperty boolMontoFavor = new SimpleBooleanProperty(true);
+    private BooleanProperty actualizarInventario = new SimpleBooleanProperty(false);
+    private Runnable onRegistroCompleto;
 
 
     public void setNota(NotaDTO nota) {
@@ -66,18 +75,18 @@ public class VentanaRegistro {
     }
 
 
-
     @FXML
     private void initialize() {
 
         grupoOpciones();
-        RegexTools.aplicarNumerosDecimal(txtAdeudo);
-        RegexTools.aplicarNumerosDecimal(txtSaldoAfavor);
+        configuraciones();
+
 
         btnRegistrar.setOnAction(event -> registrar());
 
     }//initialize
 
+    //agrupa los radioButton  en un ToggleGroup, hace que cuando cambie de opcion se borre lo seleccionado
     private void grupoOpciones() {
         rbPagado.setSelected(true);
 
@@ -89,7 +98,7 @@ public class VentanaRegistro {
         grupoOpciones.selectedToggleProperty().addListener((observable, oldToggle, newToggle) -> {
             if (newToggle != null) {
                 RadioButton seleccionado = (RadioButton) newToggle;
-                System.out.println("seleccionado:" + seleccionado.getText().toLowerCase());
+
 
                 switch (seleccionado.getText().toLowerCase()) {
                     case "pagado" -> {
@@ -99,39 +108,30 @@ public class VentanaRegistro {
                         txtAdeudo.setText("");
                         txtSaldoAfavor.setText("");
                         dpFecha.setValue(null);
-                        setAdeudoNota(0);
-                        setaFavorNota(0);
-                        setNumFactura(txtNumFactura.getText());
+
 
                     }
                     case "por pagar" -> {
+
                         txtSaldoAfavor.setVisible(false);
                         txtAdeudo.setVisible(true);
                         hbAdeudo.setVisible(true);
                         txtSaldoAfavor.setText("");
-                        dpFecha.setValue(null);
-                        setAdeudoNota(toIntSafe(txtAdeudo.getText()));
-                        setaFavorNota(0);
 
-                        if (dpFecha.getValue() != null){
-                            setFechaVencimiento(dpFecha.getValue().toString());
-                        }
+                        LocalDate fechaHoy = LocalDate.now();
+                        LocalDate fechaVencimiento = fechaHoy.plusDays(30);
 
-                        setNumFactura(txtNumFactura.getText());
+                        dpFecha.setValue(fechaVencimiento);
 
                     }
-
                     case "a favor" -> {
                         txtAdeudo.setVisible(false);
                         txtSaldoAfavor.setVisible(true);
                         hbAdeudo.setVisible(false);
                         txtAdeudo.setText("");
-                        setaFavorNota(toIntSafe(txtSaldoAfavor.getText()));
-                        setNumFactura(txtNumFactura.getText());
 
                     }
-
-                }//switch
+                }
             }
         });
     }//grupoOpciones
@@ -149,7 +149,7 @@ public class VentanaRegistro {
             if (texto == null || texto.trim().isEmpty()) {
                 return 0;
             }
-            return (int) Double.parseDouble(texto.trim());
+            return Integer.parseInt(texto.trim());
 
         } catch (NumberFormatException e) {
             return 0;
@@ -157,24 +157,36 @@ public class VentanaRegistro {
         }
     }
 
+    //convierte un espacio vacio en un numero float
+    private float toFloatSafe(String text) {
+        try {
+            return Float.parseFloat(text);
+        } catch (NumberFormatException e) {
+            return 0f;
+        }
+    }
+
     private void registrar() {
+
 
         String strNumFactura = "";
 
-        if ( getNumFactura() == null || getNumFactura().trim().isEmpty())
+        if (txtNumFactura.getText() == null || txtNumFactura.getText().trim().isEmpty())
             strNumFactura = null;
         else
-            strNumFactura = getNumFactura();
+            strNumFactura = txtNumFactura.getText();
 
-        System.out.println("Despues de la pestaña");
-        System.out.println("llanta"+nota.getLlanta());
-        System.out.println("radio"+nota.getRadio());
-        System.out.println("rayones"+nota.getRayones());
+        System.out.println(dpFecha.getValue().toString());
+
+        if (dpFecha.getValue() != null)
+            nota.setFechaVencimiento(dpFecha.getValue().toString());
+        else
+            nota.setFechaVencimiento("");
+
 
         nota.setStatusNota(estadoNota());
-        nota.setAdeudo(getAdeudoNota());
-        nota.setSaldoFavor(getaFavorNota());
-        nota.setFechaVencimiento(getFechaVencimiento() != null ? getFechaVencimiento() : "");
+        nota.setAdeudo(toFloatSafe(txtAdeudo.getText()));
+        nota.setSaldoFavor(toFloatSafe(txtSaldoAfavor.getText()));
         nota.setNumFactura(strNumFactura);
 
         Cliente clienteNota = Cliente.builder()
@@ -212,15 +224,14 @@ public class VentanaRegistro {
 
         Inventario llantaRegistrar = null;
 
-        if (nota.getInventarioId() != null){
-            try {
-                llantaRegistrar = inventarioService.buscarLlantaPorId(nota.getInventarioId());
-            }catch (Exception e){
-                mostrarError("Error de consulta","","Ocurrio un error" );
-                e.printStackTrace();
-            }
-
+        //se busca llanta antes de crear instancia
+        if (nota.getInventarioId() != null) {
+            llantaRegistrar = inventarioService.buscarLlantaPorId(nota.getInventarioId());
+            actualizarInventario.set(true);
+        } else {
+            actualizarInventario.set(false);
         }
+
 
         Nota nuevaNota = Nota.builder()
                 .notaId(nota.getNotaId())
@@ -231,6 +242,9 @@ public class VentanaRegistro {
                 .numFactura(nota.getNumFactura())
                 .fechaYhora(nota.getFechaYHora())
                 .statusNota(nota.getStatusNota())
+                .adeudo(toFloatSafe(txtAdeudo.getText()))
+                .fechaVencimiento(nota.getFechaVencimiento())
+                .saldoFavor(toFloatSafe(txtSaldoAfavor.getText()))
                 .total(nota.getTotal())
                 .build();
 
@@ -302,26 +316,64 @@ public class VentanaRegistro {
                 .subTotalFrenos(nota.getSubTotalFrenos())
                 .subTotalMecanica(nota.getSubTotalMecanica())
                 .subTotalOtros(nota.getSubTotalOtros())
-                .adeudo(getAdeudoNota())
-                .saldoFavor(getaFavorNota())
                 .build();
 
         try {
 
-            notaService.guardarNota(nuevaNota,notaDetalle);
+            notaService.guardarNota(nuevaNota, notaDetalle);
 
-            mostrarInformacion("Nota registrada","","La nota se registro correctamente");
+            if (actualizarInventario.get()) {
+                inventarioService.actualizarStock(nota.getInventarioId(), nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
+            }
 
 
-        }catch (Exception e){
-            mostrarError("Error","","Se producjo un error" );
+            cancelar(null);
+            if (onRegistroCompleto != null) {
+                onRegistroCompleto.run();
+            }
+            mostrarInformacion("Nota registrada", "", "La nota se registro correctamente");
+
+
+        } catch (InventarioException ie) {
+            mostrarError("No fue posible registrar la nota", "", "Ocurrio un error al actualizar el stock del inventrio ");
+            ie.printStackTrace();
+        } catch (NotaException ne) {
+            mostrarError("No fue posible registrar la nota", "", "" + ne.getMessage());
+            ne.printStackTrace();
+        } catch (Exception e) {
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
             e.printStackTrace();
         }
 
 
-
-
     }//registrar
+
+    //establece reglas habilitar boton o regex
+    private void configuraciones() {
+
+        //configuracion de campos
+        RegexTools.aplicarNumerosDecimal(txtAdeudo);
+        RegexTools.aplicarNumerosDecimal(txtSaldoAfavor);
+
+        //configuracion deshabilitar boton
+        boolMontoAdeudo.bind(txtAdeudo.textProperty().isNotEmpty());
+        boolFechaVencimiento.bind(dpFecha.valueProperty().isNotNull());
+        boolMontoFavor.bind(txtSaldoAfavor.textProperty().isNotEmpty());
+
+        btnRegistrar.disableProperty().bind(
+                rbPorPagar.selectedProperty().and(boolMontoAdeudo.not().or(boolFechaVencimiento.not()))
+                        .or(rbAfavor.selectedProperty().and(boolMontoFavor.not()))
+        );
+
+
+    }//configuraciones
+
+
+    //getters y setters
+    public void setOnRegistroCompleto(Runnable onRegistroCompleto) {
+        this.onRegistroCompleto = onRegistroCompleto;
+    }
+
 
     public RadioButton getRbPagado() {
         return this.rbPagado;
@@ -332,48 +384,16 @@ public class VentanaRegistro {
     }
 
 
-    public float getaFavorNota() {
-        return this.aFavorNota;
-    }
+    private String estadoNota() {
+        String estado = "";
 
-    public void setaFavorNota(final float aFavorNota) {
-        this.aFavorNota = aFavorNota;
-    }
-
-    public float getAdeudoNota() {
-        return this.adeudoNota;
-    }
-
-    public void setAdeudoNota(final float adeudoNota) {
-        this.adeudoNota = adeudoNota;
-    }
-
-    public String getFechaVencimiento() {
-        return this.fechaVencimiento;
-    }
-
-    public void setFechaVencimiento(final String fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
-    }
-
-    public String getNumFactura() {
-        return this.numFactura;
-    }
-
-    public void setNumFactura(final String numFactura) {
-        this.numFactura = numFactura;
-    }
-
-    private String estadoNota(){
-     String estado = ""   ;
-     
-     if (rbPagado.isSelected())
-         estado = StatusNota.PAGADO.toString();
-     else if (rbPorPagar.isSelected())
-         estado = StatusNota.POR_PAGAR.toString();
-     else if (rbAfavor.isSelected()) {
-         estado = StatusNota.A_FAVOR.toString();
-     }
+        if (rbPagado.isSelected())
+            estado = StatusNota.PAGADO.toString();
+        else if (rbPorPagar.isSelected())
+            estado = StatusNota.POR_PAGAR.toString();
+        else if (rbAfavor.isSelected()) {
+            estado = StatusNota.A_FAVOR.toString();
+        }
 
         return estado;
     }

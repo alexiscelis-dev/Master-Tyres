@@ -59,7 +59,12 @@ public class Nota {
     @Column(name = "active", insertable = false, updatable = true)
     private String active;
 
+    private float adeudo;
+    @Column(name = "saldo_favor")
+    private float saldoFavor;
+
     private float total;
+
 
     @OneToMany(mappedBy = "nota",cascade = CascadeType.ALL)
     private List<NotaDetalle>detalles;

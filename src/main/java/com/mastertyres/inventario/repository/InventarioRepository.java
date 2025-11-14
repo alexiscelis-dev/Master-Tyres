@@ -63,12 +63,14 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
     @Query("UPDATE Inventario i SET i.created_at = :now WHERE i.inventarioId = :idInventario ")
     void actualizaCreatedAt(@Param("now")String now,@Param("idInventario")Integer idInventario);
 
-
-
-
     Optional<Inventario> findByCodigoBarras(String codBarras);
 
     Optional<Inventario> findByDot(String dot);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Inventario i SET i.stock = :stock WHERE i.inventarioId = :inventarioId AND i.active = :active")
+    void actualizarStock(@Param("inventarioId")Integer inventarioId,@Param("stock")Integer stock, @Param("active")String active);
 
 
 

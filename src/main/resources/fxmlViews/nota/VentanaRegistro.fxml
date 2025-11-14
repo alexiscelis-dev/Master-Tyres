@@ -64,7 +64,7 @@
                     </TextField>
 
 
-                    <DatePicker fx:id="dpFecha" promptText="Fecha de vencimiento"
+                    <DatePicker  editable="false" fx:id="dpFecha" promptText="Fecha de vencimiento"
                                 prefHeight="26.0" prefWidth="165.0" styleClass="date-picker" >
 
                     </DatePicker>

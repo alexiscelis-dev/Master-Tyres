@@ -136,9 +136,6 @@ public class NotaDetalle {
     @Column(name = "subtotal_otros")
     private float subTotalOtros;
 
-    private float adeudo;
-    @Column(name = "saldo_favor")
-    private float saldoFavor;
 
 
 

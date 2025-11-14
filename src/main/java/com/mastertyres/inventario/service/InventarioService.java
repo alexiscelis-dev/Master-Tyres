@@ -206,5 +206,21 @@ public class InventarioService implements IInventarioService {
         return inventarioRepository.findById(idLlanta).orElse(null);
     }
 
+    @Transactional
+    @Override
+    public void actualizarStock(Integer inventarioId, Integer stock, String active) {
+        Inventario inventario = inventarioRepository.findById(inventarioId)
+                .orElseThrow(()-> new InventarioException("No se encontro en el inventario"));
+
+        if (stock < 0){
+            throw new InventarioException("Cantidad invalida");
+        }
+
+        inventario.setStock(inventario.getStock()-stock);
+
+        inventarioRepository.actualizarStock(inventarioId,stock,active);
+
+    }
+
 
 }//clase

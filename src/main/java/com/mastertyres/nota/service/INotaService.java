@@ -13,4 +13,8 @@ public interface INotaService {
 
     void guardarNota(Nota nota, NotaDetalle notaDetalle);
 
+    Nota findByNumNota(String numNota);
+
+
+
 }//interface

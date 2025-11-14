@@ -42,6 +42,8 @@ public interface IInventarioService {
 
     Inventario buscarLlantaPorId(Integer idLlanta);
 
+    void actualizarStock(Integer inventarioId, Integer stock, String active);
+
 
 
 

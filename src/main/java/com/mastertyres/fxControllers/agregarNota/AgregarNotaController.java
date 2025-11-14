@@ -14,6 +14,8 @@ import com.mastertyres.vehiculo.model.VehiculoDTO;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -269,6 +271,8 @@ public class AgregarNotaController {
     private String gato;
     private String llave;
     private String llanta;
+    private BooleanProperty boolTotal = new SimpleBooleanProperty(true);
+
 
 
     @FXML
@@ -277,65 +281,18 @@ public class AgregarNotaController {
 
         btnShowIcons.setOnMouseClicked(event -> showIcons());
 
-/*
-        txtHoraEntrega.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$")) {
-                return change;
-            }
-            return null;
-        }));
-
-
-
-
-        // spPorcentajeGas.setOnMouseClicked( );
-        txtNumNota.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d{0,6}")) {
-                return change;
-            }
-            return null;
-        }));
-
-        txtDia.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d{0,2}")) {
-                return change;
-            }
-            return null;
-        }));
-        txtMes.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d{0,2}")) {
-                return change;
-            }
-            return null;
-        }));
-
-
-        txtAnio.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d{0,4}")) {
-                return change;
-            }
-            return null;
-        }));
-
-
-        txtAnioVehiculo.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d{0,4}")) {
-                return change;
-            }
-            return null;
-        }));
-
-
-        txtKms.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
-
- */
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
         dibujarGasolina(50);
+
+
+        btnGuardar.setOnAction(event -> registrar(clienteNota, vehiculosNota, inventarioNota));
+
+
+    }//initialize
+
+    private void configuraciones(){
+
+        //configuracion checkBox
 
         cbRayonesSi.setOnAction(event -> {
             if (cbRayonesSi.isSelected()) {
@@ -418,14 +375,14 @@ public class AgregarNotaController {
             }
         });
 
-        btnGuardar.setOnAction(event -> registrar(clienteNota, vehiculosNota, inventarioNota));
 
-
-    }//initialize
-
-    private void configuraciones(){
+       //Iniciliza la fecha y hora del dia y sistema
         mostrarFechayHora();
+
+        //deshabilita los menu del clic derecho en los campos de texto
         MenuContextSetting.disableMenu(rootPane);
+
+        //validaciones Regex
         RegexTools.aplicarNumerosDecimal(txtTotal);
         RegexTools.aplicar24Horas(txtHoraEntrega);
         RegexTools.aplicar6Enteros(txtNumNota);
@@ -480,7 +437,7 @@ public class AgregarNotaController {
         RegexTools.aplicarNumeroEntero(txtOtrosTotal);
         RegexTools.aplicarNumeroEntero(txtOtrosTotal2);
 
-    }
+    }//configuraciones
 
     //Seccion precargar en nota
     private void showIcons() {
@@ -745,8 +702,9 @@ public class AgregarNotaController {
         boolean error = false;
 
         if (cRegistro == null) {
-            mostrarWarning("Cliente y Vehículo Faltantes",
-                    "",
+            mostrarWarning(
+                    "Campos obligatorio",
+                    "Cliente y Vehículo Faltantes ",
                     "Asocie un cliente y un vehículo antes de guardar la nota.");
 
             error = true;
@@ -754,25 +712,32 @@ public class AgregarNotaController {
         }
 
         if (txtNumNota.getText().trim().isEmpty()) {
-            mostrarWarning("Sin Número de Nota",
-                    "",
-                    "No se ha especificado un número de nota. Ingrese uno para continuar.");
+            mostrarWarning("Campo obligatorio",
+                    "Numero de nota ",
+                    "El numero de nota es obligatorio. Por favor, ingrese un valor antes de continuar.");
 
             error = true;
             return;
 
         }
 
+        if (txtTotal.getText().trim().isEmpty()){
+            mostrarWarning("Campo obligatorio",
+                    "Total de la nota ",
+                    "El total de la nota es obligatorio. Por favor, ingrese un valor antes de continuar.");
+
+            error = true;
+            return;
+        }
+
+
+
         if (!error) {
 
             checkCheckBoxes();
-            System.out.println("check");
-            System.out.println(getLlanta());
-            System.out.println(getRadio());
 
             try {
-                System.out.println("Despues del try" + getLlanta());
-                System.out.println(getRadio());
+
 
                 String fechaYhora = txtAnio.getText() + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
                 NotaDTO.NotaDTOBuilder nuevaNotaBuilder = NotaDTO.builder()
@@ -884,6 +849,8 @@ public class AgregarNotaController {
 
                 VentanaRegistro controller = loader.getController();
                 controller.setNota(nuevaNota);
+                controller.setOnRegistroCompleto(() -> refrescar(null));
+
 
                 Stage stage = new Stage(StageStyle.UTILITY);
 
@@ -894,7 +861,8 @@ public class AgregarNotaController {
                 stage.setResizable(false);
                 stage.showAndWait();
 
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
 
                 e.printStackTrace();
@@ -904,7 +872,6 @@ public class AgregarNotaController {
 
 
     }//registrar
-
 
 
     private float toFloatSafe(String text) {
@@ -1057,6 +1024,7 @@ public class AgregarNotaController {
         txtAmorDelUnitario.setText("");
         txtAmorDelTotal.setText("");
         txtAmorTraseros.setText("");
+        txtAmorTrasCantidad.setText("");
         txtAmorTrasUnitario.setText("");
         txtAmorTrasTotal.setText("");
         txtSuspension.setText("");
@@ -1100,6 +1068,11 @@ public class AgregarNotaController {
         habilitar(true, "cliente");
 
     }//refrescar
+
+
+    //getters y setters
+
+
 
     private void setClienteNota(Cliente clienteNota) {
         this.clienteNota = clienteNota;
