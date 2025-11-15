@@ -94,6 +94,7 @@
                     </font>
                 </Label>
 
+                <Pagination fx:id="paginadorInventarios" maxPageIndicatorCount="100" pageCount="1" />
 
             </VBox>
 

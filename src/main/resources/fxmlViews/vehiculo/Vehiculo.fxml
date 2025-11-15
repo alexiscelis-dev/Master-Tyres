@@ -44,7 +44,7 @@
 
                <Pane style="-fx-background-color: #080808;" HBox.hgrow="ALWAYS">
                   <children>
-                     <Button fx:id="btnModificarMarcaModeloCategoria" layoutX="1.0" layoutY="1.0" onAction="#ModificarMarcaModeloCategoria" prefHeight="25.0" prefWidth="181.0" styleClass="boton-accion" text="Agregar Marca o Modelo" />
+                     <Button fx:id="btnModificarMarcaModeloCategoria" layoutX="1.0" layoutY="1.0" onAction="#ModificarMarcaModeloCategoria" prefHeight="25.0" prefWidth="181.0" styleClass="boton-accion" text="Administrar Marcas" />
                      <Button fx:id="btnAgregarVehiculo" layoutX="195.0" layoutY="1.0" onAction="#agregarVehiculo" prefHeight="25.0" prefWidth="150.0" styleClass="boton-accion" text="Agregar Vehiculo" />
                      <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizarTabla" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
 
@@ -90,6 +90,8 @@
                </font>
             </Label>
 
+
+            <Pagination fx:id="paginadorVehiculos" maxPageIndicatorCount="100" pageCount="1" />
 
          </VBox>
 

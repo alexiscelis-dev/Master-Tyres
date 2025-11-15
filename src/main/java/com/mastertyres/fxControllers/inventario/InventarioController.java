@@ -1,11 +1,14 @@
 package com.mastertyres.fxControllers.inventario;
 
+import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarInventarioController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
+import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleFloatProperty;
@@ -19,6 +22,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -26,12 +30,14 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -40,6 +46,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.*;
@@ -77,6 +84,15 @@ public class InventarioController {
     @Autowired
     private InventarioService inventarioService;
 
+    @FXML
+    private Pagination paginadorInventarios;
+
+    private static final int INVENTARIOS_POR_PAGINA = 20;
+
+    private List<Inventario> todosLosInventarios;
+    private String terminoBusquedaActual = "";
+    private boolean modoBusqueda = false;
+
 
     @FXML
     private void initialize() {
@@ -103,24 +119,45 @@ public class InventarioController {
             }
         }));
 
-        //Buscar mientras escribes
+//        //Buscar mientras escribes
+//        buscarInventarioBuscador.setOnKeyReleased(event -> {
+//
+//            //Buscar mientras escribes
+//
+//
+//            if (event.getCode() != KeyCode.ENTER)
+//                delayQuery.setOnFinished(e -> {
+//                    String seleccion = atributoBusquedaInventario.getValue();
+//                    String busqueda = buscarInventarioBuscador.getText();
+//
+//                    if (seleccion == null && busqueda != null && !busqueda.isEmpty())
+//                        buscarInventario(busqueda);
+//                    else if (seleccion == null)
+//                        cargarInventario();
+//                });
+//            delayQuery.playFromStart();
+//
+//        });
         buscarInventarioBuscador.setOnKeyReleased(event -> {
 
-            //Buscar mientras escribes
-
-
-            if (event.getCode() != KeyCode.ENTER)
+            if (event.getCode() != KeyCode.ENTER) {
                 delayQuery.setOnFinished(e -> {
                     String seleccion = atributoBusquedaInventario.getValue();
                     String busqueda = buscarInventarioBuscador.getText();
 
-                    if (seleccion == null && busqueda != null && !busqueda.isEmpty())
+                    if (seleccion == null && busqueda != null && !busqueda.isEmpty()) {
                         buscarInventario(busqueda);
-                    else if (seleccion == null)
-                        cargarInventario();
-                });
-            delayQuery.playFromStart();
+                    } else {
+                        // Si no hay búsqueda, salir del modo búsqueda y recargar tabla
+                        modoBusqueda = false;
+                        terminoBusquedaActual = "";
+                        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
+                        paginadorInventarios.setCurrentPageIndex(0);
+                    }
 
+                });
+                delayQuery.playFromStart();
+            }
         });
 
         buscarInventarioBuscador.setOnKeyPressed(event -> {
@@ -151,6 +188,9 @@ public class InventarioController {
                     listaOpciones.getItems().addAll("Ver informacion", "Copiar", "Copiar fila completa", "Editar", "Eliminar");
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
+                    listaOpciones.getStylesheets().add(
+                            getClass().getResource("/styles_css/Lista.css").toExternalForm()
+                    );
 
                     Popup listViewPopup = new Popup();
                     listViewPopup.getContent().add(listaOpciones);
@@ -318,6 +358,152 @@ public class InventarioController {
 
     }//initialize
 
+    private VBox crearPaginaInventario(int indicePagina) {
+        Page<Inventario> paginaInventario;
+
+        if (modoBusqueda) {
+            paginaInventario = inventarioService.buscadorInventarioPaginado(
+                    StatusInventario.ACTIVE.toString(),
+                    terminoBusquedaActual,
+                    indicePagina,
+                    INVENTARIOS_POR_PAGINA
+            );
+        } else {
+            paginaInventario = inventarioService.listarInventarioPaginado(
+                    StatusInventario.ACTIVE.toString(),
+                    indicePagina,
+                    INVENTARIOS_POR_PAGINA
+            );
+        }
+
+        tablaInventario.setItems(FXCollections.observableArrayList(paginaInventario.getContent()));
+
+        VBox contenedor = new VBox(tablaInventario);
+        contenedor.setMinHeight(500);
+        contenedor.setPrefHeight(500);
+        contenedor.setStyle("-fx-background-color: transparent;");
+        return contenedor;
+    }
+
+    private VBox crearPaginaInventarioFiltro(int indicePagina) {
+        Page<Inventario> paginaInventario = Page.empty();
+
+        try {
+            if (modoBusqueda) {
+                String busqueda = terminoBusquedaActual.trim();
+                String activo = StatusInventario.ACTIVE.toString();
+
+                switch (atributoBusquedaInventario.getValue()) {
+
+                    case "codigo de barras" -> {
+                        paginaInventario = inventarioService.buscarPorCodBarrasPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                    }
+                    case "dot" -> {
+                        paginaInventario = inventarioService.buscarPorDotPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                    }
+                    case "marca" -> {
+                        paginaInventario = inventarioService.buscarPorMarcaPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                    }
+                    case "modelo" -> {
+                        paginaInventario = inventarioService.buscarPorModeloPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                    }
+                    case "medida" -> {
+                        paginaInventario = inventarioService.buscarPorMedidaPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                    }
+                    case "fecha de registro" -> {
+                        boolean consultar = false;
+
+                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+                            String fecha = busqueda;
+                            LocalDate fechaConsulta = null;
+
+                            try {
+                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                                LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+                                fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+
+                                consultar = true;
+
+                            } catch (DateTimeParseException e) {
+                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                                consultar = false;
+
+                            }
+
+                            if (consultar) {
+                                paginaInventario = inventarioService.buscarPorFechaPaginado(activo, fechaConsulta, indicePagina, INVENTARIOS_POR_PAGINA);
+                            }
+
+                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
+
+                            String fecha[] = busqueda.split(",");
+                            String consultaInicio = "", consultaFinal = "";
+
+                            try {
+                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                                LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+                                LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+
+                                //Ordenar la fecha mayor
+                                if (fecha1.isAfter(fecha2)) {
+                                    LocalDate aux = fecha1;
+                                    fecha1 = fecha2;
+                                    fecha2 = aux;
+
+                                }
+
+                                consultaInicio = fecha1.format(formatterConsulta);
+                                consultaFinal = fecha2.format(formatterConsulta);
+
+                                consultar = true;
+
+
+                            } catch (DateTimeParseException e) {
+                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                                consultar = false;
+                            }
+
+                            if (consultar) {
+                                paginaInventario = inventarioService.buscarPorFechaPaginadoRangos(activo, LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, INVENTARIOS_POR_PAGINA);
+                            }
+
+
+                        } else {
+                            List<Inventario> inventarioVacio = new ArrayList<>();
+                            tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
+                            mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+                                    " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                        }
+
+                    }
+                    default -> {
+                        mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+                    }
+
+                }//switch
+            } else {
+                paginaInventario = inventarioService.listarInventarioPaginado(
+                        StatusVehiculo.ACTIVE.toString(), indicePagina, INVENTARIOS_POR_PAGINA);
+            }
+
+        } catch (Exception e) {
+            mostrarError("Error en búsqueda", "Ocurrió un error al buscar los vehículos.", e.getMessage());
+            e.printStackTrace();
+        }
+
+        tablaInventario.setItems(FXCollections.observableArrayList(paginaInventario.getContent()));
+
+        VBox contenedor = new VBox(tablaInventario);
+        contenedor.setMinHeight(500);
+        contenedor.setPrefHeight(500);
+        contenedor.setStyle("-fx-background-color: transparent;");
+        return contenedor;
+    }
+
     private void cargarInventario() {
 
         colCodBarras.setCellValueFactory(data ->
@@ -379,151 +565,203 @@ public class InventarioController {
 
     }//cargarTabla
 
+//    private void cargarDatosInventario() {
+//
+//        try {
+//            tablaInventario.getItems().setAll(inventarioService.listarInventario(StatusInventario.ACTIVE.toString()));
+//
+//
+//        } catch (Exception e) {
+//            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+//        }
+//
+//    }//cargarDatosInventario
+
     private void cargarDatosInventario() {
 
         try {
-            tablaInventario.getItems().setAll(inventarioService.listarInventario(StatusInventario.ACTIVE.toString()));
+            long totalvehiculos = inventarioService.contarInventariosActivos(StatusInventario.ACTIVE.toString());
+            int totalPaginas = (int) Math.ceil((double) totalvehiculos / INVENTARIOS_POR_PAGINA);
+            paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
+            paginadorInventarios.setPageFactory(this::crearPaginaInventario);
 
+            // Muestra la primera página
+            paginadorInventarios.setCurrentPageIndex(0);
 
         } catch (Exception e) {
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
         }
 
+
     }//cargarDatosInventario
 
+    //    private void buscarInventario(String busqueda) {
+//
+//        List<Inventario> inventarios = inventarioService.buscadorInventario(StatusInventario.ACTIVE.toString(), busqueda);
+//        tablaInventario.setItems(FXCollections.observableList(inventarios));
+//    }//buscarInventario
     private void buscarInventario(String busqueda) {
+        terminoBusquedaActual = busqueda;
+        modoBusqueda = !busqueda.trim().isEmpty();
 
-        List<Inventario> inventarios = inventarioService.buscadorInventario(StatusInventario.ACTIVE.toString(), busqueda);
-        tablaInventario.setItems(FXCollections.observableList(inventarios));
-    }//buscarInventario
+        paginadorInventarios.setCurrentPageIndex(0); // Reinicia la paginación
+        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
 
-    private void buscarInventario(String seleccion, String busqueda) {
+    }
 
-        switch (seleccion) {
+//    private void buscarInventario(String seleccion, String busqueda) {
+//
+//        switch (seleccion) {
+//
+//            case "codigo de barras" -> {
+//                List<Inventario> inventarios = inventarioService.buscarPorCodBarras(StatusInventario.ACTIVE.toString(), busqueda);
+//                tablaInventario.setItems(FXCollections.observableList(inventarios));
+//
+//            }
+//            case "dot" -> {
+//                List<Inventario> inventarios = inventarioService.buscarPorDot(StatusInventario.ACTIVE.toString(), busqueda);
+//                tablaInventario.setItems(FXCollections.observableList(inventarios));
+//            }
+//            case "marca" -> {
+//                List<Inventario> inventarios = inventarioService.buscarPorMarca(StatusInventario.ACTIVE.toString(), busqueda);
+//                tablaInventario.setItems(FXCollections.observableList(inventarios));
+//            }
+//            case "modelo" -> {
+//                List<Inventario> inventarios = inventarioService.buscarPorModelo(StatusInventario.ACTIVE.toString(), busqueda);
+//                tablaInventario.setItems(FXCollections.observableList(inventarios));
+//            }
+//            case "medida" -> {
+//                List<Inventario> inventarios = inventarioService.buscarPorMedida(StatusInventario.ACTIVE.toString(), busqueda);
+//                tablaInventario.setItems(FXCollections.observableList(inventarios));
+//            }
+//            case "fecha de registro" -> {
+//                boolean consultar = false;
+//
+//                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+//                    String fecha = busqueda;
+//                    LocalDate fechaConsulta = null;
+//
+//                    try {
+//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+//                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+//
+//                        consultar = true;
+//
+//                    } catch (DateTimeParseException e) {
+//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                        consultar = false;
+//
+//                    }
+//
+//                    if (consultar) {
+//                        List<Inventario> inventarios = inventarioService.buscarPorFecha(StatusInventario.ACTIVE.toString(), fechaConsulta);
+//                        tablaInventario.setItems(FXCollections.observableList(inventarios));
+//                    }
+//
+//                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
+//
+//                    String fecha[] = busqueda.split(",");
+//                    String consultaInicio = "", consultaFinal = "";
+//
+//                    try {
+//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+//                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+//
+//                        //Ordenar la fecha mayor
+//                        if (fecha1.isAfter(fecha2)) {
+//                            LocalDate aux = fecha1;
+//                            fecha1 = fecha2;
+//                            fecha2 = aux;
+//
+//                        }
+//
+//                        consultaInicio = fecha1.format(formatterConsulta);
+//                        consultaFinal = fecha2.format(formatterConsulta);
+//
+//                        consultar = true;
+//
+//
+//                    } catch (DateTimeParseException e) {
+//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                        consultar = false;
+//                    }
+//
+//                    if (consultar) {
+//                        List<Inventario> inventarios = inventarioService.buscarPorFecha(StatusInventario.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal));
+//                        tablaInventario.setItems(FXCollections.observableList(inventarios));
+//
+//                    }
+//
+//
+//                } else {
+//                    List<Inventario> inventarioVacio = new ArrayList<>();
+//                    tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
+//                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+//                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+//                }
+//
+//            }
+//            default -> {
+//                mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+//            }
+//
+//        }//switch
+//
+//    }//buscarInventario
 
-            case "codigo de barras" -> {
-                List<Inventario> inventarios = inventarioService.buscarPorCodBarras(StatusInventario.ACTIVE.toString(), busqueda);
-                tablaInventario.setItems(FXCollections.observableList(inventarios));
+    private void buscarInventario(String seleccion, String busqueda) { // porque se va a buscar, vehiculo a buscar
 
-            }
-            case "dot" -> {
-                List<Inventario> inventarios = inventarioService.buscarPorDot(StatusInventario.ACTIVE.toString(), busqueda);
-                tablaInventario.setItems(FXCollections.observableList(inventarios));
-            }
-            case "marca" -> {
-                List<Inventario> inventarios = inventarioService.buscarPorMarca(StatusInventario.ACTIVE.toString(), busqueda);
-                tablaInventario.setItems(FXCollections.observableList(inventarios));
-            }
-            case "modelo" -> {
-                List<Inventario> inventarios = inventarioService.buscarPorModelo(StatusInventario.ACTIVE.toString(), busqueda);
-                tablaInventario.setItems(FXCollections.observableList(inventarios));
-            }
-            case "medida" -> {
-                List<Inventario> inventarios = inventarioService.buscarPorMedida(StatusInventario.ACTIVE.toString(), busqueda);
-                tablaInventario.setItems(FXCollections.observableList(inventarios));
-            }
-            case "fecha de registro" -> {
-                boolean consultar = false;
+        terminoBusquedaActual = busqueda;
+        modoBusqueda = !busqueda.trim().isEmpty();
+        atributoBusquedaInventario.setValue(seleccion);
 
-                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                    String fecha = busqueda;
-                    LocalDate fechaConsulta = null;
+        // Reinicia el paginador para la búsqueda
+        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
+        paginadorInventarios.setCurrentPageIndex(0);
 
-                    try {
-                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
-
-                        consultar = true;
-
-                    } catch (DateTimeParseException e) {
-                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                        consultar = false;
-
-                    }
-
-                    if (consultar) {
-                        List<Inventario> inventarios = inventarioService.buscarPorFecha(StatusInventario.ACTIVE.toString(), fechaConsulta);
-                        tablaInventario.setItems(FXCollections.observableList(inventarios));
-                    }
-
-                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
-
-                    String fecha[] = busqueda.split(",");
-                    String consultaInicio = "", consultaFinal = "";
-
-                    try {
-                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                        //Ordenar la fecha mayor
-                        if (fecha1.isAfter(fecha2)) {
-                            LocalDate aux = fecha1;
-                            fecha1 = fecha2;
-                            fecha2 = aux;
-
-                        }
-
-                        consultaInicio = fecha1.format(formatterConsulta);
-                        consultaFinal = fecha2.format(formatterConsulta);
-
-                        consultar = true;
-
-
-                    } catch (DateTimeParseException e) {
-                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                        consultar = false;
-                    }
-
-                    if (consultar) {
-                        List<Inventario> inventarios = inventarioService.buscarPorFecha(StatusInventario.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal));
-                        tablaInventario.setItems(FXCollections.observableList(inventarios));
-
-                    }
-
-
-                } else {
-                    List<Inventario> inventarioVacio = new ArrayList<>();
-                    tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
-                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
-                }
-
-            }
-            default -> {
-                mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
-            }
-
-        }//switch
-
-    }//buscarInventario
+    }//buscarVehiculo
 
     @FXML
     private void agregarInventario(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/inventario/AgregarInventario.fxml"));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent root = loader.load();
+     //   try {
+ //           FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/inventario/AgregarInventario.fxml"));
+   //         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+       //     Parent root = loader.load();
 
-            Pane panel = ventanaPrincipalController.getPanelMenu();
+           // Pane panel = ventanaPrincipalController.getPanelMenu();
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarInventario.fxml"));
+//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+//            Parent root = loader.load();
+//
+//            Pane panel = ventanaPrincipalController.getPanelMenu();
+//
+//
+//            panel.getChildren().setAll(root);
+//            AnchorPane.setTopAnchor(root, 0.0);
+//            AnchorPane.setRightAnchor(root, 0.0);
+//            AnchorPane.setBottomAnchor(root, 0.0);
+//            AnchorPane.setLeftAnchor(root, 0.0);
+//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar llanta");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            mostrarError("Error", "", "Ocurrio un error al mostrar la ventana.");
+//        }
 
+        ventanaPrincipalController.viewContent(
+                null, // no se requiere el MouseEvent
+                "/fxmlViews/AgregarInventario.fxml",
+                "Agregar llanta"
+        );
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar llanta");
 
-            panel.getChildren().setAll(root);
-            AnchorPane.setTopAnchor(root, 0.0);
-            AnchorPane.setRightAnchor(root, 0.0);
-            AnchorPane.setBottomAnchor(root, 0.0);
-            AnchorPane.setLeftAnchor(root, 0.0);
-            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar llanta");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarError("Error", "", "Ocurrio un error al mostrar la ventana.");
-        }
 
 
     }//agregarInventario
@@ -537,7 +775,14 @@ public class InventarioController {
     private void actualizarTabla(ActionEvent actionEvent){
         atributoBusquedaInventario.setValue(null);
         buscarInventarioBuscador.setText("");
-        cargarInventario();
+
+        modoBusqueda = false;
+        terminoBusquedaActual = "";
+
+        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
+        paginadorInventarios.setCurrentPageIndex(0);
+
+        //cargarInventario();
     }
 
 }//clase
