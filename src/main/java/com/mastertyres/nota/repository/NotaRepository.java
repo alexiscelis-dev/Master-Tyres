@@ -17,7 +17,7 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query("SELECT NEW com.mastertyres.nota.model.NotaDTO( " +
             "n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total, " +
-            "i.inventarioId, " +
+            "i.inventarioId," +
             "nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, " +
             "nd.llave, nd.llanta, nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal, " +
             "nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal, " +

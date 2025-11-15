@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -274,10 +275,11 @@ public class AgregarNotaController {
     private BooleanProperty boolTotal = new SimpleBooleanProperty(true);
 
 
-
     @FXML
     private void initialize() {
+
         configuraciones();
+        operacionesCampos();
 
         btnShowIcons.setOnMouseClicked(event -> showIcons());
 
@@ -290,7 +292,170 @@ public class AgregarNotaController {
 
     }//initialize
 
-    private void configuraciones(){
+    private void operacionesCampos() {
+
+        txtAlineacionCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtAlineacionCantidad.getText()) * toFloatSafe(txtAlineacionUnitario.getText());
+
+            txtAlineacionTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtAlineacionUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtAlineacionCantidad.getText()) * toIntSafe(txtAlineacionUnitario.getText());
+
+            txtAlineacionTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtBalanceoCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtBalanceoCantidad.getText()) * toFloatSafe(txtBalanceoUnitario.getText());
+
+            txtBalanceoTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtLlantasCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtLlantasCantidad.getText()) * toFloatSafe(txtLlantasUnitario.getText());
+
+            txtLlantasTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtAmorDelCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtAmorDelCantidad.getText()) * toFloatSafe(txtAmorDelUnitario.getText());
+
+            txtAmorDelTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtAmorTrasCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtAmorTrasCantidad.getText()) * toFloatSafe(txtAmorTrasUnitario.getText());
+
+            txtAmorTrasTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtSuspensionCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtSuspensionCantidad.getText()) * toFloatSafe(txtSuspensionUnitario.getText());
+
+            txtSuspensionTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtSuspensionCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtSuspensionCantidad2.getText()) * toFloatSafe(txtSuspensionUnitario2.getText());
+
+            txtSuspensionTotal2.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtMecanicaCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtMecanicaCantidad.getText()) * toFloatSafe(txtMecanicaUnitario.getText());
+
+            txtMecanicaUnitario.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtMecanicaCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtMecanicaCantidad2.getText()) * toFloatSafe(txtMecanicaUnitario2.getText());
+
+            txtMecanicaTotal2.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtFrenosCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtFrenosCantidad.getText()) * toFloatSafe(txtFrenosUnitario.getText());
+
+            txtFrenosTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtFrenosCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtFrenosCantidad2.getText()) * toFloatSafe(txtFrenosUnitario.getText());
+
+            txtFrenosTotal2.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtOtrosCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtOtrosCantidad.getText()) * toFloatSafe(txtOtrosUnitario.getText());
+
+            txtOtrosTotal.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtOtrosCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toIntSafe(txtOtrosCantidad2.getText()) * toFloatSafe(txtOtrosUnitario2.getText());
+
+            txtOtrosTotal2.setText(num + "");
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtSubTotalMecanica.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtSubTotalOtros.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+        txtSubTotalFrenos.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText(sumaTotal() + "");
+
+        });
+
+
+
+
+
+
+    }//operacionesCampos
+
+    private float sumaTotal() {
+        float suma = 0;
+
+        suma = toFloatSafe(txtAlineacionTotal.getText()) +
+                toFloatSafe(txtBalanceoTotal.getText()) +
+                toFloatSafe(txtLlantasTotal.getText()) +
+                toFloatSafe(txtAmorDelTotal.getText()) +
+                toFloatSafe(txtAmorTrasTotal.getText()) +
+                toFloatSafe(txtSuspension.getText()) +
+                toFloatSafe(txtSuspension2.getText()) +
+                toFloatSafe(txtMecanica.getText()) +
+                toFloatSafe(txtMecanica2.getText()) +
+                toFloatSafe(txtFrenos.getText()) +
+                toFloatSafe(txtFrenos2.getText()) +
+                toFloatSafe(txtOtros.getText()) +
+                toFloatSafe(txtOtros2.getText()) +
+                toFloatSafe(txtSubTotalMecanica.getText()) +
+                toFloatSafe(txtSubTotalFrenos.getText()) +
+                toFloatSafe(txtSubTotalOtros.getText());
+
+
+        return suma;
+    }//sumaTotal
+
+    private void configuraciones() {
 
         //configuracion checkBox
 
@@ -376,7 +541,7 @@ public class AgregarNotaController {
         });
 
 
-       //Iniciliza la fecha y hora del dia y sistema
+        //Iniciliza la fecha y hora del dia y sistema
         mostrarFechayHora();
 
         //deshabilita los menu del clic derecho en los campos de texto
@@ -497,7 +662,7 @@ public class AgregarNotaController {
         dialog.initOwner(owner);
 
         VBox vBox = new VBox(10);
-        vBox.setPadding(new javafx.geometry.Insets(15));
+        vBox.setPadding(new Insets(15));
         Label label = new Label("Selecciona el porcentaje de gasolina");
 
         Slider slider = new Slider(0, 100, 50);
@@ -652,11 +817,15 @@ public class AgregarNotaController {
         if (inventario != null) {
             txtLlantas.setText(inventario.getMarca() + " " + inventario.getModelo() + " " + " " + inventario.getMedida());
 
-            if (inventario.getStock() == 0)
+            if (inventario.getStock() == 0) {
                 txtLlantasCantidad.setText("1");
-
-            else
+                txtLlantasUnitario.setText(inventario.getPrecioVenta() + "");
+            } else {
                 txtLlantasCantidad.setText(inventario.getStock() + "");
+                txtLlantasUnitario.setText(inventario.getPrecioVenta() + "");
+
+            }
+
 
             habilitar(false, "inventario");
 
@@ -721,7 +890,7 @@ public class AgregarNotaController {
 
         }
 
-        if (txtTotal.getText().trim().isEmpty()){
+        if (txtTotal.getText().trim().isEmpty()) {
             mostrarWarning("Campo obligatorio",
                     "Total de la nota ",
                     "El total de la nota es obligatorio. Por favor, ingrese un valor antes de continuar.");
@@ -729,7 +898,6 @@ public class AgregarNotaController {
             error = true;
             return;
         }
-
 
 
         if (!error) {
@@ -742,7 +910,7 @@ public class AgregarNotaController {
                 String fechaYhora = txtAnio.getText() + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
                 NotaDTO.NotaDTOBuilder nuevaNotaBuilder = NotaDTO.builder()
 
-                       .clienteId(cRegistro.getClienteId())
+                        .clienteId(cRegistro.getClienteId())
                         .vehiculoId(vRegistro.getId())
 
                         .nombreCliente(cRegistro.getNombre())
@@ -834,9 +1002,9 @@ public class AgregarNotaController {
                         .subTotalMecanica(toFloatSafe(txtSubTotalMecanica.getText()))
                         .subTotalOtros(toFloatSafe(txtSubTotalOtros.getText()));
 
-                if (iRegistro != null){
+                if (iRegistro != null) {
                     nuevaNotaBuilder.inventarioId(iRegistro.getInventarioId());
-                }else {
+                } else {
                     nuevaNotaBuilder.inventarioId(null);
                 }
 
@@ -861,8 +1029,7 @@ public class AgregarNotaController {
                 stage.setResizable(false);
                 stage.showAndWait();
 
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
 
                 e.printStackTrace();
@@ -1071,7 +1238,6 @@ public class AgregarNotaController {
 
 
     //getters y setters
-
 
 
     private void setClienteNota(Cliente clienteNota) {
