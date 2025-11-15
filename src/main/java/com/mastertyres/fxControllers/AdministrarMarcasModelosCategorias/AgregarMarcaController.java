@@ -1,22 +1,18 @@
-package com.mastertyres.fxControllers.EditarMarcasModelosCategorias;
+package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
-import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.MensajesAlert;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
-import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.model.StatusPromocion;
-import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
-import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
-import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -28,14 +24,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;
@@ -62,13 +55,19 @@ public class AgregarMarcaController {
     @FXML private TextField txtModelo;
     @FXML private TextField txtMarca;
 
-    @FXML private  Button btnAgregarVehiculo;
-    @FXML private  Button btnAgregar;
+    @FXML private Button btnAgregarVehiculo;
+    @FXML private Button btnAgregar;
 
     private BooleanProperty ModeloValido = new SimpleBooleanProperty(true);
     private BooleanProperty MarcaValido = new SimpleBooleanProperty(true);
 
     private ObservableList<ModeloCategoriaTemp> listaVehiculos = FXCollections.observableArrayList();
+
+    private VentanaPrincipalController ventanaPrincipalController;
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
     @FXML
     private void initialize(){
@@ -138,6 +137,7 @@ public class AgregarMarcaController {
         choiceCategoria.setValue(null);
         txtModelo.clear();
         txtMarca.clear();
+        listaVehiculos.clear();
 
     }
 
@@ -150,34 +150,48 @@ public class AgregarMarcaController {
 
     @FXML
     private void GuardarMarca() {
-        try {
-            // Guardar Marca
-            Marca m = new Marca();
-            m.setNombreMarca(txtMarca.getText().trim());
-            m = marcaService.guardarMarca(m);
 
-            // Guardar Modelos y DetalleCategoria
-            for (ModeloCategoriaTemp temp : listaVehiculos) {
-                // Guardar Modelo
-                Modelo modelo = new Modelo();
-                modelo.setNombreModelo(temp.getModelo());
-                modelo.setMarca_id(m);
-                modelo = modeloService.guardarModelo(modelo);
+        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+                "Confirmar Agregar",
+                "¿Desea agregar este Modelo?",
+                "Se agregara los modelo de la tabla a esta marca.",
+                "Sí, agregar",
+                "Cancelar"
+        );
 
-                // Guardar DetalleCategoria
-                DetalleCategoria detalle = new DetalleCategoria();
-                detalle.setMarca(m);
-                detalle.setModelo(modelo);
-                detalle.setCategoria(temp.getCategoria());
+        if (confirmar) {
+            try {
+                // Guardar Marca
+                Marca m = new Marca();
+                m.setNombreMarca(txtMarca.getText().trim());
+                m = marcaService.guardarMarca(m);
 
-                detalleCategoriaService.guardarDetalleCategoria(detalle);
+                // Guardar Modelos y DetalleCategoria
+                for (ModeloCategoriaTemp temp : listaVehiculos) {
+                    // Guardar Modelo
+                    Modelo modelo = new Modelo();
+                    modelo.setNombreModelo(temp.getModelo());
+                    modelo.setMarca_id(m);
+                    modelo = modeloService.guardarModelo(modelo);
+
+                    // Guardar DetalleCategoria
+                    DetalleCategoria detalle = new DetalleCategoria();
+                    detalle.setMarca(m);
+                    detalle.setModelo(modelo);
+                    detalle.setCategoria(temp.getCategoria());
+
+                    detalleCategoriaService.guardarDetalleCategoria(detalle);
+                }
+
+                mostrarInformacion("Exito","Exito en guardar","Marca y modelos guardados correctamente.");
+                limpiarCamposVehiculo();
+                cerrarVentana(null);
+
+
+            } catch (Exception e) {
+                mostrarError("Error ", "Error al guardar: ", e.getMessage());
+                e.printStackTrace();
             }
-
-            mostrarInformacion("Exito","Exito en guardar","Marca y modelos guardados correctamente.");
-            limpiarCamposVehiculo();
-            cerrarVentana(null);
-        } catch (Exception e) {
-            mostrarError("Error ", "Error al guardar: ", e.getMessage());
         }
     }
 
@@ -206,7 +220,7 @@ public class AgregarMarcaController {
             if (texto.isEmpty()) {
                 ModeloValido.set(false);
                 txtModelo.setStyle("-fx-border-color: red;");
-            } else if (!texto.matches("^[A-Z]{1,20}")) {
+            } else if (!texto.matches("^[A-Z0-9\\s\\p{Punct}]{1,20}$")) {
                 ModeloValido.set(false);
                 txtModelo.setStyle("-fx-border-color: red;");
             } else {
@@ -221,7 +235,7 @@ public class AgregarMarcaController {
             if (texto.isEmpty()) {
                 MarcaValido.set(false);
                 txtMarca.setStyle("-fx-border-color: red;");
-            } else if (!texto.matches("^[A-Z]{1,20}")) {
+            } else if (!texto.matches("^[A-Z0-9\\s\\p{Punct}]{1,20}$")) {
                 MarcaValido.set(false);
                 txtMarca.setStyle("-fx-border-color: red;");
             } else {
@@ -234,12 +248,14 @@ public class AgregarMarcaController {
         btnAgregarVehiculo.disableProperty().bind(
                 choiceCategoria.valueProperty().isNull()
                         .or(txtModelo.textProperty().isEmpty())
+                        .or(ModeloValido.not())
         );
 
         //Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
         btnAgregar.disableProperty().bind(
                 Bindings.isEmpty(listaVehiculos)
                         .or(txtMarca.textProperty().isEmpty())
+                        .or(MarcaValido.not())
         );
     }
 

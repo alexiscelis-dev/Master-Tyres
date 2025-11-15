@@ -1,6 +1,8 @@
 package com.mastertyres.cliente.repository;
 
 import com.mastertyres.cliente.model.Cliente;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -40,6 +42,14 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT c FROM Cliente c WHERE c.active = :active")
     List<Cliente> listarClientesActivos(@Param("active") String active);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active")
+    Page<Cliente> listarClientesActivos(@Param("active") String active, Pageable pageable);
+
+
+    @Query("SELECT COUNT(c) FROM Cliente c WHERE c.active = :active")
+    long contarClientesActivos(@Param("active") String active);
+
+
     @Transactional
     @Modifying
     @Query("UPDATE Cliente c SET c.active = :inactive WHERE c.clienteId = :idCliente")
@@ -66,23 +76,53 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "LIKE LOWER(CONCAT('%', :nombre, '%'))")
     List<Cliente> buscarClientePorNombre(@Param("active")String active, @Param("nombre")String nombre);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER( CONCAT( CONCAT(CONCAT(c.nombre, ' '), " +
+            "COALESCE(c.apellido, '')), CONCAT(' ', COALESCE(c.segundoApellido, '')) ) ) " +
+            "LIKE LOWER(CONCAT('%', :nombre, '%'))")
+    Page<Cliente> buscarClientePorNombrePaginado(@Param("active") String active,
+                                         @Param("nombre") String nombre,
+                                         Pageable pageable);
+
+
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.numTelefono = :numTelefono")
     List<Cliente> buscarClientePorNumTelefono(@Param("active")String active, @Param("numTelefono")String numTelefono);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.numTelefono = :numTelefono")
+    Page<Cliente> buscarClientePorNumTelefonoPaginado(@Param("active")String active, @Param("numTelefono")String numTelefono, Pageable pageable);
 
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :estado , '%'))")
     List<Cliente> buscarClientePorEstado(@Param("active")String active, @Param("estado")String estado);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :estado , '%'))")
+    Page<Cliente> buscarClientePorEstadoPaginado(@Param("active")String active, @Param("estado")String estado, Pageable pageable);
+
+
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :ciudad , '%'))")
     List<Cliente> buscarClientePorCiudad(@Param("active")String active, @Param("ciudad")String ciudad);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :ciudad , '%'))")
+    Page<Cliente> buscarClientePorCiudadPaginado(@Param("active")String active, @Param("ciudad")String ciudad, Pageable pageable);
 
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :domicilio , '%'))")
     List<Cliente> buscarClientePorDomicilio(@Param("active")String active, @Param("domicilio")String domicilio);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :domicilio , '%'))")
+    Page<Cliente> buscarClientePorDomicilioPaginado(@Param("active")String active, @Param("domicilio")String domicilio, Pageable pageable);
+
+
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.hobbie, '')) LIKE LOWER (CONCAT('%', :hobbie , '%'))")
     List<Cliente> buscarClientePorHobbie(@Param("active")String active, @Param("hobbie")String hobbie);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.hobbie, '')) LIKE LOWER (CONCAT('%', :hobbie , '%'))")
+    Page<Cliente> buscarClientePorHobbiePaginado(@Param("active")String active, @Param("hobbie")String hobbie, Pageable pageable);
+
+
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
     List<Cliente> buscarClientePorRfc(@Param("active")String active, @Param("rfc")String rfc);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
+    Page<Cliente> buscarClientePorRfcPaginado(@Param("active")String active,  @Param("rfc")String rfc, Pageable pageable);
+
 
     @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND ( " +
             "(LOWER (COALESCE(c.nombre, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
@@ -98,6 +138,21 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     List<Cliente>buscadorClientes(@Param("status")String status,@Param("busqueda") String busqueda);
 
+
+    @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND (" +
+            "LOWER(COALESCE(c.nombre, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.apellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.segundoApellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.hobbie, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.rfc, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.numTelefono, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.estado, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.ciudad, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.domicilio, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.tipoCliente, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) )")
+    Page<Cliente> buscadorClientes(@Param("status") String status,
+                                   @Param("busqueda") String busqueda,
+                                   Pageable pageable);
 
 
 

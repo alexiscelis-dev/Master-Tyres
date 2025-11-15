@@ -6,6 +6,10 @@ import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +35,26 @@ public class VehiculoService implements IVehiculoService {
     public List<VehiculoDTO> obtenerVehiculosConServicioVencido() {
         LocalDate fechaLimite = LocalDate.now().minusMonths(6);
         return vehiculoRepository.listarVehiculosConServicioVencido(fechaLimite);
+    }
+
+    public Page<VehiculoDTO> obtenerVehiculosConServicioVencidoPaginado(Pageable pageable) {
+        LocalDate fechaLimite = LocalDate.now().minusMonths(6);
+        return vehiculoRepository.listarVehiculosConServicioVencidoPaginado(fechaLimite, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public long contarVehiculosActivos(String active) {
+        return vehiculoRepository.contarVehiculosActivos(active);
+    }
+
+    public List<VehiculoDTO> BuscarVehiculosConServicioVencido(String busqueda) {
+        LocalDate fechaLimite = LocalDate.now().minusMonths(6);
+        return vehiculoRepository.BuscarVehiculosConServicioVencido(fechaLimite, busqueda);
+    }
+
+    public Page<VehiculoDTO> BuscarVehiculosConServicioVencidoPaginado(String busqueda, Pageable pageable) {
+        LocalDate fechaLimite = LocalDate.now().minusMonths(6);
+        return vehiculoRepository.BuscarVehiculosConServicioVencidoPaginado(fechaLimite, busqueda, pageable);
     }
 
     public boolean actualizarUltimoServicio(Integer idVehiculo) {
@@ -121,6 +145,14 @@ public class VehiculoService implements IVehiculoService {
     public List<VehiculoDTO> listarVehiculos(String vehiculoStatus) {
         return vehiculoRepository.listarVehiculos(vehiculoStatus);
     }
+
+//    @Override
+//    @Transactional(readOnly = true)
+//    public Page<VehiculoDTO> listarVehiculosPaginado(String vehiculoStatus) {
+//        return vehiculoRepository.listarVehiculosPaginado(vehiculoStatus);
+//    }
+
+
 
     @Transactional(readOnly = true)
     public Vehiculo Vehiculo_SinDTO(Integer id) {
@@ -250,6 +282,133 @@ public class VehiculoService implements IVehiculoService {
     @Override
     public List<VehiculoDTO> buscadorVehiculo(String status, String busqueda) {
         return vehiculoRepository.buscadorVehiculos(status,busqueda);
+    }
+
+
+    // 🔹 Listar vehículos activos con paginación
+    public Page<VehiculoDTO> listarVehiculosPaginado(String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("vehiculoId").descending());
+        return vehiculoRepository.listarVehiculosPaginado(active, pageable);
+    }
+
+    // 🔹 Buscador general (multiatributo)
+    public Page<VehiculoDTO> buscadorVehiculosPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("vehiculoId").descending());
+        return vehiculoRepository.buscadorVehiculosPaginado(active, busqueda, pageable);
+    }
+
+    // 🔹 Buscar por propietario
+    public Page<VehiculoDTO> buscarPorPropietario(String active, String nombre, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorPropietarioPaginado(active, nombre, pageable);
+    }
+
+    // 🔹 Buscar por propietario
+    public Page<VehiculoDTO> buscarVehiculoPorNumSeriePaginado(String active, String numSerie, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorNumSeriePaginado(active, numSerie, pageable);
+    }
+
+    // 🔹 Buscar por marca
+    public Page<VehiculoDTO> buscarPorMarca(String active, String marca, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorMarcaPaginado(active, marca, pageable);
+    }
+
+    // 🔹 Buscar por modelo
+    public Page<VehiculoDTO> buscarPorModelo(String active, String modelo, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorModeloPaginado(active, modelo, pageable);
+    }
+
+    // 🔹 Buscar por placas
+    public Page<VehiculoDTO> buscarPorPlacas(String active, String placas, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorPlacasPaginado(active, placas, pageable);
+    }
+
+    // 🔹 Buscar por color
+    public Page<VehiculoDTO> buscarPorColor(String active, String color, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorColorPaginado(active, color, pageable);
+    }
+
+    // 🔹 Buscar por categoría
+    public Page<VehiculoDTO> buscarPorCategoria(String active, String categoria, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorCategoriaPaginado(active, categoria, pageable);
+    }
+
+    // 🔹 Buscar por año exacto
+    public Page<VehiculoDTO> buscarPorAnio(String active, Integer anio, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorAnioPaginado(active, anio, pageable);
+    }
+
+    // 🔹 Buscar por rango de años
+    public Page<VehiculoDTO> buscarPorAnioRango(String active, Integer inicio, Integer fin, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorAnioPaginado(active, inicio, fin, pageable);
+    }
+
+    // 🔹 Buscar por kilometraje exacto
+    public Page<VehiculoDTO> buscarPorKilometros(String active, Integer kms, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorKilometrosPaginado(active, kms, pageable);
+    }
+
+    // 🔹 Buscar por rango de kilometraje
+    public Page<VehiculoDTO> buscarPorKilometrosRango(String active, Integer inicio, Integer fin, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorKilometrosPaginado(active, inicio, fin, pageable);
+    }
+
+    // 🔹 Buscar por fecha de registro exacta
+    public Page<VehiculoDTO> buscarPorFechaRegistro(String active, LocalDate fecha, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorRegistroPaginado(active, fecha, pageable);
+    }
+
+    // 🔹 Buscar por fecha de registro exacta
+    public Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginado(String active, String fecha, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorUltimoServicioPaginado(active, fecha, pageable);
+    }
+
+    // 🔹 Buscar por fecha de registro exacta
+    public Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginadoRango(String active, String fechaInicio, String fechaFin , int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorUltimoServicioPaginado(active, fechaInicio, fechaInicio, pageable);
+    }
+
+    // 🔹 Buscar por rango de fecha de registro
+    public Page<VehiculoDTO> buscarPorFechaRegistroRango(String active, LocalDate inicio, LocalDate fin, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return vehiculoRepository.buscarVehiculoPorRegistroPaginado(active, inicio, fin, pageable);
+    }
+
+    // Reasignar marca
+    @Transactional
+    public int reasignarMarcaPorId(Integer marcaId) {
+        return vehiculoRepository.reasignarMarcaPorId(marcaId);
+    }
+
+    // Reasignar modelo y categoría por marca
+    @Transactional
+    public int reasignarModeloYCategoriaPorMarca(Integer marcaId) {
+        return vehiculoRepository.reasignarModeloYCategoriaPorMarca(marcaId);
+    }
+
+    // Reasignar modelo específico
+    @Transactional
+    public int reasignarModeloPorId(Integer modeloId) {
+        return vehiculoRepository.reasignarModeloPorId(modeloId);
+    }
+
+    // Reasignar categoria específico
+    @Transactional
+    public int reasignarCategoriaPorId(Integer categoriaId) {
+        return vehiculoRepository.reasignarCategoriaPorId(categoriaId);
     }
 
 }//clase

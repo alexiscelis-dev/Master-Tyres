@@ -1,0 +1,40 @@
+/* Fondo general y bordes redondeados */
+.list-view.popup-table {
+    -fx-background-color: #000000;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: white;
+    -fx-border-width: 1;
+}
+
+/* Cada celda */
+.list-cell {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-border-width: 0 0 1 0; /* línea divisoria blanca entre celdas */
+    -fx-padding: 5 7 5 7;
+    -fx-font-size: 13px;
+}
+
+/* Efecto hover */
+.list-cell:hover {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+/* Celda seleccionada */
+.list-cell:selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+.list-view.popup-table {
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #8EB83D;
+}
+.list-cell {
+    -fx-border-color: #333;
+}
