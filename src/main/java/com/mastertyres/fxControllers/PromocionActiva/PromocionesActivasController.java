@@ -34,40 +34,21 @@ import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 @Component
 public class PromocionesActivasController {
 
-    @FXML
-    private TilePane contenedorPromociones;
-
-    @FXML
-    private Label lblNombre;
-    @FXML
-    private Label lblDescripcion;
-    @FXML
-    private Label lblTipoDescuento;
-    @FXML
-    private Label lblValorDescuento;
-    @FXML
-    private Label lblPrecio;
-    @FXML
-    private Label lblFechaInicio;
-    @FXML
-    private Label lblFechaFin;
-    @FXML
-    private Button btnAgregarPromocion;
-
-    @FXML
-    private Button btnEliminarPromocion;
-    @FXML
-    private Button btnEditarPromocion;
-    @FXML
-    private Button btnClientesPromocion;
-    @FXML
-    private TextField txtBuscar;
-
-    @FXML
-    private ListView<Promocion> listaPromociones;
-
-    @FXML
-    private ListView<String> ListaVehiculosPromocion;
+    @FXML private TilePane contenedorPromociones;
+    @FXML private Label lblNombre;
+    @FXML private Label lblDescripcion;
+    @FXML private Label lblTipoDescuento;
+    @FXML private Label lblValorDescuento;
+    @FXML private Label lblPrecio;
+    @FXML private Label lblFechaInicio;
+    @FXML private Label lblFechaFin;
+    @FXML private Button btnAgregarPromocion;
+    @FXML private Button btnEliminarPromocion;
+    @FXML private Button btnEditarPromocion;
+    @FXML private Button btnClientesPromocion;
+    @FXML private TextField txtBuscar;
+    @FXML private ListView<Promocion> listaPromociones;
+    @FXML private ListView<String> ListaVehiculosPromocion;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -129,7 +110,7 @@ public class PromocionesActivasController {
 
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
-                "/fxmlViews/NuevaPromocion.fxml",
+                "/fxmlViews/promocion/NuevaPromocion.fxml",
                 "Agregar promocion"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
@@ -149,7 +130,7 @@ public class PromocionesActivasController {
     @FXML
     private void AbrirClientesAplicables() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/ClientesAplicablesPromocion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/cliente/ClientesAplicablesPromocion.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
@@ -266,7 +247,7 @@ public class PromocionesActivasController {
     @FXML
     private void abrirVentanaEditarPromocion() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarPromocion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/promocion/EditarPromocion.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 

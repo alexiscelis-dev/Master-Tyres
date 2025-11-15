@@ -28,40 +28,23 @@ import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class EditarInventarioController {
-    @FXML
-    private AnchorPane rootPane;
-    @FXML
-    private TextField txtCodBarras;
-    @FXML
-    private TextField txtDot;
-    @FXML
-    private TextField txtMarca;
-    @FXML
-    private TextField txtModelo;
-    @FXML
-    private TextField txtMedida;
-    @FXML
-    private ChoiceBox<String> cbIndiceCarga;
-    @FXML
-    private ChoiceBox<String> cbIndiceVelocidad;
-    @FXML
-    private TextField txtObservaciones;
-    @FXML
-    private TextField txtPrecioV;
-    @FXML
-    private TextField txtPrecioC;
-    @FXML
-    private TextField txtStock;
-    @FXML
-    private TextField txtImg;
-    @FXML
-    private VBox vBoxImg;
-    @FXML
-    private Button btnActualizar;
-    @FXML
-    private Button btnCancelar;
-    @FXML
-    private Button btnImagen;
+    @FXML private AnchorPane rootPane;
+    @FXML private TextField txtCodBarras;
+    @FXML private TextField txtDot;
+    @FXML private TextField txtMarca;
+    @FXML private TextField txtModelo;
+    @FXML private TextField txtMedida;
+    @FXML private ChoiceBox<String> cbIndiceCarga;
+    @FXML private ChoiceBox<String> cbIndiceVelocidad;
+    @FXML private TextField txtObservaciones;
+    @FXML private TextField txtPrecioV;
+    @FXML private TextField txtPrecioC;
+    @FXML private TextField txtStock;
+    @FXML private TextField txtImg;
+    @FXML private VBox vBoxImg;
+    @FXML private Button btnActualizar;
+    @FXML private Button btnCancelar;
+    @FXML private Button btnImagen;
 
     @Autowired
     InventarioService inventarioService;

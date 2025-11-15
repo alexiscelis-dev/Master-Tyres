@@ -3,7 +3,6 @@ package com.mastertyres.fxControllers.EditarMarcasModelosCategorias;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.fxControllers.EditarControllers.EditarPromocionController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,24 +25,16 @@ import java.util.List;
 @Component
 public class EditarMarcaModeloCategoriaController {
 
-    @FXML
-    private Label lblNombre;
-
+    @FXML private Label lblNombre;
     @FXML private TableView<DetalleCategoria> TablaVehiculoMarca;
     @FXML private TableColumn<DetalleCategoria, String> colMarca;
     @FXML private TableColumn<DetalleCategoria, String> colModelo;
     @FXML private TableColumn<DetalleCategoria, String> colCategoria;
-
-
     @FXML private Button btnAgregarMarca;
     @FXML private Button btnAgregarModelo;
     @FXML private Button EliminarMarca;
-
-    @FXML
-    private TilePane contenedorMarcas;
-
-    @FXML
-    private ListView<Marca> listaMarca;
+    @FXML private TilePane contenedorMarcas;
+    @FXML private ListView<Marca> listaMarca;
 
     private final MarcaService marcaService;
     private final DetalleCategoriaService detalleCategoriaService;
@@ -75,7 +66,7 @@ public class EditarMarcaModeloCategoriaController {
     @FXML
     private void agregarMarca (){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarMarca.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/marca/AgregarMarca.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
@@ -155,7 +146,7 @@ public class EditarMarcaModeloCategoriaController {
 
     public void EditarMarca(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarMarca.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/marca/EditarMarca.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 

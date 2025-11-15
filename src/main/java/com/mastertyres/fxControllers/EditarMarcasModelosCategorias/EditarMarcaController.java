@@ -16,7 +16,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -26,30 +25,21 @@ import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 
 @Component
 public class EditarMarcaController {
 
     @FXML private  Button btnAgregarVehiculo;
     @FXML private  Button btnAgregar;
-
-    @FXML
-    private TextField txtMarca, txtModelo;
-    @FXML
-    private ChoiceBox<Categoria> choiceCategoria;
-    @FXML
-    private TableView<DetalleCategoria> tablaVehiculos;
-    @FXML
-    private TableColumn<DetalleCategoria, String> colModelo;
-    @FXML
-    private TableColumn<DetalleCategoria, String> colCategoria;
-    @FXML
-    private TableColumn<DetalleCategoria, Void> colEliminar;
+    @FXML private TextField txtMarca, txtModelo;
+    @FXML private ChoiceBox<Categoria> choiceCategoria;
+    @FXML private TableView<DetalleCategoria> tablaVehiculos;
+    @FXML private TableColumn<DetalleCategoria, String> colModelo;
+    @FXML private TableColumn<DetalleCategoria, String> colCategoria;
+    @FXML private TableColumn<DetalleCategoria, Void> colEliminar;
 
     private Marca marcaSeleccionada;
 
