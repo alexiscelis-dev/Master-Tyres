@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.agregarVehiculo;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -10,7 +11,6 @@ import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
-import com.mastertyres.vehiculo.model.StatusCliente;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
@@ -64,48 +64,83 @@ public class AgregarVehiculoController {
     private VehiculoRepository vehiculoRepository;
 
 
-// Columnas vehiculo
-    @FXML private TableView<Vehiculo> tablaVehiculos;
-    @FXML private TableColumn<Vehiculo, String> colMarca;
-    @FXML private TableColumn<Vehiculo, String> colCategoria;
-    @FXML private TableColumn<Vehiculo, String> colColor;
-    @FXML private TableColumn<Vehiculo, String> colPlacas;
-    @FXML private TableColumn<Vehiculo, String> colAnnio;
-    @FXML private TableColumn<Vehiculo, String> colModelo;
-    @FXML private TableColumn<Vehiculo, String> colNumSerie;
-    @FXML private TableColumn<Vehiculo, String> colKilometros;
-    @FXML private TableColumn<Vehiculo, String> colultimoServicio;
-    @FXML private TableColumn<Vehiculo, String> colObservaciones;
-    @FXML private TableColumn<Vehiculo, Void> colEliminar;
+    // Columnas vehiculo
+    @FXML
+    private TableView<Vehiculo> tablaVehiculos;
+    @FXML
+    private TableColumn<Vehiculo, String> colMarca;
+    @FXML
+    private TableColumn<Vehiculo, String> colCategoria;
+    @FXML
+    private TableColumn<Vehiculo, String> colColor;
+    @FXML
+    private TableColumn<Vehiculo, String> colPlacas;
+    @FXML
+    private TableColumn<Vehiculo, String> colAnnio;
+    @FXML
+    private TableColumn<Vehiculo, String> colModelo;
+    @FXML
+    private TableColumn<Vehiculo, String> colNumSerie;
+    @FXML
+    private TableColumn<Vehiculo, String> colKilometros;
+    @FXML
+    private TableColumn<Vehiculo, String> colultimoServicio;
+    @FXML
+    private TableColumn<Vehiculo, String> colObservaciones;
+    @FXML
+    private TableColumn<Vehiculo, Void> colEliminar;
 
-// Campos vehiculo
-    @FXML private AnchorPane rootPane;
-    @FXML private ChoiceBox<Marca> choiceMarca;
-    @FXML private ChoiceBox<Modelo> choiceModelo;
-    @FXML private ChoiceBox<Categoria> choiceCategoria;
-    @FXML private TextField txtColor;
-    @FXML private TextField txtPlacas;
-    @FXML private Spinner<Integer> spinnerAnio;
-    @FXML private TextField txtSerie;
-    @FXML private TextField txtKilometros;
-    @FXML private DatePicker pickerUltimoServicio;
-    @FXML private TextField txtObservaciones;
-    @FXML private Button btnAgregarVehiculo;
-    @FXML private Button btnGuardar;
+    // Campos vehiculo
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private ChoiceBox<Marca> choiceMarca;
+    @FXML
+    private ChoiceBox<Modelo> choiceModelo;
+    @FXML
+    private ChoiceBox<Categoria> choiceCategoria;
+    @FXML
+    private TextField txtColor;
+    @FXML
+    private TextField txtPlacas;
+    @FXML
+    private Spinner<Integer> spinnerAnio;
+    @FXML
+    private TextField txtSerie;
+    @FXML
+    private TextField txtKilometros;
+    @FXML
+    private DatePicker pickerUltimoServicio;
+    @FXML
+    private TextField txtObservaciones;
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private Button btnGuardar;
 
-// Campos Cliente
-    @FXML private AnchorPane ventanaAgregarCliente;
-    @FXML private TextField txtClienteNombre;
-    @FXML private TextField txtClienteTipo;
-    @FXML private TextField txtBuscarCliente;
+    // Campos Cliente
+    @FXML
+    private AnchorPane ventanaAgregarCliente;
+    @FXML
+    private TextField txtClienteNombre;
+    @FXML
+    private TextField txtClienteTipo;
+    @FXML
+    private TextField txtBuscarCliente;
     //@FXML private ListView<Cliente> listaClientes;
-    @FXML private TableView<Cliente> tablaClientes;
-    @FXML private TableColumn<Cliente, String> colNombreCompleto;
-    @FXML private TableColumn<Cliente, String> colTipoCliente;
-    @FXML private TableColumn<Cliente, String> colRfc;
-    @FXML private TableColumn<Cliente, String> colTelefono;
+    @FXML
+    private TableView<Cliente> tablaClientes;
+    @FXML
+    private TableColumn<Cliente, String> colNombreCompleto;
+    @FXML
+    private TableColumn<Cliente, String> colTipoCliente;
+    @FXML
+    private TableColumn<Cliente, String> colRfc;
+    @FXML
+    private TableColumn<Cliente, String> colTelefono;
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
-    @FXML private Button btnBuscarCliente;
+    @FXML
+    private Button btnBuscarCliente;
 
     private BooleanProperty serieValido = new SimpleBooleanProperty(true);
     private BooleanProperty placasValido = new SimpleBooleanProperty(true);
@@ -130,7 +165,7 @@ public class AgregarVehiculoController {
         configurarValidaciones();
 
         int currentYear = Year.now().getValue();
-        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear , currentYear);
+        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
         spinnerAnio.setValueFactory(yearFactory);
 
         tablaVehiculos.setItems(listaVehiculos);
@@ -205,7 +240,6 @@ public class AgregarVehiculoController {
                 txtClienteTipo.clear();
             }
         });
-
 
 
     }
@@ -347,6 +381,7 @@ public class AgregarVehiculoController {
             public String toString(Marca marca) {
                 return marca != null ? marca.getNombreMarca() : "";
             }
+
             @Override
             public Marca fromString(String string) {
                 return null;
@@ -358,6 +393,7 @@ public class AgregarVehiculoController {
             public String toString(Modelo modelo) {
                 return modelo != null ? modelo.getNombreModelo() : "";
             }
+
             @Override
             public Modelo fromString(String string) {
                 return null;
@@ -369,13 +405,14 @@ public class AgregarVehiculoController {
             public String toString(Categoria categoria) {
                 return categoria != null ? categoria.getNombreCategoria() : "";
             }
+
             @Override
             public Categoria fromString(String string) {
                 return null;
             }
         });
 
-        // 🔹 Listener para filtrar modelos según la marca seleccionada
+        //  Listener para filtrar modelos según la marca seleccionada
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
             if (newMarca != null) {
                 List<Modelo> modelosFiltrados = modelos.stream()
@@ -407,7 +444,6 @@ public class AgregarVehiculoController {
         );
 
 
-
         txtBuscarCliente.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 buscarCliente();
@@ -427,7 +463,7 @@ public class AgregarVehiculoController {
         });
     }
 
-    private void buscarCliente(){
+    private void buscarCliente() {
         // Llenar tabla
         List<Cliente> clientes = clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString());
         //tablaClientes.setItems(FXCollections.observableArrayList(clientes));
@@ -478,17 +514,17 @@ public class AgregarVehiculoController {
             String placas = v.getPlacas();
             String numSerie = v.getNumSerie();
 
-            if (placas != null && !placas.isBlank()){
-                if (vehiculoService.existeVehiculoPorPlacas(placas)){
-                    mostrarWarning( "Vehículo duplicado","",
+            if (placas != null && !placas.isBlank()) {
+                if (vehiculoService.existeVehiculoPorPlacas(placas)) {
+                    mostrarWarning("Vehículo duplicado", "",
                             "Ya existe un vehículo activo con las mismas placas.");
                     return;
                 }
             }
 
-            if (numSerie != null && !numSerie.isBlank()){
-                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)){
-                    mostrarWarning("Vehículo duplicado","",
+            if (numSerie != null && !numSerie.isBlank()) {
+                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)) {
+                    mostrarWarning("Vehículo duplicado", "",
                             "Ya existe un vehículo activo con el mismo numero de serie.");
                     return;
                 }
@@ -498,12 +534,12 @@ public class AgregarVehiculoController {
 
         Cliente clienteSeleccionado = tablaClientes.getSelectionModel().getSelectedItem();
         if (clienteSeleccionado == null) {
-            mostrarWarning("Cliente no seleccionado","","Por favor selecciona un cliente.");
+            mostrarWarning("Cliente no seleccionado", "", "Por favor selecciona un cliente.");
             return;
         }
 
         if (listaVehiculos.isEmpty()) {
-            mostrarWarning("Sin vehículos","","Agrega al menos un vehículo antes de guardar.");
+            mostrarWarning("Sin vehículos", "", "Agrega al menos un vehículo antes de guardar.");
             return;
         }
 
@@ -538,13 +574,13 @@ public class AgregarVehiculoController {
         try {
             vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
 
-            mostrarInformacion("Éxito","","Vehículos guardados correctamente.");
+            mostrarInformacion("Éxito", "", "Vehículos guardados correctamente.");
             listaVehiculos.clear();
             limpiarCamposVehiculo();
             tablaClientes.getSelectionModel().clearSelection();
             ventanaPrincipalController.irAtras();
         } catch (Exception e) {
-            mostrarWarning("Error","","No se pudieron guardar los vehículos");
+            mostrarWarning("Error", "", "No se pudieron guardar los vehículos");
 
         }
     }

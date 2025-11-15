@@ -2,10 +2,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
-import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.MensajesAlert;
-import com.mastertyres.fxControllers.cliente.ClienteController;
-import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -13,11 +10,9 @@ import com.mastertyres.modelo.services.ModeloService;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -26,37 +21,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import static com.mastertyres.common.MensajesAlert.mostrarWarning;
 
 @Component
 public class EditarVehiculoController {
 
-    @FXML
-    private ChoiceBox<Marca> choiceMarca;
-    @FXML
-    private ChoiceBox<Modelo> choiceModelo;
-    @FXML
-    private ChoiceBox<Categoria> choiceCategoria;
-    @FXML
-    private Spinner<Integer> spinnerAnio;
-    @FXML
-    private TextField txtKilometros;
-    @FXML
-    private TextField txtColor;
-    @FXML
-    private TextField txtPlacas;
-    @FXML
-    private TextField txtNumSerie;
-    @FXML
-    private TextField txtObservaciones;
-    @FXML
-    private DatePicker dateUltimoServicio;
-    @FXML
-    private Button btnCambiar;
+    @FXML private ChoiceBox<Marca> choiceMarca;
+    @FXML private ChoiceBox<Modelo> choiceModelo;
+    @FXML private ChoiceBox<Categoria> choiceCategoria;
+    @FXML private Spinner<Integer> spinnerAnio;
+    @FXML private TextField txtKilometros;
+    @FXML private TextField txtColor;
+    @FXML private TextField txtPlacas;
+    @FXML private TextField txtNumSerie;
+    @FXML private TextField txtObservaciones;
+    @FXML private DatePicker dateUltimoServicio;
+    @FXML private Button btnCambiar;
 
     private VehiculoDTO vehiculo;
 

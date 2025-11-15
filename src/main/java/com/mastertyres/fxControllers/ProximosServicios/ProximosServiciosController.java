@@ -35,15 +35,9 @@ public class ProximosServiciosController {
     @FXML private Label lblAnio;
     @FXML private Label lblFechaUltimoServicio;
     @FXML private Label lblMensajesEnviados;
-
-
-
-    @FXML
-    private Button btnEnviarAviso;
-    @FXML
-    private Button MarcaServicioRealizado;
-    @FXML
-    private TextField txtBuscar;
+    @FXML private Button btnEnviarAviso;
+    @FXML private Button MarcaServicioRealizado;
+    @FXML private TextField txtBuscar;
 
     private VehiculoService vehiculoService;
 

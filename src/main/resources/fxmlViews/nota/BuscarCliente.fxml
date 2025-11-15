@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="700" prefWidth="700" style="-fx-background-color: #080808;" stylesheets="@../../styles_css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nota.BuscarClienteController">
+
+    <children>
+        <!--  ScrollPane que ocupa toda la pantalla -->
+        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-paneBuscar" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+
+            <!--  VBox principal dentro del Scroll -->
+            <content>
+                <VBox alignment="TOP_CENTER" spacing="15">
+                    <padding>
+                        <Insets bottom="15" left="15" right="15" top="15" />
+                    </padding>
+
+                    <!--  Título y buscador -->
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label styleClass="titulo" text="Datos del cliente" />
+                        <HBox alignment="CENTER" spacing="10">
+                            <TextField fx:id="txtBuscador" prefWidth="350" promptText="Buscar Cliente:" styleClass="buscador" />
+                            <Button fx:id="btnBuscar" styleClass="boton-accion" text="Buscar" />
+                        </HBox>
+                    </VBox>
+
+                    <!--  Tabla de Clientes -->
+                    <VBox alignment="CENTER" spacing="5">
+                        <Label styleClass="titulo" text="Clientes encontrados" />
+                        <TableView fx:id="tablaClientes" prefHeight="200">
+                            <columns>
+                                <TableColumn fx:id="colNombreCompleto" prefWidth="250" text="Cliente" />
+                                <TableColumn fx:id="colTipoCliente" prefWidth="110" text="Tipo" />
+                                <TableColumn fx:id="colRfc" prefWidth="125" text="RFC" />
+                                <TableColumn fx:id="colTelefono" prefWidth="120" text="Teléfono" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!--  Detalles del cliente -->
+                    <GridPane hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" />
+                            <ColumnConstraints hgrow="ALWAYS" />
+                            <ColumnConstraints hgrow="ALWAYS" />
+                        </columnConstraints>
+
+                        <children>
+                            <TextField fx:id="txtNombre" editable="false" promptText="Nombre completo" styleClass="buscador2" GridPane.columnSpan="3" GridPane.rowIndex="0" />
+
+                            <TextField fx:id="txtTipoCliente" editable="false" promptText="Tipo cliente" styleClass="buscador2" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+
+                            <TextField fx:id="txtRfc" editable="false" promptText="RFC" styleClass="buscador2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                            <TextField fx:id="txtNumTelefono" editable="false" promptText="Teléfono" styleClass="buscador2" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        </children>
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
+                    </GridPane>
+
+                    <!-- Tabla de Vehículos -->
+                    <VBox alignment="CENTER" spacing="5">
+                        <Label styleClass="titulo" text="Vehículos del cliente" />
+                        <TableView fx:id="tablaVehiculos" prefHeight="200">
+                            <columns>
+                                <TableColumn fx:id="colMarca" prefWidth="160" text="Marca" />
+                                <TableColumn fx:id="colModelo" prefWidth="180" text="Modelo" />
+                                <TableColumn fx:id="colCategoria" prefWidth="180" text="Categoría" />
+                                <TableColumn fx:id="colAnio" prefWidth="80" text="Año" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Botones -->
+                    <HBox alignment="CENTER" spacing="15">
+                        <Button onAction="#cancelar" prefWidth="120" styleClass="boton-accion" text="Cancelar" />
+                        <Button fx:id="btnAceptar" disable="true" onAction="#aceptar" prefWidth="120" styleClass="boton-accion" text="Aceptar" />
+                    </HBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

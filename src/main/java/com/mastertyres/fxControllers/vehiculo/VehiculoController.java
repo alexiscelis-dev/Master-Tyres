@@ -2,12 +2,12 @@ package com.mastertyres.fxControllers.vehiculo;
 
 
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.ClienteStatus;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
-import com.mastertyres.vehiculo.model.VehiculoStatus;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -26,13 +26,13 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,40 +52,23 @@ import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class VehiculoController {
-    @FXML
-    private TableView<VehiculoDTO> tablaVehiculos;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colCliente; //Columna Cliente es Columna Propietario
-    @FXML
-    private TableColumn<VehiculoDTO, String> colMarca;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colModelo;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colCategoria;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colColor;
-    @FXML
-    private TableColumn<VehiculoDTO, Integer> colAnio;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colPlacas;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colNumeroSerie;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colObservaciones;
-    @FXML
-    private TableColumn<VehiculoDTO, Integer> colKilometraje;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colUltimoServicio;
-    @FXML
-    private TableColumn<VehiculoDTO, String> colFechaRegistro;
-    @FXML
-    private TextField buscarVehiculoBuscador;
-    @FXML
-    private ChoiceBox<String> atributoBusquedaVehiculos;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private HBox limpiarChoiceBox;
+    @FXML private TableView<VehiculoDTO> tablaVehiculos;
+    @FXML private TableColumn<VehiculoDTO, String> colCliente; //Columna Cliente es Columna Propietario
+    @FXML private TableColumn<VehiculoDTO, String> colMarca;
+    @FXML private TableColumn<VehiculoDTO, String> colModelo;
+    @FXML private TableColumn<VehiculoDTO, String> colCategoria;
+    @FXML private TableColumn<VehiculoDTO, String> colColor;
+    @FXML private TableColumn<VehiculoDTO, Integer> colAnio;
+    @FXML private TableColumn<VehiculoDTO, String> colPlacas;
+    @FXML private TableColumn<VehiculoDTO, String> colNumeroSerie;
+    @FXML private TableColumn<VehiculoDTO, String> colObservaciones;
+    @FXML private TableColumn<VehiculoDTO, Integer> colKilometraje;
+    @FXML private TableColumn<VehiculoDTO, String> colUltimoServicio;
+    @FXML private TableColumn<VehiculoDTO, String> colFechaRegistro;
+    @FXML private TextField buscarVehiculoBuscador;
+    @FXML private ChoiceBox<String> atributoBusquedaVehiculos;
+    @FXML private Label statusLabel;
+    @FXML private HBox limpiarChoiceBox;
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
@@ -171,7 +154,7 @@ public class VehiculoController {
                                     if (resultado.isPresent() && resultado.get() == buttonEliminar) {
 
 
-                                        vehiculoService.eliminarVehiculo(VehiculoStatus.INACTIVE.toString(), vehiculoId);
+                                        vehiculoService.eliminarVehiculo(StatusVehiculo.INACTIVE.toString(), vehiculoId);
 
                                         cargarVehiculos(); //metodo que cargar los datos en la tabla
 
@@ -185,18 +168,20 @@ public class VehiculoController {
 
                                 case "Editar" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarVehiculo.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/vehiculo/EditarVehiculo.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
                                         EditarVehiculoController controller = loader.getController();
                                         controller.setVehiculo(vehiculoSeleccionado);
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
+                                        stage.setResizable(false);
 
                                         stage.initModality(Modality.APPLICATION_MODAL);
+
 
                                         stage.showAndWait();
                                         cargarVehiculos();
@@ -207,14 +192,14 @@ public class VehiculoController {
 
                                 case "Ver informacion" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleVehiculo.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/vehiculo/DetalleVehiculo.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
                                         detalleVehiculo controller = loader.getController();
                                         controller.setVehiculo(vehiculoSeleccionado);
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Informacion Vehiculo");
                                         stage.setScene(new Scene(root));
                                         stage.initModality(Modality.APPLICATION_MODAL);
@@ -415,14 +400,14 @@ public class VehiculoController {
 
         if (modoBusqueda) {
             paginaVehiculo = vehiculoService.buscadorVehiculosPaginado(
-                    VehiculoStatus.ACTIVE.toString(),
+                    StatusVehiculo.ACTIVE.toString(),
                     terminoBusquedaActual,
                     indicePagina,
                     VEHICULO_POR_PAGINA
             );
         } else {
             paginaVehiculo = vehiculoService.listarVehiculosPaginado(
-                    VehiculoStatus.ACTIVE.toString(),
+                    StatusVehiculo.ACTIVE.toString(),
                     indicePagina,
                     VEHICULO_POR_PAGINA
             );
@@ -488,7 +473,7 @@ public class VehiculoController {
         try {
             if (modoBusqueda) {
             String busqueda = terminoBusquedaActual.trim();
-            String activo = VehiculoStatus.ACTIVE.toString();
+            String activo = StatusVehiculo.ACTIVE.toString();
 
                 switch (atributoBusquedaVehiculos.getValue()) {
                     case "propietario" -> paginaVehiculo =
@@ -577,7 +562,7 @@ public class VehiculoController {
                             }
                             if (consultar) {
 
-                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(VehiculoStatus.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
+                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
 
                             }
 
@@ -611,7 +596,7 @@ public class VehiculoController {
                             }
 
                             if (consultar) {
-                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(VehiculoStatus.ACTIVE.toString(), consultaInicio, consultaFinal, indicePagina, VEHICULO_POR_PAGINA);
+                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(StatusVehiculo.ACTIVE.toString(), consultaInicio, consultaFinal, indicePagina, VEHICULO_POR_PAGINA);
                             }
 
                         } else {
@@ -672,7 +657,7 @@ public class VehiculoController {
 
                             if (consultar) {
 
-                                paginaVehiculo = vehiculoService.buscarPorFechaRegistro(VehiculoStatus.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
+                                paginaVehiculo = vehiculoService.buscarPorFechaRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
 
 
                             }
@@ -708,7 +693,7 @@ public class VehiculoController {
                             }
 
                             if (consultar) {
-                                paginaVehiculo = vehiculoService.buscarPorFechaRegistroRango(VehiculoStatus.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, VEHICULO_POR_PAGINA);
+                                paginaVehiculo = vehiculoService.buscarPorFechaRegistroRango(StatusVehiculo.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, VEHICULO_POR_PAGINA);
                             }
 
 
@@ -726,7 +711,7 @@ public class VehiculoController {
                 }
             } else {
             paginaVehiculo = vehiculoService.listarVehiculosPaginado(
-                    VehiculoStatus.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
+                    StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
             }
 
         } catch (Exception e) {
@@ -766,7 +751,7 @@ public class VehiculoController {
 
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
-                "/fxmlViews/AgregarVehiculo.fxml",
+                "/fxmlViews/vehiculo/AgregarVehiculo.fxml",
                 "Agregar vehiculo"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
@@ -868,7 +853,7 @@ public class VehiculoController {
     private void cargarDatosVehiculo() {
 
         try {
-            long totalvehiculos = vehiculoService.contarVehiculosActivos(VehiculoStatus.ACTIVE.toString());
+            long totalvehiculos = vehiculoService.contarVehiculosActivos(StatusVehiculo.ACTIVE.toString());
             int totalPaginas = (int) Math.ceil((double) totalvehiculos / VEHICULO_POR_PAGINA);
             paginadorVehiculos.setPageCount(Math.max(totalPaginas, 1));
             paginadorVehiculos.setPageFactory(this::crearPaginaVehiculo);
@@ -1207,7 +1192,7 @@ public class VehiculoController {
 //        }
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
-                "/fxmlViews/EditarMarcas_Modelos_Categorias.fxml",
+                "/fxmlViews/marca/EditarMarcas_Modelos_Categorias.fxml",
                 "Agregar o editar marcas"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar o editar marcas");

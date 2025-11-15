@@ -9,6 +9,7 @@ import java.util.List;
 
 
 @Entity
+@Builder
 @Table(name = "cliente")
 @Data
 @AllArgsConstructor
@@ -45,6 +46,7 @@ public class Cliente {
     private String updated_at;
     private String active;
     private String genero;
+    private String correo;
 
 
     //relaciones

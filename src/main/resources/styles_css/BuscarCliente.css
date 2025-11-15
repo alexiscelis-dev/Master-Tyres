@@ -1,0 +1,87 @@
+.seccion-titulo {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-text-alignment: center;
+}
+
+.buscador {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+}
+.buscador:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+
+.boton-accion {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.boton-accion:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-background-color: #AEE83A;
+}
+
+/* Aplica a todos los ScrollPane automáticamente */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Opcional: barras de scroll transparentes */
+.scroll-pane .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+
+/* Tabla */
+.table-view {
+    -fx-background-color: #1A1A1A;
+    -fx-table-cell-border-color: #080808;
+    -fx-padding: 5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #1A1A1A;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white; /* Cambia a blanco u otro color con buen contraste */
+    -fx-font-weight: bold; /* Opcional: texto más grueso */
+}
+
+.table-view .column-header-background .label {
+    -fx-text-fill: white; /* O el color que prefieras */
+    -fx-font-weight: bold;
+}

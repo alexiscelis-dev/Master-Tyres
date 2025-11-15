@@ -12,6 +12,9 @@ import com.mastertyres.fxControllers.cliente.ClienteController;
 import com.mastertyres.fxControllers.inventario.InventarioController;
 import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionController;
+import com.mastertyres.fxControllers.nota.NotaController;
+import com.mastertyres.fxControllers.nota.NotaController;
+import com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -38,32 +41,19 @@ import java.util.Stack;
 
 @Component
 public class VentanaPrincipalController {
-    @FXML
-    private AnchorPane sidebar;
-    @FXML
-    private HBox HBoxLogOut;
-    @FXML
-    private HBox HBoxNotas;
-    @FXML
-    private HBox HBoxVehiculos;
-    @FXML
-    private HBox HBoxClientes;
-    @FXML
-    private HBox HBoxPromociones;
-    @FXML
-    private HBox HBoxInventario;
-    @FXML
-    private HBox HBoxServicios;
-    @FXML
-    private Pane panelMenu;
-    @FXML
-    private ImageView LogoPrincipal;
-    @FXML
-    public Label cambiarPaginaEtiqueta;
-    @FXML
-    private ImageView irAtras;
-    @FXML
-    private ImageView imgPerfil;
+    @FXML private AnchorPane sidebar;
+    @FXML private HBox HBoxLogOut;
+    @FXML private HBox HBoxNotas;
+    @FXML private HBox HBoxVehiculos;
+    @FXML private HBox HBoxClientes;
+    @FXML private HBox HBoxPromociones;
+    @FXML private HBox HBoxInventario;
+    @FXML private HBox HBoxServicios;
+    @FXML private Pane panelMenu;
+    @FXML private ImageView LogoPrincipal;
+    @FXML public Label cambiarPaginaEtiqueta;
+    @FXML private ImageView irAtras;
+    @FXML private ImageView imgPerfil;
 
     @Autowired
     private ApplicationContext springContex;
@@ -82,46 +72,47 @@ public class VentanaPrincipalController {
 
     @FXML
     public void initialize() {
-        historialVistas.push("/fxmlViews/RegresarMenu.fxml");
-        historialNombreVistas.push("Inicio");
+        //viewContent(null, "RegresarMenu.fxml", "Menu");
+        historialVistas.push("/fxmlViews/master_tires/RegresarMenu.fxml");
+        historialNombreVistas.push("Menu");
 
         // iconoMenu.setOnMouseClicked(event -> toggleSidebar());
-        HBoxLogOut.setOnMouseClicked(event -> logOut(event, "/fxmlViews/Login.fxml"));
+        HBoxLogOut.setOnMouseClicked(event -> logOut(event, "/fxmlViews/login/Login.fxml"));
 
         HBoxVehiculos.setOnMouseClicked(event -> {
-                    viewContent(event, "/fxmlViews/Vehiculo.fxml", "Vehiculos");
+                    viewContent(event, "/fxmlViews/vehiculo/Vehiculo.fxml", "Vehiculos");
                     cambiarPaginaEtiqueta.setText("Vehiculos");
 
                 }
         );
 
         HBoxNotas.setOnMouseClicked(event -> {
-            viewContent(event,"/fxmlViews/Nota.fxml","Notas");
+            viewContent(event, "/fxmlViews/nota/Nota.fxml","Notas");
             cambiarPaginaEtiqueta.setText("Notas");
         });
 
 
         HBoxClientes.setOnMouseClicked(event -> {
-                    viewContent(event, "/fxmlViews/Cliente.fxml", "Clientes");
+                    viewContent(event, "/fxmlViews/cliente/Cliente.fxml", "Clientes");
                     cambiarPaginaEtiqueta.setText("Clientes");
                 }
         );
         HBoxPromociones.setOnMouseClicked(event -> {
-                    viewContent(event, "/fxmlViews/PromocionesActivas.fxml", "Promociones");
+                    viewContent(event, "/fxmlViews/promocion/PromocionesActivas.fxml", "Promociones");
                     cambiarPaginaEtiqueta.setText("Promociones");
                 }
         );
         HBoxInventario.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/Inventario.fxml", "Inventario de llantas");
+            viewContent(event, "/fxmlViews/inventario/Inventario.fxml", "Inventario de llantas");
             cambiarPaginaEtiqueta.setText("Inventario de llantas");
         });
         HBoxServicios.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/ProximosServicios.fxml", "Proximos Servicios");
+            viewContent(event, "/fxmlViews/vehiculo/ProximosServicios.fxml", "Proximos Servicios");
             cambiarPaginaEtiqueta.setText("Proximos Servicios");
         });
 
         LogoPrincipal.setOnMouseClicked(event -> {
-            regresarInicio("/fxmlViews/RegresarMenu.fxml");
+            regresarInicio("/fxmlViews/master_tires/RegresarMenu.fxml");
             cambiarPaginaEtiqueta.setText("Inicio");
         });
 
@@ -243,14 +234,14 @@ public class VentanaPrincipalController {
             if (controller instanceof NuevaPromocionController) {
                 ((NuevaPromocionController) controller).setVentanaPrincipalController(this);
             }
-            if (controller instanceof NuevaPromocionController) {
-                ((NuevaPromocionController) controller).setVentanaPrincipalController(this);
-            }
             if (controller instanceof AgregarInventarioController) {
                 ((AgregarInventarioController) controller).setVentanaPrincipalController(this);
             }
             if (controller instanceof AgregarMarcaController) {
                 ((AgregarMarcaController) controller).setVentanaPrincipalController(this);
+            }
+            if (controller instanceof NotaController){
+                ((NotaController) controller).setVentanaPrincipalController(this);
             }
             panelMenu.getChildren().clear();
             panelMenu.getChildren().add(contenido);

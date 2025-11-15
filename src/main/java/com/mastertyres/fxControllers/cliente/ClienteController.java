@@ -1,13 +1,13 @@
 package com.mastertyres.fxControllers.cliente;
 
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.ClienteStatus;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.Vehiculo;
-import com.mastertyres.vehiculo.model.VehiculoStatus;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -29,6 +29,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,54 +53,24 @@ public class ClienteController {
         this.ventanaPrincipalController = controller;
     }
 
-    @FXML
-    private TableView<Cliente> tablaClientes;
-
-    @FXML
-    private TableColumn<Cliente, String> colTipoCliente;
-
-    @FXML
-    private TableColumn<Cliente, String> colGenero;
-
-    @FXML
-    private TableColumn<Cliente, String> colCumpleanos;
-
-    @FXML
-    private TableColumn<Cliente, String> colRegistro;
-
-    @FXML
-    private TableColumn<Cliente, String> colNombre;
-
-    @FXML
-    private TableColumn<Cliente, String> colRFC;
-
-    @FXML
-    private TableColumn<Cliente, String> colTelefono;
-
-    @FXML
-    private TableColumn<Cliente, String> colEstado;
-
-    @FXML
-    private TableColumn<Cliente, String> colCiudad;
-
-    @FXML
-    private TableColumn<Cliente, String> colDomicilio;
-
-    @FXML
-    private TableColumn<Cliente, String> colHobbie;
-
-    @FXML
-    private TableColumn<Cliente, String> colVehiculo;
-
-    @FXML
-    private TextField buscarClienteBuscador;
-
-    @FXML
-    private ChoiceBox<String> atributoBusquedaClientes;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private HBox limpiarChoiceBox;
+    @FXML private TableView<Cliente> tablaClientes;
+    @FXML private TableColumn<Cliente, String> colTipoCliente;
+    @FXML private TableColumn<Cliente, String> colGenero;
+    @FXML private TableColumn<Cliente, String> colCumpleanos;
+    @FXML private TableColumn<Cliente, String> colRegistro;
+    @FXML private TableColumn<Cliente, String> colNombre;
+    @FXML private TableColumn<Cliente, String> colRFC;
+    @FXML private TableColumn<Cliente, String> colTelefono;
+    @FXML private TableColumn<Cliente, String> colEstado;
+    @FXML private TableColumn<Cliente, String> colCiudad;
+    @FXML private TableColumn<Cliente, String> colDomicilio;
+    @FXML private TableColumn<Cliente, String> colHobbie;
+    @FXML private TableColumn<Cliente, String> colVehiculo;
+    @FXML private TextField buscarClienteBuscador;
+    @FXML private ChoiceBox<String> atributoBusquedaClientes;
+    @FXML private Label statusLabel;
+    @FXML private HBox limpiarChoiceBox;
+    @FXML private Button refrescar;
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
@@ -107,7 +78,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    @FXML private Button refrescar;
+
 
     @FXML
     private Pagination paginadorClientes;
@@ -192,7 +163,7 @@ public class ClienteController {
 
                                         System.out.println("vehiculoId = " + clienteId);
 
-                                        clienteService.eliminarCliente(VehiculoStatus.INACTIVE.toString(), clienteId);
+                                        clienteService.eliminarCliente(StatusVehiculo.INACTIVE.toString(), clienteId);
 
 
                                         cargarClientes(); //metodo que cargar los datos en la tabla
@@ -207,20 +178,26 @@ public class ClienteController {
 
                                 case "Editar" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarCliente.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/cliente/EditarCliente.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
                                         EditarClienteController controller = loader.getController();
                                         controller.editarCliente(clienteSeleccionado); // pasa el cliente actual
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
+
+
+
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
+                                        stage.setResizable(false);
 
                                         stage.initModality(Modality.APPLICATION_MODAL);
 
                                         stage.showAndWait();
+
+
                                         cargarClientes();
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -229,14 +206,14 @@ public class ClienteController {
 
                                 case "Ver informacion" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleCliente.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/cliente/DetalleCliente.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                                         Parent root = loader.load();
 
                                         DetalleCliente controller = loader.getController();
                                         controller.informacionCliente(clienteSeleccionado); // pasa el cliente actual
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Informacion Cliente");
                                         stage.setScene(new Scene(root));
                                         stage.initModality(Modality.APPLICATION_MODAL);
@@ -398,11 +375,13 @@ public class ClienteController {
 
     }// initialize
 
+
+
     @FXML
     private void agregarCliente(ActionEvent event) {
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
-                "/fxmlViews/AgregarCliente.fxml",
+                "/fxmlViews/cliente/AgregarCliente.fxml",
                 "Agregar cliente"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
@@ -413,14 +392,14 @@ public class ClienteController {
 
         if (modoBusqueda) {
             paginaClientes = clienteService.buscadorClientesPaginado(
-                    ClienteStatus.ACTIVE.toString(),
+                    StatusCliente.ACTIVE.toString(),
                     terminoBusquedaActual,
                     indicePagina,
                     CLIENTES_POR_PAGINA
             );
         } else {
             paginaClientes = clienteService.listarClientesConVehiculosPaginado(
-                    ClienteStatus.ACTIVE.toString(),
+                    StatusCliente.ACTIVE.toString(),
                     indicePagina,
                     CLIENTES_POR_PAGINA
             );
@@ -443,24 +422,24 @@ public class ClienteController {
             // Dependiendo del atributo de búsqueda
             switch (atributoBusquedaClientes.getValue()) {
                 case "nombre" -> paginaClientes = clienteService.buscarClientePorNombrePaginado(
-                        ClienteStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "telefono" -> paginaClientes = clienteService.buscarClientePorNumTelefonoPaginado(
-                        ClienteStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "estado" -> paginaClientes = clienteService.buscarClientePorEstadoPaginado(
-                        ClienteStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "ciudad" -> paginaClientes = clienteService.buscarClientePorCiudadPaginado(
-                        ClienteStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "domicilio" -> paginaClientes = clienteService.buscarClientePorDomicilioPaginado(
-                        ClienteStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "hobbie" -> paginaClientes = clienteService.buscarClientePorHobbiePaginado(
-                        ClienteStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "rfc" -> paginaClientes = clienteService.buscarClientePorRfcPaginado(
-                        ClienteStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
-                default -> paginaClientes = clienteService.listarClientesConVehiculosPaginado(ClienteStatus.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                default -> paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
             }
         } else {
             paginaClientes = clienteService.listarClientesConVehiculosPaginado(
-                    ClienteStatus.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+                    StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
         }
 
         tablaClientes.setItems(FXCollections.observableArrayList(paginaClientes.getContent()));
@@ -531,7 +510,7 @@ public class ClienteController {
 
     private void cargarDatosClientes() {
         try {
-            long totalClientes = clienteService.contarClientesActivos(ClienteStatus.ACTIVE.toString());
+            long totalClientes = clienteService.contarClientesActivos(StatusCliente.ACTIVE.toString());
             int totalPaginas = (int) Math.ceil((double) totalClientes / CLIENTES_POR_PAGINA);
             paginadorClientes.setPageCount(Math.max(totalPaginas, 1));
             paginadorClientes.setPageFactory(this::crearPaginaClientes);
@@ -622,35 +601,35 @@ public class ClienteController {
         switch (seleccion) {
             case "nombre" -> paginaFiltrada =
                     clienteService.buscarClientePorNombrePaginado(
-                            ClienteStatus.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "telefono" -> paginaFiltrada =
                     clienteService.buscarClientePorNumTelefonoPaginado(
-                            ClienteStatus.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "estado" -> paginaFiltrada =
                     clienteService.buscarClientePorEstadoPaginado(
-                            ClienteStatus.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "ciudad" -> paginaFiltrada =
                     clienteService.buscarClientePorCiudadPaginado(
-                            ClienteStatus.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "domicilio" -> paginaFiltrada =
                     clienteService.buscarClientePorDomicilioPaginado(
-                            ClienteStatus.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "hobbie" -> paginaFiltrada =
                     clienteService.buscarClientePorHobbiePaginado(
-                            ClienteStatus.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "rfc" -> paginaFiltrada =
                     clienteService.buscarClientePorRfcPaginado(
-                            ClienteStatus.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             default -> paginaFiltrada =
                     clienteService.listarClientesConVehiculosPaginado(
-                            ClienteStatus.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
+                            StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
         }
 
         // ACTUALIZA EL PAGECOUNT CON EL TOTAL DE COINCIDENCIAS
