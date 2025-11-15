@@ -1,4 +1,4 @@
-package com.mastertyres.vehiculo.model;
+package com.mastertyres.cliente.model;
 
 public enum StatusCliente {
     ACTIVE,

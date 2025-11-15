@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,42 +49,25 @@ import static com.mastertyres.common.MensajesAlert.*;
 public class InventarioController {
 
 
-    @FXML
-    private TableView<Inventario> tablaInventario;
-    @FXML
-    private TableColumn<Inventario, String> colCodBarras;
-    @FXML
-    private TableColumn<Inventario, String> colDot;
-    @FXML
-    private TableColumn<Inventario, String> colMarca;
-    @FXML
-    private TableColumn<Inventario, String> colModelo;
-    @FXML
-    private TableColumn<Inventario, String> colMedida;
-    @FXML
-    private TableColumn<Inventario, String> colIndiceCar;
-    @FXML
-    private TableColumn<Inventario, String> colIndiceVel;
-    @FXML
-    private TableColumn<Inventario, Integer> colStock;
-    @FXML
-    private TableColumn<Inventario, Float> colPrecioCom;
-    @FXML
-    private TableColumn<Inventario, Float> colPrecioVen;
-    @FXML
-    private TableColumn<Inventario, String> colObservaciones;
-    @FXML
-    private TableColumn<Inventario, String> colFechaReg;
-    @FXML
-    private TextField buscarInventarioBuscador;
-    @FXML
-    private ChoiceBox<String> atributoBusquedaInventario;
-    @FXML
-    private HBox limpiarChoiceBox;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private Button btnAgregarInventario;
+    @FXML private TableView<Inventario> tablaInventario;
+    @FXML private TableColumn<Inventario, String> colCodBarras;
+    @FXML private TableColumn<Inventario, String> colDot;
+    @FXML private TableColumn<Inventario, String> colMarca;
+    @FXML private TableColumn<Inventario, String> colModelo;
+    @FXML private TableColumn<Inventario, String> colMedida;
+    @FXML private TableColumn<Inventario, String> colIndiceCar;
+    @FXML private TableColumn<Inventario, String> colIndiceVel;
+    @FXML private TableColumn<Inventario, Integer> colStock;
+    @FXML private TableColumn<Inventario, Float> colPrecioCom;
+    @FXML private TableColumn<Inventario, Float> colPrecioVen;
+    @FXML private TableColumn<Inventario, String> colObservaciones;
+    @FXML private TableColumn<Inventario, String> colFechaReg;
+    @FXML private TextField buscarInventarioBuscador;
+    @FXML private ChoiceBox<String> atributoBusquedaInventario;
+    @FXML private HBox limpiarChoiceBox;
+    @FXML private Label statusLabel;
+    @FXML private Button btnAgregarInventario;
+
     private VentanaPrincipalController ventanaPrincipalController;
 
 
@@ -182,7 +166,7 @@ public class InventarioController {
 
                                 case "Ver informacion" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/DetalleInventario.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/inventario/DetalleInventario.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
 
                                         Parent root = loader.load();
@@ -190,7 +174,7 @@ public class InventarioController {
                                         detalleInventario.InformacionInventario(seleccionado);
 
 
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Informacion del inventario");
                                         stage.setScene(new Scene(root));
                                         stage.showAndWait();
@@ -221,14 +205,15 @@ public class InventarioController {
                                 }
                                 case "Editar" -> {
                                     try {
-                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarInventario.fxml"));
+                                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/inventario/EditarInventario.fxml"));
                                         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
 
                                         Parent root = loader.load();
                                         EditarInventarioController controller = loader.getController();
                                         controller.editarInventario(seleccionado);
-                                        Stage stage = new Stage();
+                                        Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Editar inventario");
+                                        stage.setResizable(false);
                                         stage.setScene(new Scene(root));
                                         stage.showAndWait();
 
@@ -521,7 +506,7 @@ public class InventarioController {
     @FXML
     private void agregarInventario(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarInventario.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/inventario/AgregarInventario.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 

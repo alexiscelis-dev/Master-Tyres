@@ -4,6 +4,7 @@ import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,44 +15,30 @@ import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
 public class NotaController {
-    @FXML
-    private TilePane contenedorNotas;
-    @FXML
-    private Label lblStatus;
-    @FXML
-    private Label lblNumNota;
-    @FXML
-    private Label lblnumFactura;
-    @FXML
-    private Label lblCliente;
-    @FXML
-    private Label lblVehiculo;
-    @FXML
-    private Label lblFechaEmicion;
-    @FXML
-    private Label lblFechaLimite;
-    @FXML
-    private Label lblSaldoFavor;
-    @FXML
-    private Label lblAnticipo;
-    @FXML
-    private Label lblTotal;
-    @FXML
-    private Button btnNuevaNota;
-    @FXML
-    private Button btnEditar;
-    @FXML
-    private Button btnImprimir;
-    @FXML
-    private Button btnDarPlazo;
-    @FXML
-    private Button btnEliminar;
-    @FXML
-    private TextField txtBuscar;
+    @FXML private TilePane contenedorNotas;
+    @FXML private Label lblStatus;
+    @FXML private Label lblNumNota;
+    @FXML private Label lblNumFactura;
+    @FXML private Label lblCliente;
+    @FXML private Label lblVehiculo;
+    @FXML private Label lblFechaEmicion;
+    @FXML private Label lblFechaLimite;
+    @FXML private Label lblSaldoFavor;
+    @FXML private Label lblAdeudo;
+    @FXML private Label lblTotal;
+    @FXML private Button btnNuevaNota;
+    @FXML private Button btnEditar;
+    @FXML private Button btnImprimir;
+    @FXML private Button btnDarPlazo;
+    @FXML private Button btnEliminar;
+    @FXML private TextField txtBuscar;
+
     private VentanaPrincipalController ventanaPrincipalController;
 
 
@@ -61,9 +48,9 @@ public class NotaController {
     @Autowired
     NotaService notaService;
 
-public void NotaController(VentanaPrincipalController ventanaPrincipalController){
-    this.ventanaPrincipalController = ventanaPrincipalController;
-}//constructor
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
     @FXML
     private void initialize() {
@@ -79,41 +66,44 @@ public void NotaController(VentanaPrincipalController ventanaPrincipalController
     }//initialize
 
     private void cargarNota() {
-        List<NotaDTO> notas = notaService.listarNotas(StatusNota.ACTIVE.toString());
+       List<NotaDTO> notas = notaService.listarNotas(StatusNota.ACTIVE.toString());
         mostrarNotas(notas);
+
+
     }//cargarNota
 
     private void mostrarNotas(List<NotaDTO> notas) {
         contenedorNotas.getChildren().clear();
 
-        for (NotaDTO nota: notas){
+        for (NotaDTO nota : notas) {
             VBox card = crearCardNota(nota);
             contenedorNotas.getChildren().add(card);
         }
 
     }//mostrarNotas
 
-    private VBox crearCardNota(NotaDTO nota){
+    private VBox crearCardNota(NotaDTO nota) {
 
         VBox card = new VBox();
         card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
-        card.setPrefSize(500,100);
+        card.setPrefSize(500, 100);
+
 
         Label numeroNota = new Label(nota.getNumNota());
         numeroNota.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
         Label cliente = new Label(
-                nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido(): "") + " " +
+                nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido() : "") + " " +
                         (nota.getSegundoApellido() != null ? nota.getSegundoApellido() : "")
         );
         cliente.setStyle("-fx-text-fill: white;");
         Label vehiculo = new Label(
-                nota.getMarca() + " " + nota.getModelo() + " "+ nota.getAnio()
+                nota.getMarca() + " " + nota.getModelo() + " " + nota.getAnio()
         );
         vehiculo.setStyle("-fx-text-fill: white;");
-        Label total = new Label(nota.getAnio() +"");
+        Label total = new Label("Total: $" + nota.getTotal());
         total.setStyle("-fx-text-fill: white;");
 
-        VBox textBox = new VBox(5,numeroNota,cliente,vehiculo,total);
+        VBox textBox = new VBox(5, numeroNota, cliente, vehiculo, total);
         HBox contenBox = new HBox(10, textBox);
         card.getChildren().add(contenBox);
 
@@ -131,33 +121,68 @@ public void NotaController(VentanaPrincipalController ventanaPrincipalController
         return card;
     }//crearCardNota
 
-    private void mostrarDetalleNota(NotaDTO nota){
+    private void mostrarDetalleNota(NotaDTO nota) {
         notaSeleccionada = nota;
 
-        btnNuevaNota.setDisable(false);
         btnEditar.setDisable(false);
         btnImprimir.setDisable(false);
         btnDarPlazo.setDisable(false);
         btnEliminar.setDisable(false);
 
-        lblStatus.setText(nota.getStatusNota());
-        lblNumNota.setText(nota.getNumNota());
-       // lblnumFactura.setText(nota.getNumFactura() != null ? nota.ge "Sin facturar");
-        lblCliente.setText(nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido(): "") + " " +
-                (nota.getSegundoApellido() != null ? nota.getSegundoApellido() : ""));
-        lblVehiculo.setText(nota.getMarca() + " " + nota.getModelo() + " "+ nota.getAnio());
-        lblFechaEmicion.setText(nota.getCreatedAt());
-        lblFechaLimite.setText(nota.getFechaVencimiento().toString());
-        lblAnticipo.setText( "$" + nota.getMontoPagado() );
-        lblTotal.setText("$" + nota.getTotal() );
+        switch (nota.getStatusNota()) {
 
+            case "PAGADO" -> lblStatus.setText("PAGADA");
+            case "POR_PAGAR" -> lblStatus.setText("POR PAGAR");
+            case "VENCIDO" -> lblStatus.setText("VENCIDO");
+            case "A_FAVOR" -> lblStatus.setText("A FAVOR");
+
+        }
+
+        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String fechaStr = nota.getCreatedAt();
+        LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatterEntrada);
+        String fechaFormateada = fecha.format(formatter2);
+
+
+        lblNumNota.setText(nota.getNumNota());
+
+
+        lblNumFactura.setText(nota.getNumFactura() != null ? nota.getNumFactura() : "Sin facturar");
+
+
+        lblCliente.setText(nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido() : "") + " " +
+                (nota.getSegundoApellido() != null ? nota.getSegundoApellido() : ""));
+        lblVehiculo.setText(nota.getMarca() + " " + nota.getModelo() + " " + nota.getAnio());
+
+
+        lblFechaEmicion.setText(fechaFormateada);
+
+        lblFechaLimite.setText(nota.getFechaVencimiento());
+
+        lblAdeudo.setText("$" + nota.getAdeudo());
+        lblTotal.setText("$" + nota.getTotal());
+
+
+
+        lblSaldoFavor.setText("$" + nota.getSaldoFavor());
 
 
     }//mostrarDetalleNota
 
-    private void cargarNotasFiltradas(){
+    private void cargarNotasFiltradas() {
 
     }//cargarNotasFiltradas
+
+    @FXML
+    private void agregarNotas(ActionEvent actionEvent) {
+
+        ventanaPrincipalController.viewContent(
+                null,
+                "/fxmlViews/nota/NotaFormulario.fxml",
+                "Agregar Nota");
+
+    }//agregarNotas
 
 
 

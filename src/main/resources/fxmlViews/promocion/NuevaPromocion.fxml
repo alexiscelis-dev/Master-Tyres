@@ -11,7 +11,7 @@
     <children>
         <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0"
               style="-fx-background-color: #1A1A1A;" styleClass="formulario"
-              stylesheets="@../styles_css/NuevaPromocion.css">
+              stylesheets="@../../styles_css/NuevaPromocion.css">
             <children>
                 <HBox alignment="CENTER" prefHeight="33.0" prefWidth="460.0">
                     <children>
@@ -185,7 +185,7 @@
                 </HBox>
 
 
-                <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../styles_css/ClientesStyles.css">
+                <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../../styles_css/ClientesStyles.css">
                     <children>
                         <DatePicker fx:id="fechaInicio" disable="true" editable="false" prefHeight="26.0"
                                     prefWidth="159.0" styleClass="date-picker">
@@ -214,7 +214,7 @@
         </VBox>
         <VBox layoutX="600.0" layoutY="150.0" prefHeight="600.0" prefWidth="552.0"
               style="-fx-background-color: #1A1A1A;" styleClass="formulario"
-              stylesheets="@../styles_css/NuevaPromocion.css">
+              stylesheets="@../../styles_css/NuevaPromocion.css">
             <children>
 
                 <VBox alignment="TOP_CENTER" minWidth="500.0" prefHeight="339.0" prefWidth="500.0" spacing="15.0"

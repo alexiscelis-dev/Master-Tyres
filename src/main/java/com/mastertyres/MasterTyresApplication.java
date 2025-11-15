@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import static com.mastertyres.common.Setting.setPantallaSize;
+
 
 @SpringBootApplication
 public class MasterTyresApplication extends Application {
@@ -34,9 +36,9 @@ public class MasterTyresApplication extends Application {
 
 		//Cargar ventana para ajustar tamaño
 
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/Login.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/login/Login.fxml"));
 
-        FXMLLoader  loaderNavigator = new FXMLLoader(getClass().getResource("/fxmlViews/Login.fxml"));
+        FXMLLoader  loaderNavigator = new FXMLLoader(getClass().getResource("/fxmlViews/login/Login.fxml"));
 
 
 		Parent root = null;
@@ -52,12 +54,10 @@ public class MasterTyresApplication extends Application {
 
 		Scene scene = new Scene(root);
 
+        setPantallaSize(ventanaPrincipal,scene,"Master Tyres",true,true,1000,800);
 
-		ventanaPrincipal.setScene(scene);
 
-		ventanaPrincipal.setTitle("Master Tyres");
-		ventanaPrincipal.setMaximized(true);
-		ventanaPrincipal.show();
+
 
 	}
 

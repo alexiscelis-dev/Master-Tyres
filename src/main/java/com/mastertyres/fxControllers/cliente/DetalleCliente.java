@@ -2,14 +2,10 @@ package com.mastertyres.fxControllers.cliente;
 
 
 import com.mastertyres.cliente.model.Cliente;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 
 @Component
@@ -30,22 +26,22 @@ public class DetalleCliente {
     @FXML private Label txtFechaRegistro;
     @FXML private Label txtFechaActualizacion;
 
-    public void informacionCliente(Cliente clienteSeleccionado){
+    public void informacionCliente(Cliente clienteSeleccionado) {
 
-        txtNombre.setText(txtNombre.getText() + " " + (clienteSeleccionado.getNombre() != null ? clienteSeleccionado.getNombre()  : ""));
+        txtNombre.setText(txtNombre.getText() + " " + (clienteSeleccionado.getNombre() != null ? clienteSeleccionado.getNombre() : ""));
         txtApellido.setText(txtApellido.getText() + " " + (clienteSeleccionado.getApellido() != null ? clienteSeleccionado.getApellido() : ""));
         txtSegundoApellido.setText(txtSegundoApellido.getText() + " " + (clienteSeleccionado.getSegundoApellido() != null ? clienteSeleccionado.getSegundoApellido() : ""));
         txtTelefono.setText(txtTelefono.getText() + " " + (clienteSeleccionado.getNumTelefono() != null ? clienteSeleccionado.getNumTelefono() : ""));
-        txtHobbie.setText(txtHobbie.getText() + " " + (clienteSeleccionado.getHobbie() != null ? clienteSeleccionado.getHobbie() : "" ));
+        txtHobbie.setText(txtHobbie.getText() + " " + (clienteSeleccionado.getHobbie() != null ? clienteSeleccionado.getHobbie() : ""));
         txtRFC.setText(txtRFC.getText() + " " + (clienteSeleccionado.getRfc() != null ? clienteSeleccionado.getRfc() : ""));
         txtDomicilio.setText(txtDomicilio.getText() + " " + (clienteSeleccionado.getDomicilio() != null ? clienteSeleccionado.getDomicilio() : ""));
-        txtEstado.setText(txtEstado.getText() + " " + (clienteSeleccionado.getEstado() != null ?  clienteSeleccionado.getEstado() : ""));
-        txtCiudad.setText(txtCiudad.getText() + " " + (clienteSeleccionado.getCiudad() != null ?clienteSeleccionado.getCiudad() : ""));
-        txtGenero.setText(txtGenero.getText() + " " + (clienteSeleccionado.getGenero() != null ? clienteSeleccionado.getGenero(): ""));
-        txtTipoCliente.setText(txtTipoCliente.getText() + " " + (clienteSeleccionado.getTipoCliente() != null ? clienteSeleccionado.getTipoCliente()  : ""));
+        txtEstado.setText(txtEstado.getText() + " " + (clienteSeleccionado.getEstado() != null ? clienteSeleccionado.getEstado() : ""));
+        txtCiudad.setText(txtCiudad.getText() + " " + (clienteSeleccionado.getCiudad() != null ? clienteSeleccionado.getCiudad() : ""));
+        txtGenero.setText(txtGenero.getText() + " " + (clienteSeleccionado.getGenero() != null ? clienteSeleccionado.getGenero() : ""));
+        txtTipoCliente.setText(txtTipoCliente.getText() + " " + (clienteSeleccionado.getTipoCliente() != null ? clienteSeleccionado.getTipoCliente() : ""));
         txtFechaCumple.setText(txtFechaCumple.getText() + " " + (clienteSeleccionado.getFechaCumple() != null ? clienteSeleccionado.getFechaCumple() : ""));
-        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + (clienteSeleccionado.getCreated_at() != null ? clienteSeleccionado.getCreated_at()  : ""));
-        txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + (clienteSeleccionado.getUpdated_at() != null ? clienteSeleccionado.getUpdated_at(): ""));
+        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + (clienteSeleccionado.getCreated_at() != null ? clienteSeleccionado.getCreated_at() : ""));
+        txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + (clienteSeleccionado.getUpdated_at() != null ? clienteSeleccionado.getUpdated_at() : ""));
 
     }
 

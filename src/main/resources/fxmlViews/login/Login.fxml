@@ -23,7 +23,7 @@
             <StackPane maxHeight="500" maxWidth="451.0" prefHeight="383.0" prefWidth="451.0" style="-fx-background-color: #FFFFFF;  -fx-padding: 20; -fx-background-radius: 10;">
                 <ImageView fx:id="logoImage" fitHeight="200" preserveRatio="true">
                     <image>
-                        <Image url="@../icons/Master Tyres Logo.png" />
+                        <Image url="@../../icons/Master Tyres Logo.png" />
                     </image></ImageView>
             </StackPane>
 

@@ -32,50 +32,28 @@ import static javafx.collections.FXCollections.observableList;
 
 @Component
 public class NuevaPromocionController {
-    @FXML
-    private AnchorPane rootPane;
-    @FXML
-    private Slider porcentajeDescuento;
-    @FXML
-    private Label descuentoLabel;
-    @FXML
-    private TextField precioSinDescuento;
-    @FXML
-    private DatePicker fechaInicio;
-    @FXML
-    private DatePicker fechaFin;
-    @FXML
-    private Button btnRegistrar;
-    @FXML
-    private Button btnLimpiar;
-    @FXML
-    private ChoiceBox<String> tipoDescuento;
-    @FXML
-    private TextField nombrePromocion;
-    @FXML
-    private TextField descripcion;
-    @FXML
-    private ChoiceBox<Marca> choiceMarca;
-    @FXML
-    private ChoiceBox<Modelo> choiceModelo;
-    @FXML
-    private ChoiceBox<Integer> choiceAnio;
-    @FXML
-    private TableView tableVehiculosParticipantes;
-    @FXML
-    private TableColumn<VehiculoPromocion, String> colMarca;
-    @FXML
-    private TableColumn<VehiculoPromocion, String> colModelo;
-    @FXML
-    private TableColumn<VehiculoPromocion, Integer> colAnio;
-    @FXML
-    private Button btnAgregarVehiculo;
-    @FXML
-    private Button btnImagen;
-    @FXML
-    private TextField textFieldImg;
-    @FXML
-    private TableColumn<VehiculoPromocion, Void> colEliminar;
+    @FXML private AnchorPane rootPane;
+    @FXML private Slider porcentajeDescuento;
+    @FXML private Label descuentoLabel;
+    @FXML private TextField precioSinDescuento;
+    @FXML private DatePicker fechaInicio;
+    @FXML private DatePicker fechaFin;
+    @FXML private Button btnRegistrar;
+    @FXML private Button btnLimpiar;
+    @FXML private ChoiceBox<String> tipoDescuento;
+    @FXML private TextField nombrePromocion;
+    @FXML private TextField descripcion;
+    @FXML private ChoiceBox<Marca> choiceMarca;
+    @FXML private ChoiceBox<Modelo> choiceModelo;
+    @FXML private ChoiceBox<Integer> choiceAnio;
+    @FXML private TableView tableVehiculosParticipantes;
+    @FXML private TableColumn<VehiculoPromocion, String> colMarca;
+    @FXML private TableColumn<VehiculoPromocion, String> colModelo;
+    @FXML private TableColumn<VehiculoPromocion, Integer> colAnio;
+    @FXML private Button btnAgregarVehiculo;
+    @FXML private Button btnImagen;
+    @FXML private TextField textFieldImg;
+    @FXML private TableColumn<VehiculoPromocion, Void> colEliminar;
 
     private ObservableList<VehiculoPromocion> vehiculos = FXCollections.observableList(FXCollections.observableArrayList());
 
