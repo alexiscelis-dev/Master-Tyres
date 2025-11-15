@@ -28,4 +28,23 @@ public interface VehiculoPromocionRepository extends JpaRepository<VehiculoPromo
     @Query("DELETE FROM VehiculoPromocion vp WHERE vp.promocion.promocionId = :id")
     void eliminarPorPromocionId(@Param("id") Integer id);
 
+
+    // Reasignar marca por ID
+    @Modifying
+    @Transactional
+    @Query("UPDATE VehiculoPromocion v SET v.marca.marcaId = 1 WHERE v.marca.marcaId = :marcaId")
+    int reasignarMarcaPorId(Integer marcaId);
+
+    // Reasignar modelo y categoría a genéricos por marca
+    @Modifying
+    @Transactional
+    @Query("UPDATE VehiculoPromocion v SET v.modelo.modeloId = 1 WHERE v.marca.marcaId = :marcaId")
+    int reasignarModeloYCategoriaPorMarca(Integer marcaId);
+
+    // Reasignar modelo específico a modelo genérico
+    @Modifying
+    @Transactional
+    @Query("UPDATE VehiculoPromocion v SET v.modelo.modeloId = 1 WHERE v.modelo.modeloId = :modeloId")
+    int reasignarModeloPorId(Integer modeloId);
+
 }//interface

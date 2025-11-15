@@ -3,11 +3,18 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.fxControllers.AgregarInventario.AgregarInventarioController;
+import com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias.AgregarMarcaController;
 import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController;
+import com.mastertyres.fxControllers.agregarCliente.AgregarClienteController;
+import com.mastertyres.fxControllers.agregarVehiculo.AgregarVehiculoController;
 import com.mastertyres.fxControllers.cliente.ClienteController;
 import com.mastertyres.fxControllers.inventario.InventarioController;
 import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
+import com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionController;
 import com.mastertyres.fxControllers.nota.NotaController;
+import com.mastertyres.fxControllers.nota.NotaController;
+import com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -161,21 +168,27 @@ public class VentanaPrincipalController {
     }
 
 
-
-    @FXML
-    public void irAtras(MouseEvent event) {
+    public void irAtras() {
         if (!historialVistas.isEmpty() && !historialNombreVistas.isEmpty()) {
             String vistaAnterior = historialVistas.pop();
             String nombreAnterior = historialNombreVistas.pop();
+
             vistaActual = vistaAnterior;
             NombreVistaActual = nombreAnterior;
-            viewContentSinHistorial(event, vistaAnterior, nombreAnterior);
+
+            viewContentSinHistorial(null, vistaAnterior, nombreAnterior);
             cambiarPaginaEtiqueta.setText(nombreAnterior);
+        } else {
+            // Si no hay historial, vuelve al inicio (o a la vista que prefieras)
+            viewContentSinHistorial(null, "/fxmlViews/RegresarMenu.fxml", "Inicio");
+            cambiarPaginaEtiqueta.setText("Inicio");
         }
     }
 
-
-
+    @FXML
+    public void irAtras(MouseEvent event) {
+        irAtras();
+    }
 
     public void viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
 
@@ -211,6 +224,21 @@ public class VentanaPrincipalController {
             }
             if (controller instanceof ProximosServiciosController) {
                 ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
+            }
+            if (controller instanceof AgregarVehiculoController) {
+                ((AgregarVehiculoController) controller).setVentanaPrincipalController(this);
+            }
+            if (controller instanceof AgregarClienteController) {
+                ((AgregarClienteController) controller).setVentanaPrincipalController(this);
+            }
+            if (controller instanceof NuevaPromocionController) {
+                ((NuevaPromocionController) controller).setVentanaPrincipalController(this);
+            }
+            if (controller instanceof AgregarInventarioController) {
+                ((AgregarInventarioController) controller).setVentanaPrincipalController(this);
+            }
+            if (controller instanceof AgregarMarcaController) {
+                ((AgregarMarcaController) controller).setVentanaPrincipalController(this);
             }
             if (controller instanceof NotaController){
                 ((NotaController) controller).setVentanaPrincipalController(this);

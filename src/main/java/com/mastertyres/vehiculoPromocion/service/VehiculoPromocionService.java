@@ -34,6 +34,23 @@ public class VehiculoPromocionService implements   IVehiculoPromocionService{
         repo.eliminarPorPromocionId(promocionId);
     }
 
+    // Reasignar marca
+    @Transactional
+    public int reasignarMarcaPorId(Integer marcaId) {
+        return repo.reasignarMarcaPorId(marcaId);
+    }
+
+    // Reasignar modelo y categoría por marca
+    @Transactional
+    public int reasignarModeloYCategoriaPorMarca(Integer marcaId) {
+        return repo.reasignarModeloYCategoriaPorMarca(marcaId);
+    }
+
+    // Reasignar modelo específico
+    @Transactional
+    public int reasignarModeloPorId(Integer modeloId) {
+        return repo.reasignarModeloPorId(modeloId);
+    }
 
 }//clase
 

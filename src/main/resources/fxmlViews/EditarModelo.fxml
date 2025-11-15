@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="190.0" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias.EditarMarcaController">
+<AnchorPane prefHeight="190.0" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias.EditarModeloController">
 
     <children>
         <HBox alignment="TOP_CENTER" spacing="20">
@@ -16,7 +16,7 @@
                     <Insets bottom="20" left="20" right="20" top="20" />
                 </padding>
 
-                <Label styleClass="seccion-titulo" text="Editar Marca" />
+                <Label styleClass="seccion-titulo" text="Editar Modelo" />
 
                 <GridPane hgap="10" vgap="10">
                     <columnConstraints>
@@ -25,8 +25,11 @@
                     </columnConstraints>
 
                     <!-- Nombre -->
-                    <Label alignment="CENTER" text="Nombre de la Marca:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <TextField fx:id="txtMarca" promptText="Nombre de la marca" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <Label alignment="CENTER" text="Nombre del Modelo:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="txtModelo" promptText="Nombre del modelo" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <Label alignment="CENTER" text="Categoria:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <ChoiceBox fx:id="choiceCategoria" prefHeight="26.0" prefWidth="350.0" styleClass="choicebox-mini2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                     <rowConstraints>
                         <RowConstraints />
@@ -45,7 +48,7 @@
                 <!-- Botones -->
                 <HBox alignment="CENTER" spacing="20">
                     <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar" />
-                    <Button fx:id="btnAgregar" onAction="#GuardarCambios" styleClass="boton-accion" text="Editar Marca" />
+                    <Button fx:id="btnGuardar" onAction="#GuardarCambios" styleClass="boton-accion" text="Editar Modelo" />
                 </HBox>
             </VBox>
 

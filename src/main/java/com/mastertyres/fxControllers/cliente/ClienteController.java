@@ -22,13 +22,17 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -77,6 +81,15 @@ public class ClienteController {
 
 
     @FXML
+    private Pagination paginadorClientes;
+
+    private static final int CLIENTES_POR_PAGINA = 20;
+
+    private List<Cliente> todosLosClientes;
+    private String terminoBusquedaActual = "";
+    private boolean modoBusqueda = false;
+
+    @FXML
     private void initialize() {
         cargarClientes();
 
@@ -100,6 +113,9 @@ public class ClienteController {
                     listaOpciones.getItems().addAll("Ver informacion", "Copiar", "Copiar fila completa", "Editar", "Eliminar");
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
+                    listaOpciones.getStylesheets().add(
+                            getClass().getResource("/styles_css/Lista.css").toExternalForm()
+                    );
 
                     Popup listViewPopup = new Popup();
                     listViewPopup.getContent().add(listaOpciones);
@@ -333,15 +349,21 @@ public class ClienteController {
                     String seleccion = atributoBusquedaClientes.getValue();
                     String busqueda = buscarClienteBuscador.getText();
 
-                    if (seleccion == null && busqueda != null && !busqueda.isEmpty())
+                    if (seleccion == null && busqueda != null && !busqueda.isEmpty()) {
                         buscarCliente(busqueda);
-                    else if (seleccion == null)
-                        cargarClientes();
+                    } else {
+                        // Si no hay búsqueda, salir del modo búsqueda y recargar tabla
+                        modoBusqueda = false;
+                        terminoBusquedaActual = "";
+                        paginadorClientes.setPageFactory(this::crearPaginaClientes);
+                        paginadorClientes.setCurrentPageIndex(0);
+                    }
 
                 });
                 delayQuery.playFromStart();
             }
         });
+
 
         //pone en null la lista de ChoiceBox
         limpiarChoiceBox.setOnMouseClicked(event -> {
@@ -363,6 +385,71 @@ public class ClienteController {
                 "Agregar cliente"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
+    }
+
+    private VBox crearPaginaClientes(int indicePagina) {
+        Page<Cliente> paginaClientes;
+
+        if (modoBusqueda) {
+            paginaClientes = clienteService.buscadorClientesPaginado(
+                    StatusCliente.ACTIVE.toString(),
+                    terminoBusquedaActual,
+                    indicePagina,
+                    CLIENTES_POR_PAGINA
+            );
+        } else {
+            paginaClientes = clienteService.listarClientesConVehiculosPaginado(
+                    StatusCliente.ACTIVE.toString(),
+                    indicePagina,
+                    CLIENTES_POR_PAGINA
+            );
+        }
+
+        tablaClientes.setItems(FXCollections.observableArrayList(paginaClientes.getContent()));
+
+        VBox contenedor = new VBox(tablaClientes);
+        contenedor.setMinHeight(500);
+        contenedor.setPrefHeight(500);
+        contenedor.setStyle("-fx-background-color: transparent;");
+        return contenedor;
+    }
+
+
+    private VBox crearPaginaClientesconFiltro(int indicePagina) {
+        Page<Cliente> paginaClientes;
+
+        if (modoBusqueda) {
+            // Dependiendo del atributo de búsqueda
+            switch (atributoBusquedaClientes.getValue()) {
+                case "nombre" -> paginaClientes = clienteService.buscarClientePorNombrePaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "telefono" -> paginaClientes = clienteService.buscarClientePorNumTelefonoPaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "estado" -> paginaClientes = clienteService.buscarClientePorEstadoPaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "ciudad" -> paginaClientes = clienteService.buscarClientePorCiudadPaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "domicilio" -> paginaClientes = clienteService.buscarClientePorDomicilioPaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "hobbie" -> paginaClientes = clienteService.buscarClientePorHobbiePaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "rfc" -> paginaClientes = clienteService.buscarClientePorRfcPaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                default -> paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+            }
+        } else {
+            paginaClientes = clienteService.listarClientesConVehiculosPaginado(
+                    StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+        }
+
+        tablaClientes.setItems(FXCollections.observableArrayList(paginaClientes.getContent()));
+
+        VBox contenedor = new VBox(tablaClientes);
+        contenedor.setMinHeight(500);
+        contenedor.setPrefHeight(500);
+        contenedor.setStyle("-fx-background-color: transparent;");
+
+        return contenedor;
     }
 
 
@@ -415,6 +502,7 @@ public class ClienteController {
 
             return new SimpleStringProperty(descripcion.toString());
         });
+
         cargarDatosClientes();
 
 
@@ -422,89 +510,161 @@ public class ClienteController {
 
     private void cargarDatosClientes() {
         try {
-            // Listado de los clientes
-            tablaClientes.getItems().setAll(clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString()));
+            long totalClientes = clienteService.contarClientesActivos(StatusCliente.ACTIVE.toString());
+            int totalPaginas = (int) Math.ceil((double) totalClientes / CLIENTES_POR_PAGINA);
+            paginadorClientes.setPageCount(Math.max(totalPaginas, 1));
+            paginadorClientes.setPageFactory(this::crearPaginaClientes);
+
+            // Muestra la primera página
+            paginadorClientes.setCurrentPageIndex(0);
 
         } catch (Exception e) {
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
         }
+    }
 
-    }//cargarDatosClientes
+//    private void buscarCliente(String seleccion, String busqueda) {
+////
+////
+////        switch (seleccion) {
+////            case "nombre" -> {
+////
+////                String nombre = busqueda;
+////
+////                List<Cliente> clientesPorNombre = clienteService.buscarClientePorNombre(ClienteStatus.ACTIVE.toString(), nombre);
+////                tablaClientes.setItems(FXCollections.observableList(clientesPorNombre));
+////
+////            }
+////            case "telefono" -> {
+////                String numTelefono = busqueda;
+////
+////                List<Cliente> clientesPorNumero = clienteService.buscarClientePorNumTelefono(ClienteStatus.ACTIVE.toString(), numTelefono);
+////                tablaClientes.setItems(FXCollections.observableList(clientesPorNumero));
+////
+////            }
+////            case "estado" -> {
+////                String estado = busqueda;
+////
+////                List<Cliente> clientesPorEstado = clienteService.buscarClientePorEstado(ClienteStatus.ACTIVE.toString(), estado);
+////                tablaClientes.setItems(FXCollections.observableList(clientesPorEstado));
+////
+////            }
+////            case "ciudad" -> {
+////                String ciudad = busqueda;
+////
+////                List<Cliente> clientesPorCiudad = clienteService.buscarClientePorCiudad(ClienteStatus.ACTIVE.toString(), ciudad);
+////                tablaClientes.setItems(FXCollections.observableList(clientesPorCiudad));
+////
+////
+////            }
+////            case "domicilio" -> {
+////                String domicilio = busqueda;
+////
+////                List<Cliente> clientesPorDomicilio = clienteService.buscarClientePorDomicilio(ClienteStatus.ACTIVE.toString(), domicilio);
+////                tablaClientes.setItems(FXCollections.observableList(clientesPorDomicilio));
+////
+////            }
+////            case "hobbie" -> {
+////                String hobbie = busqueda;
+////
+////                List<Cliente> clientesPorHobbie = clienteService.buscarClientePorHobbie(ClienteStatus.ACTIVE.toString(), hobbie);
+////                tablaClientes.setItems(FXCollections.observableList(clientesPorHobbie));
+////            }
+////            case "rfc" -> {
+////                String rfc = busqueda;
+////
+////                List<Cliente> clientesPorRfc = clienteService.buscarClientePorRfc(ClienteStatus.ACTIVE.toString(), rfc);
+////                tablaClientes.setItems(FXCollections.observableList(clientesPorRfc));
+////            }
+////
+////        }//switch
+//
+//        terminoBusquedaActual = busqueda;
+//        modoBusqueda = !busqueda.trim().isEmpty();
+//        atributoBusquedaClientes.setValue(seleccion);
+//
+//        // Reinicia el paginador para la búsqueda
+//        paginadorClientes.setPageFactory(this::crearPaginaClientesconFiltro);
+//        paginadorClientes.setCurrentPageIndex(0);
+//
+//    }//buscarCliente
 
     private void buscarCliente(String seleccion, String busqueda) {
 
+        terminoBusquedaActual = busqueda;
+        modoBusqueda = !busqueda.trim().isEmpty();
+        atributoBusquedaClientes.setValue(seleccion);
+
+        // Obtener primera página filtrada
+        Page<Cliente> paginaFiltrada;
 
         switch (seleccion) {
-            case "nombre" -> {
+            case "nombre" -> paginaFiltrada =
+                    clienteService.buscarClientePorNombrePaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
-                String nombre = busqueda;
+            case "telefono" -> paginaFiltrada =
+                    clienteService.buscarClientePorNumTelefonoPaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
-                List<Cliente> clientesPorNombre = clienteService.buscarClientePorNombre(StatusCliente.ACTIVE.toString(), nombre);
-                tablaClientes.setItems(FXCollections.observableList(clientesPorNombre));
+            case "estado" -> paginaFiltrada =
+                    clienteService.buscarClientePorEstadoPaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
-            }
-            case "telefono" -> {
-                String numTelefono = busqueda;
+            case "ciudad" -> paginaFiltrada =
+                    clienteService.buscarClientePorCiudadPaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
-                List<Cliente> clientesPorNumero = clienteService.buscarClientePorNumTelefono(StatusCliente.ACTIVE.toString(), numTelefono);
-                tablaClientes.setItems(FXCollections.observableList(clientesPorNumero));
+            case "domicilio" -> paginaFiltrada =
+                    clienteService.buscarClientePorDomicilioPaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
-            }
-            case "estado" -> {
-                String estado = busqueda;
+            case "hobbie" -> paginaFiltrada =
+                    clienteService.buscarClientePorHobbiePaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
-                List<Cliente> clientesPorEstado = clienteService.buscarClientePorEstado(StatusCliente.ACTIVE.toString(), estado);
-                tablaClientes.setItems(FXCollections.observableList(clientesPorEstado));
+            case "rfc" -> paginaFiltrada =
+                    clienteService.buscarClientePorRfcPaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
-            }
-            case "ciudad" -> {
-                String ciudad = busqueda;
+            default -> paginaFiltrada =
+                    clienteService.listarClientesConVehiculosPaginado(
+                            StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
+        }
 
-                List<Cliente> clientesPorCiudad = clienteService.buscarClientePorCiudad(StatusCliente.ACTIVE.toString(), ciudad);
-                tablaClientes.setItems(FXCollections.observableList(clientesPorCiudad));
+        // ACTUALIZA EL PAGECOUNT CON EL TOTAL DE COINCIDENCIAS
+        int totalPaginas = paginaFiltrada.getTotalPages();
+        paginadorClientes.setPageCount(Math.max(totalPaginas, 1));
 
+        // Cambia el PageFactory
+        paginadorClientes.setPageFactory(this::crearPaginaClientesconFiltro);
 
-            }
-            case "domicilio" -> {
-                String domicilio = busqueda;
-
-                List<Cliente> clientesPorDomicilio = clienteService.buscarClientePorDomicilio(StatusCliente.ACTIVE.toString(), domicilio);
-                tablaClientes.setItems(FXCollections.observableList(clientesPorDomicilio));
-
-            }
-            case "hobbie" -> {
-                String hobbie = busqueda;
-
-                List<Cliente> clientesPorHobbie = clienteService.buscarClientePorHobbie(StatusCliente.ACTIVE.toString(), hobbie);
-                tablaClientes.setItems(FXCollections.observableList(clientesPorHobbie));
-            }
-            case "rfc" -> {
-                String rfc = busqueda;
-
-                List<Cliente> clientesPorRfc = clienteService.buscarClientePorRfc(StatusCliente.ACTIVE.toString(), rfc);
-                tablaClientes.setItems(FXCollections.observableList(clientesPorRfc));
-            }
-
-        }//switch
-
-    }//buscarCliente
+        // Ir a la primera página
+        paginadorClientes.setCurrentPageIndex(0);
+    }
 
 
     public void buscarCliente(String busqueda) {
+        terminoBusquedaActual = busqueda;
+        modoBusqueda = !busqueda.trim().isEmpty();
 
-        List<Cliente> clientes = clienteService.buscadorClientes(StatusCliente.ACTIVE.toString(), busqueda);
-
-        tablaClientes.setItems(FXCollections.observableList(clientes));
-
-
-    }//buscarCliente
+        paginadorClientes.setCurrentPageIndex(0); // Reinicia la paginación
+        paginadorClientes.setPageFactory(this::crearPaginaClientes);
+    }
 
     @FXML
     public void actualizarTabla(ActionEvent actionEvent) {
         buscarClienteBuscador.setText("");
         atributoBusquedaClientes.setValue(null);
-        cargarClientes();
 
+        // Salir del modo búsqueda
+        modoBusqueda = false;
+        terminoBusquedaActual = "";
+
+        // Reinicia paginador y carga los clientes
+        paginadorClientes.setPageFactory(this::crearPaginaClientes);
+        paginadorClientes.setCurrentPageIndex(0);
     }
+
 
 }//clase

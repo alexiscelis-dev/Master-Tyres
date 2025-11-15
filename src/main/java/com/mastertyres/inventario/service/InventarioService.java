@@ -5,6 +5,10 @@ import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.repository.InventarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +31,20 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    public long contarInventariosActivos(String active) {
+        return inventarioRepository.contarInventarioActivos(active);
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public List<Inventario> listarInventario(String active) {
         return inventarioRepository.listarInventario(active);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Inventario> listarInventarioPaginado(String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.listarInventarioPaginada(active, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -39,9 +54,21 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Inventario>  buscadorInventarioPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.buscadorInventarioPaginado(active, busqueda, pageable);
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public List<Inventario> buscarPorCodBarras(String active, String busqueda) {
         return inventarioRepository.buscarPorCodBarras(active, busqueda);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Inventario> buscarPorCodBarrasPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.buscarPorCodBarrasPaginado(active, busqueda, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -51,9 +78,21 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Inventario>  buscarPorDotPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.buscarPorDotPaginado(active, busqueda, pageable);
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public List<Inventario> buscarPorMarca(String active, String busqueda) {
         return inventarioRepository.buscarPorMarca(active, busqueda);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Inventario>  buscarPorMarcaPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.buscarPorMarcaPaginado(active, busqueda, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -63,9 +102,21 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Inventario>  buscarPorModeloPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.buscarPorModeloPaginado(active, busqueda, pageable);
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public List<Inventario> buscarPorMedida(String active, String busqueda) {
         return inventarioRepository.buscarPorMedida(active, busqueda);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Inventario> buscarPorMedidaPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.buscarPorMedidaPaginado(active, busqueda,  pageable);
     }
 
     @Transactional(readOnly = true)
@@ -75,9 +126,21 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Inventario> buscarPorFechaPaginado(String active, LocalDate fecha, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.buscarPorFechaPaginado(active, fecha,  pageable);
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public List<Inventario> buscarPorFecha(String active, LocalDate fechaInicio, LocalDate fechaFin) {
         return inventarioRepository.buscarPorFecha(active, fechaInicio, fechaFin);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Inventario> buscarPorFechaPaginadoRangos(String active, LocalDate fechaInicio, LocalDate fechaFin, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
+        return inventarioRepository.buscarPorFechaPaginado(active, fechaInicio, fechaFin,  pageable);
     }
 
     @Transactional
