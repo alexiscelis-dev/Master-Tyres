@@ -5,6 +5,7 @@ import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -110,6 +111,14 @@ public class AgregarVehiculoController {
     private BooleanProperty placasValido = new SimpleBooleanProperty(true);
     private BooleanProperty kilometrosValido = new SimpleBooleanProperty(true);
     private BooleanProperty ColorValido = new SimpleBooleanProperty(true);
+
+
+    private VentanaPrincipalController ventanaPrincipalController;
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
+
 
 
 
@@ -533,10 +542,16 @@ public class AgregarVehiculoController {
             listaVehiculos.clear();
             limpiarCamposVehiculo();
             tablaClientes.getSelectionModel().clearSelection();
+            ventanaPrincipalController.irAtras();
         } catch (Exception e) {
             mostrarWarning("Error","","No se pudieron guardar los vehículos");
 
         }
     }
 
+    public void Cancelar(ActionEvent actionEvent) {
+
+        ventanaPrincipalController.irAtras();
+
+    }
 }

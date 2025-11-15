@@ -2,6 +2,7 @@ package com.mastertyres.fxControllers.AgregarInventario;
 
 import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import javafx.beans.property.BooleanProperty;
@@ -75,6 +76,11 @@ public class AgregarInventarioController {
     private BooleanProperty precioCompraValido = new SimpleBooleanProperty(true);
     private BooleanProperty precioventaValido = new SimpleBooleanProperty(true);
 
+    private VentanaPrincipalController ventanaPrincipalController;
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
     @FXML
     private void initialize() {
@@ -199,6 +205,7 @@ public class AgregarInventarioController {
                 inventarioService.guardarInventario(inventario);
                 mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
                 clean();
+                ventanaPrincipalController.irAtras();
             } catch (InventarioException ie) {
                 ie.printStackTrace();
                 mostrarError("Error de inventario", "", ie.getMessage());

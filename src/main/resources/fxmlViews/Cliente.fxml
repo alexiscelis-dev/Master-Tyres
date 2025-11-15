@@ -64,7 +64,7 @@
 
 
                 <!-- Tabla de clientes -->
-                <TableView fx:id="tablaClientes" prefHeight="500.0">
+                <TableView fx:id="tablaClientes" minHeight="500.0" prefHeight="500.0">
                     <columns>
                         <TableColumn fx:id="colTipoCliente" prefWidth="150" text="Tipo Cliente" />
                         <TableColumn fx:id="colNombre" prefWidth="150" text="Nombre" />
@@ -81,6 +81,7 @@
                     </columns>
                 </TableView>
 
+
                 <Label fx:id="statusLabel" prefHeight="60.0" prefWidth="365.0" text="Label" textFill="WHITE" visible="false">
                     <VBox.margin>
                         <Insets left="460.0" />
@@ -90,11 +91,9 @@
                     </font>
                 </Label>
 
+                <Pagination fx:id="paginadorClientes" maxPageIndicatorCount="100" pageCount="1" />
 
             </VBox>
-
-
         </AnchorPane>
-
     </children>
 </AnchorPane>

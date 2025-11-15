@@ -2,6 +2,8 @@ package com.mastertyres.fxControllers.ProximosServicios;
 
 
 import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.marca.model.Marca;
+import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.application.HostServices;
@@ -9,8 +11,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -50,6 +55,15 @@ public class ProximosServiciosController {
 
     private HostServices hostServices;
 
+
+    private static final int SERVICIOS_POR_PAGINA = 20;
+
+    private int tamañoPagina = 20;
+
+    private String filtroActual = null;
+
+    @FXML private Pagination PaginadorServicios;
+
     public void setHostServices(HostServices hostServices) {
         this.hostServices = hostServices;
     }
@@ -59,7 +73,45 @@ public class ProximosServiciosController {
 
         cargarServicios();
 
+        txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                cargarServicios();
+            } else {
+                cargarServiciosFiltrados(newValue);
+            }
+        });
+
     }//initialize
+
+    private void configurarPaginador() {
+        //Page<String> paginaInicial = marcaService.listarNombresMarcas(PageRequest.of(0, tamañoPagina));
+        Page<VehiculoDTO> paginaInicial = vehiculoService.obtenerVehiculosConServicioVencidoPaginado(PageRequest.of(0, tamañoPagina));
+        mostrarServicios(paginaInicial.getContent());
+
+        PaginadorServicios.setPageCount(paginaInicial.getTotalPages());
+        PaginadorServicios.setCurrentPageIndex(0);
+
+        // Evento para cuando el usuario cambia de página
+        PaginadorServicios.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+            Page<VehiculoDTO> nuevaPagina = vehiculoService.obtenerVehiculosConServicioVencidoPaginado(PageRequest.of(newIndex.intValue(), tamañoPagina));
+            mostrarServicios(nuevaPagina.getContent());
+        });
+    }
+
+    private void configurarPaginadorFiltradas(String filtro) {
+        Page<VehiculoDTO> paginaFiltrada = vehiculoService.BuscarVehiculosConServicioVencidoPaginado(filtro, PageRequest.of(0, tamañoPagina));
+        mostrarServicios(paginaFiltrada.getContent());
+        PaginadorServicios.setPageCount(paginaFiltrada.getTotalPages());
+        PaginadorServicios.setCurrentPageIndex(0);
+        PaginadorServicios.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+            Page<VehiculoDTO> nuevaPagina = vehiculoService.BuscarVehiculosConServicioVencidoPaginado(filtro, PageRequest.of(newIndex.intValue(), tamañoPagina));
+            mostrarServicios(nuevaPagina.getContent());
+        });
+    }
+    
+    private void cargarServiciosFiltrados(String filtro) {
+        configurarPaginadorFiltradas(filtro);
+    }
 
     @FXML
     private void EnviarAviso(ActionEvent actionEvent){
@@ -81,8 +133,9 @@ public class ProximosServiciosController {
     }
 
     private void cargarServicios() {
-        List<VehiculoDTO> vehiculos = vehiculoService.obtenerVehiculosConServicioVencido();
-        mostrarServicios(vehiculos);
+//        List<VehiculoDTO> vehiculos = vehiculoService.obtenerVehiculosConServicioVencido();
+//        mostrarServicios(vehiculos);
+        configurarPaginador();
     }
 
     private void mostrarServicios(List<VehiculoDTO> vehiculos) {

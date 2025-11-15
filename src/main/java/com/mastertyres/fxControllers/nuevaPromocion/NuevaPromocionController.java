@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.nuevaPromocion;
 
 import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
@@ -84,6 +85,11 @@ public class NuevaPromocionController {
     @Autowired
     private VehiculoPromocionService vehiculoPromocionService;
 
+    private VentanaPrincipalController ventanaPrincipalController;
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
     @FXML
     public void initialize() {
@@ -294,6 +300,7 @@ public class NuevaPromocionController {
 
             String nombre, descripcion, tipoDescuento, precio, porcentaje, inicioPromo, finPromo;
             insertarPromocion();
+            ventanaPrincipalController.irAtras();
 
         } else if (empty())
             mostrarWarning("Campos vacios", "", "Favor de completar cada uno de los campos solicitados.");

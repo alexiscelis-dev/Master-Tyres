@@ -1,0 +1,144 @@
+package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
+
+
+import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.detalleCategoria.model.DetalleCategoria;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.marca.model.Marca;
+import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.services.ModeloService;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class EditarModeloController {
+
+    @FXML private TextField txtModelo;
+    @FXML private Button btnGuardar;
+    @FXML private ChoiceBox<Categoria> choiceCategoria;
+
+    private BooleanProperty ModeloValido = new SimpleBooleanProperty(true);
+
+    private Modelo modeloSeleccionada;
+    private DetalleCategoria detalleCategoriaSeleccionado;
+
+    @Autowired private ModeloService modeloService;
+    @Autowired private CategoriaService categoriaService;
+    @Autowired private DetalleCategoriaService detalleCategoriaService;
+
+    @FXML
+    private void initialize(){
+        configurarValidaciones();
+        cargarCategorias();
+    }
+
+    private void cargarCategorias(){
+        List<Categoria> categorias = categoriaService.listarCategorias();
+        choiceCategoria.setItems(FXCollections.observableArrayList(categorias));
+        choiceCategoria.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Categoria categoria) {
+                return categoria != null ? categoria.getNombreCategoria() : "";
+            }
+            @Override
+            public Categoria fromString(String string) {
+                return null;
+            }
+        });
+    }
+
+    public void setModelos(DetalleCategoria m) {
+        this.modeloSeleccionada = m.getModelo();
+        this.detalleCategoriaSeleccionado = m;
+        txtModelo.setText(modeloSeleccionada.getNombreModelo());
+        choiceCategoria.getItems().stream()
+                .filter(c -> c.getNombreCategoria().equals(m.getCategoria().getNombreCategoria()))
+                .findFirst()
+                .ifPresent(choiceCategoria::setValue);
+    }
+
+    private void configurarValidaciones() {
+
+        txtModelo.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtModelo.setText(texto);
+            if (texto.isEmpty()) {
+                ModeloValido.set(false);
+                txtModelo.setStyle("-fx-border-color: red;");
+            } else if (!texto.matches("^[A-Z0-9\\s\\p{Punct}]{1,20}$")) {
+                ModeloValido.set(false);
+                txtModelo.setStyle("-fx-border-color: red;");
+            } else {
+                ModeloValido.set(true);
+                txtModelo.setStyle("");
+            }
+        });
+
+        //Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
+        btnGuardar.disableProperty().bind(
+                txtModelo.textProperty().isEmpty()
+                        .or(ModeloValido.not())
+                        .or(choiceCategoria.valueProperty().isNull())
+        );
+    }
+
+    private void limpiarCamposVehiculo() {
+        txtModelo.clear();
+    }
+
+    @FXML
+    private void cerrarVentana() {
+        limpiarCamposVehiculo();
+        Stage stage = (Stage) txtModelo.getScene().getWindow();
+        stage.close();
+    }
+
+    public void GuardarCambios(ActionEvent actionEvent) {
+
+
+
+        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+                "Confirmar actualización",
+                "¿Desea guardar los cambios en este Modelo?",
+                "Se actualizarán el nombre del modelo seleccionada.",
+                "Sí, guardar",
+                "Cancelar"
+        );
+
+        if (confirmar){
+            try {
+                modeloSeleccionada.setNombreModelo(txtModelo.getText());
+                detalleCategoriaSeleccionado.setCategoria(choiceCategoria.getValue());
+
+                modeloService.guardarModelo(modeloSeleccionada);
+                detalleCategoriaService.guardarDetalleCategoria(detalleCategoriaSeleccionado);
+
+                MensajesAlert.mostrarInformacion("Éxito", "Modelo actualizada", "El modelo se actualizó correctamente.");
+                cerrarVentana();
+            } catch (Exception e) {
+                MensajesAlert.mostrarError(
+                        "Error al actualizar",
+                        "No se pudo actualizar el modelo",
+                        "Detalles: " + e.getMessage()
+                );
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+}

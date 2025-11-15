@@ -5,6 +5,7 @@ import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -146,6 +147,12 @@ public class AgregarClienteController {
     private BooleanProperty nombreValido = new SimpleBooleanProperty(true);
     private BooleanProperty apellidoValido = new SimpleBooleanProperty(true);
     private BooleanProperty ColorValido = new SimpleBooleanProperty(true);
+
+    private VentanaPrincipalController ventanaPrincipalController;
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
 
     @FXML
@@ -526,6 +533,7 @@ public class AgregarClienteController {
 
         listaVehiculos.add(v);
         limpiarCamposVehiculo();
+
     }
 
     private void limpiarCamposVehiculo() {
@@ -679,6 +687,7 @@ public class AgregarClienteController {
             listaVehiculos.clear();
 
             mostrarInformacion("Cliente guardado con éxito", "", "El cliente guardado con éxito");
+            ventanaPrincipalController.irAtras();
         } catch (Exception e) {
             mostrarError("Error", "Cliente NO guardado", "El cliente NO pudo ser guardado");
         }
@@ -686,5 +695,6 @@ public class AgregarClienteController {
     }
 
     public void Cancelar(ActionEvent actionEvent) {
+        ventanaPrincipalController.irAtras();
     }
 }
