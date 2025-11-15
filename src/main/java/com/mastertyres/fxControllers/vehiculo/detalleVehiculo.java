@@ -3,7 +3,6 @@ package com.mastertyres.fxControllers.vehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -16,8 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class detalleVehiculo {
 
-    @FXML
-    private Label txtMarca;
+    @FXML private Label txtMarca;
     @FXML private Label txtModelo;
     @FXML private Label txtannio;
     @FXML private Label txtCategoria;

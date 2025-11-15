@@ -54,88 +54,51 @@ public class AgregarClienteController {
     private VehiculoService vehiculoService;
 
     // Columnas de tabla vehiculos
-    @FXML
-    private TableView<Vehiculo> tablaVehiculos;
-    @FXML
-    private TableColumn<Vehiculo, String> colMarca;
-    @FXML
-    private TableColumn<Vehiculo, String> colCategoria;
-    @FXML
-    private TableColumn<Vehiculo, String> colColor;
-    @FXML
-    private TableColumn<Vehiculo, String> colPlacas;
-    @FXML
-    private TableColumn<Vehiculo, String> colAnnio;
-    @FXML
-    private TableColumn<Vehiculo, String> colModelo;
-    @FXML
-    private TableColumn<Vehiculo, String> colNumSerie;
-    @FXML
-    private TableColumn<Vehiculo, String> colKilometros;
-    @FXML
-    private TableColumn<Vehiculo, String> colultimoServicio;
-    @FXML
-    private TableColumn<Vehiculo, String> colObservaciones;
-    @FXML
-    private TableColumn<Vehiculo, Void> colEliminar;
+    @FXML private TableView<Vehiculo> tablaVehiculos;
+    @FXML private TableColumn<Vehiculo, String> colMarca;
+    @FXML private TableColumn<Vehiculo, String> colCategoria;
+    @FXML private TableColumn<Vehiculo, String> colColor;
+    @FXML private TableColumn<Vehiculo, String> colPlacas;
+    @FXML private TableColumn<Vehiculo, String> colAnnio;
+    @FXML private TableColumn<Vehiculo, String> colModelo;
+    @FXML private TableColumn<Vehiculo, String> colNumSerie;
+    @FXML private TableColumn<Vehiculo, String> colKilometros;
+    @FXML private TableColumn<Vehiculo, String> colultimoServicio;
+    @FXML private TableColumn<Vehiculo, String> colObservaciones;
+    @FXML private TableColumn<Vehiculo, Void> colEliminar;
 
     //Campos Cliente
 
-    @FXML
-    private AnchorPane ventanaAgregarCliente;
-    @FXML
-    private TextField txtNombre;
-    @FXML
-    private TextField txtApellido;
-    @FXML
-    private TextField txtSegundoApellido;
-    @FXML
-    private TextField txtTelefono;
-    @FXML
-    private TextField txtDomicilio;
-    @FXML
-    private TextField txtCiudad;
-    @FXML
-    private TextField txtEstado;
-    @FXML
-    private TextField txtHobbie;
-    @FXML
-    private TextField txtRFC;
-    @FXML
-    private DatePicker pickerCumpleanos;
-    @FXML
-    private ChoiceBox<String> choiceTipoCliente;
-    @FXML
-    private ChoiceBox<String> choiceGenero;
+    @FXML private AnchorPane ventanaAgregarCliente;
+    @FXML private TextField txtNombre;
+    @FXML private TextField txtApellido;
+    @FXML private TextField txtSegundoApellido;
+    @FXML private TextField txtTelefono;
+    @FXML private TextField txtDomicilio;
+    @FXML private TextField txtCiudad;
+    @FXML private TextField txtEstado;
+    @FXML private TextField txtHobbie;
+    @FXML private TextField txtRFC;
+    @FXML private DatePicker pickerCumpleanos;
+    @FXML private ChoiceBox<String> choiceTipoCliente;
+    @FXML private ChoiceBox<String> choiceGenero;
 
     // Campos Vehiculo
-    @FXML
-    private ChoiceBox<Marca> choiceMarca;
-    @FXML
-    private ChoiceBox<Modelo> choiceModelo;
-    @FXML
-    private ChoiceBox<Categoria> choiceCategoria;
-    @FXML
-    private TextField txtColor;
-    @FXML
-    private TextField txtPlacas;
-    @FXML
-    private Spinner<Integer> spinnerAnio;
-    @FXML
-    private TextField txtSerie;
-    @FXML
-    private TextField txtKilometros;
-    @FXML
-    private DatePicker pickerUltimoServicio;
-    @FXML
-    private TextField txtObservaciones;
+    @FXML private ChoiceBox<Marca> choiceMarca;
+    @FXML private ChoiceBox<Modelo> choiceModelo;
+    @FXML private ChoiceBox<Categoria> choiceCategoria;
+    @FXML private TextField txtColor;
+    @FXML private TextField txtPlacas;
+    @FXML private Spinner<Integer> spinnerAnio;
+    @FXML private TextField txtSerie;
+    @FXML private TextField txtKilometros;
+    @FXML private DatePicker pickerUltimoServicio;
+    @FXML private TextField txtObservaciones;
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
 
     // Botones Principales
-    @FXML
-    private Button btnAgregarVehiculo;
-    @FXML
-    private Button btnGuardar;
+    @FXML private Button btnAgregarVehiculo;
+    @FXML private Button btnGuardar;
 
     //Validaciones:
     private BooleanProperty rfcValido = new SimpleBooleanProperty(true);

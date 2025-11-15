@@ -29,22 +29,14 @@ public class EditarClienteController {
     private TextField txtTelefono;
     @FXML
     private TextField txtHobbie;
-    @FXML
-    private TextField txtRfc;
-    @FXML
-    private TextField txtDomicilio;
-    @FXML
-    private TextField txtEstado;
-    @FXML
-    private TextField txtCiudad;
-    @FXML
-    private ChoiceBox<String> choiceGenero;
-    @FXML
-    private ChoiceBox<String> choiceTipoCliente;
-    @FXML
-    private DatePicker dateCumpleanos;
-    @FXML
-    private Button btnCambiar;
+    @FXML private TextField txtRfc;
+    @FXML private TextField txtDomicilio;
+    @FXML private TextField txtEstado;
+    @FXML private TextField txtCiudad;
+    @FXML private ChoiceBox<String> choiceGenero;
+    @FXML private ChoiceBox<String> choiceTipoCliente;
+    @FXML private DatePicker dateCumpleanos;
+    @FXML private Button btnCambiar;
 
     private Cliente cliente;
 

@@ -15,36 +15,21 @@ import java.io.File;
 
 @Component
 public class DetalleInventarioController {
-    @FXML
-    private Label txtCodBarras;
-    @FXML
-    private Label txtDot;
-    @FXML
-    private Label txtMarca;
-    @FXML
-    private Label txtModelo;
-    @FXML
-    private Label txtMedida;
-    @FXML
-    private Label txtIdCarga;
-    @FXML
-    private Label txtIdVelocidad;
-    @FXML
-    private Label txtStock;
-    @FXML
-    private Label txtPrecioC;
-    @FXML
-    private Label txtPrecioV;
-    @FXML
-    private Label txtObservaciones;
-    @FXML
-    private Label txtFechaRegistro;
-    @FXML
-    private Button btnCerrar;
-    @FXML
-    private ImageView imgInventario;
-    @FXML
-    private ScrollPane scrollPane;
+    @FXML private Label txtCodBarras;
+    @FXML private Label txtDot;
+    @FXML private Label txtMarca;
+    @FXML private Label txtModelo;
+    @FXML private Label txtMedida;
+    @FXML private Label txtIdCarga;
+    @FXML private Label txtIdVelocidad;
+    @FXML private Label txtStock;
+    @FXML private Label txtPrecioC;
+    @FXML private Label txtPrecioV;
+    @FXML private Label txtObservaciones;
+    @FXML private Label txtFechaRegistro;
+    @FXML private Button btnCerrar;
+    @FXML private ImageView imgInventario;
+    @FXML private ScrollPane scrollPane;
 
     @FXML
     private void initialize() {
