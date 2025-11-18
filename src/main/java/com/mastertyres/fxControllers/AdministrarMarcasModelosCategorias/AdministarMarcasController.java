@@ -1,6 +1,5 @@
 package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
-import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MensajesAlert;
@@ -26,15 +25,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import javax.script.Bindings;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class AdministarMarcasController {
@@ -277,7 +271,7 @@ public class AdministarMarcasController {
     @FXML
     private void agregarMarca (){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarMarca.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/marca/AgregarMarca.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
@@ -358,7 +352,7 @@ public class AdministarMarcasController {
 
     public void EditarMarca(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarMarca.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/marca/EditarMarca.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
