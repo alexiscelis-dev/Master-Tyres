@@ -127,7 +127,6 @@ public class BuscarLlantaController {
     private void aceptar(ActionEvent event) {
 
         llantaSeleccionada = tablaLlantas.getSelectionModel().getSelectedItem();
-        llantaSeleccionada.setStock(Integer.parseInt(txtStock.getText()));
 
         int solicitado = Integer.parseInt(txtStock.getText());
         int disponible = llantaSeleccionada.getStock();
@@ -148,6 +147,7 @@ public class BuscarLlantaController {
 
 
         }else{
+            llantaSeleccionada.setStock(Integer.parseInt(txtStock.getText())); // se actualiza el stock con lo que se selecciona en el campo de texto
             btnAceptar.getScene().getWindow().hide();
         }
 

@@ -261,7 +261,8 @@ public class VentanaRegistro {
                 .radio(nota.getRadio())
                 .gato(nota.getGato())
                 .llave(nota.getLlave())
-                .llanta(nota.getLlanta())
+                .llanta(nota.getLlanta())//llanta de los checkBox
+                .llantaCampo(nota.getLlantaCampo()) //llanta del inventario
                 .llantaCantidad(nota.getLlantaCantidad())
                 .llantaUnitario(nota.getLlantaUnitario())
                 .llantaTotal(nota.getLlantaTotal())

@@ -21,23 +21,42 @@ import java.util.List;
 
 @Component
 public class NotaController {
-    @FXML private TilePane contenedorNotas;
-    @FXML private Label lblStatus;
-    @FXML private Label lblNumNota;
-    @FXML private Label lblNumFactura;
-    @FXML private Label lblCliente;
-    @FXML private Label lblVehiculo;
-    @FXML private Label lblFechaEmicion;
-    @FXML private Label lblFechaLimite;
-    @FXML private Label lblSaldoFavor;
-    @FXML private Label lblAdeudo;
-    @FXML private Label lblTotal;
-    @FXML private Button btnNuevaNota;
-    @FXML private Button btnEditar;
-    @FXML private Button btnImprimir;
-    @FXML private Button btnDarPlazo;
-    @FXML private Button btnEliminar;
-    @FXML private TextField txtBuscar;
+    @FXML
+    private TilePane contenedorNotas;
+    @FXML
+    private Label lblStatus;
+    @FXML
+    private Label lblNumNota;
+    @FXML
+    private Label lblNumFactura;
+    @FXML
+    private Label lblCliente;
+    @FXML
+    private Label lblVehiculo;
+    @FXML
+    private Label lblFechaEmicion;
+    @FXML
+    private Label lblFechaLimite;
+    @FXML
+    private Label lblSaldoFavor;
+    @FXML
+    private Label lblAdeudo;
+    @FXML
+    private Label lblTotal;
+    @FXML
+    private Button btnNuevaNota;
+    @FXML
+    private Button btnEditar;
+    @FXML
+    private Button btnImprimir;
+    @FXML
+    private Button btnDarPlazo;
+    @FXML
+    private Button btnEliminar;
+    @FXML
+    private Button btnHistorial;
+    @FXML
+    private TextField txtBuscar;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -66,7 +85,7 @@ public class NotaController {
     }//initialize
 
     private void cargarNota() {
-       List<NotaDTO> notas = notaService.listarNotas(StatusNota.ACTIVE.toString());
+        List<NotaDTO> notas = notaService.listarNotas(StatusNota.ACTIVE.toString());
         mostrarNotas(notas);
 
 
@@ -128,6 +147,7 @@ public class NotaController {
         btnImprimir.setDisable(false);
         btnDarPlazo.setDisable(false);
         btnEliminar.setDisable(false);
+        btnHistorial.setDisable(false);
 
         switch (nota.getStatusNota()) {
 
@@ -164,7 +184,6 @@ public class NotaController {
         lblTotal.setText("$" + nota.getTotal());
 
 
-
         lblSaldoFavor.setText("$" + nota.getSaldoFavor());
 
 
@@ -183,8 +202,6 @@ public class NotaController {
                 "Agregar Nota");
 
     }//agregarNotas
-
-
 
 
 }//class

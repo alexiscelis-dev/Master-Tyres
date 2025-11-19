@@ -13,6 +13,17 @@ public class RegexTools {
         });
 
     }
+
+    public static void aplicarNumerosDecimalNota(TextField textField){
+        textField.textProperty().addListener((observable, oldText, newText) -> {
+            if (!newText.matches("^$|^\\$?\\s*\\d*(?:[.,]\\d*)?$")){
+                textField.setText(oldText);
+            }
+        });
+
+    }
+
+
     //acepta solo enteros y vacio
     public static void aplicarNumeroEntero(TextField textField){
         textField.textProperty().addListener((observable, oldText, newText) -> {

@@ -49,6 +49,8 @@
                     <RowConstraints prefHeight="35.0"/>
                     <RowConstraints prefHeight="35.0"/>
                     <RowConstraints prefHeight="35.0"/>
+                    <RowConstraints prefHeight="35.0"/>
+                    <RowConstraints prefHeight="35.0"/>
 
                 </rowConstraints>
 
@@ -59,7 +61,7 @@
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/person_search.png"/>
+                                    <Image url="@/icons/nota/person_search.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
@@ -78,8 +80,33 @@
 
                     </Button>
 
+                    <Button disable="true" fx:id="btnBorrarCliente" onAction="#eliminarCliente" GridPane.columnIndex="0"
+                            GridPane.rowIndex="2" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/nota/delete-user.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
 
-                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="2" prefHeight="25.0"
+                    </Button>
+
+                    <Button disable="true" fx:id="btnBorrarInventario" onAction="#eliminarInventario" GridPane.columnIndex="0"
+                            GridPane.rowIndex="3" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/nota/delete-car-wheel.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+
+                    </Button>
+
+
+
+                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="25.0"
                             prefWidth="25.0"
                             styleClass="boton-accion">
                         <graphic>
@@ -91,7 +118,7 @@
                         </graphic>
 
                     </Button>
-                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="5"
                             mnemonicParsing="false" prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
 
@@ -1146,7 +1173,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
+                                        <TextField  fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1335,7 +1362,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="10" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField fx:id="txtSuspensionTotal" prefWidth="105"
+                                        <TextField  fx:id="txtSuspensionTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1618,7 +1645,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField fx:id="txtOtros" prefWidth="520"
+                                        <TextField  fx:id="txtOtros" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1660,7 +1687,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField fx:id="txtOtros2" prefWidth="520"
+                                        <TextField  fx:id="txtOtros2" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1686,7 +1713,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="20" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField fx:id="txtOtrosTotal2" prefWidth="105"
+                                        <TextField  fx:id="txtOtrosTotal2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>

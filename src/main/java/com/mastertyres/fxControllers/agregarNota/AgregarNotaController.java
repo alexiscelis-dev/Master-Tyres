@@ -43,14 +43,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarWarning;
+import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class AgregarNotaController {
 
     @FXML
     private AnchorPane rootPane;
+    @FXML
+    private Button btnBorrarCliente;
+    @FXML
+    private Button btnBorrarInventario;
     @FXML
     private GridPane gridPaneIcons;
     @FXML
@@ -293,140 +296,312 @@ public class AgregarNotaController {
     }//initialize
 
     private void operacionesCampos() {
-
+//Alineacion
         txtAlineacionCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtAlineacionCantidad.getText()) * toFloatSafe(txtAlineacionUnitario.getText());
+            float num = toFloatSafe(txtAlineacionCantidad.getText()) * toFloatSafe(txtAlineacionUnitario.getText());
 
-            txtAlineacionTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtAlineacionTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
 
         txtAlineacionUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtAlineacionCantidad.getText()) * toIntSafe(txtAlineacionUnitario.getText());
-
-            txtAlineacionTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            float num = toFloatSafe(txtAlineacionCantidad.getText()) * toFloatSafe(newValue.toString());
+            txtAlineacionTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
+
+        //Balanceo
 
         txtBalanceoCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtBalanceoCantidad.getText()) * toFloatSafe(txtBalanceoUnitario.getText());
+            float num = toFloatSafe(txtBalanceoCantidad.getText()) * toFloatSafe(txtBalanceoUnitario.getText());
 
-            txtBalanceoTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtBalanceoTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
 
+        txtBalanceoUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtBalanceoCantidad.getText()) * toFloatSafe(newValue.toString());
+
+            txtBalanceoTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        //llantas
         txtLlantasCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtLlantasCantidad.getText()) * toFloatSafe(txtLlantasUnitario.getText());
+            float num = toFloatSafe(txtLlantasCantidad.getText()) * toFloatSafe(txtLlantasUnitario.getText());
 
-            txtLlantasTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtLlantasTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
 
+        txtLlantasUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtLlantasCantidad.getText()) * toFloatSafe(newValue.toString());
+
+            txtLlantasTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        //amortiguadores delanteros
         txtAmorDelCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtAmorDelCantidad.getText()) * toFloatSafe(txtAmorDelUnitario.getText());
+            float num = toFloatSafe(txtAmorDelCantidad.getText()) * toFloatSafe(txtAmorDelUnitario.getText());
 
-            txtAmorDelTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtAmorDelTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
+
+        txtAmorDelUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtAmorDelCantidad.getText()) * toFloatSafe(newValue.toString());
+
+            txtAmorDelTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        //amortiguadores traseros
 
         txtAmorTrasCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtAmorTrasCantidad.getText()) * toFloatSafe(txtAmorTrasUnitario.getText());
+            float num = toFloatSafe(txtAmorTrasCantidad.getText()) * toFloatSafe(txtAmorTrasUnitario.getText());
 
-            txtAmorTrasTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtAmorTrasTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
+
+        txtAmorTrasUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtAmorTrasCantidad.getText()) * toFloatSafe(newValue.toString());
+
+            txtAmorTrasTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        //suspension
 
         txtSuspensionCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtSuspensionCantidad.getText()) * toFloatSafe(txtSuspensionUnitario.getText());
+            float num = toFloatSafe(txtSuspensionCantidad.getText()) * toFloatSafe(txtSuspensionUnitario.getText());
 
-            txtSuspensionTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtSuspensionTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
+
+        txtSuspensionUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtSuspensionCantidad.getText()) * toFloatSafe(newValue.toString());
+
+            txtSuspensionTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        //suspension 2
 
         txtSuspensionCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtSuspensionCantidad2.getText()) * toFloatSafe(txtSuspensionUnitario2.getText());
+            float num = toFloatSafe(txtSuspensionCantidad2.getText()) * toFloatSafe(txtSuspensionUnitario2.getText());
 
-            txtSuspensionTotal2.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtSuspensionTotal2.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
+
+        txtSuspensionUnitario2.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtSuspensionCantidad2.getText()) * toFloatSafe(newValue.toString());
+
+            txtSuspensionTotal2.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        //Mecanica
 
         txtMecanicaCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtMecanicaCantidad.getText()) * toFloatSafe(txtMecanicaUnitario.getText());
+            float num = toFloatSafe(txtMecanicaCantidad.getText()) * toFloatSafe(txtMecanicaUnitario.getText());
 
-            txtMecanicaUnitario.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtMecanicaTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
+
+        txtMecanicaUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtMecanicaCantidad.getText()) * toFloatSafe(newValue.toString());
+
+            txtMecanicaTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        //mecanica2
 
         txtMecanicaCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtMecanicaCantidad2.getText()) * toFloatSafe(txtMecanicaUnitario2.getText());
+            float num = toFloatSafe(txtMecanicaCantidad2.getText()) * toFloatSafe(txtMecanicaUnitario2.getText());
 
-            txtMecanicaTotal2.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtMecanicaTotal2.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
 
-        txtFrenosCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtFrenosCantidad.getText()) * toFloatSafe(txtFrenosUnitario.getText());
+        txtMecanicaUnitario2.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtMecanicaCantidad2.getText()) * toFloatSafe(newValue.toString());
 
-            txtFrenosTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtMecanicaTotal2.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        //frenos
+
+        txtFrenosCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtFrenosCantidad.getText()) * toFloatSafe(txtFrenosUnitario.getText());
+
+            txtFrenosTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+        txtFrenosUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtFrenosCantidad.getText()) * toFloatSafe(newValue.toString());
+
+            txtFrenosTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
 
         txtFrenosCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtFrenosCantidad2.getText()) * toFloatSafe(txtFrenosUnitario.getText());
+            float num = toFloatSafe(txtFrenosCantidad2.getText()) * toFloatSafe(txtFrenosUnitario2.getText());
 
-            txtFrenosTotal2.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtFrenosTotal2.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
 
+        txtFrenosUnitario2.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtFrenosCantidad2.getText()) * toFloatSafe(newValue.toString());
+
+            txtFrenosTotal2.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        //otros
         txtOtrosCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtOtrosCantidad.getText()) * toFloatSafe(txtOtrosUnitario.getText());
+            float num = toFloatSafe(txtOtrosCantidad.getText()) * toFloatSafe(txtOtrosUnitario.getText());
 
-            txtOtrosTotal.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtOtrosTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
 
+        txtOtrosUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtOtrosCantidad.getText()) * toFloatSafe(newValue.toString());
+
+            txtOtrosTotal.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        //otros2
         txtOtrosCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toIntSafe(txtOtrosCantidad2.getText()) * toFloatSafe(txtOtrosUnitario2.getText());
+            float num = toFloatSafe(txtOtrosCantidad2.getText()) * toFloatSafe(txtOtrosUnitario2.getText());
 
-            txtOtrosTotal2.setText(num + "");
-            txtTotal.setText(sumaTotal() + "");
+            txtOtrosTotal2.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
 
         });
 
+        txtOtrosUnitario2.textProperty().addListener((observable, oldValue, newValue) -> {
+            float num = toFloatSafe(txtOtrosCantidad2.getText()) * toFloatSafe(newValue.toString());
+
+            txtOtrosTotal2.setText("$" + num);
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+
+
+        //al escribir directamente el el total de cada uno
+        txtAlineacionTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtBalanceoTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtLlantasTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtAmorDelTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtAmorTrasTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtSuspensionTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtSuspensionTotal2.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtMecanicaTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtMecanicaTotal2.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtFrenosTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtFrenosTotal2.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtOtrosTotal.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
+        txtOtrosTotal2.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            txtTotal.setText("$" + sumaTotal());
+
+        });
         txtSubTotalMecanica.textProperty().addListener((observable, oldValue, newValue) -> {
 
-            txtTotal.setText(sumaTotal() + "");
+            txtTotal.setText("$" + sumaTotal());
 
         });
-
-        txtSubTotalOtros.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            txtTotal.setText(sumaTotal() + "");
-
-        });
-
         txtSubTotalFrenos.textProperty().addListener((observable, oldValue, newValue) -> {
 
-            txtTotal.setText(sumaTotal() + "");
+            txtTotal.setText("$" + sumaTotal());
 
         });
+        txtSubTotalOtros.textProperty().addListener((observable, oldValue, newValue) -> {
 
+            txtTotal.setText("$" + sumaTotal());
 
-
-
+        });
 
 
     }//operacionesCampos
@@ -439,17 +614,17 @@ public class AgregarNotaController {
                 toFloatSafe(txtLlantasTotal.getText()) +
                 toFloatSafe(txtAmorDelTotal.getText()) +
                 toFloatSafe(txtAmorTrasTotal.getText()) +
-                toFloatSafe(txtSuspension.getText()) +
-                toFloatSafe(txtSuspension2.getText()) +
-                toFloatSafe(txtMecanica.getText()) +
-                toFloatSafe(txtMecanica2.getText()) +
-                toFloatSafe(txtFrenos.getText()) +
-                toFloatSafe(txtFrenos2.getText()) +
-                toFloatSafe(txtOtros.getText()) +
-                toFloatSafe(txtOtros2.getText()) +
+                toFloatSafe(txtSuspensionTotal.getText()) +
+                toFloatSafe(txtSuspensionTotal2.getText()) +
+                toFloatSafe(txtMecanicaTotal.getText()) +
+                toFloatSafe(txtMecanicaTotal2.getText()) +
+                toFloatSafe(txtFrenosTotal.getText()) +
+                toFloatSafe(txtFrenosTotal2.getText()) +
+                toFloatSafe(txtOtrosTotal.getText()) +
+                toFloatSafe(txtOtrosTotal2.getText()) +
                 toFloatSafe(txtSubTotalMecanica.getText()) +
                 toFloatSafe(txtSubTotalFrenos.getText()) +
-                toFloatSafe(txtSubTotalOtros.getText());
+                toFloatSafe(txtSubTotalOtros.getText()); //16
 
 
         return suma;
@@ -548,7 +723,7 @@ public class AgregarNotaController {
         MenuContextSetting.disableMenu(rootPane);
 
         //validaciones Regex
-        RegexTools.aplicarNumerosDecimal(txtTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtTotal);
         RegexTools.aplicar24Horas(txtHoraEntrega);
         RegexTools.aplicar6Enteros(txtNumNota);
         RegexTools.aplicar2Enteros(txtDia);
@@ -571,38 +746,39 @@ public class AgregarNotaController {
         RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
         RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
 
-        RegexTools.aplicarNumerosDecimal(txtAlineacionUnitario);
-        RegexTools.aplicarNumerosDecimal(txtBalanceoUnitario);
-        RegexTools.aplicarNumerosDecimal(txtLlantasUnitario);
-        RegexTools.aplicarNumerosDecimal(txtAmorDelUnitario);
-        RegexTools.aplicarNumerosDecimal(txtAmorTrasUnitario);
-        RegexTools.aplicarNumerosDecimal(txtSuspensionUnitario);
-        RegexTools.aplicarNumerosDecimal(txtSuspensionUnitario2);
-        RegexTools.aplicarNumerosDecimal(txtMecanicaUnitario);
-        RegexTools.aplicarNumerosDecimal(txtMecanicaUnitario);
-        RegexTools.aplicarNumerosDecimal(txtMecanicaUnitario2);
-        RegexTools.aplicarNumerosDecimal(txtFrenosUnitario);
-        RegexTools.aplicarNumerosDecimal(txtFrenosUnitario2);
-        RegexTools.aplicarNumerosDecimal(txtOtrosUnitario);
-        RegexTools.aplicarNumerosDecimal(txtOtrosUnitario2);
-        RegexTools.aplicarNumerosDecimal(txtAlineacionTotal);
-        RegexTools.aplicarNumerosDecimal(txtBalanceoTotal);
-        RegexTools.aplicarNumerosDecimal(txtLlantasTotal);
-        RegexTools.aplicarNumerosDecimal(txtAmorDelTotal);
-        RegexTools.aplicarNumerosDecimal(txtAmorTrasTotal);
-        RegexTools.aplicarNumerosDecimal(txtSuspensionTotal);
-        RegexTools.aplicarNumerosDecimal(txtSuspensionTotal2);
-        RegexTools.aplicarNumerosDecimal(txtSubTotalFrenos);
-        RegexTools.aplicarNumerosDecimal(txtSubTotalMecanica);
-        RegexTools.aplicarNumerosDecimal(txtSubTotalOtros);
-        RegexTools.aplicarNumerosDecimal(txtMecanicaTotal);
-        RegexTools.aplicarNumerosDecimal(txtMecanicaTotal2);
-        RegexTools.aplicarNumerosDecimal(txtFrenosTotal);
-        RegexTools.aplicarNumerosDecimal(txtFrenosTotal2);
-        RegexTools.aplicarNumeroEntero(txtOtrosTotal);
-        RegexTools.aplicarNumeroEntero(txtOtrosTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
 
     }//configuraciones
+
 
     //Seccion precargar en nota
     private void showIcons() {
@@ -795,6 +971,7 @@ public class AgregarNotaController {
 
         }
         setClienteNota(cliente);
+        btnBorrarCliente.setDisable(false);
 
     }//llenarNota
 
@@ -807,7 +984,8 @@ public class AgregarNotaController {
             txtPlacas.setText(vehiculos.getPlacas());
             habilitar(false, "cliente");
 
-            setVehiculo(vehiculos);
+            setVehiculoNota(vehiculos);
+
         }
 
 
@@ -832,14 +1010,10 @@ public class AgregarNotaController {
         }
 
         setInventarioNota(inventario);
+        btnBorrarInventario.setDisable(false);
 
 
     }//llenarNota
-
-    //pone la suma de los totales en el campo total
-    private void total() {
-
-    }//total
 
 
     private void habilitar(boolean habilitar, String opcion) {
@@ -940,6 +1114,7 @@ public class AgregarNotaController {
                         .tapones(getTapones())
                         .tapetes(getTapetes())
                         .radio(getRadio())
+                        .gato(getGato())
                         .llave(getLlave())
                         .llanta(getLlanta())
                         //nota
@@ -1042,12 +1217,18 @@ public class AgregarNotaController {
 
 
     private float toFloatSafe(String text) {
+       text = text.replaceFirst("^\\$", "");
+
         try {
+
+            // Normaliza comas a puntos
+            text = text.replace(",", ".");
+
             return Float.parseFloat(text);
         } catch (NumberFormatException e) {
             return 0f;
         }
-    }
+    }//toFloatSafe
 
 
     private int toIntSafe(String texto) {
@@ -1062,7 +1243,6 @@ public class AgregarNotaController {
 
         }
     }//toFloatSafe
-
 
     private void checkCheckBoxes() {
         //    String rayones = "", golpes = "", tapones = "", tapetes = "", radio = "", gato = "", llave = "", llanta = "";
@@ -1141,6 +1321,8 @@ public class AgregarNotaController {
         clienteNota = null;
         vehiculosNota = null;
         inventarioNota = null;
+        btnBorrarInventario.setDisable(true);
+        btnBorrarCliente.setDisable(true);
 
         txtNumNota.setText("");
         mostrarFechayHora();
@@ -1215,7 +1397,7 @@ public class AgregarNotaController {
         txtFrenosUnitario.setText("");
         txtFrenosTotal.setText("");
         txtFrenos2.setText("");
-        txtFrenosCantidad.setText("");
+        txtFrenosCantidad2.setText("");
         txtFrenosUnitario2.setText("");
         txtFrenosTotal2.setText("");
         txtOtros.setText("");
@@ -1224,6 +1406,7 @@ public class AgregarNotaController {
         txtOtrosTotal.setText("");
         txtOtros2.setText("");
         txtOtrosCantidad2.setText("");
+        txtOtrosUnitario2.setText("");
         txtOtrosTotal2.setText("");
         txtSubTotalFrenos.setText("");
         txtSubTotalMecanica.setText("");
@@ -1235,6 +1418,67 @@ public class AgregarNotaController {
         habilitar(true, "cliente");
 
     }//refrescar
+
+    //pone en null stock de inventario para desasociar la relacion Entidad nota-inventario
+    @FXML
+    private void eliminarInventario() {
+
+
+        boolean confirmar = mostrarConfirmacion(
+                "Eliminar llanta de Nota",
+                "La llanta seleccionada dejará de estar asociada a la nota.\n",
+                "Esto no eliminará la llanta del inventario, solo la relación con la nota.\n" +
+                        "¿Deseas continuar?",
+                "Continuar",
+                "Cancelar"
+        );
+
+
+        if (confirmar) {
+            setInventarioNota(null);
+            txtLlantas.setText("");
+            txtLlantasCantidad.setText("");
+            txtLlantasUnitario.setText("");
+            txtLlantasTotal.setText("");
+            btnBorrarInventario.setDisable(true);
+
+        }
+
+    }//eliminarInventario
+
+    //Pone en null cliente y vehiculo para desasocial las relaciones de entidades Nota - vehiculo- Cliente
+    @FXML
+    private void eliminarCliente() {
+
+
+        boolean confirmar = mostrarConfirmacion(
+                "Eliminar cliente de Nota",
+                "El cliente y el vehículo dejarán de estar asociados a la nota.\n",
+                "Esto no eliminará al cliente ni el vehículo del sistema, solo la relación con la nota.\n" +
+                        "¿Deseas continuar?\n\n",
+                "Continuar",
+                "Cancelar"
+        );
+
+
+        if (confirmar) {
+            setClienteNota(null);
+            setVehiculoNota(null);
+
+            txtNombre.setText("");
+            txtDireccion.setText("");
+            txtDireccion2.setText("");
+            txtRfc.setText("");
+            txtCorreo.setText("");
+            mostrarFechayHora();
+            txtMarca.setText("");
+            txtModelo.setText("");
+            txtAnioVehiculo.setText("");
+            txtKms.setText("");
+            txtPlacas.setText("");
+            btnBorrarCliente.setDisable(true);
+        }
+    }//eliminarCliente
 
 
     //getters y setters
@@ -1248,7 +1492,7 @@ public class AgregarNotaController {
         this.inventarioNota = inventarioNota;
     }
 
-    private void setVehiculo(VehiculoDTO vehiculos) {
+    private void setVehiculoNota(VehiculoDTO vehiculos) {
         this.vehiculosNota = vehiculos;
     }
 
