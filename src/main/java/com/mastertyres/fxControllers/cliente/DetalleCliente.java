@@ -7,6 +7,10 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @Component
 public class DetalleCliente {
@@ -15,6 +19,7 @@ public class DetalleCliente {
     @FXML private Label txtApellido;
     @FXML private Label txtSegundoApellido;
     @FXML private Label txtTelefono;
+    @FXML private Label txtCorreo;
     @FXML private Label txtHobbie;
     @FXML private Label txtRFC;
     @FXML private Label txtDomicilio;
@@ -26,24 +31,72 @@ public class DetalleCliente {
     @FXML private Label txtFechaRegistro;
     @FXML private Label txtFechaActualizacion;
 
-    public void informacionCliente(Cliente clienteSeleccionado) {
+    public void informacionCliente(Cliente cliente) {
 
-        txtNombre.setText(txtNombre.getText() + " " + (clienteSeleccionado.getNombre() != null ? clienteSeleccionado.getNombre() : ""));
-        txtApellido.setText(txtApellido.getText() + " " + (clienteSeleccionado.getApellido() != null ? clienteSeleccionado.getApellido() : ""));
-        txtSegundoApellido.setText(txtSegundoApellido.getText() + " " + (clienteSeleccionado.getSegundoApellido() != null ? clienteSeleccionado.getSegundoApellido() : ""));
-        txtTelefono.setText(txtTelefono.getText() + " " + (clienteSeleccionado.getNumTelefono() != null ? clienteSeleccionado.getNumTelefono() : ""));
-        txtHobbie.setText(txtHobbie.getText() + " " + (clienteSeleccionado.getHobbie() != null ? clienteSeleccionado.getHobbie() : ""));
-        txtRFC.setText(txtRFC.getText() + " " + (clienteSeleccionado.getRfc() != null ? clienteSeleccionado.getRfc() : ""));
-        txtDomicilio.setText(txtDomicilio.getText() + " " + (clienteSeleccionado.getDomicilio() != null ? clienteSeleccionado.getDomicilio() : ""));
-        txtEstado.setText(txtEstado.getText() + " " + (clienteSeleccionado.getEstado() != null ? clienteSeleccionado.getEstado() : ""));
-        txtCiudad.setText(txtCiudad.getText() + " " + (clienteSeleccionado.getCiudad() != null ? clienteSeleccionado.getCiudad() : ""));
-        txtGenero.setText(txtGenero.getText() + " " + (clienteSeleccionado.getGenero() != null ? clienteSeleccionado.getGenero() : ""));
-        txtTipoCliente.setText(txtTipoCliente.getText() + " " + (clienteSeleccionado.getTipoCliente() != null ? clienteSeleccionado.getTipoCliente() : ""));
-        txtFechaCumple.setText(txtFechaCumple.getText() + " " + (clienteSeleccionado.getFechaCumple() != null ? clienteSeleccionado.getFechaCumple() : ""));
-        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + (clienteSeleccionado.getCreated_at() != null ? clienteSeleccionado.getCreated_at() : ""));
-        txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + (clienteSeleccionado.getUpdated_at() != null ? clienteSeleccionado.getUpdated_at() : ""));
+        txtNombre.setText("Nombre: " + valorONull(cliente.getNombre()));
+        txtApellido.setText("Primer apellido: " + valorONull(cliente.getApellido()));
+        txtSegundoApellido.setText("Segundo apellido: " + valorONull(cliente.getSegundoApellido()));
+        txtTelefono.setText("Teléfono: " + valorONull(cliente.getNumTelefono()));
+        txtCorreo.setText("Correo: " + valorONull(cliente.getCorreo()));
+        txtHobbie.setText("Hobbie: " + valorONull(cliente.getHobbie()));
+        txtRFC.setText("RFC: " + valorONull(cliente.getRfc()));
+        txtDomicilio.setText("Domicilio: " + valorONull(cliente.getDomicilio()));
+        txtEstado.setText("Estado: " + valorONull(cliente.getEstado()));
+        txtCiudad.setText("Ciudad: " + valorONull(cliente.getCiudad()));
+        txtGenero.setText("Género: " + formatearGenero(cliente.getGenero()));
+        txtTipoCliente.setText("Tipo de cliente: " + valorONull(cliente.getTipoCliente()));
 
+        // FECHAS formateadas
+        txtFechaCumple.setText("Fecha de cumpleaños: " + formatearFecha(cliente.getFechaCumple()));
+        txtFechaRegistro.setText("Fecha de registro: " + formatearFechaHora(cliente.getCreated_at()));
+        txtFechaActualizacion.setText("Fecha de última actualización: " + formatearFechaHora(cliente.getUpdated_at()));
     }
+
+
+    private String formatearFecha(String fecha) {
+        if (fecha == null || fecha.isBlank()) return "No especificado";
+
+        try {
+            LocalDate f = LocalDate.parse(fecha); // Para formato yyyy-MM-dd
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "No especificado";
+        }
+    }
+
+    private String formatearFechaHora(String fechaHora) {
+        if (fechaHora == null || fechaHora.isBlank()) return "No especificado";
+
+        try {
+            LocalDateTime f = LocalDateTime.parse(fechaHora.replace(" ", "T"));
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "No especificado";
+        }
+    }
+
+    private String valorONull(String valor) {
+        return (valor == null || valor.isBlank()) ? "No especificado" : valor;
+    }
+
+    private String formatearGenero(String genero) {
+        if (genero == null || genero.isBlank()) return "No especificado";
+
+        genero = genero.trim().toUpperCase();
+
+        switch (genero) {
+            case "M":
+                return "Masculino";
+            case "F":
+                return "Femenino";
+            case "O":
+                return "Otro";
+            default:
+                return "No especificado";
+        }
+    }
+
+
 
     @FXML
     private void cerrarVentana() {
@@ -61,6 +114,7 @@ public class DetalleCliente {
         txtFechaCumple.setText("Fecha de cumpleaños:");
         txtFechaRegistro.setText("Fecha de registro:");
         txtFechaActualizacion.setText("Fecha de ultima actualizacion:");
+        txtCorreo.setText("Correo:");
 
         Stage stage = (Stage) txtNombre.getScene().getWindow();
         stage.close();

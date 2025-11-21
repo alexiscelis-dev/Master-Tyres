@@ -28,6 +28,8 @@ public class EditarClienteController {
     @FXML
     private TextField txtTelefono;
     @FXML
+    private TextField txtCorreo;
+    @FXML
     private TextField txtHobbie;
     @FXML private TextField txtRfc;
     @FXML private TextField txtDomicilio;
@@ -48,6 +50,7 @@ public class EditarClienteController {
     private BooleanProperty telefonoValido = new SimpleBooleanProperty(true);
     private BooleanProperty nombreValido = new SimpleBooleanProperty(true);
     private BooleanProperty apellidoValido = new SimpleBooleanProperty(true);
+    private BooleanProperty CorreoValido = new SimpleBooleanProperty(true);
 
     public void initialize() {
 
@@ -147,6 +150,23 @@ public class EditarClienteController {
             } else {
                 rfcValido.set(true);
                 txtRfc.setStyle("");
+                ObtenerFechaCumpleaños(texto);
+            }
+        });
+
+        // correo: opcional, acepta minúsculas
+        txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toLowerCase(); // convertir a minusculas para la validación
+            txtCorreo.setText(texto); // actualiza el campo visualmente en minusculas
+            if (texto.isEmpty()) {
+                CorreoValido.set(true);
+                txtCorreo.setStyle("");
+            } else if (!texto.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,63}$")) {
+                CorreoValido.set(false);
+                txtCorreo.setStyle("-fx-border-color: red;");
+            } else {
+                CorreoValido.set(true);
+                txtCorreo.setStyle("");
             }
         });
 
@@ -158,9 +178,36 @@ public class EditarClienteController {
                         .or(choiceTipoCliente.valueProperty().isNull())
                         .or(rfcValido.not())
                         .or(telefonoValido.not())
+                        .or(CorreoValido.not())
 
         );
 
+    }
+
+    private void ObtenerFechaCumpleaños(String rfc) {
+        String texto = rfc.toUpperCase();
+        // Extraer fecha: YYYY-MM-DD
+        String yy = texto.substring(texto.length() == 13 ? 4 : 3, texto.length() == 13 ? 6 : 5);
+        String mm = texto.substring(texto.length() == 13 ? 6 : 5, texto.length() == 13 ? 8 : 7);
+        String dd = texto.substring(texto.length() == 13 ? 8 : 7, texto.length() == 13 ? 10 : 9);
+
+        int year = Integer.parseInt(yy);
+        int month = Integer.parseInt(mm);
+        int day = Integer.parseInt(dd);
+
+        // Siglo
+        if (year >= 0 && year <= 23) {
+            year += 2000;
+        } else {
+            year += 1900;
+        }
+
+        try {
+            LocalDate fechaNacimiento = LocalDate.of(year, month, day);
+            dateCumpleanos.setValue(fechaNacimiento);
+        } catch (Exception e) {
+            dateCumpleanos.setValue(null);
+        }
     }
 
     private String formatoOracion(String texto) {
@@ -190,6 +237,7 @@ public class EditarClienteController {
         txtDomicilio.setText(cliente.getDomicilio());
         txtEstado.setText(cliente.getEstado());
         txtCiudad.setText(cliente.getCiudad());
+        txtCorreo.setText(cliente.getCorreo());
 
         choiceGenero.getItems().setAll("Masculino", "Femenino", "Otro");
         choiceGenero.setValue(cliente.getGenero());
@@ -270,6 +318,7 @@ public class EditarClienteController {
                 cliente.setFechaCumple(dateCumpleanos.getValue().toString());
                 cliente.setRfc(txtRfc.getText().trim());
                 cliente.setNumTelefono(txtTelefono.getText().trim());
+                cliente.setCorreo(txtCorreo.getText().trim());
 
                 if (choiceGenero.getValue().equals("Masculino")) {
                     cliente.setGenero("M");

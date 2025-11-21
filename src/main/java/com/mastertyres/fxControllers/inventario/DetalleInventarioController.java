@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class DetalleInventarioController {
@@ -42,18 +45,18 @@ public class DetalleInventarioController {
 
     public void InformacionInventario(Inventario inventario) {
 
-        txtCodBarras.setText(txtCodBarras.getText() + " " + (inventario.getCodigoBarras() != null ? inventario.getCodigoBarras() : ""));
-        txtDot.setText(txtDot.getText() + " " + (inventario.getDot() != null ? inventario.getDot() : ""));
-        txtMarca.setText(txtMarca.getText() + " " + (inventario.getMarca() != null ? inventario.getMarca() : ""));
-        txtModelo.setText(txtModelo.getText() + " " + (inventario.getModelo() != null ? inventario.getModelo() : ""));
-        txtMedida.setText(txtMedida.getText() + " " + (inventario.getMedida() != null ? inventario.getMedida() : ""));
-        txtIdCarga.setText(txtIdCarga.getText() + " " + (inventario.getIndiceCarga() != null ? inventario.getIndiceCarga() : ""));
-        txtIdVelocidad.setText(txtIdVelocidad.getText() + " " + (inventario.getIndiceVelocidad() != null ? inventario.getIndiceVelocidad() : ""));
-        txtStock.setText(txtStock.getText() + " " + inventario.getStock());
-        txtPrecioC.setText(txtPrecioC.getText() + " $" + inventario.getPrecioCompra());
-        txtPrecioV.setText(txtPrecioV.getText() + " $" + inventario.getPrecioVenta());
-        txtObservaciones.setText(txtObservaciones.getText() + " " + (inventario.getObservaciones() != null ? inventario.getObservaciones() : ""));
-        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + (inventario.getCreated_at() != null ? inventario.getCreated_at() : ""));
+        txtCodBarras.setText(txtCodBarras.getText() + " " + valorONull(inventario.getCodigoBarras()));
+        txtDot.setText(txtDot.getText() + " " + valorONull(inventario.getDot()));
+        txtMarca.setText(txtMarca.getText() + " " + valorONull(inventario.getMarca()));
+        txtModelo.setText(txtModelo.getText() + " " + valorONull(inventario.getModelo()));
+        txtMedida.setText(txtMedida.getText() + " " + valorONull(inventario.getMedida()));
+        txtIdCarga.setText(txtIdCarga.getText() + " " + valorONull(inventario.getIndiceCarga()));
+        txtIdVelocidad.setText(txtIdVelocidad.getText() + " " + valorONull(inventario.getIndiceVelocidad()));
+        txtStock.setText(txtStock.getText() + " " + valorONull(inventario.getStock()+""));
+        txtPrecioC.setText(txtPrecioC.getText() + " $" + valorONull(inventario.getPrecioCompra()+""));
+        txtPrecioV.setText(txtPrecioV.getText() + " $" + valorONull(inventario.getPrecioVenta()+""));
+        txtObservaciones.setText(txtObservaciones.getText() + " " + valorONull(inventario.getObservaciones()));
+        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + formatearFechaHora(inventario.getCreated_at()));
 
         File file = new File(inventario.getImagen());
         Image image;
@@ -67,6 +70,33 @@ public class DetalleInventarioController {
 
 
     }//detalleInventario
+
+
+    private String formatearFecha(String fecha) {
+        if (fecha == null || fecha.isBlank()) return "No especificado";
+
+        try {
+            LocalDate f = LocalDate.parse(fecha); // Para formato yyyy-MM-dd
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "No especificado";
+        }
+    }
+
+    private String formatearFechaHora(String fechaHora) {
+        if (fechaHora == null || fechaHora.isBlank()) return "No especificado";
+
+        try {
+            LocalDateTime f = LocalDateTime.parse(fechaHora.replace(" ", "T"));
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "No especificado";
+        }
+    }
+
+    private String valorONull(String valor) {
+        return (valor == null || valor.isBlank()) ? "No especificado" : valor;
+    }
 
     @FXML
     private void cerrarVentana() {

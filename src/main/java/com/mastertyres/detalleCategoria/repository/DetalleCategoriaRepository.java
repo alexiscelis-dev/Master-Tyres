@@ -121,4 +121,9 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
     @Query("DELETE FROM DetalleCategoria dc WHERE dc.marca.marcaId = :marcaId")
     void eliminarPorMarcaId(@Param("marcaId") Integer marcaId);
 
+    @Query("SELECT d.categoria FROM DetalleCategoria d " +
+            "WHERE d.marca.marcaId = :marcaId AND d.modelo.modeloId = :modeloId")
+    List<Categoria> findCategoriasByMarcaAndModelo(@Param("marcaId") Integer marcaId,
+                                                   @Param("modeloId") Integer modeloId);
+
 }

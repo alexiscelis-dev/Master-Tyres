@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
@@ -281,10 +283,21 @@ public class PromocionesActivasController {
         lblTipoDescuento.setText(p.getTipoDescuento());
         lblValorDescuento.setText(p.getPorcentaje() + "%");
         lblPrecio.setText(p.getPrecio() + "");
-        lblFechaInicio.setText(p.getFechaInicio());
-        lblFechaFin.setText(p.getFechaFin());
+        lblFechaInicio.setText(formatearFecha(p.getFechaInicio()));
+        lblFechaFin.setText(formatearFecha(p.getFechaFin()));
 
         cargarVehiculosPromocion(p.getPromocionId());
+    }
+
+    private String formatearFecha(String fecha) {
+        if (fecha == null || fecha.isBlank()) return "N/A";
+
+        try {
+            LocalDate f = LocalDate.parse(fecha);  // yyyy-MM-dd
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "N/A";
+        }
     }
 
     private void eliminarPromocion() {

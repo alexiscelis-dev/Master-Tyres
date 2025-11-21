@@ -5,6 +5,7 @@ import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.services.MarcaService;
@@ -54,6 +55,9 @@ public class AgregarClienteController {
     @Autowired
     private VehiculoService vehiculoService;
 
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
+
     // Columnas de tabla vehiculos
     @FXML private TableView<Vehiculo> tablaVehiculos;
     @FXML private TableColumn<Vehiculo, String> colMarca;
@@ -95,6 +99,7 @@ public class AgregarClienteController {
     @FXML private TextField txtKilometros;
     @FXML private DatePicker pickerUltimoServicio;
     @FXML private TextField txtObservaciones;
+    @FXML private TextField txtCorreo;
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
 
     // Botones Principales
@@ -110,6 +115,7 @@ public class AgregarClienteController {
     private BooleanProperty nombreValido = new SimpleBooleanProperty(true);
     private BooleanProperty apellidoValido = new SimpleBooleanProperty(true);
     private BooleanProperty ColorValido = new SimpleBooleanProperty(true);
+    private BooleanProperty CorreoValido = new SimpleBooleanProperty(true);
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -282,6 +288,24 @@ public class AgregarClienteController {
             } else {
                 rfcValido.set(true);
                 txtRFC.setStyle("");
+                ObtenerFechaCumpleaños(texto);
+            }
+        });
+
+
+        // correo: opcional, acepta minúsculas
+        txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toLowerCase(); // convertir a minusculas para la validación
+            txtCorreo.setText(texto); // actualiza el campo visualmente en minusculas
+            if (texto.isEmpty()) {
+                CorreoValido.set(true);
+                txtCorreo.setStyle("");
+            } else if (!texto.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,63}$")) {
+                CorreoValido.set(false);
+                txtCorreo.setStyle("-fx-border-color: red;");
+            } else {
+                CorreoValido.set(true);
+                txtCorreo.setStyle("");
             }
         });
 
@@ -374,9 +398,36 @@ public class AgregarClienteController {
                         .or(choiceTipoCliente.valueProperty().isNull())
                         .or(rfcValido.not())
                         .or(telefonoValido.not())
+                        .or(CorreoValido.not())
 
         );
 
+    }
+
+    private void ObtenerFechaCumpleaños(String rfc) {
+        String texto = rfc.toUpperCase();
+        // Extraer fecha: YYYY-MM-DD
+        String yy = texto.substring(texto.length() == 13 ? 4 : 3, texto.length() == 13 ? 6 : 5);
+        String mm = texto.substring(texto.length() == 13 ? 6 : 5, texto.length() == 13 ? 8 : 7);
+        String dd = texto.substring(texto.length() == 13 ? 8 : 7, texto.length() == 13 ? 10 : 9);
+
+        int year = Integer.parseInt(yy);
+        int month = Integer.parseInt(mm);
+        int day = Integer.parseInt(dd);
+
+        // Siglo
+        if (year >= 0 && year <= 23) {
+            year += 2000;
+        } else {
+            year += 1900;
+        }
+
+        try {
+            LocalDate fechaNacimiento = LocalDate.of(year, month, day);
+            pickerCumpleanos.setValue(fechaNacimiento);
+        } catch (Exception e) {
+            pickerCumpleanos.setValue(null);
+        }
     }
 
     private String formatoOracion(String texto) {
@@ -457,6 +508,24 @@ public class AgregarClienteController {
                 choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
             } else {
                 choiceModelo.getItems().clear();
+            }
+        });
+
+        choiceModelo.getSelectionModel().selectedItemProperty().addListener((obs, oldModelo, newModelo) -> {
+            Marca marcaSeleccionada = choiceMarca.getValue();
+
+            if (marcaSeleccionada != null && newModelo != null) {
+
+                List<Categoria> categoriasFiltradas =
+                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
+                                marcaSeleccionada.getMarcaId(),
+                                newModelo.getModeloId()
+                        );
+
+                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
+
+            } else {
+                choiceCategoria.getItems().clear();
             }
         });
     }
@@ -606,6 +675,7 @@ public class AgregarClienteController {
         cliente.setEstado(txtEstado.getText());
         cliente.setCiudad(txtCiudad.getText());
         cliente.setDomicilio(txtDomicilio.getText());
+        cliente.setCorreo(txtCorreo.getText());
         cliente.setTipoCliente(choiceTipoCliente.getValue() != null ? choiceTipoCliente.getValue().toString() : null);
         if (pickerCumpleanos.getValue() != null) {
             cliente.setFechaCumple(pickerCumpleanos.getValue().toString());

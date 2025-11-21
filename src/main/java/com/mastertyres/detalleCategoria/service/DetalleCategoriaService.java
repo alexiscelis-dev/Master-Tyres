@@ -25,6 +25,10 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
         return detalleCategoriaRepository.findByMarcaId(marcaId);
     }
 
+    public List<Categoria> listarCategoriasPorMarcaYModelo(Integer marcaId, Integer modeloId) {
+        return detalleCategoriaRepository.findCategoriasByMarcaAndModelo(marcaId, modeloId);
+    }
+
     public List<DetalleCategoria> buscarPorTexto(String busqueda) {
         if (busqueda == null || busqueda.trim().isEmpty()) {
             return detalleCategoriaRepository.findAll();

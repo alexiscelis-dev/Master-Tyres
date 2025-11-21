@@ -12,6 +12,7 @@ import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -379,9 +381,6 @@ public class VehiculoController {
 
     @FXML
     public void actualizarTabla(ActionEvent actionEvent) {
-//        buscarVehiculoBuscador.setText("");
-//        atributoBusquedaVehiculos.setValue(null);
-//        cargarVehiculos();
 
         buscarVehiculoBuscador.setText("");
         atributoBusquedaVehiculos.setValue(null);
@@ -422,51 +421,6 @@ public class VehiculoController {
         return contenedor;
     }
 
-//    private VBox crearPaginaVehiculoconFiltro(int indicePagina) {
-//        Page<VehiculoDTO> paginaVehiculo;
-//
-//        if (modoBusqueda) {
-//            // Dependiendo del atributo de búsqueda
-//            switch (atributoBusquedaVehiculos.getValue()) {
-//                case "propietario" -> paginaVehiculo = vehiculoService.buscarPorPropietario(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                case "marca" -> paginaVehiculo = vehiculoService.buscarPorMarca(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                case "modelo" -> paginaVehiculo = vehiculoService.buscarPorModelo(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                case "categoria" -> paginaVehiculo = vehiculoService.buscarPorCategoria(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                case "color" -> paginaVehiculo = vehiculoService.buscarPorColor(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                case "placas" -> paginaVehiculo = vehiculoService.buscarPorPlacas(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                case "numero serie" -> paginaVehiculo = vehiculoService.buscarVehiculoPorNumSeriePaginado(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                case "año" -> paginaVehiculo = vehiculoService.buscarPorAnio(
-//                        VehiculoStatus.ACTIVE.toString(), Integer.parseInt(terminoBusquedaActual), indicePagina, VEHICULO_POR_PAGINA);
-//                case "kilometraje" -> paginaVehiculo = vehiculoService.buscarPorKilometros(
-//                        VehiculoStatus.ACTIVE.toString(), Integer.parseInt(terminoBusquedaActual), indicePagina, VEHICULO_POR_PAGINA);
-//                case "ultimo servicio" -> paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                case "fecha registro" -> paginaVehiculo = vehiculoService.buscarPorFechaRegistro(
-//                        VehiculoStatus.ACTIVE.toString(), terminoBusquedaActual, indicePagina, VEHICULO_POR_PAGINA);
-//                default -> paginaVehiculo = vehiculoService.listarVehiculosPaginado(ClienteStatus.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
-//            }
-//
-//        } else {
-//            paginaVehiculo = vehiculoService.listarVehiculosPaginado(
-//                    VehiculoStatus.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
-//        }
-//
-//        tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
-//
-//        VBox contenedor = new VBox(tablaVehiculos);
-//        contenedor.setMinHeight(500);
-//        contenedor.setPrefHeight(500);
-//        contenedor.setStyle("-fx-background-color: transparent;");
-//
-//        return contenedor;
-//    }
     private VBox crearPaginaVehiculoconFiltro(int indicePagina) {
         Page<VehiculoDTO> paginaVehiculo = Page.empty();
 
@@ -610,27 +564,6 @@ public class VehiculoController {
 
 
                     case "fecha registro" -> {
-//                        boolean consultar = false;
-//                        DateTimeFormatter entrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//                        DateTimeFormatter consulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//
-//                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-//                            LocalDate fecha = LocalDate.parse(busqueda, entrada);
-//                            paginaVehiculo = vehiculoService.buscarPorFechaRegistro(activo, fecha, indicePagina, VEHICULO_POR_PAGINA);
-//
-//                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-//                            String[] fechas = busqueda.split(",");
-//                            LocalDate f1 = LocalDate.parse(fechas[0], entrada);
-//                            LocalDate f2 = LocalDate.parse(fechas[1], entrada);
-//                            if (f1.isAfter(f2)) {
-//                                LocalDate aux = f1; f1 = f2; f2 = aux;
-//                            }
-//                            paginaVehiculo = vehiculoService.buscarPorFechaRegistroRango(
-//                                    activo, f1, f2, indicePagina, VEHICULO_POR_PAGINA);
-//                        } else {
-//                            mostrarWarning("Formato incorrecto", "Formato no válido para fecha de registro",
-//                                    "Use dd-MM-yyyy o dd-MM-yyyy,dd-MM-yyyy para rango de fechas.");
-//                        }
                         boolean consultar = false;
 
                         if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
@@ -731,24 +664,6 @@ public class VehiculoController {
     @FXML
     private void agregarVehiculo(ActionEvent event) {
 
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarVehiculo.fxml"));
-//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-//            Parent root = loader.load();
-//
-//            Pane panel = ventanaPrincipalController.getPanelMenu();
-//            panel.getChildren().setAll(root);
-//            AnchorPane.setTopAnchor(root, 0.0);
-//            AnchorPane.setRightAnchor(root, 0.0);
-//            AnchorPane.setBottomAnchor(root, 0.0);
-//            AnchorPane.setLeftAnchor(root, 0.0);
-//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//
-//        }
-
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
                 "/fxmlViews/vehiculo/AgregarVehiculo.fxml",
@@ -761,95 +676,122 @@ public class VehiculoController {
     public void cargarVehiculos() {
 
         colCliente.setCellValueFactory(data -> {
-
-            String nombre = data.getValue().getNombreCliente() != null ? data.getValue().getNombreCliente() : "";
-            String apellido = data.getValue().getApellido() != null ? data.getValue().getApellido() : "";
-            String segundoApellido = data.getValue().getSegundoApellido() != null ? data.getValue().getSegundoApellido() : "";
-            String propietario = nombre + " " + apellido + " " + segundoApellido;
-
+            String propietario = nombreCompleto(
+                    data.getValue().getNombreCliente(),
+                    data.getValue().getApellido(),
+                    data.getValue().getSegundoApellido()
+            );
             return new SimpleStringProperty(propietario);
         });
 
         colMarca.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getNombreMarca())
+                new SimpleStringProperty(valorONull(data.getValue().getNombreMarca()))
         );
 
         colModelo.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getNombreModelo())
-
+                new SimpleStringProperty(valorONull(data.getValue().getNombreModelo()))
         );
+
         colColor.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getColor())
+                new SimpleStringProperty(valorONull(data.getValue().getColor()))
         );
+
         colCategoria.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getNombreCategoria())
+                new SimpleStringProperty(valorONull(data.getValue().getNombreCategoria()))
         );
+
+
         colAnio.setCellValueFactory(data ->
-                new SimpleIntegerProperty(data.getValue().getAnio()).asObject()
-
+                new SimpleObjectProperty<>(data.getValue().getAnio())
         );
+        colAnio.setCellFactory(column -> new TableCell<VehiculoDTO, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(item == null ? "N/A" : item.toString());
+                }
+            }
+        });
+
         colPlacas.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getPlacas())
-
+                new SimpleStringProperty(valorONull(data.getValue().getPlacas()))
         );
-        colNumeroSerie.setCellValueFactory(
-                new PropertyValueFactory<>("numSerie")
+
+        colNumeroSerie.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getNumSerie()))
         );
 
         colObservaciones.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getObservaciones())
+                new SimpleStringProperty(valorONull(data.getValue().getObservaciones()))
         );
 
         colKilometraje.setCellValueFactory(data ->
-                new SimpleIntegerProperty(data.getValue().getKilometros()).asObject()
+                new SimpleObjectProperty<>(data.getValue().getKilometros())
         );
-
-        DateTimeFormatter input = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter output = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        colKilometraje.setCellFactory(column -> new TableCell<VehiculoDTO, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(item == null ? "N/A" : item.toString());
+                }
+            }
+        });
 
         colUltimoServicio.setCellValueFactory(data -> {
-                    String fechaStr = data.getValue().getUltimoServicio();
+            String fechaStr = data.getValue().getUltimoServicio();
 
-                    if (fechaStr == null || fechaStr.isEmpty()) {
-                        return new SimpleStringProperty("N/A");
-                    } else {
-                        LocalDate fecha = LocalDate.parse(fechaStr, input);
-                        String texto = fecha.format(output);
-                        return new SimpleStringProperty(texto);
-                    }
-                }
-        );
+            if (fechaStr == null || fechaStr.isBlank()) {
+                return new SimpleStringProperty("N/A");
+            }
 
+            DateTimeFormatter input = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter output = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+            LocalDate fecha = LocalDate.parse(fechaStr, input);
+            return new SimpleStringProperty(fecha.format(output));
+        });
 
         colFechaRegistro.setCellValueFactory(data -> {
+            String fechaStr = data.getValue().getFechaRegistro();
 
-                    DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    String fechaStr = data.getValue().getFechaRegistro();
-                    LocalDate fecha = LocalDate.parse(fechaStr, formatterEntrada);
-                    String texto = fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));  //mostrar solo fecha sin la hora del registro
-                    return new SimpleStringProperty(texto);
-                }
+            if (fechaStr == null || fechaStr.isBlank()) {
+                return new SimpleStringProperty("N/A");
+            }
 
-        );
+            try {
+                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatterEntrada);
+
+                return new SimpleStringProperty(
+                        fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                );
+            } catch (Exception e) {
+                return new SimpleStringProperty("N/A");
+            }
+        });
 
         cargarDatosVehiculo();
-
-
     }//cargarVehiculos
 
-//    private void cargarDatosVehiculo() {
-//
-//        //Llenar tabla con registros
-//        try {
-//            tablaVehiculos.getItems().setAll(vehiculoService.listarVehiculos(VehiculoStatus.ACTIVE.toString()));
-//
-//        } catch (Exception e) {
-//            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
-//
-//        }
-//
-//
-//    }//cargarDatosVehiculo
+    private String valorONull(String valor) {
+        return (valor == null || valor.isBlank()) ? "N/A" : valor;
+    }
+
+    private String nombreCompleto(String n, String a1, String a2) {
+        n = (n == null ? "" : n.trim());
+        a1 = (a1 == null ? "" : a1.trim());
+        a2 = (a2 == null ? "" : a2.trim());
+
+        String full = (n + " " + a1 + " " + a2).trim();
+        return full.isBlank() ? "N/A" : full;
+    }
+
     private void cargarDatosVehiculo() {
 
         try {
@@ -1173,23 +1115,7 @@ public class VehiculoController {
     }//setVentanaPrincipalController
 
     public void ModificarMarcaModeloCategoria(ActionEvent actionEvent) {
-//
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarMarcas_Modelos_Categorias.fxml"));
-//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-//            Parent root = loader.load();
-//
-//            Pane panel = ventanaPrincipalController.getPanelMenu();
-//            panel.getChildren().setAll(root);
-//            AnchorPane.setTopAnchor(root, 0.0);
-//            AnchorPane.setRightAnchor(root, 0.0);
-//            AnchorPane.setBottomAnchor(root, 0.0);
-//            AnchorPane.setLeftAnchor(root, 0.0);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//
-//        }
+
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
                 "/fxmlViews/marca/EditarMarcas_Modelos_Categorias.fxml",
