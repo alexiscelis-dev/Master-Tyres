@@ -93,8 +93,8 @@
                                 </Label>
                                 <Label fx:id="lblMensajesEnviados" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-                                <Button fx:id="btnEnviarAviso" disable="true" onAction="#EnviarAviso" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Enviar aviso a cleinte" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2" />
-                                <Button fx:id="MarcaServicioRealizado" disable="true" onAction="#ActualizarServicio" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Marcar Servicio Realizado" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+                                <Button fx:id="btnEnviarAviso" disable="true" onAction="#EnviarAviso" prefHeight="80.0" prefWidth="120.0" styleClass="boton-accion" text="Enviar aviso a cleinte" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2" />
+                                <Button fx:id="MarcaServicioRealizado" disable="true" onAction="#ActualizarServicio" prefHeight="80.0" prefWidth="120.0" styleClass="boton-accion" text="Marcar Servicio Realizado" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
 
                                 <columnConstraints>
                                     <ColumnConstraints minWidth="-Infinity" prefWidth="200.0" />

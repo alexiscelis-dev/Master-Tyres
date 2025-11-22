@@ -8,7 +8,7 @@
 <AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.cliente.DetalleCliente">
 
     <children>
-        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="600" spacing="10" styleClass="secciones">
+        <VBox alignment="CENTER" prefHeight="714.0" prefWidth="600" spacing="10" styleClass="secciones">
 
             <padding>
                 <Insets bottom="20" left="20" right="20" top="20" />
@@ -47,59 +47,63 @@
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
+                <Label fx:id="txtCorreo" text="Correo:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font></Label>
 
                 <!-- Hobbie -->
-                <Label fx:id="txtHobbie" text="Hobbie:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                <Label fx:id="txtHobbie" text="Hobbie:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="5">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
 
                 <!-- RFC -->
-                <Label fx:id="txtRFC" text="RFC:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                <Label fx:id="txtRFC" text="RFC:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="6">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
 
                 <!-- Domicilio -->
-                <Label fx:id="txtDomicilio" text="Domicilio:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="6">
+                <Label fx:id="txtDomicilio" text="Domicilio:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="7">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
 
                 <!-- Estado -->
-                <Label fx:id="txtEstado" text="Estado:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="7">
+                <Label fx:id="txtEstado" text="Estado:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="8">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
 
                 <!-- Ciudad -->
-                <Label fx:id="txtCiudad" text="Ciudad:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="8">
+                <Label fx:id="txtCiudad" text="Ciudad:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="9">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
 
                 <!-- Género -->
-                <Label fx:id="txtGenero" text="Género:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="9">
+                <Label fx:id="txtGenero" text="Género:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="10">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
 
                 <!-- Tipo Cliente -->
-                <Label fx:id="txtTipoCliente" text="Tipo Cliente:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="10">
+                <Label fx:id="txtTipoCliente" text="Tipo Cliente:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="11">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
 
                 <!-- Fecha Cumpleaños -->
-                <Label fx:id="txtFechaCumple" text="Cumpleaños:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="11">
+                <Label fx:id="txtFechaCumple" text="Cumpleaños:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="12">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
-            <Label fx:id="txtFechaRegistro" text="Fecha de registro:" textFill="WHITE" GridPane.rowIndex="12">
+            <Label fx:id="txtFechaRegistro" text="Fecha de registro:" textFill="WHITE" GridPane.rowIndex="13">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
-            <Label fx:id="txtFechaActualizacion" text="Fecha de ultima actualizacion: " textFill="WHITE" GridPane.rowIndex="13">
+            <Label fx:id="txtFechaActualizacion" text="Fecha de ultima actualizacion: " textFill="WHITE" GridPane.rowIndex="14">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
@@ -118,6 +122,7 @@
                <RowConstraints />
                <RowConstraints />
                <RowConstraints minHeight="10.0" prefHeight="30.0" />
+               <RowConstraints />
             </rowConstraints>
             </GridPane>
 
