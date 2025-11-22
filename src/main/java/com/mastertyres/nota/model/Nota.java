@@ -56,7 +56,8 @@ public class Nota {
     @Column(name = "updated_at",updatable = true)
     @UpdateTimestamp
     private String updatedAt;
-    @Column(name = "active", insertable = false, updatable = true)
+
+    @Column(name = "active")
     private String active;
 
     private float adeudo;
