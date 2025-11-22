@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -210,7 +212,7 @@ public class ProximosServiciosController {
         lblMarca.setText(p.getNombreMarca());
         lblModelo.setText(p.getNombreModelo());
         lblAnio.setText(p.getAnio()+"");
-        lblFechaUltimoServicio.setText(p.getUltimoServicio());
+        lblFechaUltimoServicio.setText(formatearFecha(p.getUltimoServicio()));
         lblMensajesEnviados.setText(p.getContador_mensaje()+"");
     }
 
@@ -225,6 +227,17 @@ public class ProximosServiciosController {
         vehiculoSeleccion = null;
         btnEnviarAviso.setDisable(true);
         MarcaServicioRealizado.setDisable(true);
+    }
+
+    private String formatearFecha(String fecha) {
+        if (fecha == null || fecha.isBlank()) return "N/A";
+
+        try {
+            LocalDate f = LocalDate.parse(fecha);  // yyyy-MM-dd
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "N/A";
+        }
     }
 
     public void actualizar(ActionEvent actionEvent) {

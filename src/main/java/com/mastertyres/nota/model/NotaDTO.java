@@ -7,26 +7,129 @@ import lombok.*;
 @Data
 public class NotaDTO {
 
+    //Nota
+    private Integer notaId;
+    private String numNota;
+    private String numFactura;
+    private String fechaYHora;
+    private String fechaVencimiento;
+    private String statusNota;
+    private String createdAt;
+    private String active;
+    private Float total;
+
+    private Integer inventarioId;
+    // nota detalle
+    private String observaciones;
+    private String observaciones2;
+    private Integer porcentajeGas;
+    private String rayones;
+    private String golpes;
+    private String tapones;
+    private String tapetes;
+    private String radio;
+    private String gato;
+    private String llave;
+    private String llanta;
+    private String alineacion;
+    private Integer alineacionCantidad;
+    private Float alineacionUnitario;
+    private Float alineacionTotal;
+    private String balanceo;
+    private Integer balanceoCantidad;
+    private Float balanceoUnitario;
+    private Float balanceoTotal;
+    private String amorDelanteros;
+    private Integer amorDelCantidad;
+    private Float amorDelUnitario;
+    private Float amorDelTotal;
+    private String amorTraseros;
+    private Integer amorTrasCantidad;
+    private Float amorTrasUnitario;
+    private Float amorTrasTotal;
+    private String suspension;
+    private Integer suspensionCantidad;
+    private Float suspensionUnitario;
+    private Float suspensionTotal;
+    private String suspension2;
+    private Integer suspensionCantidad2;
+    private Float suspensionUnitario2;
+    private Float suspensionTotal2;
+    private String mecanica;
+    private Integer mecanicaCantidad;
+    private Float mecanicaUnitario;
+    private Float mecanicaTotal;
+    private String mecanica2;
+    private Integer mecanicaCantidad2;
+    private Float mecanicaUnitario2;
+    private Float mecanicaTotal2;
+    private String frenos;
+    private Integer frenosCantidad;
+    private Float frenosUnitario;
+    private Float frenosTotal;
+    private String frenos2;
+    private Integer frenosCantidad2;
+    private Float frenosUnitario2;
+    private Float frenosTotal2;
+    private String otros;
+    private Integer otrosCantidad;
+    private Float otrosUnitario;
+    private Float otrosTotal;
+    private String otros2;
+    private Integer otrosCantidad2;
+    private Float otrosUnitario2;
+    private Float otrosTotal2;
+    private Float subTotalMecanica;
+    private Float subTotalFrenos;
+    private Float subTotalOtros;
+    private String llantaCampo;
+    private Integer llantaCantidad;
+    private Float llantaUnitario;
+    private Float llantaTotal;
+    private Float adeudo;
+    private Float saldoFavor;
+
+
+    //cliente
+
+    private Integer clienteId;
+    private String nombreCliente;
+    private String apellido;
+    private String segundoApellido;
+    private String domicilio;
+    private String rfc;
+    private String correo;
+
+    //vehiculo
+    private Integer vehiculoId;
+    private String marca;
+    private String modelo;
+    private String categoria;
+    private Integer anio;
+    private Integer kilometros;
+    private String color;
+    private String placas;
+
 
     public NotaDTO(final Integer notaId, final String numNota, final String numFactura, final String fechaYHora,
                    final String fechaVencimiento, final String statusNota, final String createdAt, final String active,
-                   final float total, final Integer inventarioId, final String observaciones, final String observaciones2,
-                   final int porcentajeGas, final String rayones, final String golpes, final String tapones, final String tapetes,
+                   final Float total, final Integer inventarioId, final String observaciones, final String observaciones2,
+                   final Integer porcentajeGas, final String rayones, final String golpes, final String tapones, final String tapetes,
                    final String radio, final String gato, final String llave, final String llanta, final String alineacion,
-                   final int alineacionCantidad, final float alineacionUnitario, final float alineacionTotal, final String balanceo,
-                   final int balanceoCantidad, final float balanceoUnitario, final float balanceoTotal, final String amorDelanteros,
-                   final int amorDelCantidad, final float amorDelUnitario, final float amorDelTotal, final String amorTraseros,
-                   final int amorTrasCantidad, final float amorTrasUnitario, final float amorTrasTotal, final String suspension,
-                   final int suspensionCantidad, final float suspensionUnitario, final float suspensionTotal, final String suspension2,
-                   final int suspensionCantidad2, final float suspensionUnitario2, final float suspensionTotal2, final String mecanica,
-                   final int mecanicaCantidad, final float mecanicaUnitario, final float mecanicaTotal, final String mecanica2,
-                   final int mecanicaCantidad2, final float mecanicaUnitario2, final float mecanicaTotal2, final String frenos,
-                   final int frenosCantidad, final float frenosUnitario, final float frenosTotal, final String frenos2,
-                   final int frenosCantidad2, final float frenosUnitario2, final float frenosTotal2, final String otros,
-                   final int otrosCantidad, final float otrosUnitario, final float otrosTotal, final String otros2,
-                   final int otrosCantidad2, final float otrosUnitario2, final float otrosTotal2, final float subTotalMecanica,
-                   final float subTotalFrenos, final float subTotalOtros,final String llantaCampo, final int llantaCantidad, final float llantaUnitario,
-                   final float llantaTotal, final float adeudo, final float saldoFavor, final Integer clienteId,
+                   final Integer alineacionCantidad, final Float alineacionUnitario, final Float alineacionTotal, final String balanceo,
+                   final Integer balanceoCantidad, final Float balanceoUnitario, final Float balanceoTotal, final String amorDelanteros,
+                   final Integer amorDelCantidad, final Float amorDelUnitario, final Float amorDelTotal, final String amorTraseros,
+                   final Integer amorTrasCantidad, final Float amorTrasUnitario, final Float amorTrasTotal, final String suspension,
+                   final Integer suspensionCantidad, final Float suspensionUnitario, final Float suspensionTotal, final String suspension2,
+                   final Integer suspensionCantidad2, final Float suspensionUnitario2, final Float suspensionTotal2, final String mecanica,
+                   final Integer mecanicaCantidad, final Float mecanicaUnitario, final Float mecanicaTotal, final String mecanica2,
+                   final Integer mecanicaCantidad2, final Float mecanicaUnitario2, final Float mecanicaTotal2, final String frenos,
+                   final Integer frenosCantidad, final Float frenosUnitario, final Float frenosTotal, final String frenos2,
+                   final Integer frenosCantidad2, final Float frenosUnitario2, final Float frenosTotal2, final String otros,
+                   final Integer otrosCantidad, final Float otrosUnitario, final Float otrosTotal, final String otros2,
+                   final Integer otrosCantidad2, final Float otrosUnitario2, final Float otrosTotal2, final Float subTotalMecanica,
+                   final Float subTotalFrenos, final Float subTotalOtros,final String llantaCampo, final Integer llantaCantidad, final Float llantaUnitario,
+                   final Float llantaTotal, final Float adeudo, final Float saldoFavor, final Integer clienteId,
                    final String nombreCliente, final String apellido, final String segundoApellido, final String domicilio,
                    final String rfc, final String correo, final Integer vehiculoId, final String marca, final String modelo,
                    final String categoria, final Integer anio, final Integer kilometros, final String color, final String placas) {
@@ -125,107 +228,6 @@ public class NotaDTO {
         this.placas = placas;
     }
 
-    //Nota
-    private Integer notaId;
-    private String numNota;
-    private String numFactura;
-    private String fechaYHora;
-    private String fechaVencimiento;
-    private String statusNota;
-    private String createdAt;
-    private String active;
-    private float total;
 
-    private Integer inventarioId;
-    // nota detalle
-    private String observaciones;
-    private String observaciones2;
-    private int porcentajeGas;
-    private String rayones;
-    private String golpes;
-    private String tapones;
-    private String tapetes;
-    private String radio;
-    private String gato;
-    private String llave;
-    private String llanta;
-    private String alineacion;
-    private int alineacionCantidad;
-    private float alineacionUnitario;
-    private float alineacionTotal;
-    private String balanceo;
-    private int balanceoCantidad;
-    private float balanceoUnitario;
-    private float balanceoTotal;
-    private String amorDelanteros;
-    private int amorDelCantidad;
-    private float amorDelUnitario;
-    private float amorDelTotal;
-    private String amorTraseros;
-    private int amorTrasCantidad;
-    private float amorTrasUnitario;
-    private float amorTrasTotal;
-    private String suspension;
-    private int suspensionCantidad;
-    private float suspensionUnitario;
-    private float suspensionTotal;
-    private String suspension2;
-    private int suspensionCantidad2;
-    private float suspensionUnitario2;
-    private float suspensionTotal2;
-    private String mecanica;
-    private int mecanicaCantidad;
-    private float mecanicaUnitario;
-    private float mecanicaTotal;
-    private String mecanica2;
-    private int mecanicaCantidad2;
-    private float mecanicaUnitario2;
-    private float mecanicaTotal2;
-    private String frenos;
-    private int frenosCantidad;
-    private float frenosUnitario;
-    private float frenosTotal;
-    private String frenos2;
-    private int frenosCantidad2;
-    private float frenosUnitario2;
-    private float frenosTotal2;
-    private String otros;
-    private int otrosCantidad;
-    private float otrosUnitario;
-    private float otrosTotal;
-    private String otros2;
-    private int otrosCantidad2;
-    private float otrosUnitario2;
-    private float otrosTotal2;
-    private float subTotalMecanica;
-    private float subTotalFrenos;
-    private float subTotalOtros;
-    private String llantaCampo;
-    private int llantaCantidad;
-    private float llantaUnitario;
-    private float llantaTotal;
-    private float adeudo;
-    private float saldoFavor;
-
-
-    //cliente
-
-    private Integer clienteId;
-    private String nombreCliente;
-    private String apellido;
-    private String segundoApellido;
-    private String domicilio;
-    private String rfc;
-    private String correo;
-
-    //vehiculo
-    private Integer vehiculoId;
-    private String marca;
-    private String modelo;
-    private String categoria;
-    private Integer anio;
-    private Integer kilometros;
-    private String color;
-    private String placas;
 
 }//class

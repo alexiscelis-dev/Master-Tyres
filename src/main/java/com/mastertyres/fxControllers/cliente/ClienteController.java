@@ -36,6 +36,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +64,7 @@ public class ClienteController {
     @FXML private TableColumn<Cliente, String> colNombre;
     @FXML private TableColumn<Cliente, String> colRFC;
     @FXML private TableColumn<Cliente, String> colTelefono;
+    @FXML private TableColumn<Cliente, String> colCorreo;
     @FXML private TableColumn<Cliente, String> colEstado;
     @FXML private TableColumn<Cliente, String> colCiudad;
     @FXML private TableColumn<Cliente, String> colDomicilio;
@@ -167,6 +171,8 @@ public class ClienteController {
 
 
                                         cargarClientes(); //metodo que cargar los datos en la tabla
+                                        resetBusqueda();
+
 
                                     } else {
                                         mostrarInformacion("Accion cancelada", "", "Accion cancelada");
@@ -199,6 +205,7 @@ public class ClienteController {
 
 
                                         cargarClientes();
+                                        resetBusqueda();
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
                                     }
@@ -328,6 +335,27 @@ public class ClienteController {
 
         //Enter buscar
         buscarClienteBuscador.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+
+                String seleccion = atributoBusquedaClientes.getValue();
+                String busqueda = buscarClienteBuscador.getText();
+
+                // SOLO funciona si hay un filtro seleccionado
+                if (seleccion != null && !seleccion.isEmpty()) {
+
+                    // Si el texto está vacío, resetea y detén
+                    if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
+                        resetBusqueda();
+                        return;
+                    }
+
+                    // Ejecutar búsqueda específica
+                    buscarCliente(seleccion.toLowerCase(), busqueda);
+                }
+            }
+        });
+
+       /* buscarClienteBuscador.setOnKeyPressed(event -> {
 
             if (event.getCode() == KeyCode.ENTER) {
                 String seleccion = atributoBusquedaClientes.getValue(), busqueda = buscarClienteBuscador.getText();
@@ -338,14 +366,44 @@ public class ClienteController {
             }
 
 
-        });
+        });*/
 
         //buscar mientras escribes
 
         buscarClienteBuscador.setOnKeyReleased(event -> {
 
+            if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
+
+            delayQuery.setOnFinished(e -> {
+
+                String seleccion = atributoBusquedaClientes.getValue();
+                String busqueda = buscarClienteBuscador.getText();
+
+                // 🔥 SOLO ejecutar búsqueda general si NO hay filtro
+                if (seleccion == null || seleccion.isEmpty()) {
+
+                    if (busqueda == null || busqueda.isEmpty()) {
+                        resetBusqueda();
+                        return;
+                    }
+
+                    // Búsqueda general mientras escribe
+                    buscarCliente(busqueda);
+                }
+                // Si sí hay filtro → no hace nada, porque solo se buscan al presionar ENTER
+            });
+
+            delayQuery.playFromStart();
+        });
+
+        /*buscarClienteBuscador.setOnKeyReleased(event -> {
+
             if (event.getCode() != KeyCode.ENTER) {
                 delayQuery.setOnFinished(e -> {
+                    if (buscarClienteBuscador.getText().isEmpty()) {
+                        resetBusqueda();
+                        return;
+                    }
                     String seleccion = atributoBusquedaClientes.getValue();
                     String busqueda = buscarClienteBuscador.getText();
 
@@ -362,7 +420,7 @@ public class ClienteController {
                 });
                 delayQuery.playFromStart();
             }
-        });
+        });*/
 
 
         //pone en null la lista de ChoiceBox
@@ -370,7 +428,7 @@ public class ClienteController {
 
             if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
                 atributoBusquedaClientes.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
-
+                resetBusqueda();
         });
 
     }// initialize
@@ -414,13 +472,13 @@ public class ClienteController {
         return contenedor;
     }
 
-
     private VBox crearPaginaClientesconFiltro(int indicePagina) {
         Page<Cliente> paginaClientes;
 
         if (modoBusqueda) {
             // Dependiendo del atributo de búsqueda
-            switch (atributoBusquedaClientes.getValue()) {
+            String key = atributoBusquedaClientes.getValue();
+            switch (key.toLowerCase()) {
                 case "nombre" -> paginaClientes = clienteService.buscarClientePorNombrePaginado(
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "telefono" -> paginaClientes = clienteService.buscarClientePorNumTelefonoPaginado(
@@ -452,34 +510,55 @@ public class ClienteController {
         return contenedor;
     }
 
-
     private void cargarClientes() {
 
-        //Ajuste de tamaño de las columnas
-        //  tablaClientes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        colTipoCliente.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getTipoCliente()))
+        );
 
-        //LLenado de las columnas
-        colTipoCliente.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTipoCliente().toString() != null ? data.getValue().getTipoCliente().toString() : "N/A"));
-        colNombre.setCellValueFactory(data -> new SimpleStringProperty(
+        colNombre.setCellValueFactory(data ->
+                new SimpleStringProperty(nombreCompleto(data.getValue()))
+        );
 
-                (data.getValue().getNombre() != null ? data.getValue().getNombre() : "") + " " +
-                        (data.getValue().getApellido() != null ? data.getValue().getApellido() : "") + " " +
-                        (data.getValue().getSegundoApellido() != null ? data.getValue().getSegundoApellido() : "")
+        colTelefono.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getNumTelefono()))
+        );
 
-        ));
+        colCorreo.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getCorreo()))
+        );
 
+        colEstado.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getEstado()))
+        );
 
-        //colApellido.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getApellido() + " " + data.getValue().getSegundoApellido()));
-        colTelefono.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNumTelefono() != null ? data.getValue().getNumTelefono() : "N/A"));
-        colEstado.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEstado() != null ? data.getValue().getEstado() : "N/A"));
-        colCiudad.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCiudad() != null ? data.getValue().getCiudad() : "N/A"));
-        colDomicilio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDomicilio() != null ? data.getValue().getDomicilio() : "N/A"));
-        colHobbie.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getHobbie() != null ? data.getValue().getHobbie() : "N/A"));
-        colRFC.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRfc() != null ? data.getValue().getRfc() : "N/A"));
-        colGenero.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getGenero() != null ? data.getValue().getGenero() : "N/A"));
-        colRegistro.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCreated_at() != null ? data.getValue().getCreated_at() : "N/A"));
-        colCumpleanos.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFechaCumple() != null ? data.getValue().getFechaCumple() : "N/A"));
+        colCiudad.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getCiudad()))
+        );
 
+        colDomicilio.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getDomicilio()))
+        );
+
+        colHobbie.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getHobbie()))
+        );
+
+        colRFC.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getRfc()))
+        );
+
+        colGenero.setCellValueFactory(data ->
+                new SimpleStringProperty(formatearGenero(data.getValue().getGenero()))
+        );
+
+        colRegistro.setCellValueFactory(data ->
+                new SimpleStringProperty(formatearFechaHora(data.getValue().getCreated_at()))
+        );
+
+        colCumpleanos.setCellValueFactory(data ->
+                new SimpleStringProperty(formatearFecha(data.getValue().getFechaCumple()))
+        );
         colVehiculo.setCellValueFactory(data -> {
             var vehiculos = data.getValue().getVehiculos();
 
@@ -507,6 +586,56 @@ public class ClienteController {
 
 
     }//cargarClientes
+
+    private String valorONull(String valor) {
+        return (valor == null || valor.isBlank()) ? "N/A" : valor;
+    }
+
+    private String formatearGenero(String genero) {
+        if (genero == null || genero.isBlank()) return "N/A";
+
+        switch (genero.trim().toUpperCase()) {
+            case "M": return "Masculino";
+            case "F": return "Femenino";
+            case "O": return "Otro";
+            default: return "N/A";
+        }
+    }
+
+    private String formatearFecha(String fecha) {
+        if (fecha == null || fecha.isBlank()) return "N/A";
+
+        try {
+            LocalDate f = LocalDate.parse(fecha);  // yyyy-MM-dd
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "N/A";
+        }
+    }
+
+    private String formatearFechaHora(String fechaHora) {
+        if (fechaHora == null || fechaHora.isBlank()) return "N/A";
+
+        try {
+            LocalDateTime f = LocalDateTime.parse(
+                    fechaHora.replace(" ", "T")  // convierte yyyy-MM-dd HH:mm:ss → yyyy-MM-ddTHH:mm:ss
+            );
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "N/A";
+        }
+    }
+
+    private String nombreCompleto(Cliente c) {
+        String n = (c.getNombre() == null ? "" : c.getNombre().trim());
+        String a1 = (c.getApellido() == null ? "" : c.getApellido().trim());
+        String a2 = (c.getSegundoApellido() == null ? "" : c.getSegundoApellido().trim());
+
+        String full = String.join(" ", n, a1, a2).trim();
+
+        return full.isBlank() ? "N/A" : full;
+    }
+
 
     private void cargarDatosClientes() {
         try {
@@ -593,7 +722,7 @@ public class ClienteController {
 
         terminoBusquedaActual = busqueda;
         modoBusqueda = !busqueda.trim().isEmpty();
-        atributoBusquedaClientes.setValue(seleccion);
+        //atributoBusquedaClientes.setValue(seleccion);
 
         // Obtener primera página filtrada
         Page<Cliente> paginaFiltrada;
@@ -648,9 +777,42 @@ public class ClienteController {
         terminoBusquedaActual = busqueda;
         modoBusqueda = !busqueda.trim().isEmpty();
 
-        paginadorClientes.setCurrentPageIndex(0); // Reinicia la paginación
+        if (modoBusqueda) {
+            // 🔥 total de resultados para el buscador general
+            long totalResultados = clienteService.contarClientesPorBusquedaGeneral(
+                    StatusCliente.ACTIVE.toString(),
+                    terminoBusquedaActual
+            );
+
+            int totalPaginas = (int) Math.ceil((double) totalResultados / CLIENTES_POR_PAGINA);
+
+            paginadorClientes.setPageCount(Math.max(totalPaginas, 1));
+        } else {
+            // Si no hay búsqueda, restaurar paginación normal
+            long totalClientes = clienteService.contarClientesActivos(StatusCliente.ACTIVE.toString());
+            int totalPaginas = (int) Math.ceil((double) totalClientes / CLIENTES_POR_PAGINA);
+            paginadorClientes.setPageCount(Math.max(totalPaginas, 1));
+        }
+
+        // 🔥 Asignar PageFactory
         paginadorClientes.setPageFactory(this::crearPaginaClientes);
+
+        // 🔥 Reiniciar a la primera página
+        paginadorClientes.setCurrentPageIndex(0);
     }
+
+    private void resetBusqueda() {
+        modoBusqueda = false;
+        terminoBusquedaActual = "";
+        atributoBusquedaClientes.setValue(null);
+        buscarClienteBuscador.clear();
+
+        paginadorClientes.setPageFactory(this::crearPaginaClientes);
+        paginadorClientes.setCurrentPageIndex(0);
+
+        cargarDatosClientes();  // vuelve a cargar conteo y items normales
+    }
+
 
     @FXML
     public void actualizarTabla(ActionEvent actionEvent) {
@@ -662,8 +824,12 @@ public class ClienteController {
         terminoBusquedaActual = "";
 
         // Reinicia paginador y carga los clientes
+
+
         paginadorClientes.setPageFactory(this::crearPaginaClientes);
         paginadorClientes.setCurrentPageIndex(0);
+        cargarDatosClientes();
+        resetBusqueda();
     }
 
 

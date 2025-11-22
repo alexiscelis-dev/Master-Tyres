@@ -69,6 +69,7 @@
                         <TableColumn fx:id="colTipoCliente" prefWidth="150" text="Tipo Cliente" />
                         <TableColumn fx:id="colNombre" prefWidth="150" text="Nombre" />
                         <TableColumn fx:id="colTelefono" prefWidth="150" text="Teléfono" />
+                        <TableColumn fx:id="colCorreo" prefWidth="150" text="Correo" />
                         <TableColumn fx:id="colRFC" prefWidth="150" text="RFC" />
                         <TableColumn fx:id="colEstado" prefWidth="150" text="Estado" />
                         <TableColumn fx:id="colCiudad" prefWidth="150" text="Ciudad" />

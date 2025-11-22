@@ -9,4 +9,6 @@ public interface IDetalleCategoriaService {
     List<DetalleCategoria> listarDetalleCategoria();
 
     List<DetalleCategoria> findByCategoria(Categoria categoria);
+
+
 }

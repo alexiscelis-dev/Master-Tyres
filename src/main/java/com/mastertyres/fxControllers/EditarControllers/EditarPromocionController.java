@@ -280,6 +280,7 @@ public class EditarPromocionController {
                 choiceModelo.getItems().clear();
             }
         });
+
         List<Integer> anios = new ArrayList<>();
 
         int anioActual = LocalDate.now().getYear();

@@ -620,4 +620,9 @@ public class ClienteService implements IClienteService {
 
     }//buscadorClientes
 
+    public long contarClientesPorBusquedaGeneral(String status, String termino){
+        return clienteRepository.contarClientesPorBusquedaGeneral(status, termino);
+    };
+
+
 }//clase
