@@ -129,6 +129,7 @@ public class ClienteService implements IClienteService {
 
     }//eliminarCliente
 
+
     @Transactional(readOnly = true)
     public List<Cliente> buscarClientes( String filtro) {
         return clienteRepository.buscarClientes(filtro);
@@ -619,5 +620,14 @@ public class ClienteService implements IClienteService {
         return clientes;
 
     }//buscadorClientes
+
+    @Transactional(readOnly = true)
+    @Override
+    public Cliente buscarClientePorId(Integer clienteId, String status) {
+        return clienteRepository.buscarClientePorId(clienteId,status);
+    }
+
+
+
 
 }//clase

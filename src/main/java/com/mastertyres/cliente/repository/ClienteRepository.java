@@ -154,6 +154,10 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
                                    @Param("busqueda") String busqueda,
                                    Pageable pageable);
 
+    @Query("SELECT c FROM Cliente c WHERE c.clienteId = :clienteId AND c.active = :status")
+    Cliente buscarClientePorId(@Param("clienteId")Integer clienteId,@Param("status")String status);
+
+
 
 
 }//interface

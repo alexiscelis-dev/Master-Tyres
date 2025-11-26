@@ -57,6 +57,14 @@ public class NotaService implements INotaService {
 
     @Transactional(readOnly = true)
     @Override
+    public NotaDTO buscarPorNumNota(String active, String numNota) {
+
+       return notaRepository.buscarPorNumNota(active,numNota);
+
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Nota findByNumNota(String numNota) {
         return notaRepository.findByNumNota(numNota);
     }

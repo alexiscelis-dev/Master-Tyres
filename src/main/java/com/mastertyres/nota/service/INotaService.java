@@ -13,6 +13,8 @@ public interface INotaService {
 
     void guardarNota(Nota nota, NotaDetalle notaDetalle);
 
+    NotaDTO buscarPorNumNota(String active, String numNota);
+
     Nota findByNumNota(String numNota);
 
 

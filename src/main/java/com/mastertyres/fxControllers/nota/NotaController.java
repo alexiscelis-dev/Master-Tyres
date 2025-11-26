@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -58,14 +59,14 @@ public class NotaController {
     @FXML
     private TextField txtBuscar;
 
+    @Autowired
+    private NotaService notaService;
+
     private VentanaPrincipalController ventanaPrincipalController;
 
 
     private NotaDTO notaSeleccionada;
 
-
-    @Autowired
-    NotaService notaService;
 
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
@@ -81,6 +82,8 @@ public class NotaController {
             else
                 cargarNotasFiltradas();
         });
+
+        btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
 
     }//initialize
 
@@ -143,6 +146,7 @@ public class NotaController {
     private void mostrarDetalleNota(NotaDTO nota) {
         notaSeleccionada = nota;
 
+
         btnEditar.setDisable(false);
         btnImprimir.setDisable(false);
         btnDarPlazo.setDisable(false);
@@ -159,10 +163,17 @@ public class NotaController {
         }
 
         DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatterEntrada2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
         String fechaStr = nota.getCreatedAt();
+        String fechaStr2 = nota.getFechaVencimiento();
+
         LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatterEntrada);
+        LocalDate fecha2 = LocalDate.parse(fechaStr2, formatterEntrada2);
+
         String fechaFormateada = fecha.format(formatter2);
+        String fechaFormateada2 = fecha2.format(formatter2);
 
 
         lblNumNota.setText(nota.getNumNota());
@@ -177,8 +188,7 @@ public class NotaController {
 
 
         lblFechaEmicion.setText(fechaFormateada);
-
-        lblFechaLimite.setText(nota.getFechaVencimiento());
+        lblFechaLimite.setText(fechaFormateada2);
 
         lblAdeudo.setText("$" + nota.getAdeudo());
         lblTotal.setText("$" + nota.getTotal());
@@ -200,8 +210,30 @@ public class NotaController {
                 null,
                 "/fxmlViews/nota/NotaFormulario.fxml",
                 "Agregar Nota");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar Nota");
+
 
     }//agregarNotas
 
 
+    private void editarNota(String numNota) {
+
+        Object controllerObj = ventanaPrincipalController.viewContent(
+                null,
+                "/fxmlViews/nota/EditarNota.fxml",
+                "Editar Nota");
+        EditarNotaController controller = (EditarNotaController) controllerObj;
+        controller.agregarNota(numNota);
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Editar Nota");
+
+
+    }//editarNota
+
+    public NotaDTO getNotaSeleccionada() {
+        return this.notaSeleccionada;
+    }
+
+    public void setNotaSeleccionada(final NotaDTO notaSeleccionada) {
+        this.notaSeleccionada = notaSeleccionada;
+    }
 }//class

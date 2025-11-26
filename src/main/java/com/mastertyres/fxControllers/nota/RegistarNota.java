@@ -33,7 +33,7 @@ import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class VentanaRegistro {
+public class RegistarNota {
     @FXML
     private RadioButton rbPagado;
     @FXML
@@ -70,7 +70,7 @@ public class VentanaRegistro {
     private Runnable onRegistroCompleto;
 
 
-    public void setNota(NotaDTO nota) {
+    public void agregarNota(NotaDTO nota) {
         this.nota = nota;
     }
 

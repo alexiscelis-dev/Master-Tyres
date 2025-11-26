@@ -375,7 +375,7 @@ public class AdministarMarcasController {
 
     public void EditarModelo(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/EditarModelo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/modelo/EditarModelo.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
@@ -399,7 +399,7 @@ public class AdministarMarcasController {
 
     public void AgregarModelo(ActionEvent actionEvent) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarModelo.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/modelo/AgregarModelo.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
