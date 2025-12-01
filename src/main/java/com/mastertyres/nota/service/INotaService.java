@@ -17,6 +17,10 @@ public interface INotaService {
 
     Nota findByNumNota(String numNota);
 
+    void actualizarAdeudo(float adeudo, String fechaVencimiento, Integer notaId);
+
+    void actualizarUpdatedAtNota(Integer notaId, String updatedAt);
+
 
 
 }//interface

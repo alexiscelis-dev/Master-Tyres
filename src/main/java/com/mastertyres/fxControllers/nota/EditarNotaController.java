@@ -2,8 +2,10 @@ package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.RegexTools;
+import com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatatusSiNo;
 import com.mastertyres.nota.model.StatusNota;
@@ -13,9 +15,13 @@ import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -29,6 +35,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +44,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+
+import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 
 @Component
 public class EditarNotaController {
@@ -260,7 +270,9 @@ public class EditarNotaController {
     @FXML
     private Button btnGuardar;
     @FXML
-    private Button btnActualizarDatos; 
+    private Button btnActualizarDatos;
+    @FXML
+    private Button btnActualizarAdeudo;
 
     private int porcentajeGasNota;
 
@@ -281,6 +293,10 @@ public class EditarNotaController {
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
         btnActualizarDatos.setOnAction(event -> actualizarDatosCliente(notaEditar));
+
+        btnActualizarAdeudo.setOnAction(event -> actualizarAdeudo(getNotaEditar()));
+
+
 
 
     }//initialize
@@ -433,6 +449,8 @@ public class EditarNotaController {
             txtSubTotalMecanica.setText(eliminarCero(notaEditar.getSubTotalMecanica()));
             txtSubTotalOtros.setText(eliminarCero(notaEditar.getSubTotalOtros()));
             txtTotal.setText(eliminarCero(notaEditar.getTotal()));
+
+            setNotaEditar(notaEditar);
 
 
         }//if nota != null
@@ -1203,19 +1221,45 @@ public class EditarNotaController {
     }//refrescar
 
 
+    private void actualizarAdeudo(NotaDTO notaAdeudo){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/EditarAdeudo.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+            EditarAdeudoController controller = loader.getController();
+            controller.setAdeudo(notaAdeudo);
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setTitle("Actualizar adeudo");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+
+
+        }catch (Exception e){
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+
+            e.printStackTrace();
+
+        }
+
+
+
+    }//actualizarAdeudo
+
     private void actualizarDatosCliente(NotaDTO nota) {
 
 
         if (nota != null){
-            System.out.println("nota.getClienteId() = " + nota.getClienteId());
-            System.out.println("nota.getVehiculoId() = " + nota.getVehiculoId());
+
             cliente = clienteService.buscarClientePorId(nota.getClienteId(),StatusNota.ACTIVE.toString());
             vehiculo = vehiculoService.buscarVehiculoPorId(nota.getVehiculoId(),StatusNota.ACTIVE.toString());
 
             
 
             txtNombre.setText(cliente.getNombre() + " " +
-                    (cliente.getApellido() != null ? cliente.getApellido() : "") +
+                    (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
                     (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : "")
             );
             txtDireccion.setText(cliente.getDomicilio() != null ? cliente.getDomicilio(): "");
@@ -1226,6 +1270,8 @@ public class EditarNotaController {
             txtAnioVehiculo.setText(vehiculo.getAnio() + "");
             txtKms.setText((vehiculo.getKilometros() != null ? vehiculo.getKilometros() :"") + "");
             txtPlacas.setText(vehiculo.getPlacas() != null ? vehiculo.getPlacas() :"");
+
+            mostrarInformacion("Informacion actualizada","","Informacion actualizada.");
         }
 
 
@@ -1239,4 +1285,11 @@ public class EditarNotaController {
         this.numNota = numNota;
     }
 
+    public NotaDTO getNotaEditar() {
+        return this.notaEditar;
+    }
+
+    public void setNotaEditar(final NotaDTO notaEditar) {
+        this.notaEditar = notaEditar;
+    }
 }//class

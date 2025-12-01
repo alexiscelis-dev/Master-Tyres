@@ -8,6 +8,7 @@ import com.mastertyres.nota.repository.NotaRepository;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import com.mastertyres.notaDetalle.repository.NotaDetalleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +68,22 @@ public class NotaService implements INotaService {
     @Override
     public Nota findByNumNota(String numNota) {
         return notaRepository.findByNumNota(numNota);
+    }
+
+
+    @Modifying
+    @Transactional
+    @Override
+    public void actualizarAdeudo(float adeudo, String fechaVencimiento, Integer notaId) {
+        notaRepository.actualizarAdeudo(adeudo,fechaVencimiento,notaId);
+
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void actualizarUpdatedAtNota(Integer notaId, String updatedAt) {
+        notaRepository.actualizarUpdatedAtNota(notaId,updatedAt);
     }
 
 

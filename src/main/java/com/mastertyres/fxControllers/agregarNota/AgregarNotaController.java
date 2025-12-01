@@ -6,7 +6,7 @@ import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.fxControllers.nota.BuscarClienteController;
 import com.mastertyres.fxControllers.nota.BuscarLlantaController;
-import com.mastertyres.fxControllers.nota.RegistarNota;
+import com.mastertyres.fxControllers.nota.RegistrarNotaController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatatusSiNo;
@@ -1191,7 +1191,7 @@ public class AgregarNotaController {
                 loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                 Parent root = loader.load();
 
-                RegistarNota controller = loader.getController();
+                RegistrarNotaController controller = loader.getController();
                 controller.agregarNota(nuevaNota);
                 controller.setOnRegistroCompleto(() -> refrescar(null));
 

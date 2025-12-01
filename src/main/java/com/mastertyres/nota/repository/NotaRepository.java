@@ -4,6 +4,7 @@ import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
@@ -80,6 +81,16 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
 
     @Query("SELECT n FROM Nota n WHERE numNota = :numNota")
     Nota findByNumNota(@Param("numNota")String numNota);
+
+    @Modifying
+    @Query("UPDATE Nota n SET n.adeudo = :adeudo, n.fechaVencimiento = :fechaVencimiento WHERE n.notaId = :notaId")
+    void actualizarAdeudo(@Param("adeudo")float adeudo,
+                          @Param("fechaVencimiento")String fechaVencimiento,
+                          @Param("notaId")Integer notaId);
+
+    @Modifying
+    @Query("UPDATE Nota n SET n.updatedAt = :updatedAt WHERE n.notaId = :notaId")
+    void actualizarUpdatedAtNota(@Param("notaId")Integer notaId, @Param("updatedAt")String updatedAt);
 
 
 
