@@ -6,6 +6,7 @@ import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController;
+import com.mastertyres.fxControllers.EditarControllers.EditarSaldoController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatatusSiNo;
 import com.mastertyres.nota.model.StatusNota;
@@ -15,8 +16,6 @@ import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -273,6 +272,12 @@ public class EditarNotaController {
     private Button btnActualizarDatos;
     @FXML
     private Button btnActualizarAdeudo;
+    @FXML
+    private Button btnClienteDetalles;
+    @FXML
+    private Button btnActualizarSaldoFavor;
+    @FXML
+    private Button btnNotaDetalles;
 
     private int porcentajeGasNota;
 
@@ -280,7 +285,6 @@ public class EditarNotaController {
     private String numNota;
     private Vehiculo vehiculo;
     private Cliente cliente;
-
 
 
     @FXML
@@ -292,10 +296,13 @@ public class EditarNotaController {
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
-        btnActualizarDatos.setOnAction(event -> actualizarDatosCliente(notaEditar));
+        btnActualizarDatos.setOnAction(event -> actualizarDatosCliente(getNotaEditar(),true));
 
         btnActualizarAdeudo.setOnAction(event -> actualizarAdeudo(getNotaEditar()));
 
+        btnActualizarSaldoFavor.setOnAction(event -> actualizarSaldo(getNotaEditar()));
+
+        btnNotaDetalles.setOnAction(event -> notaDetalles(getNotaEditar()));
 
 
 
@@ -308,7 +315,7 @@ public class EditarNotaController {
     private void llenarNota(String numNota) {
         notaEditar = notaService.buscarPorNumNota(StatusNota.ACTIVE.toString(), numNota);
 
-  
+
         if (notaEditar != null) {
 
             txtNumNota.setText(notaEditar.getNumNota());
@@ -988,6 +995,9 @@ public class EditarNotaController {
         RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
         RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
 
+        //deshabilitar botones de actualizar saldo a favor y adeudo si estos son 0
+
+
     }//configuraciones
 
     private void dibujarGasolina(double porcentaje) {
@@ -1220,8 +1230,8 @@ public class EditarNotaController {
 
     }//refrescar
 
-
-    private void actualizarAdeudo(NotaDTO notaAdeudo){
+    @FXML
+    private void actualizarAdeudo(NotaDTO notaAdeudo) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/EditarAdeudo.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -1230,14 +1240,15 @@ public class EditarNotaController {
             controller.setAdeudo(notaAdeudo);
 
             Stage stage = new Stage(StageStyle.UTILITY);
-            stage.setTitle("Actualizar adeudo");
+            stage.setTitle("Actualizar Adeudo");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.showAndWait();
+            actualizarDatosCliente(notaAdeudo,false);
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
 
             e.printStackTrace();
@@ -1245,51 +1256,90 @@ public class EditarNotaController {
         }
 
 
-
     }//actualizarAdeudo
 
-    private void actualizarDatosCliente(NotaDTO nota) {
+    private void actualizarDatosCliente(NotaDTO nota, boolean mensaje) {
 
 
-        if (nota != null){
+        if (nota != null) {
 
-            cliente = clienteService.buscarClientePorId(nota.getClienteId(),StatusNota.ACTIVE.toString());
-            vehiculo = vehiculoService.buscarVehiculoPorId(nota.getVehiculoId(),StatusNota.ACTIVE.toString());
+            llenarNota(nota.getNumNota());
 
-            
+            if (mensaje)
+            mostrarInformacion("Informacion actualizada", "", "Informacion actualizada.");
 
-            txtNombre.setText(cliente.getNombre() + " " +
-                    (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
-                    (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : "")
-            );
-            txtDireccion.setText(cliente.getDomicilio() != null ? cliente.getDomicilio(): "");
-            txtRfc.setText(cliente.getRfc() != null ? cliente.getRfc() : "");
-            txtCorreo.setText(cliente.getCorreo() != null ? cliente.getCorreo() :"");
-            txtMarca.setText(vehiculo.getMarca().getNombreMarca());
-            txtModelo.setText(vehiculo.getModelo().getNombreModelo());
-            txtAnioVehiculo.setText(vehiculo.getAnio() + "");
-            txtKms.setText((vehiculo.getKilometros() != null ? vehiculo.getKilometros() :"") + "");
-            txtPlacas.setText(vehiculo.getPlacas() != null ? vehiculo.getPlacas() :"");
+    }
 
-            mostrarInformacion("Informacion actualizada","","Informacion actualizada.");
+}//actualizarDatosCliente
+
+   private void actualizarSaldo(NotaDTO notaClienteDet) {
+
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/EditarSaldo.fxml"));
+        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
+        Parent root = loader.load();
+        EditarSaldoController controller = loader.getController();
+        controller.setSaldoFavor(notaClienteDet);
+
+        Stage stage = new Stage(StageStyle.UTILITY);
+        stage.setTitle("Actualizar Saldo");
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.showAndWait();
+        actualizarDatosCliente(notaClienteDet,false);
+
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+    }
+
+
+}//actualizarSaldo
+
+    private void notaDetalles(NotaDTO notaDetalles){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/NotaDetalles.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
+            Parent root = loader.load();
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setTitle("Nota Detalles");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
         }
 
+    }//notaDetalles
 
-    }//actualizarDatosCliente
+private void refrescar() {
 
-    public String getNumNota() {
-        return this.numNota;
-    }
+}
 
-    public void setNumNota(final String numNota) {
-        this.numNota = numNota;
-    }
 
-    public NotaDTO getNotaEditar() {
-        return this.notaEditar;
-    }
+//getters y setters
 
-    public void setNotaEditar(final NotaDTO notaEditar) {
-        this.notaEditar = notaEditar;
-    }
+public String getNumNota() {
+    return this.numNota;
+}
+
+public void setNumNota(final String numNota) {
+    this.numNota = numNota;
+}
+
+public NotaDTO getNotaEditar() {
+    return this.notaEditar;
+}
+
+public void setNotaEditar(final NotaDTO notaEditar) {
+    this.notaEditar = notaEditar;
+}
 }//class

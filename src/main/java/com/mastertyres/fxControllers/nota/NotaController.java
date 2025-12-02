@@ -169,11 +169,21 @@ public class NotaController {
         String fechaStr = nota.getCreatedAt();
         String fechaStr2 = nota.getFechaVencimiento();
 
-        LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatterEntrada);
-        LocalDate fecha2 = LocalDate.parse(fechaStr2, formatterEntrada2);
+        String fechaFormateada = "";
+        String fechaFormateada2 = "";
 
-        String fechaFormateada = fecha.format(formatter2);
-        String fechaFormateada2 = fecha2.format(formatter2);
+
+        if (fechaStr != null && !fechaStr.trim().isEmpty()) {
+            LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatterEntrada);
+            fechaFormateada = fecha.format(formatter2);
+        }
+
+
+        if (fechaStr2 != null && !fechaStr2.trim().isEmpty()) {
+            LocalDate fecha2 = LocalDate.parse(fechaStr2, formatterEntrada2);
+            fechaFormateada2 = fecha2.format(formatter2);
+        }
+
 
 
         lblNumNota.setText(nota.getNumNota());

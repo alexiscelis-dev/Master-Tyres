@@ -49,26 +49,27 @@
                     <RowConstraints prefHeight="35.0"/>
                     <RowConstraints prefHeight="35.0"/>
                     <RowConstraints prefHeight="35.0"/>
+                    <RowConstraints prefHeight="35.0"/>
+                    <RowConstraints prefHeight="35.0"/>
 
 
                 </rowConstraints>
 
                 <children>
 
-
-
-
-                    <Button fx:id="btnActualizarDatos" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="25.0"
+                    <Button fx:id="btnNotaDetalles" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/update-data-user.png"/>
+                                    <Image url="@/icons/nota/note-details.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
 
                     </Button>
+
+
                     <Button fx:id="btnActualizarAdeudo" GridPane.columnIndex="0" GridPane.rowIndex="1" prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
@@ -92,8 +93,20 @@
 
                     </Button>
 
+                    <Button fx:id="btnActualizarDatos" GridPane.columnIndex="0" GridPane.rowIndex="3" prefHeight="25.0"
+                            prefWidth="25.0" styleClass="boton-accion">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/nota/update-data-user.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
 
-                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="3" prefHeight="25.0"
+                    </Button>
+
+
+                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="25.0"
                             prefWidth="25.0"
                             styleClass="boton-accion">
                         <graphic>
@@ -105,6 +118,8 @@
                         </graphic>
 
                     </Button>
+
+
 
 
                 </children>

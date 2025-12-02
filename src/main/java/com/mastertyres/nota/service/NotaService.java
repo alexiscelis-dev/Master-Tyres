@@ -86,5 +86,12 @@ public class NotaService implements INotaService {
         notaRepository.actualizarUpdatedAtNota(notaId,updatedAt);
     }
 
+    @Modifying
+    @Transactional
+    @Override
+    public void actualizarSaldo(float saldo, Integer notaId) {
+        notaRepository.actualizarSaldo(saldo,notaId);
+    }
+
 
 }//clase

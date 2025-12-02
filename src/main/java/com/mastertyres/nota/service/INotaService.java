@@ -21,6 +21,8 @@ public interface INotaService {
 
     void actualizarUpdatedAtNota(Integer notaId, String updatedAt);
 
+    void actualizarSaldo(float saldo, Integer notaId);
+
 
 
 }//interface

@@ -89,6 +89,10 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
                           @Param("notaId")Integer notaId);
 
     @Modifying
+    @Query("UPDATE Nota n SET n.saldoFavor = :saldo WHERE n.notaId = :notaId")
+    void actualizarSaldo(@Param("saldo")float saldo, @Param("notaId")Integer notaId);
+
+    @Modifying
     @Query("UPDATE Nota n SET n.updatedAt = :updatedAt WHERE n.notaId = :notaId")
     void actualizarUpdatedAtNota(@Param("notaId")Integer notaId, @Param("updatedAt")String updatedAt);
 

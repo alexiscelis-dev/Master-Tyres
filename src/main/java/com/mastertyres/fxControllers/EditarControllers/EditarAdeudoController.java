@@ -4,14 +4,12 @@ import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.service.NotaService;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,8 @@ public class EditarAdeudoController {
     @FXML
     private CheckBox cbLiquidar;
     @FXML
+    private Label lblAdeudo;
+    @FXML
     private Button btnActualizar;
 
     @Autowired
@@ -44,13 +44,16 @@ public class EditarAdeudoController {
 
     private NotaDTO notaAdeudo;
 
-    private BooleanProperty boolActualizarNota = new SimpleBooleanProperty(false);
+    private BooleanProperty boolActualizarNota = new SimpleBooleanProperty(true);
 
     @FXML
     private void initialize() {
+
+
+
         configuraciones();
         cbLiquidar.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            revisarCheckBox();
+            revisarCheckBox(notaAdeudo.getAdeudo());
         });
 
         btnActualizar.setOnAction(event -> actualizar(notaAdeudo));
@@ -60,31 +63,49 @@ public class EditarAdeudoController {
 
 
     private void configuraciones() {
+
         MenuContextSetting.disableMenu(root);
         MenuContextSetting.disableMenuDatePicker(dpFecha);
         RegexTools.aplicarNumerosDecimal(txtAdeudo);
 
+        BooleanBinding fechaInvalida = dpFecha.valueProperty().isNull().and(cbLiquidar.selectedProperty().not());
+
         btnActualizar.disableProperty().bind(
                 txtAdeudo.textProperty().isNull()
                         .or(txtAdeudo.textProperty().isEmpty())
-                        .or(dpFecha.valueProperty().isNull())
+                        .or(boolActualizarNota.not())
+                        .or(fechaInvalida)
 
         );
 
     }
 
-    private void revisarCheckBox() {
-        if (cbLiquidar.isSelected())
-            txtAdeudo.setText(notaAdeudo.getAdeudo() + "");
-        else
+    private void revisarCheckBox(float conAdeudo) {
+        if (cbLiquidar.isSelected()) {
+            txtAdeudo.setText("0");
+            dpFecha.setValue(null);
+            dpFecha.setDisable(true);
+        } else {
             txtAdeudo.setText("");
+            dpFecha.setDisable(false);
+        }
+
+
     }
 
     public void setAdeudo(NotaDTO notaAdeudo) {
         this.notaAdeudo = notaAdeudo;
-        LocalDate fecha = LocalDate.parse(notaAdeudo.getFechaVencimiento());
-        dpFecha.setValue(fecha);
-        revisarCheckBox();
+
+        String strFecha = notaAdeudo.getFechaVencimiento();
+
+        if (strFecha != null && !strFecha.trim().isEmpty())
+            dpFecha.setValue(LocalDate.parse(strFecha));
+        else
+            dpFecha.setValue(null);
+
+
+        lblAdeudo.setText("Adeudo: $" + notaAdeudo.getAdeudo());
+        revisarCheckBox(notaAdeudo.getAdeudo());
 
 
     }//setAdeudo
@@ -96,20 +117,34 @@ public class EditarAdeudoController {
         stage.close();
     }//cancelar
 
-    private void actualizar(NotaDTO notaAdeudo){
+    private void actualizar(NotaDTO notaAdeudo) {
+
         String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String fechaStr = null;
 
-       try {
-           notaService.actualizarAdeudo(Float.parseFloat(txtAdeudo.getText()),dpFecha.getValue().toString(),notaAdeudo.getNotaId());
-           notaService.actualizarUpdatedAtNota(notaAdeudo.getNotaId(),fecha);
-           mostrarInformacion("Adeudo actualizado", "", "El adeudo se actualizo correctamente. Puede consultar mas detalles en  nota +.");
-       }catch (Exception e){
-           e.printStackTrace();
-           mostrarError("Error inesperado", "", "No se pudo actualizar el lemento seleccionado, vuelva a intentarlo más tarde.");
-       }
+        //if asig null si el datePicker no tiene nada seleccionado
+        if (dpFecha.getValue() != null)
+            fechaStr = dpFecha.getValue().toString();
 
+
+        try {
+            notaService.actualizarAdeudo(Float.parseFloat(txtAdeudo.getText()), fechaStr, notaAdeudo.getNotaId());
+            notaService.actualizarUpdatedAtNota(notaAdeudo.getNotaId(), fecha);
+            Stage stage = (Stage) txtAdeudo.getScene().getWindow();
+            stage.close();
+            mostrarInformacion("Adeudo actualizado", "", "El adeudo se actualizo correctamente. Puede consultar mas detalles en  nota '+' Detalles cliente.");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Stage stage = (Stage) txtAdeudo.getScene().getWindow();
+            stage.close();
+            mostrarError("Error inesperado", "", "No se pudo actualizar el lemento seleccionado, vuelva a intentarlo más tarde.");
+        }
 
 
     }//actualizar
+
+
 
 }//class

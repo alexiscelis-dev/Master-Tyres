@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.text.Font?>
 <AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ActualizarAdeudo.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController">
@@ -21,7 +21,19 @@
         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="600.0">
 
             <VBox>
+                <Label fx:id="lblAdeudo" text="Adeudo" textFill="#8eb83d">
+                    <VBox.margin>
+                        <Insets bottom="20" />
+                    </VBox.margin>
+                    <font>
+                        <Font name="Arial Bold" size="14.0" />
+                    </font>
+
+                </Label>
+
                 <HBox fx:id="hbAdeudo" alignment="CENTER_LEFT" spacing="20" visible="true">
+
+
                     <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="250.0"
                                promptText="Ingrese el nuevo monto del adeudo" styleClass="buscador">
 
@@ -54,7 +66,7 @@
 
         <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
             <Button onAction="#cancelar" fx:id="btnCancelar" styleClass="boton-accion" text="Cancelar"/>
-            <Button disable="true" fx:id="btnActualizar" styleClass="boton-accion" text="Registrar"/>
+            <Button disable="true" fx:id="btnActualizar" styleClass="boton-accion" text="Actualizar"/>
         </HBox>
 
     </VBox>
