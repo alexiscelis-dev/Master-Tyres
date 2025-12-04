@@ -1,14 +1,10 @@
 package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
-import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.common.MensajesAlert;
-import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.marca.model.Marca;
-import com.mastertyres.marca.services.MarcaService;
+import com.mastertyres.marca.service.MarcaService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;

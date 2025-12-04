@@ -8,7 +8,7 @@ import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
-import com.mastertyres.marca.services.MarcaService;
+import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
 import com.mastertyres.vehiculo.model.Vehiculo;

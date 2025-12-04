@@ -7,10 +7,16 @@ import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController;
 import com.mastertyres.fxControllers.EditarControllers.EditarSaldoController;
+import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.inventario.service.InventarioService;
+import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatatusSiNo;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
+import com.mastertyres.notaDetalle.model.NotaDetalle;
+import com.mastertyres.notaDetalle.service.NotaDetalleService;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.FadeTransition;
@@ -44,8 +50,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class EditarNotaController {
@@ -256,14 +261,25 @@ public class EditarNotaController {
     @FXML
     private TextField txtTotal; //total de la nota
 
+    private String rayones;
+    private String golpes;
+    private String tapones;
+    private String tapetes;
+    private String radio;
+    private String gato;
+    private String llave;
+    private String llanta;
+
     @Autowired
     private NotaService notaService;
-
     @Autowired
     private VehiculoService vehiculoService;
-
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private NotaDetalleService notaDetalleService;
+    @Autowired
+    private InventarioService inventarioService;
 
 
     @FXML
@@ -278,13 +294,14 @@ public class EditarNotaController {
     private Button btnActualizarSaldoFavor;
     @FXML
     private Button btnNotaDetalles;
+    @FXML
+    private  Button btnAgregarNumFactura;
+
 
     private int porcentajeGasNota;
 
     private NotaDTO notaEditar;
     private String numNota;
-    private Vehiculo vehiculo;
-    private Cliente cliente;
 
 
     @FXML
@@ -296,13 +313,18 @@ public class EditarNotaController {
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
-        btnActualizarDatos.setOnAction(event -> actualizarDatosCliente(getNotaEditar(),true));
+        btnActualizarDatos.setOnAction(event -> actualizarDatosCliente(getNotaEditar(), true));
 
         btnActualizarAdeudo.setOnAction(event -> actualizarAdeudo(getNotaEditar()));
 
         btnActualizarSaldoFavor.setOnAction(event -> actualizarSaldo(getNotaEditar()));
 
         btnNotaDetalles.setOnAction(event -> notaDetalles(getNotaEditar()));
+
+        btnGuardar.setOnAction(event -> actualizarNota(notaEditar));
+
+        btnAgregarNumFactura.setOnAction(event -> agregarNumFactura(notaEditar));
+
 
 
 
@@ -1245,12 +1267,11 @@ public class EditarNotaController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.showAndWait();
-            actualizarDatosCliente(notaAdeudo,false);
+            actualizarDatosCliente(notaAdeudo, false);
 
 
         } catch (Exception e) {
             mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
-
             e.printStackTrace();
 
         }
@@ -1266,45 +1287,48 @@ public class EditarNotaController {
             llenarNota(nota.getNumNota());
 
             if (mensaje)
-            mostrarInformacion("Informacion actualizada", "", "Informacion actualizada.");
+                mostrarInformacion("Informacion actualizada", "", "Informacion actualizada.");
 
-    }
+        }
 
-}//actualizarDatosCliente
+    }//actualizarDatosCliente
 
-   private void actualizarSaldo(NotaDTO notaClienteDet) {
+    private void actualizarSaldo(NotaDTO notaClienteDet) {
 
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/EditarSaldo.fxml"));
-        loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/EditarSaldo.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
 
-        Parent root = loader.load();
-        EditarSaldoController controller = loader.getController();
-        controller.setSaldoFavor(notaClienteDet);
+            Parent root = loader.load();
+            EditarSaldoController controller = loader.getController();
+            controller.setSaldoFavor(notaClienteDet);
 
-        Stage stage = new Stage(StageStyle.UTILITY);
-        stage.setTitle("Actualizar Saldo");
-        stage.setScene(new Scene(root));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setResizable(false);
-        stage.showAndWait();
-        actualizarDatosCliente(notaClienteDet,false);
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setTitle("Actualizar Saldo");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
 
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
-    }
+            actualizarDatosCliente(notaClienteDet, false);
 
 
-}//actualizarSaldo
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+        }
 
-    private void notaDetalles(NotaDTO notaDetalles){
+
+    }//actualizarSaldo
+
+    private void notaDetalles(NotaDTO notaDetalles) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/NotaDetalles.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
 
             Parent root = loader.load();
+            NotaDetallesController controller = loader.getController();
+            controller.setNotaDetalles(notaDetalles);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Nota Detalles");
@@ -1313,6 +1337,8 @@ public class EditarNotaController {
             stage.setResizable(false);
             stage.showAndWait();
 
+            actualizarDatosCliente(notaDetalles, false);
+
         } catch (Exception e) {
             e.printStackTrace();
             mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
@@ -1320,26 +1346,316 @@ public class EditarNotaController {
 
     }//notaDetalles
 
-private void refrescar() {
+    private void checkCheckBoxes() {
+        //    String rayones = "", golpes = "", tapones = "", tapetes = "", radio = "", gato = "", llave = "", llanta = "";
 
-}
+        //rayones
+        if (cbRayonesSi.isSelected() && !cbRayonesNo.isSelected())
+            setRayones(StatatusSiNo.SI.toString());
+        else if (!cbRayonesSi.isSelected() && !cbRayonesNo.isSelected())
+            setRayones(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setRayones(StatatusSiNo.NO.toString());
+
+        //golpes
+        if (cbGolpesSi.isSelected() && !cbGolpesNo.isSelected())
+            setGolpes(StatatusSiNo.SI.toString());
+        else if (!cbGolpesSi.isSelected() && !cbGolpesNo.isSelected())
+            setGolpes(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setGolpes(StatatusSiNo.NO.toString());
+
+        //tapones
+        if (cbTaponesSi.isSelected() && !cbTaponesNo.isSelected())
+            setTapones(StatatusSiNo.SI.toString());
+        else if (!cbTaponesSi.isSelected() && !cbTaponesNo.isSelected())
+            setTapones(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setTapones(StatatusSiNo.NO.toString());
+
+
+        //tapetes
+        if (cbTapetesSi.isSelected() && !cbTapetesNo.isSelected())
+            setTapetes(StatatusSiNo.SI.toString());
+        else if (!cbTapetesSi.isSelected() && !cbTapetesNo.isSelected())
+            setTapetes(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setTapetes(StatatusSiNo.NO.toString());
+
+        //radio
+        if (cbRadioSi.isSelected() && !cbRadioNo.isSelected())
+            setRadio(StatatusSiNo.SI.toString());
+        else if (!cbRadioSi.isSelected() && !cbRadioNo.isSelected())
+            setRadio(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setRadio(StatatusSiNo.NO.toString());
+
+
+        //gato
+        if (cbGatoSi.isSelected() && !cbGatoNo.isSelected())
+            setGato(StatatusSiNo.SI.toString());
+        else if (!cbGatoSi.isSelected() && !cbGatoNo.isSelected())
+            setGato(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setGato(StatatusSiNo.NO.toString());
+
+        //llave
+        if (cbLlaveSi.isSelected() && !cbLlaveNo.isSelected())
+            setLlave(StatatusSiNo.SI.toString());
+        else if (!cbLlaveSi.isSelected() && !cbLlaveNo.isSelected())
+            setLlave(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setLlave(StatatusSiNo.NO.toString());
+
+        //llanta
+        if (cbLlantaSi.isSelected() && !cbLlantaNo.isSelected())
+            setLlanta(StatatusSiNo.SI.toString());
+        else if (!cbLlantaSi.isSelected() && !cbLlantaNo.isSelected())
+            setLlanta(StatatusSiNo.DESELECCIONADO.toString());
+        else
+            setLlanta(StatatusSiNo.NO.toString());
+
+
+    }//checkCheckBoxes
+
+
+    private void actualizarNota(NotaDTO notaActualizar) {
+
+        boolean guardar = mostrarConfirmacion("Guardar cambios", "", "¿Desea guardar los cambios realizados?", "Guardar", "Cancelar");
+
+        checkCheckBoxes();
+
+        if (guardar) {
+            Nota notaRegistrar = notaService.buscarPorId(notaActualizar.getNotaId());
+            NotaDetalle ndRegistrar = notaDetalleService.buscarNotaDetalle(notaRegistrar);
+            Cliente cliente = clienteService.buscarClientePorId(notaActualizar.getClienteId(), StatusNota.ACTIVE.toString());
+            Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(notaActualizar.getVehiculoId(), StatusVehiculo.ACTIVE.toString());
+
+            Inventario inventario = null;
+            if (notaActualizar.getInventarioId() != null)
+                inventario = inventarioService.buscarLlantaPorId(notaActualizar.getInventarioId());
+
+
+            //actualizar campos nota
+            String fechaYHora = txtAnio.getText() + "-" + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
+
+            notaRegistrar.setNumFactura(notaActualizar.getNumFactura());
+            notaRegistrar.setTotal(toFloatSafe(txtTotal.getText()));
+            notaRegistrar.setFechaYhora(fechaYHora); //pendiente
+            notaRegistrar.setFechaVencimiento(notaActualizar.getFechaVencimiento());
+            notaRegistrar.setAdeudo(notaActualizar.getAdeudo());
+            notaRegistrar.setSaldoFavor(notaActualizar.getSaldoFavor());
+            notaRegistrar.setStatusNota(notaActualizar.getStatusNota());
+            notaRegistrar.setCliente(cliente);
+            notaRegistrar.setVehiculo(vehiculo);
+
+
+            //datos cliente y vehiculo
+            //en el caso de la entidad cliente no se setean ya que en caso de haber cambios el usuario los hace con el UPDATE y
+            //estos se traen directo de la BD no de los campos de texto. El mismo caso con vehiculo
+
+
+            //actualizar nota detalle
+            ndRegistrar.setObservaciones(txtObservaciones.getText());
+            ndRegistrar.setObservaciones2(txtObservaciones2.getText());
+            ndRegistrar.setPorcentajeGas(getPorcentajeGasNota());
+            ndRegistrar.setRayones(getRayones());//comienzan checkBox
+            ndRegistrar.setGolpes(getGolpes());
+            ndRegistrar.setTapones(getTapones());
+            ndRegistrar.setTapetes(getTapetes());
+            ndRegistrar.setRadio(getRadio());
+            ndRegistrar.setGato(getGato());
+            ndRegistrar.setLlave(getLlave());
+            ndRegistrar.setLlanta(getLlanta()); //terminan CkeckBox
+            ndRegistrar.setAlineacion(txtAlineacion.getText()); //comienzan campos de la nota
+            ndRegistrar.setAlineacionCantidad(toIntSafe(txtAlineacionCantidad.getText()));
+            ndRegistrar.setAlineacionUnitario(toFloatSafe(txtAlineacionUnitario.getText()));
+            ndRegistrar.setAlineacionTotal(toFloatSafe(txtAlineacionTotal.getText()));
+            ndRegistrar.setBalanceo(txtBalanceo.getText());
+            ndRegistrar.setBalanceoCantidad(toIntSafe(txtBalanceoCantidad.getText()));
+            ndRegistrar.setBalanceoUnitario(toFloatSafe(txtBalanceoUnitario.getText()));
+            ndRegistrar.setBalanceoTotal(toFloatSafe(txtBalanceoTotal.getText()));
+            ndRegistrar.setAmorDelanteros(txtAmorDelanteros.getText());
+            ndRegistrar.setAmorDelCantidad(toIntSafe(txtAmorDelCantidad.getText()));
+            ndRegistrar.setAmorDelUnitario(toFloatSafe(txtAmorDelUnitario.getText()));
+            ndRegistrar.setAmorDelTotal(toFloatSafe(txtAmorDelTotal.getText()));
+            ndRegistrar.setAmorTraseros(txtAmorTraseros.getText());
+            ndRegistrar.setAmorTrasCantidad(toIntSafe(txtAmorTrasCantidad.getText()));
+            ndRegistrar.setAmorTrasUnitario(toFloatSafe(txtAmorTrasUnitario.getText()));
+            ndRegistrar.setAmorTrasTotal(toFloatSafe(txtAmorTrasTotal.getText()));
+            ndRegistrar.setSuspension(txtSuspension.getText());
+            ndRegistrar.setSuspensionCantidad(toIntSafe(txtSuspensionCantidad.getText()));
+            ndRegistrar.setSuspensionUnitario(toFloatSafe(txtSuspensionUnitario.getText()));
+            ndRegistrar.setSuspensionTotal(toFloatSafe(txtSuspensionTotal.getText()));
+            ndRegistrar.setSuspension2(txtSuspension2.getText());
+            ndRegistrar.setSuspensionCantidad2(toIntSafe(txtSuspensionCantidad2.getText()));
+            ndRegistrar.setSuspensionUnitario2(toFloatSafe(txtSuspensionUnitario2.getText()));
+            ndRegistrar.setMecanica(txtMecanica.getText());
+            ndRegistrar.setMecanicaCantidad(toIntSafe(txtMecanicaCantidad.getText()));
+            ndRegistrar.setMecanicaUnitario(toFloatSafe(txtMecanicaUnitario.getText()));
+            ndRegistrar.setMecanicaTotal(toFloatSafe(txtMecanicaTotal.getText()));
+            ndRegistrar.setMecanica2(txtMecanica2.getText());
+            ndRegistrar.setMecanicaCantidad2(toIntSafe(txtMecanicaCantidad2.getText()));
+            ndRegistrar.setMecanicaUnitario2(toFloatSafe(txtMecanicaUnitario2.getText()));
+            ndRegistrar.setMecanicaTotal2(toFloatSafe(txtMecanicaTotal2.getText()));
+            ndRegistrar.setFrenos(txtFrenos.getText());
+            ndRegistrar.setFrenosCantidad(toIntSafe(txtFrenosCantidad.getText()));
+            ndRegistrar.setFrenosUnitario(toFloatSafe(txtFrenosUnitario.getText()));
+            ndRegistrar.setFrenosTotal(toFloatSafe(txtFrenosTotal.getText()));
+            ndRegistrar.setFrenos2(txtFrenos2.getText());
+            ndRegistrar.setFrenosCantidad2(toIntSafe(txtFrenosCantidad2.getText()));
+            ndRegistrar.setFrenosUnitario2(toFloatSafe(txtFrenosUnitario2.getText()));
+            ndRegistrar.setFrenosTotal2(toFloatSafe(txtFrenosTotal2.getText()));
+            ndRegistrar.setOtros(txtOtros.getText());
+            ndRegistrar.setOtrosCantidad(toIntSafe(txtOtrosCantidad.getText()));
+            ndRegistrar.setOtrosUnitario(toFloatSafe(txtOtrosUnitario.getText()));
+            ndRegistrar.setOtrosTotal(toFloatSafe(txtOtrosTotal.getText()));
+            ndRegistrar.setOtros2(txtOtros2.getText());
+            ndRegistrar.setOtrosCantidad2(toIntSafe(txtOtrosCantidad2.getText()));
+            ndRegistrar.setOtrosUnitario2(toFloatSafe(txtOtrosUnitario2.getText()));
+            ndRegistrar.setOtrosTotal2(toFloatSafe(txtOtrosTotal2.getText()));
+            ndRegistrar.setSubTotalFrenos(toFloatSafe(txtSubTotalOtros.getText()));
+            ndRegistrar.setSubTotalMecanica(toFloatSafe(txtSubTotalMecanica.getText()));
+            ndRegistrar.setSubTotalOtros(toFloatSafe(txtSubTotalOtros.getText()));
+            ndRegistrar.setLlantaCampo(txtLlantas.getText());
+            ndRegistrar.setLlantaCantidad(toIntSafe(txtLlantasCantidad.getText()));
+            ndRegistrar.setLlantaUnitario(toFloatSafe(txtLlantasUnitario.getText()));
+            ndRegistrar.setLlantaTotal(toFloatSafe(txtLlantasTotal.getText()));
+
+
+            System.out.println("notaRegistrar = " + notaRegistrar);
+            System.out.println("ndRegistrar = " + ndRegistrar);
+            System.out.println("cliente = " + cliente);
+            System.out.println("vehiculo = " + vehiculo);
+
+
+            try {
+
+                notaService.actualizarNota(notaRegistrar, ndRegistrar);
+
+                LocalDateTime fecha = LocalDateTime.now();
+                String fechaStr = fecha.toString();
+                notaService.actualizarUpdatedAtNota(notaActualizar.getNotaId(), fechaStr);
+
+                mostrarInformacion("Nota Actualizada", "", "Los cambios se guardaron correctamente.");
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            }
+        }//if guardar
+
+    }//actualizarNota
+
+    private void agregarNumFactura(NotaDTO notaEditar) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/AgregarNumFactura.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
+            Parent root = loader.load();
+            AgregarNumFacturaController controller = loader.getController();
+            controller.setNumFactura(notaEditar.getNotaId());
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setTitle("Agregar Numero de Factura");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+
+            actualizarDatosCliente(notaEditar, false);
+
+        } catch (Exception e) {
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            e.printStackTrace();
+
+        }
+
+
+    }//agregarNumFactura
 
 
 //getters y setters
 
-public String getNumNota() {
-    return this.numNota;
-}
+    public String getNumNota() {
+        return this.numNota;
+    }
 
-public void setNumNota(final String numNota) {
-    this.numNota = numNota;
-}
+    public void setNumNota(final String numNota) {
+        this.numNota = numNota;
+    }
 
-public NotaDTO getNotaEditar() {
-    return this.notaEditar;
-}
+    public NotaDTO getNotaEditar() {
+        return this.notaEditar;
+    }
 
-public void setNotaEditar(final NotaDTO notaEditar) {
-    this.notaEditar = notaEditar;
-}
+    public void setNotaEditar(final NotaDTO notaEditar) {
+        this.notaEditar = notaEditar;
+    }
+
+    public String getRayones() {
+        return this.rayones;
+    }
+
+    public void setRayones(final String rayones) {
+        this.rayones = rayones;
+    }
+
+    public String getGolpes() {
+        return this.golpes;
+    }
+
+    public void setGolpes(final String golpes) {
+        this.golpes = golpes;
+    }
+
+    public String getTapones() {
+        return this.tapones;
+    }
+
+    public void setTapones(final String tapones) {
+        this.tapones = tapones;
+    }
+
+    public String getTapetes() {
+        return this.tapetes;
+    }
+
+    public void setTapetes(final String tapetes) {
+        this.tapetes = tapetes;
+    }
+
+    public String getRadio() {
+        return this.radio;
+    }
+
+    public void setRadio(final String radio) {
+        this.radio = radio;
+    }
+
+    public String getGato() {
+        return this.gato;
+    }
+
+    public void setGato(final String gato) {
+        this.gato = gato;
+    }
+
+    public String getLlave() {
+        return this.llave;
+    }
+
+    public void setLlave(final String llave) {
+        this.llave = llave;
+    }
+
+    public String getLlanta() {
+        return this.llanta;
+    }
+
+    public void setLlanta(final String llanta) {
+        this.llanta = llanta;
+    }
 }//class

@@ -4,7 +4,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.common.MensajesAlert;
 import com.mastertyres.marca.model.Marca;
-import com.mastertyres.marca.services.MarcaService;
+import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
 import com.mastertyres.vehiculo.model.Vehiculo;

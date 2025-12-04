@@ -28,7 +28,7 @@ public class NotaDTO {
                    final float subTotalFrenos, final float subTotalOtros,final String llantaCampo, final int llantaCantidad, final float llantaUnitario,
                    final float llantaTotal, final float adeudo, final float saldoFavor, final Integer clienteId,
                    final String nombreCliente, final String apellido, final String segundoApellido, final String domicilio,
-                   final String rfc, final String correo, final Integer vehiculoId, final String marca, final String modelo,
+                   final String rfc, final String correo,final String genero, final String tipoCliente, final Integer vehiculoId, final String marca, final String modelo,
                    final String categoria, final Integer anio, final Integer kilometros, final String color, final String placas) {
         this.notaId = notaId;
         this.numNota = numNota;
@@ -115,6 +115,8 @@ public class NotaDTO {
         this.domicilio = domicilio;
         this.rfc = rfc;
         this.correo = correo;
+        this.genero = genero;
+        this.tipoCliente = tipoCliente;
         this.vehiculoId = vehiculoId;
         this.marca = marca;
         this.modelo = modelo;
@@ -217,6 +219,8 @@ public class NotaDTO {
     private String domicilio;
     private String rfc;
     private String correo;
+    private String genero;
+    private String tipoCliente;
 
     //vehiculo
     private Integer vehiculoId;

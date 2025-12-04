@@ -62,7 +62,7 @@
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/note-details.png"/>
+                                    <Image url="@/icons/nota/user-details2.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
@@ -93,7 +93,21 @@
 
                     </Button>
 
-                    <Button fx:id="btnActualizarDatos" GridPane.columnIndex="0" GridPane.rowIndex="3" prefHeight="25.0"
+
+                    <Button fx:id="btnAgregarNumFactura" GridPane.columnIndex="0" GridPane.rowIndex="3" prefHeight="25.0"
+                            prefWidth="25.0" styleClass="boton-accion">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/nota/Add-invoice-number.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+
+                    </Button>
+
+
+                    <Button fx:id="btnActualizarDatos" GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
@@ -106,7 +120,7 @@
                     </Button>
 
 
-                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="25.0"
+                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="5" prefHeight="25.0"
                             prefWidth="25.0"
                             styleClass="boton-accion">
                         <graphic>
@@ -1175,7 +1189,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
+                                        <TextField  editable="false" fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1183,7 +1197,7 @@
 
                                     <HBox GridPane.rowIndex="4" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField fx:id="txtLlantasCantidad" prefWidth="105"
+                                        <TextField editable="false" fx:id="txtLlantasCantidad" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
 

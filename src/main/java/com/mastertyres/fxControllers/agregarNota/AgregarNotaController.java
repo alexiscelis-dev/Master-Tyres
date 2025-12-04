@@ -1497,6 +1497,9 @@ public class AgregarNotaController {
         this.vehiculosNota = vehiculos;
     }
 
+
+
+
     //getters y setters para checkBox
     public String getRayones() {
         return this.rayones;
@@ -1518,7 +1521,7 @@ public class AgregarNotaController {
         return this.tapones;
     }
 
-    public void setTapones(final String tapones) {
+    public void setTapones(final String tapons) {
         this.tapones = tapones;
     }
 

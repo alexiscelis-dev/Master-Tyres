@@ -94,4 +94,24 @@ public class NotaService implements INotaService {
     }
 
 
+    @Transactional
+    @Override
+    public void actualizarNota(Nota nota, NotaDetalle notaDetalle) {
+        notaRepository.save(nota);
+        notaDetalleRepository.save(notaDetalle);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Nota buscarPorId(Integer notaId) {
+        return notaRepository.findById(notaId).orElseThrow(()-> new NotaException("Error al guardar nota"));
+    }
+
+    @Transactional
+    @Override
+    public void actualizarNumFactura(String numNota, Integer notaId) {
+        notaRepository.actualizarNumFactura(numNota,notaId);
+    }
+
+
 }//clase

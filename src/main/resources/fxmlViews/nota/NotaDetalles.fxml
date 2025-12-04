@@ -28,14 +28,14 @@
                 </columnConstraints>
 
 
-                <Label fx:id="txtNumNota" text="Numero de nota:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label fx:id="lblNumNota" text="Numero de nota:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0">
                     <font>
                         <Font name="System Bold" size="18.0"/>
                     </font>
                 </Label>
 
 
-                <Label fx:id="txtNumFactura" text="Numero de factura:" textFill="WHITE" GridPane.columnIndex="0"
+                <Label fx:id="lblNumFactura" text="Numero de factura:" textFill="WHITE" GridPane.columnIndex="0"
                        GridPane.rowIndex="1">
                     <font>
                         <Font name="System Bold" size="18.0"/>
@@ -43,7 +43,7 @@
                 </Label>
 
 
-                <Label fx:id="txtFechaVencimiento" text="Fecha de vencimiento:" textFill="WHITE" GridPane.columnIndex="0"
+                <Label fx:id="lblFechaVencimiento" text="Fecha de vencimiento:" textFill="WHITE" GridPane.columnIndex="0"
                        GridPane.rowIndex="2">
                     <font>
                         <Font name="System Bold" size="18.0"/>
@@ -51,7 +51,7 @@
                 </Label>
 
 
-                <Label fx:id="txtAdeudo" text="Adeudo:" textFill="WHITE" GridPane.columnIndex="0"
+                <Label fx:id="lblAdeudo" text="Adeudo:" textFill="WHITE" GridPane.columnIndex="0"
                        GridPane.rowIndex="3">
                     <font>
                         <Font name="System Bold" size="18.0"/>
@@ -59,21 +59,21 @@
                 </Label>
 
 
-                <Label fx:id="txtSaldo" text="Saldo:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                <Label fx:id="lblSaldo" text="Saldo a favor:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
                     <font>
                         <Font name="System Bold" size="18.0"/>
                     </font>
                 </Label>
 
 
-                <Label fx:id="txtStatus" text="Estado:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                <Label fx:id="lblStatus" text="Estado:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="5">
                     <font>
                         <Font name="System Bold" size="18.0"/>
                     </font>
                 </Label>
 
 
-                <Label fx:id="txtFechaCreacion" text="Fecha de creacion:" textFill="WHITE" GridPane.columnIndex="0"
+                <Label fx:id="lblFechaCreacion" text="Fecha de creacion:" textFill="WHITE" GridPane.columnIndex="0"
                        GridPane.rowIndex="6">
                     <font>
                         <Font name="System Bold" size="18.0"/>
@@ -81,14 +81,14 @@
                 </Label>
 
 
-                <Label fx:id="txtGenero" text="Género:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="9">
+                <Label fx:id="lblGenero" text="Género:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="7">
                     <font>
                         <Font name="System Bold" size="18.0"/>
                     </font>
                 </Label>
 
-                <Label fx:id="txtTipoCliente" text="Tipo Cliente:" textFill="WHITE" GridPane.columnIndex="0"
-                       GridPane.rowIndex="10">
+                <Label fx:id="lblTipoCliente" text="Tipo Cliente:" textFill="WHITE" GridPane.columnIndex="0"
+                       GridPane.rowIndex="8">
                     <font>
                         <Font name="System Bold" size="18.0"/>
                     </font>
@@ -105,18 +105,13 @@
                     <RowConstraints/>
                     <RowConstraints/>
                     <RowConstraints/>
-                    <RowConstraints/>
-                    <RowConstraints/>
-                    <RowConstraints/>
-                    <RowConstraints/>
-                    <RowConstraints/>
                     <RowConstraints minHeight="10.0" prefHeight="30.0"/>
                 </rowConstraints>
             </GridPane>
 
             <!-- Botones -->
             <HBox alignment="CENTER" spacing="20">
-                <Button styleClass="boton-accion" text="Cerrar"/>
+                <Button onAction="#cancelar" fx:id="btnCancelar" styleClass="boton-accion" text="Cerrar"/>
             </HBox>
         </VBox>
     </children>

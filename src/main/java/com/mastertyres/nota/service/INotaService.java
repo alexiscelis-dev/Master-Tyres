@@ -23,6 +23,13 @@ public interface INotaService {
 
     void actualizarSaldo(float saldo, Integer notaId);
 
+    void actualizarNota(Nota nota, NotaDetalle notaDetalle);
+
+    Nota buscarPorId(Integer notaId);
+
+    void actualizarNumFactura(String numNota, Integer notaId);
+
+
 
 
 }//interface

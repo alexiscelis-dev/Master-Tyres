@@ -34,7 +34,7 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
             "nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2, " +
             "nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, " +
             "nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal, n.adeudo, n.saldoFavor, " +
-            "c.clienteId, c.nombre, c.apellido, c.segundoApellido, c.domicilio, c.rfc, c.correo, " +
+            "c.clienteId, c.nombre, c.apellido, c.segundoApellido, c.domicilio, c.rfc, c.correo, c.genero,c.tipoCliente ," +
             "v.vehiculoId, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.kilometros, v.color, v.placas) " +
             "FROM Nota n " +
             "JOIN n.detalles nd " +
@@ -66,7 +66,7 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
             "nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2, " +
             "nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, " +
             "nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal, n.adeudo, n.saldoFavor, " +
-            "c.clienteId, c.nombre, c.apellido, c.segundoApellido, c.domicilio, c.rfc, c.correo, " +
+            "c.clienteId, c.nombre, c.apellido, c.segundoApellido, c.domicilio, c.rfc, c.correo, c.genero,c.tipoCliente ," +
             "v.vehiculoId, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.kilometros, v.color, v.placas) " +
             "FROM Nota n " +
             "JOIN n.detalles nd " +
@@ -95,6 +95,10 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @Modifying
     @Query("UPDATE Nota n SET n.updatedAt = :updatedAt WHERE n.notaId = :notaId")
     void actualizarUpdatedAtNota(@Param("notaId")Integer notaId, @Param("updatedAt")String updatedAt);
+
+    @Modifying
+    @Query("UPDATE Nota n SET n.numFactura = :numFactura WHERE n.notaId = :notaId ")
+    void actualizarNumFactura(@Param("numFactura")String numFactura, @Param("notaId")Integer notaId);
 
 
 
