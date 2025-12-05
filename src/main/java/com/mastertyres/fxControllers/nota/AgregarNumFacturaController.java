@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.RegexTools;
 import com.mastertyres.nota.service.NotaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,8 +31,20 @@ public class AgregarNumFacturaController {
 
     @FXML
     private void initialize(){
+        configuraciones();
 
     }//initialize
+
+    private void configuraciones(){
+
+        RegexTools.aplicarNumFactura(txtNumFactura);
+        btnAgregar.disableProperty().bind(
+                txtNumFactura.textProperty().isEmpty()
+                        .or(txtNumFactura.textProperty().isNull())
+                        .or(txtNumFactura.textProperty().length().lessThan(3))
+        );
+
+    }
 
     public void setNumFactura(Integer notaId){
         this.notaId = notaId;

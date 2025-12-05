@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ActualizarAdeudo.css"
+<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
+            stylesheets="/styles_css/ActualizarAdeudo.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController">
 
@@ -23,10 +24,10 @@
             <VBox>
                 <Label fx:id="lblAdeudo" text="Adeudo" textFill="#8eb83d">
                     <VBox.margin>
-                        <Insets bottom="20" />
+                        <Insets bottom="20"/>
                     </VBox.margin>
                     <font>
-                        <Font name="Arial Bold" size="14.0" />
+                        <Font name="Arial Bold" size="14.0"/>
                     </font>
 
                 </Label>
@@ -47,11 +48,8 @@
 
                 </HBox>
                 <StackPane prefHeight="50" prefWidth="200" alignment="CENTER">
-                    <CheckBox fx:id="cbLiquidar"  text="Liquidar adeudo"> </CheckBox>
+                    <CheckBox fx:id="cbLiquidar" text="Liquidar adeudo"></CheckBox>
                 </StackPane>
-
-
-
 
 
             </VBox>

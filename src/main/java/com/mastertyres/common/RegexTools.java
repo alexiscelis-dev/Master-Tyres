@@ -157,6 +157,24 @@ public class RegexTools {
 
     }
 
+    public static void aplicarNumFactura(TextField textField){
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9 _-]{1,32}$");
+
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+           String newText = change.getControlNewText();
+
+           if (newText.isEmpty())
+               return change;
+
+           if (pattern.matcher(newText).matches())
+               return change;
+
+            return  null;
+        });
+        textField.setTextFormatter(formatter);
+
+    }
+
 
 
 }//class

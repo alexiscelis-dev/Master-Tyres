@@ -1,24 +1,35 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.GenerarPDF;
+import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static com.mastertyres.common.MensajesAlert.mostrarError;
 
 @Component
 public class NotaController {
@@ -84,6 +95,8 @@ public class NotaController {
         });
 
         btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
+
+        btnImprimir.setOnAction(event -> imprimir(notaSeleccionada.getNumNota()));
 
     }//initialize
 
@@ -185,7 +198,6 @@ public class NotaController {
         }
 
 
-
         lblNumNota.setText(nota.getNumNota());
 
 
@@ -225,7 +237,6 @@ public class NotaController {
 
     }//agregarNotas
 
-
     private void editarNota(String numNota) {
 
         Object controllerObj = ventanaPrincipalController.viewContent(
@@ -238,6 +249,75 @@ public class NotaController {
 
 
     }//editarNota
+
+
+    private void imprimir(String numNota) {
+        try {
+            // 1. Cargar FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            // 2. Ejecutar tu lógica
+            ImprimirNotaController controller = loader.getController();
+            controller.agregarNota(numNota);
+
+            // 3. Crear una escena temporal para que JavaFX renderice bien los nodos
+            Scene tempScene = new Scene(root);
+
+            // 4. Forzar layout y CSS para que calcule tamaños
+            root.applyCss();
+            root.layout();
+
+            double escala = 0.9;
+            root.setScaleX(escala);
+            root.setScaleY(escala);
+
+            // ⚠ Aquí sí se renderiza bien, no como antes
+            WritableImage snapshot = new WritableImage(
+                    (int) root.prefWidth(-1),
+                    (int) root.prefHeight(-1)
+            );
+
+            root.snapshot(null, snapshot);
+
+            // 5. FileChooser para guardar
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Guardar Nota en PDF");
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+            chooser.setInitialFileName("Nota_" + numNota + ".pdf");
+
+            File archivo = chooser.showSaveDialog(root.getScene().getWindow());
+            if (archivo == null) return;
+
+            // 6. Generar PDF
+            GenerarPDF.generarPDF(snapshot, archivo.getAbsolutePath());
+
+
+
+
+        } catch (Exception e) {
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            e.printStackTrace();
+
+        }
+       /* try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setTitle("Nota Detalles");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+
+        } catch (Exception e) {
+
+        }*/
+
+    }//imprimir
 
     public NotaDTO getNotaSeleccionada() {
         return this.notaSeleccionada;
