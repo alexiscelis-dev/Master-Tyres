@@ -75,7 +75,7 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
             "JOIN v.categoria ca " +
-            "JOIN n.inventario i " +
+            "LEFT JOIN n.inventario i " +
             "WHERE n.active = :active")
     Page<NotaDTO> listarNotasPaginado(@Param("active") String active, Pageable pageable);
 
@@ -113,7 +113,7 @@ JOIN v.cliente c
 JOIN v.marca m
 JOIN v.modelo mo
 JOIN v.categoria ca
-JOIN n.inventario i
+LEFT JOIN n.inventario i
 WHERE n.active = :active
 AND (
        LOWER(n.numNota) LIKE LOWER(CONCAT('%', :filtro, '%'))
@@ -129,7 +129,7 @@ AND (
     OR STR(n.total) LIKE CONCAT('%', :filtro, '%')
     OR STR(n.adeudo) LIKE CONCAT('%', :filtro, '%')
     OR STR(n.saldoFavor) LIKE CONCAT('%', :filtro, '%')
-    OR STR(i.inventarioId) LIKE CONCAT('%', :filtro, '%')
+    OR (i.inventarioId IS NOT NULL AND STR(i.inventarioId) LIKE CONCAT('%', :filtro, '%'))
     OR LOWER(nd.observaciones) LIKE LOWER(CONCAT('%', :filtro, '%'))
 )
 """)

@@ -35,6 +35,10 @@ public class InventarioService implements IInventarioService {
         return inventarioRepository.contarInventarioActivos(active);
     }
 
+    public long contarInventarioPorBusquedaGeneral(String status, String termino){
+        return inventarioRepository.contarInventarioPorBusquedaGeneral(status, termino);
+    };
+
     @Transactional(readOnly = true)
     @Override
     public List<Inventario> listarInventario(String active) {

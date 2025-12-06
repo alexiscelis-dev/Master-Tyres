@@ -47,6 +47,17 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
             "LOWER(COALESCE(i.marca,'')) LIKE LOWER(CONCAT('%',:busqueda,'%'))")
     Page<Inventario> buscadorInventarioPaginado(@Param("active") String active, @Param("busqueda")String busqueda, Pageable pageable);
 
+    @Query("SELECT COUNT(i) FROM Inventario i WHERE i.active = :status AND " +
+            "LOWER(COALESCE(i.codigoBarras,'')) LIKE LOWER(CONCAT('%',:busqueda,'%')) OR " +
+            "LOWER(COALESCE(i.dot,'')) LIKE LOWER(CONCAT('%',:busqueda,'%')) OR " +
+            "LOWER(COALESCE(i.modelo,'')) LIKE LOWER(CONCAT('%',:busqueda,'%')) OR " +
+            "LOWER(COALESCE(i.medida,'')) LIKE LOWER(CONCAT('%',:busqueda,'%')) OR " +
+            "LOWER(COALESCE(i.indiceCarga,'')) LIKE LOWER(CONCAT('%',:busqueda,'%')) OR " +
+            "LOWER(COALESCE(i.indiceVelocidad,'')) LIKE LOWER(CONCAT('%',:busqueda,'%')) OR " +
+            "CAST(i.stock AS STRING) LIKE LOWER(CONCAT('%',:busqueda,'%')) OR " +
+            "LOWER(COALESCE(i.marca,'')) LIKE LOWER(CONCAT('%',:busqueda,'%'))")
+    long contarInventarioPorBusquedaGeneral(String status, String busqueda);
+
     @Query("SELECT i FROM Inventario i WHERE i.active = :active AND LOWER(COALESCE(i.codigoBarras,'')) LIKE LOWER(CONCAT('%',:busqueda,'%'))")
     List<Inventario>buscarPorCodBarras(@Param("active")String active ,@Param("busqueda")String busqueda);
 

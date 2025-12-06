@@ -284,6 +284,9 @@ public class VehiculoService implements IVehiculoService {
         return vehiculoRepository.buscadorVehiculos(status,busqueda);
     }
 
+    public long contarVehiculosPorBusquedaGeneral(String status, String termino){
+        return vehiculoRepository.contarVehiculosPorBusquedaGeneral(status, termino);
+    };
 
     // 🔹 Listar vehículos activos con paginación
     public Page<VehiculoDTO> listarVehiculosPaginado(String active, int pagina, int tamanoPagina) {
