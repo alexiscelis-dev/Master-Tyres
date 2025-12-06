@@ -82,13 +82,9 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-
-
     @FXML
     private Pagination paginadorClientes;
-
     private static final int CLIENTES_POR_PAGINA = 20;
-
     private List<Cliente> todosLosClientes;
     private String terminoBusquedaActual = "";
     private boolean modoBusqueda = false;
@@ -102,9 +98,7 @@ public class ClienteController {
 
         });
 
-
         //Click derecho borrar
-
         tablaClientes.setRowFactory(tabla -> {
             TableRow<Cliente> fila = new TableRow<>();
 
@@ -355,21 +349,7 @@ public class ClienteController {
             }
         });
 
-       /* buscarClienteBuscador.setOnKeyPressed(event -> {
-
-            if (event.getCode() == KeyCode.ENTER) {
-                String seleccion = atributoBusquedaClientes.getValue(), busqueda = buscarClienteBuscador.getText();
-
-                if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty()) {
-                    buscarCliente(seleccion.toLowerCase(), busqueda);
-                }
-            }
-
-
-        });*/
-
         //buscar mientras escribes
-
         buscarClienteBuscador.setOnKeyReleased(event -> {
 
             if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
@@ -396,33 +376,6 @@ public class ClienteController {
             delayQuery.playFromStart();
         });
 
-        /*buscarClienteBuscador.setOnKeyReleased(event -> {
-
-            if (event.getCode() != KeyCode.ENTER) {
-                delayQuery.setOnFinished(e -> {
-                    if (buscarClienteBuscador.getText().isEmpty()) {
-                        resetBusqueda();
-                        return;
-                    }
-                    String seleccion = atributoBusquedaClientes.getValue();
-                    String busqueda = buscarClienteBuscador.getText();
-
-                    if (seleccion == null && busqueda != null && !busqueda.isEmpty()) {
-                        buscarCliente(busqueda);
-                    } else {
-                        // Si no hay búsqueda, salir del modo búsqueda y recargar tabla
-                        modoBusqueda = false;
-                        terminoBusquedaActual = "";
-                        paginadorClientes.setPageFactory(this::crearPaginaClientes);
-                        paginadorClientes.setCurrentPageIndex(0);
-                    }
-
-                });
-                delayQuery.playFromStart();
-            }
-        });*/
-
-
         //pone en null la lista de ChoiceBox
         limpiarChoiceBox.setOnMouseClicked(event -> {
 
@@ -432,8 +385,6 @@ public class ClienteController {
         });
 
     }// initialize
-
-
 
     @FXML
     private void agregarCliente(ActionEvent event) {
@@ -636,7 +587,6 @@ public class ClienteController {
         return full.isBlank() ? "N/A" : full;
     }
 
-
     private void cargarDatosClientes() {
         try {
             long totalClientes = clienteService.contarClientesActivos(StatusCliente.ACTIVE.toString());
@@ -651,72 +601,6 @@ public class ClienteController {
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
         }
     }
-
-//    private void buscarCliente(String seleccion, String busqueda) {
-////
-////
-////        switch (seleccion) {
-////            case "nombre" -> {
-////
-////                String nombre = busqueda;
-////
-////                List<Cliente> clientesPorNombre = clienteService.buscarClientePorNombre(ClienteStatus.ACTIVE.toString(), nombre);
-////                tablaClientes.setItems(FXCollections.observableList(clientesPorNombre));
-////
-////            }
-////            case "telefono" -> {
-////                String numTelefono = busqueda;
-////
-////                List<Cliente> clientesPorNumero = clienteService.buscarClientePorNumTelefono(ClienteStatus.ACTIVE.toString(), numTelefono);
-////                tablaClientes.setItems(FXCollections.observableList(clientesPorNumero));
-////
-////            }
-////            case "estado" -> {
-////                String estado = busqueda;
-////
-////                List<Cliente> clientesPorEstado = clienteService.buscarClientePorEstado(ClienteStatus.ACTIVE.toString(), estado);
-////                tablaClientes.setItems(FXCollections.observableList(clientesPorEstado));
-////
-////            }
-////            case "ciudad" -> {
-////                String ciudad = busqueda;
-////
-////                List<Cliente> clientesPorCiudad = clienteService.buscarClientePorCiudad(ClienteStatus.ACTIVE.toString(), ciudad);
-////                tablaClientes.setItems(FXCollections.observableList(clientesPorCiudad));
-////
-////
-////            }
-////            case "domicilio" -> {
-////                String domicilio = busqueda;
-////
-////                List<Cliente> clientesPorDomicilio = clienteService.buscarClientePorDomicilio(ClienteStatus.ACTIVE.toString(), domicilio);
-////                tablaClientes.setItems(FXCollections.observableList(clientesPorDomicilio));
-////
-////            }
-////            case "hobbie" -> {
-////                String hobbie = busqueda;
-////
-////                List<Cliente> clientesPorHobbie = clienteService.buscarClientePorHobbie(ClienteStatus.ACTIVE.toString(), hobbie);
-////                tablaClientes.setItems(FXCollections.observableList(clientesPorHobbie));
-////            }
-////            case "rfc" -> {
-////                String rfc = busqueda;
-////
-////                List<Cliente> clientesPorRfc = clienteService.buscarClientePorRfc(ClienteStatus.ACTIVE.toString(), rfc);
-////                tablaClientes.setItems(FXCollections.observableList(clientesPorRfc));
-////            }
-////
-////        }//switch
-//
-//        terminoBusquedaActual = busqueda;
-//        modoBusqueda = !busqueda.trim().isEmpty();
-//        atributoBusquedaClientes.setValue(seleccion);
-//
-//        // Reinicia el paginador para la búsqueda
-//        paginadorClientes.setPageFactory(this::crearPaginaClientesconFiltro);
-//        paginadorClientes.setCurrentPageIndex(0);
-//
-//    }//buscarCliente
 
     private void buscarCliente(String seleccion, String busqueda) {
 
@@ -772,7 +656,6 @@ public class ClienteController {
         paginadorClientes.setCurrentPageIndex(0);
     }
 
-
     public void buscarCliente(String busqueda) {
         terminoBusquedaActual = busqueda;
         modoBusqueda = !busqueda.trim().isEmpty();
@@ -813,7 +696,6 @@ public class ClienteController {
         cargarDatosClientes();  // vuelve a cargar conteo y items normales
     }
 
-
     @FXML
     public void actualizarTabla(ActionEvent actionEvent) {
         buscarClienteBuscador.setText("");
@@ -831,6 +713,5 @@ public class ClienteController {
         cargarDatosClientes();
         resetBusqueda();
     }
-
 
 }//clase
