@@ -1,5 +1,8 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.GenerarPDF;
+import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
@@ -7,50 +10,77 @@ import com.mastertyres.nota.service.NotaService;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.mastertyres.common.MensajesAlert.mostrarError;
+
 @Component
 public class NotaController {
-    @FXML private TilePane contenedorNotas;
-    @FXML private Label lblStatus;
-    @FXML private Label lblNumNota;
-    @FXML private Label lblNumFactura;
-    @FXML private Label lblCliente;
-    @FXML private Label lblVehiculo;
-    @FXML private Label lblFechaEmicion;
-    @FXML private Label lblFechaLimite;
-    @FXML private Label lblSaldoFavor;
-    @FXML private Label lblAdeudo;
-    @FXML private Label lblTotal;
-    @FXML private Button btnNuevaNota;
-    @FXML private Button btnEditar;
-    @FXML private Button btnImprimir;
-    @FXML private Button btnDarPlazo;
-    @FXML private Button btnEliminar;
-    @FXML private TextField txtBuscar;
+    @FXML
+    private TilePane contenedorNotas;
+    @FXML
+    private Label lblStatus;
+    @FXML
+    private Label lblNumNota;
+    @FXML
+    private Label lblNumFactura;
+    @FXML
+    private Label lblCliente;
+    @FXML
+    private Label lblVehiculo;
+    @FXML
+    private Label lblFechaEmicion;
+    @FXML
+    private Label lblFechaLimite;
+    @FXML
+    private Label lblSaldoFavor;
+    @FXML
+    private Label lblAdeudo;
+    @FXML
+    private Label lblTotal;
+    @FXML
+    private Button btnNuevaNota;
+    @FXML
+    private Button btnEditar;
+    @FXML
+    private Button btnImprimir;
+    @FXML
+    private Button btnDarPlazo;
+    @FXML
+    private Button btnEliminar;
+    @FXML
+    private Button btnHistorial;
+    @FXML
+    private TextField txtBuscar;
+
+    @Autowired
+    private NotaService notaService;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
 
     private NotaDTO notaSeleccionada;
-
-
-    @Autowired
-    NotaService notaService;
 
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
@@ -73,6 +103,10 @@ public class NotaController {
                 cargarNotasFiltradas(newValue);
             }
         });
+
+        btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
+
+        btnImprimir.setOnAction(event -> imprimir(notaSeleccionada.getNumNota()));
 
     }//initialize
 
@@ -164,6 +198,7 @@ public class NotaController {
         btnImprimir.setDisable(false);
         btnDarPlazo.setDisable(false);
         btnEliminar.setDisable(false);
+        btnHistorial.setDisable(false);
 
         switch (nota.getStatusNota()) {
 
@@ -175,10 +210,26 @@ public class NotaController {
         }
 
         DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatterEntrada2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
         String fechaStr = nota.getCreatedAt();
-        LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatterEntrada);
-        String fechaFormateada = fecha.format(formatter2);
+        String fechaStr2 = nota.getFechaVencimiento();
+
+        String fechaFormateada = "";
+        String fechaFormateada2 = "";
+
+
+        if (fechaStr != null && !fechaStr.trim().isEmpty()) {
+            LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatterEntrada);
+            fechaFormateada = fecha.format(formatter2);
+        }
+
+
+        if (fechaStr2 != null && !fechaStr2.trim().isEmpty()) {
+            LocalDate fecha2 = LocalDate.parse(fechaStr2, formatterEntrada2);
+            fechaFormateada2 = fecha2.format(formatter2);
+        }
 
 
         lblNumNota.setText(nota.getNumNota());
@@ -193,12 +244,10 @@ public class NotaController {
 
 
         lblFechaEmicion.setText(fechaFormateada);
-
-        lblFechaLimite.setText(nota.getFechaVencimiento());
+        lblFechaLimite.setText(fechaFormateada2);
 
         lblAdeudo.setText("$" + nota.getAdeudo());
         lblTotal.setText("$" + nota.getTotal());
-
 
 
         lblSaldoFavor.setText("$" + nota.getSaldoFavor());
@@ -217,7 +266,98 @@ public class NotaController {
                 null,
                 "/fxmlViews/nota/NotaFormulario.fxml",
                 "Agregar Nota");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar Nota");
+
 
     }//agregarNotas
 
+    private void editarNota(String numNota) {
+
+        Object controllerObj = ventanaPrincipalController.viewContent(
+                null,
+                "/fxmlViews/nota/EditarNota.fxml",
+                "Editar Nota");
+        EditarNotaController controller = (EditarNotaController) controllerObj;
+        controller.agregarNota(numNota);
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Editar Nota");
+
+
+    }//editarNota
+
+
+    private void imprimir(String numNota) {
+        try {
+            // 1. Cargar FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            // 2. Ejecutar tu lógica
+            ImprimirNotaController controller = loader.getController();
+            controller.agregarNota(numNota);
+
+            // 3. Crear una escena temporal para que JavaFX renderice bien los nodos
+            Scene tempScene = new Scene(root);
+
+            // 4. Forzar layout y CSS para que calcule tamaños
+            root.applyCss();
+            root.layout();
+
+            double escala = 0.9;
+            root.setScaleX(escala);
+            root.setScaleY(escala);
+
+            // ⚠ Aquí sí se renderiza bien, no como antes
+            WritableImage snapshot = new WritableImage(
+                    (int) root.prefWidth(-1),
+                    (int) root.prefHeight(-1)
+            );
+
+            root.snapshot(null, snapshot);
+
+            // 5. FileChooser para guardar
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Guardar Nota en PDF");
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+            chooser.setInitialFileName("Nota_" + numNota + ".pdf");
+
+            File archivo = chooser.showSaveDialog(root.getScene().getWindow());
+            if (archivo == null) return;
+
+            // 6. Generar PDF
+            GenerarPDF.generarPDF(snapshot, archivo.getAbsolutePath());
+
+
+
+
+        } catch (Exception e) {
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            e.printStackTrace();
+
+        }
+       /* try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setTitle("Nota Detalles");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+
+        } catch (Exception e) {
+
+        }*/
+
+    }//imprimir
+
+    public NotaDTO getNotaSeleccionada() {
+        return this.notaSeleccionada;
+    }
+
+    public void setNotaSeleccionada(final NotaDTO notaSeleccionada) {
+        this.notaSeleccionada = notaSeleccionada;
+    }
 }//class

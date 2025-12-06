@@ -88,9 +88,46 @@
 			<version>21.0.3</version>
 		</dependency>
 
+        <!--Dependencia para generar los PDF -->
 
 
-	</dependencies>
+
+            <!-- iText7 Core -->
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>kernel</artifactId>
+                <version>7.2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>layout</artifactId>
+                <version>7.2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>io</artifactId>
+                <version>7.2.5</version>
+            </dependency>
+
+        <!-- JavaFX Swing (necesario para SwingFXUtils)
+        convierte imágenes entre JavaFX y formatos utilizables por bibliotecas externas como iText:
+        -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>21.0.3</version>
+        </dependency>
+
+
+
+
+
+
+
+
+    </dependencies>
 
 	<build>
 		<plugins>

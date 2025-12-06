@@ -10,7 +10,7 @@
 <AnchorPane fx:id="rootPane" prefHeight="570.0" prefWidth="945.0" stylesheets="@../../styles_css/Nota.css"
             translateX="100.0"
             translateY="80.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.agregarNota.AgregarNotaController">
+            fx:controller="com.mastertyres.fxControllers.nota.EditarNotaController">
 
 
     <children>
@@ -52,52 +52,54 @@
                     <RowConstraints prefHeight="35.0"/>
                     <RowConstraints prefHeight="35.0"/>
 
+
                 </rowConstraints>
 
                 <children>
 
-                    <Button onAction="#buscarCliente" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="25.0"
+                    <Button fx:id="btnNotaDetalles" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/person_search.png"/>
+                                    <Image url="@/icons/nota/user-details2.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
 
                     </Button>
 
-                    <Button fx:id="btnBuscarLlanta" onAction="#buscarLlanta" GridPane.columnIndex="0"
-                            GridPane.rowIndex="1" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+
+                    <Button fx:id="btnActualizarAdeudo" GridPane.columnIndex="0" GridPane.rowIndex="1" prefHeight="25.0"
+                            prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/car-wheel.png"/>
+                                    <Image url="@/icons/nota/paying.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
 
                     </Button>
-
-                    <Button disable="true" fx:id="btnBorrarCliente" onAction="#eliminarCliente" GridPane.columnIndex="0"
-                            GridPane.rowIndex="2" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+                    <Button fx:id="btnActualizarSaldoFavor" GridPane.columnIndex="0" GridPane.rowIndex="2" prefHeight="25.0"
+                            prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/delete-user.png"/>
+                                    <Image url="@/icons/nota/money.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
 
                     </Button>
 
-                    <Button disable="true" fx:id="btnBorrarInventario" onAction="#eliminarInventario" GridPane.columnIndex="0"
-                            GridPane.rowIndex="3" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+
+                    <Button fx:id="btnAgregarNumFactura" GridPane.columnIndex="0" GridPane.rowIndex="3" prefHeight="25.0"
+                            prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/delete-car-wheel.png"/>
+                                    <Image url="@/icons/nota/Add-invoice-number.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
@@ -105,8 +107,20 @@
                     </Button>
 
 
+                    <Button fx:id="btnActualizarDatos" GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="25.0"
+                            prefWidth="25.0" styleClass="boton-accion">
+                        <graphic>
+                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/nota/update-data-user.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
 
-                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="25.0"
+                    </Button>
+
+
+                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="5" prefHeight="25.0"
                             prefWidth="25.0"
                             styleClass="boton-accion">
                         <graphic>
@@ -118,18 +132,9 @@
                         </graphic>
 
                     </Button>
-                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="5"
-                            mnemonicParsing="false" prefHeight="25.0"
-                            prefWidth="25.0" styleClass="boton-accion">
 
-                        <graphic>
-                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/refresh.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Button>
+
+
 
                 </children>
 
@@ -203,6 +208,7 @@
 
                                     <TextField styleClass="textfield-nota" fx:id="txtNumNota" alignment="CENTER"
                                                prefHeight="25"
+                                               editable="false"
                                                prefWidth="150" promptText="Numero de nota"/>
 
                                 </HBox>
@@ -373,6 +379,7 @@
 
                                                 <TextField fx:id="txtNombre" prefWidth="460"
                                                            styleClass="text-field-nota"
+                                                           editable="false"
                                                            GridPane.columnIndex="1" GridPane.rowIndex="0">
 
                                                 </TextField>
@@ -397,6 +404,7 @@
 
                                                 <TextField fx:id="txtDireccion" prefWidth="450"
                                                            styleClass="text-field-nota"
+                                                           editable="false"
                                                            GridPane.columnIndex="1" GridPane.rowIndex="1">
 
                                                 </TextField>
@@ -406,6 +414,7 @@
 
                                             <TextField fx:id="txtDireccion2" prefWidth="520"
                                                        styleClass="text-field-nota"
+                                                       editable="false"
                                                        GridPane.columnIndex="0" GridPane.columnSpan="2"
                                                        GridPane.rowIndex="2" GridPane.rowSpan="1">
 
@@ -437,6 +446,7 @@
                                                 </Label>
 
                                                 <TextField fx:id="txtRfc" prefWidth="480" styleClass="text-field-nota"
+                                                           editable="false"
                                                            GridPane.columnIndex="1" GridPane.rowIndex="3">
 
                                                 </TextField>
@@ -460,6 +470,7 @@
                                                 </Label>
 
                                                 <TextField fx:id="txtCorreo" prefWidth="470"
+                                                           editable="false"
                                                            styleClass="text-field-nota">
 
                                                 </TextField>
@@ -508,6 +519,7 @@
 
                                                 <TextField fx:id="txtMarca" prefWidth="275"
                                                            styleClass="text-field-nota2 "
+                                                           editable="false"
                                                            GridPane.columnIndex="3" GridPane.rowIndex="1">
 
                                                 </TextField>
@@ -534,6 +546,7 @@
 
                                                 <TextField fx:id="txtModelo" prefWidth="270"
                                                            styleClass="text-field-nota2 "
+                                                           editable="false"
                                                            GridPane.columnIndex="3" GridPane.rowIndex="2">
 
                                                 </TextField>
@@ -555,6 +568,7 @@
 
                                                     </Label>
                                                     <TextField fx:id="txtAnioVehiculo" prefWidth="80"
+                                                               editable="false"
                                                                styleClass="text-field-nota2 ">
 
                                                     </TextField>
@@ -566,6 +580,7 @@
                                                     </Label>
 
                                                     <TextField fx:id="txtKms" prefWidth="160"
+                                                               editable="false"
                                                                styleClass="text-field-nota2 ">
 
                                                     </TextField>
@@ -594,6 +609,7 @@
 
                                                 <TextField fx:id="txtPlacas" prefWidth="280"
                                                            styleClass="text-field-nota2 "
+                                                           editable="false"
                                                            GridPane.columnIndex="3" GridPane.rowIndex="4">
 
                                                 </TextField>
@@ -1173,7 +1189,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
+                                        <TextField  editable="false" fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1181,7 +1197,7 @@
 
                                     <HBox GridPane.rowIndex="4" GridPane.columnIndex="2" alignment="CENTER">
 
-                                        <TextField fx:id="txtLlantasCantidad" prefWidth="105"
+                                        <TextField editable="false" fx:id="txtLlantasCantidad" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
 
@@ -1363,7 +1379,7 @@
 
                                     <HBox GridPane.rowIndex="10" GridPane.columnIndex="4" alignment="CENTER">
                                         <TextField  fx:id="txtSuspensionTotal" prefWidth="105"
-                                                   styleClass="text-field-nota2">
+                                                    styleClass="text-field-nota2">
 
                                         </TextField>
 
@@ -1646,7 +1662,7 @@
                                         </GridPane.margin>
 
                                         <TextField  fx:id="txtOtros" prefWidth="520"
-                                                   styleClass="text-field-nota">
+                                                    styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1688,7 +1704,7 @@
                                         </GridPane.margin>
 
                                         <TextField  fx:id="txtOtros2" prefWidth="520"
-                                                   styleClass="text-field-nota">
+                                                    styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1714,7 +1730,7 @@
 
                                     <HBox GridPane.rowIndex="20" GridPane.columnIndex="4" alignment="CENTER">
                                         <TextField  fx:id="txtOtrosTotal2" prefWidth="105"
-                                                   styleClass="text-field-nota2">
+                                                    styleClass="text-field-nota2">
 
                                         </TextField>
 

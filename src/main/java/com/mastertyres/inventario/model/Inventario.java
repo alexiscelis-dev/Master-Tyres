@@ -33,9 +33,9 @@ public class Inventario {
     private float precioVenta;
     private String observaciones;
     private String imagen;
-    @Column(name = "active",insertable = false, updatable = true)
+    @Column(name = "active",insertable = false, updatable = false)
     private String active;
-    @Column(name = "created_at",updatable = false)
+    @Column(name = "created_at",updatable = true)
     @CreationTimestamp
     private String created_at;
     @Column(name = "updated_at",updatable = true)

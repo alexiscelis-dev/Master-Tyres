@@ -414,4 +414,13 @@ public class VehiculoService implements IVehiculoService {
         return vehiculoRepository.reasignarCategoriaPorId(categoriaId);
     }
 
+
+    @Transactional(readOnly = true)
+    @Override
+    public Vehiculo buscarVehiculoPorId(Integer vehiculoId, String status) {
+        return vehiculoRepository.buscarVehiculoPorId(vehiculoId,status);
+    }
+
+
+
 }//clase

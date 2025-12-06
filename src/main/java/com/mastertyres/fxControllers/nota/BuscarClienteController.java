@@ -112,6 +112,8 @@ public class BuscarClienteController {
                                 .nombreCliente(newCliente.getNombre())
                                 .apellido(newCliente.getApellido())
                                 .segundoApellido(newCliente.getSegundoApellido())
+                                .genero(newCliente.getGenero())
+                                .tipoCliente(newCliente.getTipoCliente())
                                 .marca(newVehiculo.getNombreMarca())
                                 .modelo(newVehiculo.getNombreModelo())
                                 .categoria(newVehiculo.getNombreCategoria())

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,8 +74,59 @@ public class NotaService implements INotaService {
 
     @Transactional(readOnly = true)
     @Override
+    public NotaDTO buscarPorNumNota(String active, String numNota) {
+
+       return notaRepository.buscarPorNumNota(active,numNota);
+
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Nota findByNumNota(String numNota) {
         return notaRepository.findByNumNota(numNota);
+    }
+
+
+    @Modifying
+    @Transactional
+    @Override
+    public void actualizarAdeudo(float adeudo, String fechaVencimiento, Integer notaId) {
+        notaRepository.actualizarAdeudo(adeudo,fechaVencimiento,notaId);
+
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void actualizarUpdatedAtNota(Integer notaId, String updatedAt) {
+        notaRepository.actualizarUpdatedAtNota(notaId,updatedAt);
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void actualizarSaldo(float saldo, Integer notaId) {
+        notaRepository.actualizarSaldo(saldo,notaId);
+    }
+
+
+    @Transactional
+    @Override
+    public void actualizarNota(Nota nota, NotaDetalle notaDetalle) {
+        notaRepository.save(nota);
+        notaDetalleRepository.save(notaDetalle);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Nota buscarPorId(Integer notaId) {
+        return notaRepository.findById(notaId).orElseThrow(()-> new NotaException("Error al guardar nota"));
+    }
+
+    @Transactional
+    @Override
+    public void actualizarNumFactura(String numNota, Integer notaId) {
+        notaRepository.actualizarNumFactura(numNota,notaId);
     }
 
 

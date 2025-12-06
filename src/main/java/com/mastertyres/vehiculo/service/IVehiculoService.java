@@ -1,6 +1,7 @@
 package com.mastertyres.vehiculo.service;
 
 
+import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 
 import java.time.LocalDate;
@@ -43,6 +44,9 @@ public interface IVehiculoService {
     List<VehiculoDTO> buscarVehiculoPorRegistro(String activo, LocalDate fechaInicio, LocalDate fechaFin);
 
     List<VehiculoDTO> buscadorVehiculo(String status, String busqueda);
+
+    public Vehiculo buscarVehiculoPorId(Integer vehiculoId, String status);
+
 
 
 
