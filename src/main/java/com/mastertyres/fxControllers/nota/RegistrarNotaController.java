@@ -2,6 +2,7 @@ package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
@@ -21,19 +22,23 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;
 import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class VentanaRegistro {
+public class RegistrarNotaController {
+    @FXML
+    private AnchorPane root;
     @FXML
     private RadioButton rbPagado;
     @FXML
@@ -70,7 +75,7 @@ public class VentanaRegistro {
     private Runnable onRegistroCompleto;
 
 
-    public void setNota(NotaDTO nota) {
+    public void agregarNota(NotaDTO nota) {
         this.nota = nota;
     }
 
@@ -176,12 +181,12 @@ public class VentanaRegistro {
         else
             strNumFactura = txtNumFactura.getText();
 
-        System.out.println(dpFecha.getValue().toString());
+
 
         if (dpFecha.getValue() != null)
             nota.setFechaVencimiento(dpFecha.getValue().toString());
         else
-            nota.setFechaVencimiento("");
+            nota.setFechaVencimiento(null);
 
 
         nota.setStatusNota(estadoNota());
@@ -261,7 +266,8 @@ public class VentanaRegistro {
                 .radio(nota.getRadio())
                 .gato(nota.getGato())
                 .llave(nota.getLlave())
-                .llanta(nota.getLlanta())
+                .llanta(nota.getLlanta())//llanta de los checkBox
+                .llantaCampo(nota.getLlantaCampo()) //llanta del inventario
                 .llantaCantidad(nota.getLlantaCantidad())
                 .llantaUnitario(nota.getLlantaUnitario())
                 .llantaTotal(nota.getLlantaTotal())
@@ -323,7 +329,11 @@ public class VentanaRegistro {
             notaService.guardarNota(nuevaNota, notaDetalle);
 
             if (actualizarInventario.get()) {
+
                 inventarioService.actualizarStock(nota.getInventarioId(), nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
+                  LocalDateTime fecha = LocalDateTime.now();
+                  String fechaStr = fecha.toString();
+                  inventarioService.actualizarUptatedAt(fechaStr,nota.getInventarioId());
             }
 
 
@@ -354,6 +364,8 @@ public class VentanaRegistro {
         //configuracion de campos
         RegexTools.aplicarNumerosDecimal(txtAdeudo);
         RegexTools.aplicarNumerosDecimal(txtSaldoAfavor);
+        MenuContextSetting.disableMenuDatePicker(dpFecha);
+        MenuContextSetting.disableMenu(root);
 
         //configuracion deshabilitar boton
         boolMontoAdeudo.bind(txtAdeudo.textProperty().isNotEmpty());

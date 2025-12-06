@@ -38,6 +38,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Stack;
 
+import static com.mastertyres.common.MensajesAlert.mostrarError;
+
 
 @Component
 public class VentanaPrincipalController {
@@ -190,7 +192,7 @@ public class VentanaPrincipalController {
         irAtras();
     }
 
-    public void viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
+    public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
 
         try {
 
@@ -251,9 +253,14 @@ public class VentanaPrincipalController {
             AnchorPane.setLeftAnchor(contenido, 0.0);
             AnchorPane.setRightAnchor(contenido, 0.0);
 
+            return loader.getController();
+
 
         } catch (IOException e) {
+
+            mostrarError("Ocurrio un error","",""+ e.getMessage());
             e.printStackTrace();
+            return null;
         }
 
     }//ventanasSidebar

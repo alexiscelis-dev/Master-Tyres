@@ -620,6 +620,15 @@ public class ClienteService implements IClienteService {
 
     }//buscadorClientes
 
+    @Transactional(readOnly = true)
+    @Override
+    public Cliente buscarClientePorId(Integer clienteId, String status) {
+        return clienteRepository.buscarClientePorId(clienteId,status);
+    }
+
+
+
+
     public long contarClientesPorBusquedaGeneral(String status, String termino){
         return clienteRepository.contarClientesPorBusquedaGeneral(status, termino);
     };

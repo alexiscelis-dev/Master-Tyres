@@ -13,7 +13,22 @@ public interface INotaService {
 
     void guardarNota(Nota nota, NotaDetalle notaDetalle);
 
+    NotaDTO buscarPorNumNota(String active, String numNota);
+
     Nota findByNumNota(String numNota);
+
+    void actualizarAdeudo(float adeudo, String fechaVencimiento, Integer notaId);
+
+    void actualizarUpdatedAtNota(Integer notaId, String updatedAt);
+
+    void actualizarSaldo(float saldo, Integer notaId);
+
+    void actualizarNota(Nota nota, NotaDetalle notaDetalle);
+
+    Nota buscarPorId(Integer notaId);
+
+    void actualizarNumFactura(String numNota, Integer notaId);
+
 
 
 
