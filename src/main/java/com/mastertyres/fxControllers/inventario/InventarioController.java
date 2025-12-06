@@ -1,5 +1,7 @@
 package com.mastertyres.fxControllers.inventario;
 
+import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarInventarioController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -81,9 +83,7 @@ public class InventarioController {
 
     @FXML
     private Pagination paginadorInventarios;
-
     private static final int INVENTARIOS_POR_PAGINA = 20;
-
     private List<Inventario> todosLosInventarios;
     private String terminoBusquedaActual = "";
     private boolean modoBusqueda = false;
@@ -115,25 +115,7 @@ public class InventarioController {
         }));
 
 //        //Buscar mientras escribes
-//        buscarInventarioBuscador.setOnKeyReleased(event -> {
-//
-//            //Buscar mientras escribes
-//
-//
-//            if (event.getCode() != KeyCode.ENTER)
-//                delayQuery.setOnFinished(e -> {
-//                    String seleccion = atributoBusquedaInventario.getValue();
-//                    String busqueda = buscarInventarioBuscador.getText();
-//
-//                    if (seleccion == null && busqueda != null && !busqueda.isEmpty())
-//                        buscarInventario(busqueda);
-//                    else if (seleccion == null)
-//                        cargarInventario();
-//                });
-//            delayQuery.playFromStart();
-//
-//        });
-        buscarInventarioBuscador.setOnKeyReleased(event -> {
+       /* buscarInventarioBuscador.setOnKeyReleased(event -> {
 
             if (event.getCode() != KeyCode.ENTER) {
                 delayQuery.setOnFinished(e -> {
@@ -153,9 +135,29 @@ public class InventarioController {
                 });
                 delayQuery.playFromStart();
             }
+        });*/
+        buscarInventarioBuscador.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+
+                String seleccion = atributoBusquedaInventario.getValue();
+                String busqueda = buscarInventarioBuscador.getText();
+
+                // SOLO funciona si hay un filtro seleccionado
+                if (seleccion != null && !seleccion.isEmpty()) {
+
+                    // Si el texto está vacío, resetea y detén
+                    if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
+                        resetBusqueda();
+                        return;
+                    }
+
+                    // Ejecutar búsqueda específica
+                    buscarInventario(seleccion.toLowerCase(), busqueda);
+                }
+            }
         });
 
-        buscarInventarioBuscador.setOnKeyPressed(event -> {
+       /* buscarInventarioBuscador.setOnKeyPressed(event -> {
 
             if (event.getCode() == KeyCode.ENTER) {
                 String seleccion = atributoBusquedaInventario.getValue(), busqueda = buscarInventarioBuscador.getText();
@@ -163,6 +165,31 @@ public class InventarioController {
                 if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty())
                     buscarInventario(seleccion.toLowerCase(), busqueda);
             }
+        });*/
+        buscarInventarioBuscador.setOnKeyReleased(event -> {
+
+            if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
+
+            delayQuery.setOnFinished(e -> {
+
+                String seleccion = atributoBusquedaInventario.getValue();
+                String busqueda = buscarInventarioBuscador.getText();
+
+                // 🔥 SOLO ejecutar búsqueda general si NO hay filtro
+                if (seleccion == null || seleccion.isEmpty()) {
+
+                    if (busqueda == null || busqueda.isEmpty()) {
+                        resetBusqueda();
+                        return;
+                    }
+
+                    // Búsqueda general mientras escribe
+                    buscarInventario(busqueda);
+                }
+                // Si sí hay filtro → no hace nada, porque solo se buscan al presionar ENTER
+            });
+
+            delayQuery.playFromStart();
         });
 
         //Clic derecho
@@ -353,6 +380,19 @@ public class InventarioController {
 
     }//initialize
 
+    private void resetBusqueda() {
+        modoBusqueda = false;
+        terminoBusquedaActual = "";
+        atributoBusquedaInventario.setValue(null);
+        buscarInventarioBuscador.clear();
+
+        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
+        paginadorInventarios.setCurrentPageIndex(0);
+
+        cargarDatosInventario();  // vuelve a cargar conteo y items normales
+    }
+
+
     private VBox crearPaginaInventario(int indicePagina) {
         Page<Inventario> paginaInventario;
 
@@ -383,29 +423,29 @@ public class InventarioController {
     private VBox crearPaginaInventarioFiltro(int indicePagina) {
         Page<Inventario> paginaInventario = Page.empty();
 
-        try {
-            if (modoBusqueda) {
-                String busqueda = terminoBusquedaActual.trim();
-                String activo = StatusInventario.ACTIVE.toString();
 
-                switch (atributoBusquedaInventario.getValue()) {
+        if (modoBusqueda) {
+            String busqueda = terminoBusquedaActual.trim();
+            String activo = StatusInventario.ACTIVE.toString();
+            String key = atributoBusquedaInventario.getValue();
+            switch (key.toLowerCase()) {
 
-                    case "codigo de barras" -> {
-                        paginaInventario = inventarioService.buscarPorCodBarrasPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
-                    }
-                    case "dot" -> {
-                        paginaInventario = inventarioService.buscarPorDotPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
-                    }
-                    case "marca" -> {
-                        paginaInventario = inventarioService.buscarPorMarcaPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
-                    }
-                    case "modelo" -> {
-                        paginaInventario = inventarioService.buscarPorModeloPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
-                    }
-                    case "medida" -> {
-                        paginaInventario = inventarioService.buscarPorMedidaPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
-                    }
-                    case "fecha de registro" -> {
+                case "codigo de barras" -> {
+                    paginaInventario = inventarioService.buscarPorCodBarrasPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                }
+                case "dot" -> {
+                    paginaInventario = inventarioService.buscarPorDotPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                }
+                case "marca" -> {
+                    paginaInventario = inventarioService.buscarPorMarcaPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                }
+                case "modelo" -> {
+                    paginaInventario = inventarioService.buscarPorModeloPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                }
+                case "medida" -> {
+                    paginaInventario = inventarioService.buscarPorMedidaPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
+                }
+                case "fecha de registro" -> {
                         boolean consultar = false;
 
                         if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
@@ -475,20 +515,16 @@ public class InventarioController {
                         }
 
                     }
-                    default -> {
+                default -> {
                         mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
                     }
-
                 }//switch
             } else {
                 paginaInventario = inventarioService.listarInventarioPaginado(
                         StatusVehiculo.ACTIVE.toString(), indicePagina, INVENTARIOS_POR_PAGINA);
             }
 
-        } catch (Exception e) {
-            mostrarError("Error en búsqueda", "Ocurrió un error al buscar los vehículos.", e.getMessage());
-            e.printStackTrace();
-        }
+
 
         tablaInventario.setItems(FXCollections.observableArrayList(paginaInventario.getContent()));
 
@@ -534,11 +570,6 @@ public class InventarioController {
                 new SimpleStringProperty(safe.apply(data.getValue().getIndiceVelocidad()))
         );
 
-
-        // =========================================
-        //  ⬇️ Mantienes Integer y Float como números
-        // =========================================
-
         colStock.setCellValueFactory(data ->
                 new SimpleIntegerProperty(data.getValue().getStock()).asObject()
         );
@@ -550,11 +581,6 @@ public class InventarioController {
         colPrecioVen.setCellValueFactory(data ->
                 new SimpleFloatProperty(data.getValue().getPrecioVenta()).asObject()
         );
-
-
-        // =========================================
-        //        ⬇️ FECHA REGISTRO FORMATEADA
-        // =========================================
 
         colFechaReg.setCellValueFactory(data -> {
 
@@ -588,19 +614,6 @@ public class InventarioController {
         return (valor == null || valor.isBlank()) ? "N/A" : valor;
     }
 
-
-//    private void cargarDatosInventario() {
-//
-//        try {
-//            tablaInventario.getItems().setAll(inventarioService.listarInventario(StatusInventario.ACTIVE.toString()));
-//
-//
-//        } catch (Exception e) {
-//            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
-//        }
-//
-//    }//cargarDatosInventario
-
     private void cargarDatosInventario() {
 
         try {
@@ -619,131 +632,136 @@ public class InventarioController {
 
     }//cargarDatosInventario
 
-    //    private void buscarInventario(String busqueda) {
-//
-//        List<Inventario> inventarios = inventarioService.buscadorInventario(StatusInventario.ACTIVE.toString(), busqueda);
-//        tablaInventario.setItems(FXCollections.observableList(inventarios));
-//    }//buscarInventario
     private void buscarInventario(String busqueda) {
         terminoBusquedaActual = busqueda;
         modoBusqueda = !busqueda.trim().isEmpty();
+
+        if (modoBusqueda) {
+            // 🔥 total de resultados para el buscador general
+            long totalResultados = inventarioService.contarInventarioPorBusquedaGeneral(
+                    StatusInventario.ACTIVE.toString(),
+                    terminoBusquedaActual
+            );
+
+            int totalPaginas = (int) Math.ceil((double) totalResultados / INVENTARIOS_POR_PAGINA);
+
+            paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
+        } else {
+            // Si no hay búsqueda, restaurar paginación normal
+            long totalClientes = inventarioService.contarInventariosActivos(StatusInventario.ACTIVE.toString());
+            int totalPaginas = (int) Math.ceil((double) totalClientes / INVENTARIOS_POR_PAGINA);
+            paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
+        }
 
         paginadorInventarios.setCurrentPageIndex(0); // Reinicia la paginación
         paginadorInventarios.setPageFactory(this::crearPaginaInventario);
 
     }
 
-//    private void buscarInventario(String seleccion, String busqueda) {
-//
-//        switch (seleccion) {
-//
-//            case "codigo de barras" -> {
-//                List<Inventario> inventarios = inventarioService.buscarPorCodBarras(StatusInventario.ACTIVE.toString(), busqueda);
-//                tablaInventario.setItems(FXCollections.observableList(inventarios));
-//
-//            }
-//            case "dot" -> {
-//                List<Inventario> inventarios = inventarioService.buscarPorDot(StatusInventario.ACTIVE.toString(), busqueda);
-//                tablaInventario.setItems(FXCollections.observableList(inventarios));
-//            }
-//            case "marca" -> {
-//                List<Inventario> inventarios = inventarioService.buscarPorMarca(StatusInventario.ACTIVE.toString(), busqueda);
-//                tablaInventario.setItems(FXCollections.observableList(inventarios));
-//            }
-//            case "modelo" -> {
-//                List<Inventario> inventarios = inventarioService.buscarPorModelo(StatusInventario.ACTIVE.toString(), busqueda);
-//                tablaInventario.setItems(FXCollections.observableList(inventarios));
-//            }
-//            case "medida" -> {
-//                List<Inventario> inventarios = inventarioService.buscarPorMedida(StatusInventario.ACTIVE.toString(), busqueda);
-//                tablaInventario.setItems(FXCollections.observableList(inventarios));
-//            }
-//            case "fecha de registro" -> {
-//                boolean consultar = false;
-//
-//                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-//                    String fecha = busqueda;
-//                    LocalDate fechaConsulta = null;
-//
-//                    try {
-//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//
-//                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-//                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
-//
-//                        consultar = true;
-//
-//                    } catch (DateTimeParseException e) {
-//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-//                        consultar = false;
-//
-//                    }
-//
-//                    if (consultar) {
-//                        List<Inventario> inventarios = inventarioService.buscarPorFecha(StatusInventario.ACTIVE.toString(), fechaConsulta);
-//                        tablaInventario.setItems(FXCollections.observableList(inventarios));
-//                    }
-//
-//                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
-//
-//                    String fecha[] = busqueda.split(",");
-//                    String consultaInicio = "", consultaFinal = "";
-//
-//                    try {
-//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//
-//                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-//                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-//
-//                        //Ordenar la fecha mayor
-//                        if (fecha1.isAfter(fecha2)) {
-//                            LocalDate aux = fecha1;
-//                            fecha1 = fecha2;
-//                            fecha2 = aux;
-//
-//                        }
-//
-//                        consultaInicio = fecha1.format(formatterConsulta);
-//                        consultaFinal = fecha2.format(formatterConsulta);
-//
-//                        consultar = true;
-//
-//
-//                    } catch (DateTimeParseException e) {
-//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-//                        consultar = false;
-//                    }
-//
-//                    if (consultar) {
-//                        List<Inventario> inventarios = inventarioService.buscarPorFecha(StatusInventario.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal));
-//                        tablaInventario.setItems(FXCollections.observableList(inventarios));
-//
-//                    }
-//
-//
-//                } else {
-//                    List<Inventario> inventarioVacio = new ArrayList<>();
-//                    tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
-//                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-//                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
-//                }
-//
-//            }
-//            default -> {
-//                mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
-//            }
-//
-//        }//switch
-//
-//    }//buscarInventario
-
     private void buscarInventario(String seleccion, String busqueda) { // porque se va a buscar, vehiculo a buscar
 
         terminoBusquedaActual = busqueda;
         modoBusqueda = !busqueda.trim().isEmpty();
-        atributoBusquedaInventario.setValue(seleccion);
+        String activo = StatusInventario.ACTIVE.toString();
+        //atributoBusquedaInventario.setValue(seleccion);
+
+        Page<Inventario> paginaFiltrada = null;
+
+        switch (seleccion) {
+            case "codigo de barras" -> {
+                paginaFiltrada = inventarioService.buscarPorCodBarrasPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "dot" -> {
+                paginaFiltrada = inventarioService.buscarPorDotPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "marca" -> {
+                paginaFiltrada = inventarioService.buscarPorMarcaPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "modelo" -> {
+                paginaFiltrada = inventarioService.buscarPorModeloPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "medida" -> {
+                paginaFiltrada = inventarioService.buscarPorMedidaPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "fecha de registro" -> {
+                boolean consultar = false;
+
+                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+                    String fecha = busqueda;
+                    LocalDate fechaConsulta = null;
+
+                    try {
+                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+
+                        consultar = true;
+
+                    } catch (DateTimeParseException e) {
+                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                        consultar = false;
+
+                    }
+
+                    if (consultar) {
+                        paginaFiltrada = inventarioService.buscarPorFechaPaginado(activo, fechaConsulta, 0, INVENTARIOS_POR_PAGINA);
+                    }
+
+                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
+
+                    String fecha[] = busqueda.split(",");
+                    String consultaInicio = "", consultaFinal = "";
+
+                    try {
+                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+
+                        //Ordenar la fecha mayor
+                        if (fecha1.isAfter(fecha2)) {
+                            LocalDate aux = fecha1;
+                            fecha1 = fecha2;
+                            fecha2 = aux;
+
+                        }
+
+                        consultaInicio = fecha1.format(formatterConsulta);
+                        consultaFinal = fecha2.format(formatterConsulta);
+
+                        consultar = true;
+
+
+                    } catch (DateTimeParseException e) {
+                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                        consultar = false;
+                    }
+
+                    if (consultar) {
+                        paginaFiltrada = inventarioService.buscarPorFechaPaginadoRangos(activo, LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), 0, INVENTARIOS_POR_PAGINA);
+                    }
+
+
+                } else {
+                    List<Inventario> inventarioVacio = new ArrayList<>();
+                    tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
+                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                }
+
+            }
+            default -> {
+                mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+            }
+        }
+
+        // ACTUALIZA EL PAGECOUNT CON EL TOTAL DE COINCIDENCIAS
+        int totalPaginas = paginaFiltrada.getTotalPages();
+        paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
+
 
         // Reinicia el paginador para la búsqueda
         paginadorInventarios.setPageFactory(this::crearPaginaInventario);
@@ -753,34 +771,9 @@ public class InventarioController {
 
     @FXML
     private void agregarInventario(ActionEvent event) {
-     //   try {
- //           FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/inventario/AgregarInventario.fxml"));
-   //         loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-       //     Parent root = loader.load();
-
-           // Pane panel = ventanaPrincipalController.getPanelMenu();
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/AgregarInventario.fxml"));
-//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-//            Parent root = loader.load();
-//
-//            Pane panel = ventanaPrincipalController.getPanelMenu();
-//
-//
-//            panel.getChildren().setAll(root);
-//            AnchorPane.setTopAnchor(root, 0.0);
-//            AnchorPane.setRightAnchor(root, 0.0);
-//            AnchorPane.setBottomAnchor(root, 0.0);
-//            AnchorPane.setLeftAnchor(root, 0.0);
-//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar llanta");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            mostrarError("Error", "", "Ocurrio un error al mostrar la ventana.");
-//        }
 
         ventanaPrincipalController.viewContent(
-                null, // no se requiere el MouseEvent
+                null,
                 "/fxmlViews/inventario/AgregarInventario.fxml",
                 "Agregar llanta"
         );

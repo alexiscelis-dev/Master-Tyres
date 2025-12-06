@@ -542,6 +542,39 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             "LOWER (COALESCE(v.placas, '')) LIKE LOWER (CONCAT('%', :busqueda ,'%')) ")
     Page<VehiculoDTO> buscadorVehiculosPaginado(@Param("status")String status,@Param("busqueda")String busqueda,  Pageable pageable);
 
+    @Query("""
+       SELECT COUNT(v)
+       FROM Vehiculo v
+       WHERE v.active = :status
+         AND (
+              
+               LOWER(v.cliente.nombre)          LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.cliente.apellido)        LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.cliente.segundoApellido) LIKE LOWER(CONCAT('%', :busqueda, '%'))
+
+              
+            OR LOWER(v.marca.nombreMarca)       LIKE LOWER(CONCAT('%', :busqueda, '%')) 
+            OR LOWER(v.modelo.nombreModelo)     LIKE LOWER(CONCAT('%', :busqueda, '%'))  
+            OR LOWER(v.categoria.nombreCategoria) LIKE LOWER(CONCAT('%', :busqueda, '%'))
+
+            OR CAST(v.anio AS string)             LIKE CONCAT('%', :busqueda, '%')
+            OR CAST(v.kilometros AS string)       LIKE CONCAT('%', :busqueda, '%')
+              
+            OR LOWER(v.color)                   LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.placas)                  LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.numSerie)                  LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.observaciones)             LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.fechaRegistro)             LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.ultimoServicio)            LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.created_at)                LIKE LOWER(CONCAT('%', :busqueda, '%'))
+            OR LOWER(v.updated_at)                LIKE LOWER(CONCAT('%', :busqueda, '%'))
+         )
+       """)
+    long contarVehiculosPorBusquedaGeneral(
+            @Param("status") String status,
+            @Param("busqueda") String busqueda
+    );
+
     // Reasignar marca por ID
     @Modifying
     @Transactional
