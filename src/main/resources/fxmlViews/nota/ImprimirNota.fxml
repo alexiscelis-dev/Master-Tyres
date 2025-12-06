@@ -7,149 +7,27 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.canvas.Canvas?>
 
-<AnchorPane fx:id="rootPane" prefHeight="570.0" prefWidth="945.0" stylesheets="@../../styles_css/Nota.css"
+<AnchorPane fx:id="rootPane" prefHeight="1650.0" prefWidth="950.0" stylesheets="@../../styles_css/Imprimir.css"
             translateX="100.0"
             translateY="80.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.agregarNota.AgregarNotaController">
+            fx:controller="com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController">
 
 
     <children>
 
 
-        <!--Zona superior -->
-        <StackPane translateX="990" translateY="50" styleClass="showIcons" fx:id="btnShowIcons">
-
-
-            <StackPane.margin>
-                <Insets bottom="20" top="50"/>
-            </StackPane.margin>
-
-            <ImageView fitHeight="50" fitWidth="50" preserveRatio="true">
-                <image>
-                    <Image url="@/icons/add_circle.png"/>
-                </image>
-            </ImageView>
-
-        </StackPane>
-
-
-        <StackPane translateX="1000" translateY="120" AnchorPane.topAnchor="20.0">
-
-
-            <GridPane fx:id="gridPaneIcons" alignment="CENTER" hgap="15" vgap="10" visible="false">
-                <padding>
-                    <Insets top="10" right="0" bottom="10" left="0"/>
-                </padding>
-                <columnConstraints>
-                    <ColumnConstraints prefWidth="50"/>
-
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-
-                </rowConstraints>
-
-                <children>
-
-                    <Button onAction="#buscarCliente" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="25.0"
-                            prefWidth="25.0" styleClass="boton-accion">
-                        <graphic>
-                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/nota/person_search.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-
-                    </Button>
-
-                    <Button fx:id="btnBuscarLlanta" onAction="#buscarLlanta" GridPane.columnIndex="0"
-                            GridPane.rowIndex="1" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
-                        <graphic>
-                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/nota/car-wheel.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-
-                    </Button>
-
-                    <Button disable="true" fx:id="btnBorrarCliente" onAction="#eliminarCliente" GridPane.columnIndex="0"
-                            GridPane.rowIndex="2" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
-                        <graphic>
-                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/nota/delete-user.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-
-                    </Button>
-
-                    <Button disable="true" fx:id="btnBorrarInventario" onAction="#eliminarInventario" GridPane.columnIndex="0"
-                            GridPane.rowIndex="3" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
-                        <graphic>
-                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/nota/delete-car-wheel.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-
-                    </Button>
-
-
-
-                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="25.0"
-                            prefWidth="25.0"
-                            styleClass="boton-accion">
-                        <graphic>
-                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/save.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-
-                    </Button>
-                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="5"
-                            mnemonicParsing="false" prefHeight="25.0"
-                            prefWidth="25.0" styleClass="boton-accion">
-
-                        <graphic>
-                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/refresh.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Button>
-
-                </children>
-
-            </GridPane>
-        </StackPane>
-
-        <!--Termina zona superior -->
-
-
         <!-- StackPane centra el ScrollPane dentro del AnchorPane -->
-        <StackPane alignment="CENTER" layoutY="-37.0" prefHeight="607.0" prefWidth="945.0"
+        <StackPane fx:id="stackImprimir" alignment="CENTER" layoutY="-37.0" prefHeight="950.0" prefWidth="945.0"
                    translateY="120.0"
                    translateX="-10"
                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                    AnchorPane.topAnchor="-40.0">
 
             <!-- ScrollPane centrado -->
-            <ScrollPane fitToHeight="false" fitToWidth="true" pannable="true" prefHeight="617.0" prefWidth="945.0">
+            <ScrollPane fx:id="scrollPaneNota" fitToHeight="false" fitToWidth="true" pannable="true" prefHeight="950.0" prefWidth="945.0">
 
                 <content>
+                    <AnchorPane fx:id="contentNota"/>
 
 
                     <!-- VBox con padding CORRECTO -->
@@ -933,7 +811,7 @@
                                 <Insets left="30"/>
                             </GridPane.margin>
 
-                            <HBox>
+                            <HBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" spacing="10">
 
                                 <Label text="Observaciones: ">
 
@@ -944,14 +822,16 @@
 
                                 </Label>
 
-                                <TextField fx:id="txtObservaciones" prefWidth="810" styleClass="text-field-nota ">
+
+
+                                <TextField fx:id="txtObservaciones" prefWidth="815" styleClass="text-field-nota ">
 
                                 </TextField>
 
 
                             </HBox>
 
-                            <TextField fx:id="txtObservaciones2" prefWidth="1000" styleClass="text-field-nota ">
+                            <TextField fx:id="txtObservaciones2" prefWidth="700" styleClass="text-field-nota ">
 
                             </TextField>
 
@@ -1173,7 +1053,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
+                                        <TextField fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1362,7 +1242,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="10" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtSuspensionTotal" prefWidth="105"
+                                        <TextField fx:id="txtSuspensionTotal" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>
@@ -1645,7 +1525,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtOtros" prefWidth="520"
+                                        <TextField fx:id="txtOtros" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1687,7 +1567,7 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtOtros2" prefWidth="520"
+                                        <TextField fx:id="txtOtros2" prefWidth="520"
                                                    styleClass="text-field-nota">
 
                                         </TextField>
@@ -1713,7 +1593,7 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="20" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtOtrosTotal2" prefWidth="105"
+                                        <TextField fx:id="txtOtrosTotal2" prefWidth="105"
                                                    styleClass="text-field-nota2">
 
                                         </TextField>

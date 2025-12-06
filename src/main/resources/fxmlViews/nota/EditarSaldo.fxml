@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ActualizarAdeudo.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarSaldoController">
+
+
+    <VBox alignment="TOP_CENTER" layoutY="1.0" prefHeight="500.0" prefWidth="600.0">
+        <Label styleClass="titulo" text="Actualizar saldo">
+            <VBox.margin>
+                <Insets bottom="60.0" top="20.0" />
+            </VBox.margin>
+
+        </Label>
+
+
+        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="600.0">
+
+            <VBox>
+                <Label fx:id="lblSaldo" text="Saldo" textFill="#8eb83d">
+                    <VBox.margin>
+                        <Insets bottom="20" />
+                    </VBox.margin>
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+
+                </Label>
+                <HBox alignment="CENTER_LEFT" spacing="20" visible="true">
+                    <TextField fx:id="txtSaldo" prefHeight="26.0" prefWidth="300.0" promptText="Ingrese el nuevo saldo" styleClass="buscador">
+
+                    </TextField>
+
+
+
+
+                </HBox>
+                <StackPane alignment="CENTER" prefHeight="50" prefWidth="200">
+                    <CheckBox fx:id="cbLiquidar" text="Descontar saldo a favor"> </CheckBox>
+                </StackPane>
+
+
+
+
+
+            </VBox>
+
+
+            <VBox.margin>
+                <Insets top="10.0" />
+            </VBox.margin>
+
+        </VBox>
+
+
+        <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
+            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar" />
+            <Button fx:id="btnActualizar" disable="true" onAction="#actualizar" styleClass="boton-accion" text="Actualizar" />
+        </HBox>
+
+    </VBox>
+
+</AnchorPane>

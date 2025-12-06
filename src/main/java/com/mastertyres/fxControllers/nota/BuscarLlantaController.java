@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,7 +128,6 @@ public class BuscarLlantaController {
     private void aceptar(ActionEvent event) {
 
         llantaSeleccionada = tablaLlantas.getSelectionModel().getSelectedItem();
-        llantaSeleccionada.setStock(Integer.parseInt(txtStock.getText()));
 
         int solicitado = Integer.parseInt(txtStock.getText());
         int disponible = llantaSeleccionada.getStock();
@@ -148,6 +148,10 @@ public class BuscarLlantaController {
 
 
         }else{
+
+            llantaSeleccionada.setStock(Integer.parseInt(txtStock.getText())); // se actualiza el stock con lo que se selecciona en el campo de texto
+            LocalDateTime fecha = LocalDateTime.now();
+            String fechaStr = fecha.toString();
             btnAceptar.getScene().getWindow().hide();
         }
 

@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = {"cliente", "vehiculo","inventario","detalles"})
 @Builder
 public class Nota {
 

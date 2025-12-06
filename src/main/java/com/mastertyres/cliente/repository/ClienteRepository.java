@@ -50,7 +50,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     long contarClientesActivos(@Param("active") String active);
 
 
-
     @Transactional
     @Modifying
     @Query("UPDATE Cliente c SET c.active = :inactive WHERE c.clienteId = :idCliente")
@@ -159,6 +158,10 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     Page<Cliente> buscadorClientes(@Param("status") String status,
                                    @Param("busqueda") String busqueda,
                                    Pageable pageable);
+
+    @Query("SELECT c FROM Cliente c WHERE c.clienteId = :clienteId AND c.active = :status")
+    Cliente buscarClientePorId(@Param("clienteId")Integer clienteId,@Param("status")String status);
+
 
     @Query("SELECT COUNT(c) FROM Cliente c WHERE c.active = :status AND (" +
             "LOWER(COALESCE(c.nombre, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +

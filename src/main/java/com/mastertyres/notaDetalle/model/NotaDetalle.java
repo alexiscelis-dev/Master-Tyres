@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = {"nota"})
 @Builder
 public class NotaDetalle {
 

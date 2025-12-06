@@ -15,8 +15,7 @@ public interface IClienteService {
 
     int eliminarCliente(String eliminar,Integer idCliente);
 
-
-
+    Cliente buscarClientePorId(Integer clienteId, String status);
 
 
 

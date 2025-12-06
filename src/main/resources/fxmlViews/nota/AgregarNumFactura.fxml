@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
+            stylesheets="/styles_css/ActualizarAdeudo.css" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.fxControllers.nota.AgregarNumFacturaController">
+
+
+    <VBox alignment="TOP_CENTER" layoutY="1.0" prefHeight="500.0" prefWidth="600.0">
+        <Label styleClass="titulo" text="Agregar numero de factura ">
+            <VBox.margin>
+                <Insets bottom="60.0" top="20.0"/>
+            </VBox.margin>
+
+        </Label>
+
+
+        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="600.0">
+
+            <Label styleClass="titulo2" text="Ingrese un nuevo numero de factura" textFill="#8eb83d">
+                <VBox.margin>
+                    <Insets bottom="20.0"/>
+                </VBox.margin>
+                <font>
+                    <Font name="Arial Bold" size="14.0"/>
+                </font>
+            </Label>
+
+
+            <TextField fx:id="txtNumFactura" prefWidth="300.0"  styleClass="buscador">
+
+            </TextField>
+
+            <VBox.margin>
+                <Insets top="10.0"/>
+            </VBox.margin>
+
+        </VBox>
+
+
+        <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
+            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar"/>
+            <Button fx:id="btnAgregar" onAction="#agregar" styleClass="boton-accion" text="Registrar"/>
+        </HBox>
+
+    </VBox>
+
+</AnchorPane>
