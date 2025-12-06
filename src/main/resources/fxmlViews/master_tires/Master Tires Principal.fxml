@@ -225,7 +225,7 @@
                            pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0"
                            AnchorPane.topAnchor="15.0">
                     <image>
-                        <Image url="@../../icons/Master Tyres Logo.png"/>
+                        <Image url="@../../icons/Master Tyres Logo (Fondo Blanco).png"/>
                     </image>
                 </ImageView>
                 <Label fx:id="cambiarPaginaEtiqueta" layoutX="380.0" layoutY="56.0" text="Inicio" textFill="WHITE"
