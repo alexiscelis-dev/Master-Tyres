@@ -417,3 +417,21 @@ DatePicker
 
 
 
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar,
+.scroll-bar .track,
+.scroll-bar .thumb {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+#stackTransparente {
+    -fx-background-color: transparent;
+}

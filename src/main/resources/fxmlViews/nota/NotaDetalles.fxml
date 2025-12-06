@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
+            stylesheets="/styles_css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nota.NotaDetallesController">
+
+    <children>
+        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="600" spacing="10" styleClass="secciones">
+
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20"/>
+            </padding>
+
+            <Label text="Informacion de la Nota" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="40.0"/>
+                </font>
+            </Label>
+
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints halignment="LEFT" prefWidth="600.0"/>
+                </columnConstraints>
+
+
+                <Label fx:id="lblNumNota" text="Numero de nota:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+
+                <Label fx:id="lblNumFactura" text="Numero de factura:" textFill="WHITE" GridPane.columnIndex="0"
+                       GridPane.rowIndex="1">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+
+                <Label fx:id="lblFechaVencimiento" text="Fecha de vencimiento:" textFill="WHITE" GridPane.columnIndex="0"
+                       GridPane.rowIndex="2">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+
+                <Label fx:id="lblAdeudo" text="Adeudo:" textFill="WHITE" GridPane.columnIndex="0"
+                       GridPane.rowIndex="3">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+
+                <Label fx:id="lblSaldo" text="Saldo a favor:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+
+                <Label fx:id="lblStatus" text="Estado:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+
+                <Label fx:id="lblFechaCreacion" text="Fecha de creacion:" textFill="WHITE" GridPane.columnIndex="0"
+                       GridPane.rowIndex="6">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+
+                <Label fx:id="lblGenero" text="Género:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="7">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+                <Label fx:id="lblTipoCliente" text="Tipo Cliente:" textFill="WHITE" GridPane.columnIndex="0"
+                       GridPane.rowIndex="8">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+
+
+
+                <rowConstraints>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0"/>
+                </rowConstraints>
+            </GridPane>
+
+            <!-- Botones -->
+            <HBox alignment="CENTER" spacing="20">
+                <Button onAction="#cancelar" fx:id="btnCancelar" styleClass="boton-accion" text="Cerrar"/>
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>

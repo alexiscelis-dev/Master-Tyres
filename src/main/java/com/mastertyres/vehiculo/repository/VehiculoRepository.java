@@ -1,6 +1,5 @@
 package com.mastertyres.vehiculo.repository;
 
-import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import org.springframework.data.domain.Page;
@@ -492,6 +491,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND v.numSerie = :numSerie")
     boolean existeVehiculoPorNumeroSerie(@Param("numSerie") String numSerie);
 
+    //Cambiar nombre de metodo
     @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND v.numSerie = :numSerie AND v.vehiculoId <> :vehiculoId")
     boolean existeVehiculoNumeroSerie_Editar(@Param("numSerie") String numSerie, @Param("vehiculoId") Integer vehiculoId);
 
@@ -499,6 +499,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND v.placas = :placas")
     boolean existeVehiculoPorPlacas(@Param("placas") String placas);
 
+    //Cambiar nombre de metodo
     @Query("SELECT COUNT(v) > 0 FROM Vehiculo v WHERE v.active = 'ACTIVE' AND v.placas = :placas AND v.vehiculoId <> :vehiculoId")
     boolean existeVehiculoPlacas_Editar(@Param("placas") String placas, @Param("vehiculoId") Integer vehiculoId);
 
@@ -564,5 +565,15 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
     @Transactional
     @Query("UPDATE Vehiculo v SET v.categoria.categoriaId = 1 WHERE v.categoria.categoriaId = :categoriaId")
     int reasignarCategoriaPorId(Integer categoriaId);
+
+    //En esta consulta si se utiliza el Joi Fetch para evitar el error LazyInitializationException y porque no son muchos datos
+    //Buscar un cliente y su vehiculo mediante sus respectivas ids, se utiliza en Nota
+    @Query("SELECT v FROM Vehiculo v " +
+            "JOIN FETCH v.marca m " +
+            "JOIN FETCH v.modelo mo " +
+            "JOIN FETCH v.categoria ca " +
+            "WHERE  v.vehiculoId = :vehiculoId AND v.active = :status")
+    Vehiculo buscarVehiculoPorId(@Param("vehiculoId")Integer vehiculoId, @Param("status")String status);
+
 
 }//interface

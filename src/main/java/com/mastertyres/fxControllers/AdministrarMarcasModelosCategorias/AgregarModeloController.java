@@ -6,7 +6,7 @@ import com.mastertyres.common.MensajesAlert;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
-import com.mastertyres.marca.services.MarcaService;
+import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
@@ -26,7 +26,6 @@ import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.beans.Transient;
 import java.util.List;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;

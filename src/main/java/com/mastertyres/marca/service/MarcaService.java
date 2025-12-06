@@ -1,6 +1,5 @@
-package com.mastertyres.marca.services;
+package com.mastertyres.marca.service;
 
-import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.repository.MarcaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,7 @@ public class MarcaService implements IMarcaServices {
         return marcaRepository.listarMarcasSinGenerica();
     }
 
+
     public List<String> listarNombresMarcas() {
         return marcaRepository.listarNombresMarcas();
     }
@@ -53,13 +53,13 @@ public class MarcaService implements IMarcaServices {
     }
 
 
-    // ✅ Listar paginado
+    //  Listar paginado
     public Page<Marca> listarMarcasPaginado(int numeroPagina, int tamañoPagina) {
         Pageable pageable = PageRequest.of(numeroPagina, tamañoPagina);
         return marcaRepository.listarMarcasPaginadoSinGenerica(pageable);
     }
 
-    // ✅ Buscar marcas paginado
+    //  Buscar marcas paginado
     public Page<Marca> buscarMarcasPorNombre(String filtro, int numeroPagina, int tamañoPagina) {
         Pageable pageable = PageRequest.of(numeroPagina, tamañoPagina);
         return marcaRepository.findByNombreMarcaContainingIgnoreCaseExcludingGenerica(filtro, pageable);
@@ -70,6 +70,7 @@ public class MarcaService implements IMarcaServices {
     public int eliminarMarcaPorId(Integer marcaId) {
         return marcaRepository.eliminarMarcaPorId(marcaId);
     }
+
 
 
 
