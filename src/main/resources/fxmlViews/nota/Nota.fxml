@@ -132,7 +132,7 @@
                             <Label fx:id="lblTotal" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                             <Button fx:id="btnNuevaNota" onAction="#agregarNotas" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Nueva nota" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2" />
                             <Button fx:id="btnEditar" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Editar" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
-                            <Button fx:id="btnImprimir"  disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Ver e Imprimir" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                            <Button fx:id="btnImprimir" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Ver e Imprimir" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
                             <Button fx:id="btnDarPlazo" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Dar plazo" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.rowSpan="2" />
                             <Button fx:id="btnHistorial" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Historial" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.rowSpan="2" />
                             <Button fx:id="btnEliminar" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Eliminar" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="10" GridPane.rowSpan="2" />
@@ -155,7 +155,6 @@
                                 <RowConstraints minHeight="30.0" />
                                 <RowConstraints minHeight="30.0" />
                                 <RowConstraints minHeight="30.0" valignment="CENTER" />
-                                <RowConstraints minHeight="100.0" prefHeight="30.0" valignment="CENTER" />
                                 <RowConstraints />
                             </rowConstraints>
                             <padding>
