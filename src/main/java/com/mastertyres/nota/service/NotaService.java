@@ -7,7 +7,12 @@ import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.repository.NotaRepository;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import com.mastertyres.notaDetalle.repository.NotaDetalleRepository;
+import com.mastertyres.vehiculo.model.VehiculoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +37,17 @@ public class NotaService implements INotaService {
     public List<NotaDTO> listarNotas(String active) {
         return notaRepository.listarNotas(active);
     }
+
+    // 🔹 Listar vehículos activos con paginación
+    public Page<NotaDTO> listarNotasPaginado(String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.listarNotasPaginado(active, pageable);
+    }
+
+    public Page<NotaDTO> buscarNotas(String filtro, int pagina, int tamanio) {
+        return notaRepository.buscarNotas("ACTIVE", filtro, PageRequest.of(pagina, tamanio));
+    }
+
 
     @Transactional
     @Override

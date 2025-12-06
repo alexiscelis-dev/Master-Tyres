@@ -129,7 +129,6 @@ public class ClienteService implements IClienteService {
 
     }//eliminarCliente
 
-
     @Transactional(readOnly = true)
     public List<Cliente> buscarClientes( String filtro) {
         return clienteRepository.buscarClientes(filtro);
@@ -628,6 +627,11 @@ public class ClienteService implements IClienteService {
     }
 
 
+
+
+    public long contarClientesPorBusquedaGeneral(String status, String termino){
+        return clienteRepository.contarClientesPorBusquedaGeneral(status, termino);
+    };
 
 
 }//clase

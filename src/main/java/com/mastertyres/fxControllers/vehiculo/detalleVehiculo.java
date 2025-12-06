@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -35,16 +36,16 @@ public class detalleVehiculo {
 
         Vehiculo v = vehiculoService.Vehiculo_SinDTO(vehiculoSeleccionado.getId());
 
-        txtMarca.setText(txtMarca.getText() + " " + vehiculoSeleccionado.getNombreMarca());
-        txtModelo.setText(txtModelo.getText() + " " + vehiculoSeleccionado.getNombreModelo());
-        txtannio.setText(txtannio.getText() + " " + vehiculoSeleccionado.getAnio());
-        txtCategoria.setText(txtCategoria.getText() + " " + vehiculoSeleccionado.getNombreCategoria());
-        txtKilometros.setText(txtKilometros.getText() + " " + vehiculoSeleccionado.getKilometros());
-        txtColor.setText(txtColor.getText() + " " + vehiculoSeleccionado.getColor());
-        txtPlacas.setText(txtPlacas.getText() + " " + vehiculoSeleccionado.getPlacas());
-        txtNumeroSerie.setText(txtNumeroSerie.getText() + " " + vehiculoSeleccionado.getNumSerie());
-        txtObservaciones.setText(txtObservaciones.getText() + " " + vehiculoSeleccionado.getObservaciones());
-        txtUltimoServicio.setText(txtUltimoServicio.getText() + " " + vehiculoSeleccionado.getUltimoServicio());
+        txtMarca.setText(txtMarca.getText() + " " + valorONull(vehiculoSeleccionado.getNombreMarca()));
+        txtModelo.setText(txtModelo.getText() + " " + valorONull(vehiculoSeleccionado.getNombreModelo()));
+        txtannio.setText(txtannio.getText() + " " + valorONull(vehiculoSeleccionado.getAnio().toString()));
+        txtCategoria.setText(txtCategoria.getText() + " " + valorONull(vehiculoSeleccionado.getNombreCategoria()));
+        txtKilometros.setText(txtKilometros.getText() + " " + valorONull(vehiculoSeleccionado.getKilometros().toString()));
+        txtColor.setText(txtColor.getText() + " " + valorONull(vehiculoSeleccionado.getColor()));
+        txtPlacas.setText(txtPlacas.getText() + " " + valorONull(vehiculoSeleccionado.getPlacas()));
+        txtNumeroSerie.setText(txtNumeroSerie.getText() + " " + valorONull(vehiculoSeleccionado.getNumSerie()));
+        txtObservaciones.setText(txtObservaciones.getText() + " " + valorONull(vehiculoSeleccionado.getObservaciones()));
+        txtUltimoServicio.setText(txtUltimoServicio.getText() + " " + formatearFecha(vehiculoSeleccionado.getUltimoServicio()));
 
         DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String fechaStr = vehiculoSeleccionado.getFechaRegistro();
@@ -52,8 +53,34 @@ public class detalleVehiculo {
         String texto = fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));  //mostrar solo fecha sin la hora del registro
         txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + texto);
 
-        txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + v.getUpdated_at());
+        txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + formatearFechaHora(v.getUpdated_at()));
 
+    }
+
+    private String formatearFecha(String fecha) {
+        if (fecha == null || fecha.isBlank()) return "No especificado";
+
+        try {
+            LocalDate f = LocalDate.parse(fecha); // Para formato yyyy-MM-dd
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "No especificado";
+        }
+    }
+
+    private String formatearFechaHora(String fechaHora) {
+        if (fechaHora == null || fechaHora.isBlank()) return "No especificado";
+
+        try {
+            LocalDateTime f = LocalDateTime.parse(fechaHora.replace(" ", "T"));
+            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception e) {
+            return "No especificado";
+        }
+    }
+
+    private String valorONull(String valor) {
+        return (valor == null || valor.isBlank()) ? "No especificado" : valor;
     }
 
     @FXML

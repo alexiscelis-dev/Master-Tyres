@@ -42,6 +42,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.mastertyres.common.MensajesAlert.*;
 
@@ -500,33 +501,43 @@ public class InventarioController {
 
     private void cargarInventario() {
 
+        // Helper para valores String
+        final Function<String, String> safe = s ->
+                (s == null || s.trim().isEmpty()) ? "N/A" : s;
+
+
         colCodBarras.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getCodigoBarras())
+                new SimpleStringProperty(safe.apply(data.getValue().getCodigoBarras()))
         );
 
         colDot.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getDot())
+                new SimpleStringProperty(safe.apply(data.getValue().getDot()))
         );
 
         colMarca.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getMarca())
+                new SimpleStringProperty(safe.apply(data.getValue().getMarca()))
         );
 
         colModelo.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getModelo())
+                new SimpleStringProperty(safe.apply(data.getValue().getModelo()))
         );
 
         colMedida.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getMedida())
+                new SimpleStringProperty(safe.apply(data.getValue().getMedida()))
         );
 
         colIndiceCar.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getIndiceCarga())
+                new SimpleStringProperty(safe.apply(data.getValue().getIndiceCarga()))
         );
 
         colIndiceVel.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getIndiceVelocidad())
+                new SimpleStringProperty(safe.apply(data.getValue().getIndiceVelocidad()))
         );
+
+
+        // =========================================
+        //  ⬇️ Mantienes Integer y Float como números
+        // =========================================
 
         colStock.setCellValueFactory(data ->
                 new SimpleIntegerProperty(data.getValue().getStock()).asObject()
@@ -540,24 +551,43 @@ public class InventarioController {
                 new SimpleFloatProperty(data.getValue().getPrecioVenta()).asObject()
         );
 
+
+        // =========================================
+        //        ⬇️ FECHA REGISTRO FORMATEADA
+        // =========================================
+
         colFechaReg.setCellValueFactory(data -> {
-                    DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-                    String fechaStr = data.getValue().getCreated_at();
-                    LocalDate fecha = LocalDate.parse(fechaStr, formatterEntrada);
-                    String texto = fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String fechaStr = data.getValue().getCreated_at();
 
-                    return new SimpleStringProperty(texto);
-                }
-        );
+            if (fechaStr == null || fechaStr.trim().isEmpty()) {
+                return new SimpleStringProperty("N/A");
+            }
+
+            try {
+                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime fecha = LocalDateTime.parse(fechaStr, formatterEntrada);
+
+                String salida = fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+                return new SimpleStringProperty(salida);
+            } catch (Exception e) {
+                return new SimpleStringProperty("N/A");
+            }
+        });
+
 
         colObservaciones.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getObservaciones())
+                new SimpleStringProperty(safe.apply(data.getValue().getObservaciones()))
         );
 
         cargarDatosInventario();
-
     }//cargarTabla
+
+    private String valorONull(String valor) {
+        return (valor == null || valor.isBlank()) ? "N/A" : valor;
+    }
+
 
 //    private void cargarDatosInventario() {
 //

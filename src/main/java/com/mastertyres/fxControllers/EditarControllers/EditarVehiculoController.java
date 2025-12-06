@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.services.CategoriaService;
 import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -52,6 +53,9 @@ public class EditarVehiculoController {
 
     @Autowired
     private VehiculoService vehiculoService;
+
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
 
     private List<Modelo> modelos;
 
@@ -219,6 +223,24 @@ public class EditarVehiculoController {
                 choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
             } else {
                 choiceModelo.getItems().clear();
+            }
+        });
+
+        choiceModelo.getSelectionModel().selectedItemProperty().addListener((obs, oldModelo, newModelo) -> {
+            Marca marcaSeleccionada = choiceMarca.getValue();
+
+            if (marcaSeleccionada != null && newModelo != null) {
+
+                List<Categoria> categoriasFiltradas =
+                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
+                                marcaSeleccionada.getMarcaId(),
+                                newModelo.getModeloId()
+                        );
+
+                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
+
+            } else {
+                choiceCategoria.getItems().clear();
             }
         });
     }

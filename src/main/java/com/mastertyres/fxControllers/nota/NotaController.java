@@ -7,6 +7,7 @@ import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
+import com.mastertyres.vehiculo.model.VehiculoDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
@@ -21,6 +23,8 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -78,20 +82,26 @@ public class NotaController {
 
     private NotaDTO notaSeleccionada;
 
-
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
+
+    private static final int NOTAS_POR_PAGINA = 20;
+
+    private int tamañoPagina = 20;
+
+    @FXML private Pagination PaginadorNotas;
 
     @FXML
     private void initialize() {
         cargarNota();
 
-        txtBuscar.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.isEmpty())
+        txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
                 cargarNota();
-            else
-                cargarNotasFiltradas();
+            } else {
+                cargarNotasFiltradas(newValue);
+            }
         });
 
         btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
@@ -100,11 +110,36 @@ public class NotaController {
 
     }//initialize
 
+    private void configurarPaginador() {
+        Page<NotaDTO> paginaInicial =
+                notaService.listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+
+        mostrarNotas(paginaInicial.getContent());
+
+        PaginadorNotas.setPageCount(paginaInicial.getTotalPages());
+        PaginadorNotas.setCurrentPageIndex(0);
+
+        PaginadorNotas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+            Page<NotaDTO> nuevaPagina =
+                    notaService.listarNotasPaginado("ACTIVE", newIndex.intValue(), tamañoPagina);
+
+            mostrarNotas(nuevaPagina.getContent());
+        });
+    }
+
+    private void configurarPaginadorFiltradas(String filtro) {
+        Page<NotaDTO> paginaFiltrada = notaService.buscarNotas(filtro,0, tamañoPagina);
+        mostrarNotas(paginaFiltrada.getContent());
+        PaginadorNotas.setPageCount(paginaFiltrada.getTotalPages());
+        PaginadorNotas.setCurrentPageIndex(0);
+        PaginadorNotas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+            Page<NotaDTO> nuevaPagina = notaService.buscarNotas(filtro, newIndex.intValue(), tamañoPagina);
+            mostrarNotas(nuevaPagina.getContent());
+        });
+    }
+
     private void cargarNota() {
-        List<NotaDTO> notas = notaService.listarNotas(StatusNota.ACTIVE.toString());
-        mostrarNotas(notas);
-
-
+       configurarPaginador();
     }//cargarNota
 
     private void mostrarNotas(List<NotaDTO> notas) {
@@ -158,7 +193,6 @@ public class NotaController {
 
     private void mostrarDetalleNota(NotaDTO nota) {
         notaSeleccionada = nota;
-
 
         btnEditar.setDisable(false);
         btnImprimir.setDisable(false);
@@ -221,8 +255,8 @@ public class NotaController {
 
     }//mostrarDetalleNota
 
-    private void cargarNotasFiltradas() {
-
+    private void cargarNotasFiltradas(String filtro) {
+        configurarPaginadorFiltradas(filtro);
     }//cargarNotasFiltradas
 
     @FXML

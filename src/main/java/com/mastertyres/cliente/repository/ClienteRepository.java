@@ -149,13 +149,37 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "LOWER(COALESCE(c.estado, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.ciudad, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.domicilio, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
-            "LOWER(COALESCE(c.tipoCliente, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) )")
+            "LOWER(COALESCE(c.tipoCliente, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.created_at, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.updated_at, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.genero, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.correo, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.fechaCumple, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) )")
     Page<Cliente> buscadorClientes(@Param("status") String status,
                                    @Param("busqueda") String busqueda,
                                    Pageable pageable);
 
     @Query("SELECT c FROM Cliente c WHERE c.clienteId = :clienteId AND c.active = :status")
     Cliente buscarClientePorId(@Param("clienteId")Integer clienteId,@Param("status")String status);
+
+
+    @Query("SELECT COUNT(c) FROM Cliente c WHERE c.active = :status AND (" +
+            "LOWER(COALESCE(c.nombre, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.apellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.segundoApellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.hobbie, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.rfc, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.numTelefono, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.estado, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.ciudad, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.domicilio, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.tipoCliente, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.created_at, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.updated_at, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.genero, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.correo, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.fechaCumple, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) )")
+    long contarClientesPorBusquedaGeneral(String status, String busqueda);
 
 
 
