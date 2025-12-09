@@ -93,22 +93,7 @@ public class PromocionesActivasController {
 
     @FXML
     private void agregarPromociones(ActionEvent event) {
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/NuevaPromocion.fxml"));
-//            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-//            Parent root = loader.load();
-//
-//            Pane panel = ventanaPrincipalController.getPanelMenu();
-//            panel.getChildren().setAll(root);
-//            AnchorPane.setTopAnchor(root, 0.0);
-//            AnchorPane.setRightAnchor(root, 0.0);
-//            AnchorPane.setBottomAnchor(root, 0.0);
-//            AnchorPane.setLeftAnchor(root, 0.0);
-//            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
 
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
@@ -138,7 +123,7 @@ public class PromocionesActivasController {
 
             ClientesPromocionesController controller = loader.getController();
 
-            // 👇 Aquí pasas el HostServices desde tu Application
+            //  Aquí pasas el HostServices desde tu Application
             controller.setHostServices(MasterTyresApplication.getAppHostServices());
 
             controller.LlenarTabla(promocionSeleccionada);

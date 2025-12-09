@@ -4,10 +4,11 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.FechaUtils;
 import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
+import com.mastertyres.vehiculo.model.Vehiculo;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,9 +23,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
@@ -36,12 +35,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
 import static com.mastertyres.common.MensajesAlert.mostrarError;
 import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 
@@ -200,6 +197,7 @@ public class ClienteController {
 
                                         cargarClientes();
                                         resetBusqueda();
+
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
                                     }
@@ -284,11 +282,12 @@ public class ClienteController {
                                                 vehiculosStr.setLength(vehiculosStr.length() - 1);
                                             }
                                         }
+
                                         String filaCopiada = item.getTipoCliente() + " " + (item.getNombre() != null ? item.getNombre() : "") + " " + (item.getApellido() != null ? item.getApellido() : "") + " " +
                                                 (item.getSegundoApellido() != null ? item.getSegundoApellido() : "") + " " + (item.getNumTelefono() != null ? item.getNumTelefono() : "") + " " +
                                                 (item.getEstado() != null ? item.getEstado() : "") + " " + (item.getCiudad() != null ? item.getCiudad() : "") + " " +
                                                 (item.getDomicilio() != null ? item.getDomicilio() : "") + " " + (item.getHobbie() != null ? item.getHobbie() : "") + " " +
-                                                vehiculosStr + " " + (item.getRfc() != null ? item.getRfc() : "");
+                                                vehiculosStr + " " + (item.getRfc() != null ? item.getRfc() : "") + " " + getFechaFormateadaSegundos(item.getCreated_at());
 
                                         ClipboardContent content = new ClipboardContent();
                                         content.putString(filaCopiada);
@@ -359,7 +358,7 @@ public class ClienteController {
                 String seleccion = atributoBusquedaClientes.getValue();
                 String busqueda = buscarClienteBuscador.getText();
 
-                // 🔥 SOLO ejecutar búsqueda general si NO hay filtro
+                //  SOLO ejecutar búsqueda general si NO hay filtro
                 if (seleccion == null || seleccion.isEmpty()) {
 
                     if (busqueda == null || busqueda.isEmpty()) {
@@ -504,11 +503,11 @@ public class ClienteController {
         );
 
         colRegistro.setCellValueFactory(data ->
-                new SimpleStringProperty(formatearFechaHora(data.getValue().getCreated_at()))
+                new SimpleStringProperty(FechaUtils.formatearFechaHora(data.getValue().getCreated_at()))
         );
 
         colCumpleanos.setCellValueFactory(data ->
-                new SimpleStringProperty(formatearFecha(data.getValue().getFechaCumple()))
+                new SimpleStringProperty(FechaUtils.formatearFecha(data.getValue().getFechaCumple()))
         );
         colVehiculo.setCellValueFactory(data -> {
             var vehiculos = data.getValue().getVehiculos();
@@ -550,30 +549,6 @@ public class ClienteController {
             case "F": return "Femenino";
             case "O": return "Otro";
             default: return "N/A";
-        }
-    }
-
-    private String formatearFecha(String fecha) {
-        if (fecha == null || fecha.isBlank()) return "N/A";
-
-        try {
-            LocalDate f = LocalDate.parse(fecha);  // yyyy-MM-dd
-            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        } catch (Exception e) {
-            return "N/A";
-        }
-    }
-
-    private String formatearFechaHora(String fechaHora) {
-        if (fechaHora == null || fechaHora.isBlank()) return "N/A";
-
-        try {
-            LocalDateTime f = LocalDateTime.parse(
-                    fechaHora.replace(" ", "T")  // convierte yyyy-MM-dd HH:mm:ss → yyyy-MM-ddTHH:mm:ss
-            );
-            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        } catch (Exception e) {
-            return "N/A";
         }
     }
 
@@ -661,7 +636,7 @@ public class ClienteController {
         modoBusqueda = !busqueda.trim().isEmpty();
 
         if (modoBusqueda) {
-            // 🔥 total de resultados para el buscador general
+            //  total de resultados para el buscador general
             long totalResultados = clienteService.contarClientesPorBusquedaGeneral(
                     StatusCliente.ACTIVE.toString(),
                     terminoBusquedaActual
@@ -677,10 +652,10 @@ public class ClienteController {
             paginadorClientes.setPageCount(Math.max(totalPaginas, 1));
         }
 
-        // 🔥 Asignar PageFactory
+        //  Asignar PageFactory
         paginadorClientes.setPageFactory(this::crearPaginaClientes);
 
-        // 🔥 Reiniciar a la primera página
+        //  Reiniciar a la primera página
         paginadorClientes.setCurrentPageIndex(0);
     }
 
@@ -713,5 +688,7 @@ public class ClienteController {
         cargarDatosClientes();
         resetBusqueda();
     }
+
+
 
 }//clase

@@ -306,7 +306,7 @@ public class EditarClienteController {
         if (confirmar) {
 
             try {
-                // 🔹 Actualizar datos generales
+                //  Actualizar datos generales
                 cliente.setNombre(txtNombre.getText().trim());
                 cliente.setApellido(txtApellido.getText().trim());
                 cliente.setSegundoApellido(txtSegundoApellido.getText().trim());
@@ -329,7 +329,7 @@ public class EditarClienteController {
                 }
                 cliente.setUpdated_at(LocalDateTime.now().toString());
 
-                // 🔹 Guardar cambios en la promoción
+                //  Guardar cambios en la promoción
                 clienteService.guardarCliente(cliente);
 
 

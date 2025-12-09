@@ -29,6 +29,8 @@ public interface INotaService {
 
     void actualizarNumFactura(String numNota, Integer notaId);
 
+    void actualizarStatus(String status, Integer notaId);
+
 
 
 

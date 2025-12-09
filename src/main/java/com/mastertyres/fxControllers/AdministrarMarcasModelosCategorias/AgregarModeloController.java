@@ -1,7 +1,7 @@
 package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.MensajesAlert;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
@@ -122,7 +122,7 @@ public class AgregarModeloController {
         colModelo.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getModelo().getNombreModelo()));
         colCategoria.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCategoria().getNombreCategoria()));
 
-        // 🔹 Botón eliminar solo para nuevos
+        //  Botón eliminar solo para nuevos
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
             {
@@ -213,7 +213,7 @@ public class AgregarModeloController {
 //            return;
 //        }
 //
-//        // 🔹 Validación de duplicados
+//        //  Validación de duplicados
 //        boolean existe = listaVehiculos.stream().anyMatch(
 //                v -> v.getModelo().getNombreModelo().equalsIgnoreCase(modeloNombre) &&
 //                        v.getCategoria().getCategoriaId().equals(categoria.getCategoriaId())
@@ -295,10 +295,10 @@ public class AgregarModeloController {
                 }
 
                 for (DetalleCategoria detalle : listaNuevos) {
-                    // 🔹 Guardar modelo
+                    //  Guardar modelo
                     Modelo nuevoModelo = modeloService.guardarModelo(detalle.getModelo());
 
-                    // 🔹 Crear relación detalle_categoria
+                    //  Crear relación detalle_categoria
                     DetalleCategoria nuevoDetalle = new DetalleCategoria();
                     nuevoDetalle.setMarca(marcaSeleccionada);
                     nuevoDetalle.setModelo(nuevoModelo);
