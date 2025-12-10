@@ -3,6 +3,7 @@ package com.mastertyres.nota.model;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import jakarta.persistence.*;
@@ -69,6 +70,9 @@ public class Nota {
 
     @OneToMany(mappedBy = "nota",cascade = CascadeType.ALL)
     private List<NotaDetalle>detalles;
+
+    @OneToMany(mappedBy = "nota",cascade = CascadeType.ALL)
+    private List<NotaClienteDetalle>notaClienteDetalles;
 
 
 

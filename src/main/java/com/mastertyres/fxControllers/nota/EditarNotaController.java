@@ -26,15 +26,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -298,6 +296,13 @@ public class EditarNotaController {
     private  Button btnAgregarNumFactura;
 
 
+    private PopupControl popup;
+    private ComboBox<Integer> cmbHora;
+    private ComboBox<Integer> cmbMinuto;
+
+
+
+
     private int porcentajeGasNota;
 
     private NotaDTO notaEditar;
@@ -308,6 +313,8 @@ public class EditarNotaController {
     private void initialize() {
         configuraciones();
         operacionesCampos();
+
+        popUpHora();
 
         btnShowIcons.setOnMouseClicked(event -> showIcons());
 
@@ -327,8 +334,56 @@ public class EditarNotaController {
 
 
 
-
     }//initialize
+    private void popUpHora() {
+
+        popup = new PopupControl();
+        popup.setAutoHide(true);  // <-- permite cerrar si clicas fuera
+
+        cmbHora = new ComboBox<>();
+        cmbMinuto = new ComboBox<>();
+
+        // llenar horas (00-23)
+        for (int h = 0; h < 24; h++) cmbHora.getItems().add(h);
+
+        // llenar minutos (00-59)
+        for (int m = 0; m < 60; m++) cmbMinuto.getItems().add(m);
+
+        Button btnAceptar = new Button("Aceptar");
+        Button btnCancelar = new Button("Cancelar");
+
+        btnAceptar.setOnAction(e -> {
+            if (cmbHora.getValue() != null && cmbMinuto.getValue() != null) {
+                txtHoraEntrega.setText(String.format("%02d:%02d",
+                        cmbHora.getValue(),
+                        cmbMinuto.getValue()
+                ));
+            }
+            popup.hide();
+        });
+
+        btnCancelar.setOnAction(e -> popup.hide());
+
+        HBox selectors = new HBox(10, cmbHora, cmbMinuto);
+        selectors.setAlignment(Pos.CENTER);
+
+        HBox buttons = new HBox(10, btnAceptar, btnCancelar);
+        buttons.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(10, selectors, buttons);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-border-color: #333;");
+
+        popup.getScene().setRoot(layout);
+
+        txtHoraEntrega.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                popup.show(txtHoraEntrega, e.getScreenX(), e.getScreenY());
+            }
+        });
+    }
+
+
 
     public void agregarNota(String numNota) {
         llenarNota(numNota);

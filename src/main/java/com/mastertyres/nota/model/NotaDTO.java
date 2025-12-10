@@ -1,7 +1,7 @@
 package com.mastertyres.nota.model;
 
-import lombok.*;
-
+import lombok.Builder;
+import lombok.Data;
 
 @Builder
 @Data
@@ -89,6 +89,23 @@ public class NotaDTO {
     private Float adeudo;
     private Float saldoFavor;
 
+    //Nota Cliente Detalles borrar estos atributos para que no marque error
+/*
+    private Integer nombreClienteDetalleId;
+    private String nombreClienteNota;
+    private String direccion1Nota;
+    private String direccion2Nota;
+    private String rfcNota;
+    private String correoNota;
+    private String marcaNota;
+    private String modeloNota;
+    private Integer anioNota;
+    private Integer kilometrosNota;
+    private String placasNota;
+
+
+ */
+
 
     //cliente
 
@@ -130,11 +147,14 @@ public class NotaDTO {
                    final Integer frenosCantidad2, final Float frenosUnitario2, final Float frenosTotal2, final String otros,
                    final Integer otrosCantidad, final Float otrosUnitario, final Float otrosTotal, final String otros2,
                    final Integer otrosCantidad2, final Float otrosUnitario2, final Float otrosTotal2, final Float subTotalMecanica,
-                   final Float subTotalFrenos, final Float subTotalOtros,final String llantaCampo, final Integer llantaCantidad, final Float llantaUnitario,
+                   final Float subTotalFrenos, final Float subTotalOtros, final String llantaCampo, final Integer llantaCantidad, final Float llantaUnitario,
                    final Float llantaTotal, final Float adeudo, final Float saldoFavor, final Integer clienteId,
                    final String nombreCliente, final String apellido, final String segundoApellido, final String domicilio,
-                   final String rfc, final String correo,final String genero, final String tipoCliente, final Integer vehiculoId, final String marca, final String modelo,
-                   final String categoria, final Integer anio, final Integer kilometros, final String color, final String placas) {
+                   final String rfc, final String correo, final String genero, final String tipoCliente, final Integer vehiculoId, final String marca, final String modelo,
+                   final String categoria, final Integer anio, final Integer kilometros, final String color, final String placas
+
+
+                   ) {
         this.notaId = notaId;
         this.numNota = numNota;
         this.numFactura = numFactura;
@@ -230,7 +250,12 @@ public class NotaDTO {
         this.kilometros = kilometros;
         this.color = color;
         this.placas = placas;
+
+
+
+
     }
+
 
 
 

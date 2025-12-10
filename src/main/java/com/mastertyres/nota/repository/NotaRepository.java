@@ -37,7 +37,8 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
             "nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, " +
             "nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal, n.adeudo, n.saldoFavor, " +
             "c.clienteId, c.nombre, c.apellido, c.segundoApellido, c.domicilio, c.rfc, c.correo, c.genero,c.tipoCliente ," +
-            "v.vehiculoId, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.kilometros, v.color, v.placas) " +
+            "v.vehiculoId, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.kilometros, v.color, v.placas " +
+            ")" +
             "FROM Nota n " +
             "JOIN n.detalles nd " +
             "JOIN n.vehiculo v " +
@@ -46,6 +47,7 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
             "JOIN v.modelo mo " +
             "JOIN v.categoria ca " +
             "JOIN n.inventario i " +
+            "JOIN n.notaClienteDetalles ncd " +
             "WHERE n.active = :active")
     List<NotaDTO> listarNotas(@Param("active") String active);
 
