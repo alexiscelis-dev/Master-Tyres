@@ -15,6 +15,7 @@ import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
+import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import javafx.beans.property.BooleanProperty;
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 
 import static com.mastertyres.common.MensajesAlert.mostrarError;
 import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.NotaUtils.toFloatSafe;
 
 
 @Component
@@ -148,28 +150,7 @@ public class RegistrarNotaController {
 
     }
 
-    //convierte un espacio vacio en 0 si no se selecciona nada
-    private int toIntSafe(String texto) {
-        try {
-            if (texto == null || texto.trim().isEmpty()) {
-                return 0;
-            }
-            return Integer.parseInt(texto.trim());
 
-        } catch (NumberFormatException e) {
-            return 0;
-
-        }
-    }
-
-    //convierte un espacio vacio en un numero float
-    private float toFloatSafe(String text) {
-        try {
-            return Float.parseFloat(text);
-        } catch (NumberFormatException e) {
-            return 0f;
-        }
-    }
 
     private void registrar() {
 
@@ -196,23 +177,18 @@ public class RegistrarNotaController {
 
         Cliente clienteNota = Cliente.builder()
                 .clienteId(nota.getClienteId())
-                .nombre(nota.getNombreCliente())
-                .apellido(nota.getApellido())
-                .segundoApellido(nota.getSegundoApellido())
-                .domicilio(nota.getDomicilio())
-                .rfc(nota.getRfc())
-                .correo(nota.getCorreo())
                 .build();
 
+
         Marca marca = Marca.builder()
-                .nombreMarca(nota.getMarca())
+                .nombreMarca(nota.getMarcaNota())
                 .build();
 
         Modelo modelo = Modelo.builder()
-                .nombreModelo(nota.getModelo())
+                .nombreModelo(nota.getModeloNota())
                 .build();
         Categoria categoria = Categoria.builder()
-                .nombreCategoria(nota.getCategoria())
+                .nombreCategoria(nota.getCategoriaNota())
                 .build();
 
         Vehiculo vehiculo = Vehiculo.builder()
@@ -221,10 +197,9 @@ public class RegistrarNotaController {
                 .marca(marca)
                 .modelo(modelo)
                 .categoria(categoria)
-                .anio(nota.getAnio())
-                .kilometros(nota.getKilometros())
-                .color(nota.getColor())
-                .placas(nota.getPlacas())
+                .anio(nota.getAnioNota())
+                .kilometros(nota.getKilometrosNota())
+                .placas(nota.getPlacasNota())
                 .build();
 
         Inventario llantaRegistrar = null;
@@ -324,16 +299,30 @@ public class RegistrarNotaController {
                 .subTotalOtros(nota.getSubTotalOtros())
                 .build();
 
+        NotaClienteDetalle clienteDetalle = NotaClienteDetalle.builder()
+                .nota(nuevaNota)
+                .nombreClienteNota(nota.getNombreClienteNota())
+                .direccion1Nota(nota.getDireccion1Nota())
+                .direccion2Nota(nota.getDireccion2Nota())
+                .rfcNota(nota.getRfcNota())
+                .correoNota(nota.getCorreoNota())
+                .marcaNota(nota.getMarcaNota())
+                .modeloNota(nota.getModeloNota())
+                .categoriaNota(nota.getCategoriaNota())
+                .anioNota(nota.getAnioNota())
+                .kilometrosNota(nota.getKilometrosNota())
+                .placasNota(nota.getPlacasNota())
+                .build();
+
         try {
 
-            notaService.guardarNota(nuevaNota, notaDetalle);
+            notaService.guardarNota(nuevaNota, notaDetalle,clienteDetalle);
 
             if (actualizarInventario.get()) {
+                System.out.println("nota.getLlantaCantidad() = " + nota.getLlantaCantidad());
 
-                inventarioService.actualizarStock(nota.getInventarioId(), nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
-                  LocalDateTime fecha = LocalDateTime.now();
-                  String fechaStr = fecha.toString();
-                  inventarioService.actualizarUptatedAt(fechaStr,nota.getInventarioId());
+                inventarioService.actualizarStock(nota.getInventarioId(), llantaRegistrar.getStock()-nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
+                inventarioService.actualizarUptatedAt(LocalDateTime.now().toString(),nota.getInventarioId());
             }
 
 

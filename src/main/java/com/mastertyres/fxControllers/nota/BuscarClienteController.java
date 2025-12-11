@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,25 +30,41 @@ import static com.mastertyres.common.MensajesAlert.mostrarError;
 @Component
 public class BuscarClienteController {
 
-    @FXML private TableView<Cliente> tablaClientes;
-    @FXML private TableColumn<Cliente,String> colNombreCompleto;
-    @FXML private TableColumn<Cliente,String>colTipoCliente;
-    @FXML private TableColumn<Cliente,String>colRfc;
-    @FXML private TableColumn<Cliente,String>colTelefono;
-    @FXML private TextField txtBuscador;
-    @FXML private Button btnBuscar;
-    @FXML private Button btnAceptar;
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtTipoCliente;
-    @FXML private TextField txtRfc;
-    @FXML private TextField txtNumTelefono;
+    @FXML
+    private TableView<Cliente> tablaClientes;
+    @FXML
+    private TableColumn<Cliente, String> colNombreCompleto;
+    @FXML
+    private TableColumn<Cliente, String> colTipoCliente;
+    @FXML
+    private TableColumn<Cliente, String> colRfc;
+    @FXML
+    private TableColumn<Cliente, String> colTelefono;
+    @FXML
+    private TextField txtBuscador;
+    @FXML
+    private Button btnBuscar;
+    @FXML
+    private Button btnAceptar;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtTipoCliente;
+    @FXML
+    private TextField txtRfc;
+    @FXML
+    private TextField txtNumTelefono;
 
-    @FXML private TableView<VehiculoDTO> tablaVehiculos;
-    @FXML private TableColumn<VehiculoDTO,String> colMarca;
-    @FXML private TableColumn<VehiculoDTO,String> colModelo;
-    @FXML private TableColumn<VehiculoDTO,String> colCategoria;
-    @FXML private  TableColumn<VehiculoDTO,Integer> colAnio;
-
+    @FXML
+    private TableView<VehiculoDTO> tablaVehiculos;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colMarca;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colModelo;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colCategoria;
+    @FXML
+    private TableColumn<VehiculoDTO, Integer> colAnio;
 
 
     private Cliente clienteSeleccionado;
@@ -55,11 +72,11 @@ public class BuscarClienteController {
 
     //getters
 
-    public Cliente getClienteSeleccionado(){
+    public Cliente getClienteSeleccionado() {
         return clienteSeleccionado;
     }
 
-    public VehiculoDTO getVehiculoSeleccionado(){
+    public VehiculoDTO getVehiculoSeleccionado() {
         return vehiculoSeleccionado;
     }
 
@@ -70,15 +87,24 @@ public class BuscarClienteController {
     private VehiculoService vehiculoService;
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         cargarClientes(txtBuscador.getText());
+
+        txtBuscador.setOnKeyPressed(event -> {
+            if (txtBuscador.getText() != null && !txtBuscador.getText().isEmpty()) {
+                if (event.getCode() == KeyCode.ENTER)
+                    cargarDatosClientes(txtBuscador.getText());
+            }
+
+
+        });
 
         btnBuscar.setOnAction(event -> cargarDatosClientes(txtBuscador.getText()));
 
         tablaClientes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
 
-            if (newValue != null){
+            if (newValue != null) {
                 txtNombre.setText((newValue.getNombre() != null ? newValue.getNombre() : "") + "" + " " +
                         (newValue.getApellido() != null ? newValue.getApellido() : "") + "" + " " +
                         (newValue.getSegundoApellido() != null ? newValue.getSegundoApellido() : "")
@@ -89,8 +115,7 @@ public class BuscarClienteController {
                 txtRfc.setText(newValue.getRfc() != null ? newValue.getRfc() : "N/A");
 
 
-                String busqueda = newValue.getNombre() + " " + (newValue.getApellido() != null ? newValue.getApellido() : "") + " " + ( newValue.getSegundoApellido() != null ? newValue.getSegundoApellido() : "");
-                System.out.println(busqueda);
+                String busqueda = newValue.getNombre() + " " + (newValue.getApellido() != null ? newValue.getApellido() : "") + " " + (newValue.getSegundoApellido() != null ? newValue.getSegundoApellido() : "");
                 cargarVehiculos(busqueda);
 
 
@@ -102,27 +127,24 @@ public class BuscarClienteController {
         tablaVehiculos.getSelectionModel().selectedItemProperty().addListener((observableVehiculo, oldVehiculo, newVehiculo) -> {
 
 
-                tablaClientes.getSelectionModel().selectedItemProperty().addListener((observableCliente, oldCliente, newCliente) -> {
+            tablaClientes.getSelectionModel().selectedItemProperty().addListener((observableCliente, oldCliente, newCliente) -> {
 
-                    if (newCliente != null && newVehiculo != null) {
+                if (newCliente != null && newVehiculo != null) {
 
 
-                        NotaDTO nota = NotaDTO
-                                .builder()
-                                .nombreCliente(newCliente.getNombre())
-                                .apellido(newCliente.getApellido())
-                                .segundoApellido(newCliente.getSegundoApellido())
-                                .genero(newCliente.getGenero())
-                                .tipoCliente(newCliente.getTipoCliente())
-                                .marca(newVehiculo.getNombreMarca())
-                                .modelo(newVehiculo.getNombreModelo())
-                                .categoria(newVehiculo.getNombreCategoria())
-                                .anio(newVehiculo.getAnio())
-                                .build();
+                    NotaDTO nota = NotaDTO
+                            .builder()
+                            .nombreClienteNota(newCliente.getNombre())
+                            .marcaNota(newVehiculo.getNombreMarca())
+                            .modeloNota(newVehiculo.getNombreMarca())
+                            .categoriaNota(newVehiculo.getNombreCategoria())
+                            .anioNota(newVehiculo.getAnio())
+                            .build();
 
-                    }});
+                }
+            });
 
-                btnAceptar.setDisable(false);
+            btnAceptar.setDisable(false);
 
         });
 
@@ -130,9 +152,8 @@ public class BuscarClienteController {
     }//initialize
 
 
-
     //seccion tabla clientes
-    private void cargarClientes(String busqueda){
+    private void cargarClientes(String busqueda) {
 
         colNombreCompleto.setCellValueFactory(data -> new SimpleStringProperty(
                 (data.getValue().getNombre() != null ? data.getValue().getNombre() : "") + "" + " " +
@@ -156,23 +177,23 @@ public class BuscarClienteController {
 
     }//cargarClientes
 
-    private void cargarDatosClientes(String busqueda){
+    private void cargarDatosClientes(String busqueda) {
         try {
-            if (!busqueda.isEmpty()){
-                List<Cliente> clientes = clienteService.buscadorClientes(StatusCliente.ACTIVE.toString(),busqueda);
+            if (!busqueda.isEmpty()) {
+                List<Cliente> clientes = clienteService.buscadorClientes(StatusCliente.ACTIVE.toString(), busqueda);
                 tablaClientes.getItems().setAll(FXCollections.observableList(clientes));
-            }else {
-                List<Cliente>clientesVacio = new ArrayList<>();
+            } else {
+                List<Cliente> clientesVacio = new ArrayList<>();
                 tablaClientes.getItems().setAll(FXCollections.observableList(clientesVacio));
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
         }
     }
 
     @FXML
-    private void cancelar(ActionEvent event){
+    private void cancelar(ActionEvent event) {
         Stage stage = (Stage) txtNombre.getScene().getWindow();
         stage.close();
 
@@ -180,7 +201,7 @@ public class BuscarClienteController {
 
     //seccion vehiculos
 
-    private void cargarVehiculos(String busqueda){
+    private void cargarVehiculos(String busqueda) {
 
         colMarca.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getNombreMarca()
@@ -197,21 +218,21 @@ public class BuscarClienteController {
 
     }//cargarVehiculos
 
-    private void cargarDatosVehiculo(String busqueda){
+    private void cargarDatosVehiculo(String busqueda) {
 
         try {
-            if (busqueda != null && !busqueda.isEmpty()){
+            if (busqueda != null && !busqueda.isEmpty()) {
                 List<VehiculoDTO> vehiculos = vehiculoService.buscarVehiculoPorPropietario(StatusVehiculo.ACTIVE.toString(), busqueda);
                 tablaVehiculos.getItems().setAll(FXCollections.observableList(vehiculos));
 
-            }else {
+            } else {
                 List<VehiculoDTO> vehiculosVacio = new ArrayList<>();
                 tablaVehiculos.getItems().setAll(FXCollections.observableList(vehiculosVacio));
             }
 
 
-        }catch (Exception e){
-            mostrarError("","","");
+        } catch (Exception e) {
+            mostrarError("", "", "");
             e.printStackTrace();
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
         }
@@ -219,14 +240,12 @@ public class BuscarClienteController {
     }//cargarDatosVehiculo
 
     @FXML
-    private void aceptar(ActionEvent event){
-        clienteSeleccionado  = tablaClientes.getSelectionModel().getSelectedItem();
+    private void aceptar(ActionEvent event) {
+        clienteSeleccionado = tablaClientes.getSelectionModel().getSelectedItem();
         vehiculoSeleccionado = tablaVehiculos.getSelectionModel().getSelectedItem();
         btnAceptar.getScene().getWindow().hide();
 
     }//aceptar
-
-
 
 
 }//clase

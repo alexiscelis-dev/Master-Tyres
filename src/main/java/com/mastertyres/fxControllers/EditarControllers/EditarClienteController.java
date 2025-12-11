@@ -307,22 +307,32 @@ public class EditarClienteController {
 
             try {
                 //  Actualizar datos generales
+                String segundoApellido = txtSegundoApellido.getText().trim() != null ? txtSegundoApellido.getText().trim() : "";
+                String hobbie = txtHobbie.getText().trim() != null ? txtHobbie.getText().trim() : "";
+                String rfc = txtRfc.getText().trim() != null ? txtRfc.getText().trim() : "";
+                String domicilio = txtDomicilio.getText().trim() != null ? txtDomicilio.getText().trim() : "";
+                String correo = txtCorreo.getText().trim() != null ? txtCorreo.getText().trim() : "";
+                String tipoCliente =  choiceTipoCliente.getValue() != null ? choiceTipoCliente.getValue() : "";
+
+
                 cliente.setNombre(txtNombre.getText().trim());
                 cliente.setApellido(txtApellido.getText().trim());
-                cliente.setSegundoApellido(txtSegundoApellido.getText().trim());
-                cliente.setTipoCliente(choiceTipoCliente.getValue());
-                cliente.setHobbie(txtHobbie.getText().trim());
+                cliente.setSegundoApellido(segundoApellido);
+                cliente.setTipoCliente(tipoCliente);
+                cliente.setHobbie(hobbie);
                 cliente.setEstado(txtEstado.getText().trim());
                 cliente.setCiudad(txtCiudad.getText().trim());
-                cliente.setDomicilio(txtDomicilio.getText().trim());
+                cliente.setDomicilio(domicilio);
                 cliente.setFechaCumple(dateCumpleanos.getValue().toString());
-                cliente.setRfc(txtRfc.getText().trim());
+                cliente.setRfc(rfc);
                 cliente.setNumTelefono(txtTelefono.getText().trim());
-                cliente.setCorreo(txtCorreo.getText().trim());
+                cliente.setCorreo(correo);
 
-                if (choiceGenero.getValue().equals("Masculino")) {
+                String genero = choiceGenero.getValue() != null ? choiceGenero.getValue().toString() : "";
+
+                if (genero.equals("Masculino")) {
                     cliente.setGenero("M");
-                } else if (choiceGenero.getValue().equals("Femenino")) {
+                } else if (genero.equals("Femenino")) {
                     cliente.setGenero("F");
                 } else {
                     cliente.setGenero("O");

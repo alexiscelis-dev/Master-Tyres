@@ -1,11 +1,17 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.GenerarPDF;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.service.NotaService;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
+import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -72,6 +78,12 @@ public class NotaController {
 
     @Autowired
     private NotaService notaService;
+
+    @Autowired
+    ClienteService clienteService;
+    @Autowired
+    VehiculoService vehiculoService;
+
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -149,6 +161,10 @@ public class NotaController {
     }//mostrarNotas
 
     private VBox crearCardNota(NotaDTO nota) {
+        Cliente cliente = clienteService.buscarClientePorId(nota.getClienteId(), StatusCliente.ACTIVE.toString());
+        Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(nota.getVehiculoId(), StatusVehiculo.ACTIVE.toString());
+
+
 
         VBox card = new VBox();
         card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
@@ -157,19 +173,19 @@ public class NotaController {
 
         Label numeroNota = new Label(nota.getNumNota());
         numeroNota.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
-        Label cliente = new Label(
-                nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido() : "") + " " +
-                        (nota.getSegundoApellido() != null ? nota.getSegundoApellido() : "")
+        Label lblCliente = new Label(
+                cliente.getNombre() + " " + (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
+                        (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : "")
         );
-        cliente.setStyle("-fx-text-fill: white;");
-        Label vehiculo = new Label(
-                nota.getMarca() + " " + nota.getModelo() + " " + nota.getAnio()
+        lblCliente.setStyle("-fx-text-fill: white;");
+        Label lblVehiculo = new Label(
+                vehiculo.getMarca() + " " + vehiculo.getModelo() + " " + vehiculo.getAnio()
         );
-        vehiculo.setStyle("-fx-text-fill: white;");
+        lblVehiculo.setStyle("-fx-text-fill: white;");
         Label total = new Label("Total: $" + nota.getTotal());
         total.setStyle("-fx-text-fill: white;");
 
-        VBox textBox = new VBox(5, numeroNota, cliente, vehiculo, total);
+        VBox textBox = new VBox(5, numeroNota, lblCliente, lblVehiculo, total);
         HBox contenBox = new HBox(10, textBox);
         card.getChildren().add(contenBox);
 
@@ -233,9 +249,8 @@ public class NotaController {
         lblNumFactura.setText(nota.getNumFactura() != null ? nota.getNumFactura() : "Sin facturar");
 
 
-        lblCliente.setText(nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido() : "") + " " +
-                (nota.getSegundoApellido() != null ? nota.getSegundoApellido() : ""));
-        lblVehiculo.setText(nota.getMarca() + " " + nota.getModelo() + " " + nota.getAnio());
+        lblCliente.setText(nota.getNombreClienteNota());
+        lblVehiculo.setText(nota.getMarcaNota() + " " + nota.getModeloNota() + " " + nota.getAnioNota());
 
 
         lblFechaEmicion.setText(fechaFormateada);

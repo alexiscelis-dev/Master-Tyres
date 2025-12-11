@@ -4,7 +4,7 @@ import com.mastertyres.nota.model.Nota;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Table(name = "nota_cliente_detalle")
+@Table(name = "nota_cliente_detalles")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,6 +36,8 @@ public class NotaClienteDetalle {
     private String marcaNota;
     @Column(name = "modelo")
     private String modeloNota;
+    @Column(name = "categoria")
+    private String categoriaNota;
     @Column(name = "anio")
     private Integer anioNota;
     @Column(name = "kilometros")

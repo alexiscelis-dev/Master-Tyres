@@ -334,21 +334,19 @@ public class ImprimirNotaController {
             txtHoraEntrega.setText(strHoraFormateada);
 
             //datos cliente
-            txtNombre.setText(notaEditar.getNombreCliente() + " " +
-                    (notaEditar.getApellido() != null ? notaEditar.getApellido() : "") + " "
-                    + (notaEditar.getSegundoApellido() != null ? notaEditar.getSegundoApellido() : ""));
+            txtNombre.setText(notaEditar.getNombreClienteNota());
 
-            txtDireccion.setText(notaEditar.getDomicilio() != null ? notaEditar.getDomicilio() : "");
-            txtDireccion2.setText("");
-            txtRfc.setText(notaEditar.getRfc() != null ? notaEditar.getRfc() : "");
-            txtCorreo.setText(notaEditar.getCorreo() != null ? notaEditar.getCorreo() : "");
+            txtDireccion.setText(notaEditar.getDireccion1Nota() != null ? notaEditar.getDireccion1Nota() : "");
+            txtDireccion2.setText(notaEditar.getDireccion2Nota() != null ? notaEditar.getDireccion2Nota() : "");
+            txtRfc.setText(notaEditar.getRfcNota() != null ? notaEditar.getRfcNota() : "");
+            txtCorreo.setText(notaEditar.getCorreoNota() != null ? notaEditar.getCorreoNota() : "");
 
             //datos vehiculo
-            txtMarca.setText(notaEditar.getMarca());
-            txtModelo.setText(notaEditar.getModelo());
-            txtAnioVehiculo.setText(notaEditar.getAnio() + "");
-            txtKms.setText((notaEditar.getKilometros() != null ? notaEditar.getKilometros() : "") + "");
-            txtPlacas.setText(notaEditar.getPlacas() != null ? notaEditar.getPlacas() : "");
+            txtMarca.setText(notaEditar.getMarcaNota());
+            txtModelo.setText(notaEditar.getModeloNota());
+            txtAnioVehiculo.setText(notaEditar.getAnioNota() + "");
+            txtKms.setText((notaEditar.getKilometrosNota() != null ? notaEditar.getKilometrosNota() : "") + "");
+            txtPlacas.setText(notaEditar.getPlacasNota() != null ? notaEditar.getPlacasNota() : "");
             dibujarGasolina(notaEditar.getPorcentajeGas());
 
             //checkBox

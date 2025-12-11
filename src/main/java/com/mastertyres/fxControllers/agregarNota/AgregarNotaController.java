@@ -11,9 +11,6 @@ import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatatusSiNo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -36,7 +33,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import javafx.util.Duration;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -44,6 +40,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.NotaUtils.*;
 
 @Component
 public class AgregarNotaController {
@@ -282,10 +279,12 @@ public class AgregarNotaController {
     @FXML
     private void initialize() {
 
+        mostrarPopupHora(txtHoraEntrega);
+
         configuraciones();
         operacionesCampos();
 
-        btnShowIcons.setOnMouseClicked(event -> showIcons());
+        btnShowIcons.setOnMouseClicked(event -> showIcons(gridPaneIcons));
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
         dibujarGasolina(50);
@@ -782,41 +781,8 @@ public class AgregarNotaController {
 
 
     //Seccion precargar en nota
-    private void showIcons() {
-        final Duration TIEMPO = Duration.millis(500);
-
-        if (!gridPaneIcons.isVisible()) {
-            gridPaneIcons.setVisible(true);
-            TranslateTransition slideIN = new TranslateTransition(TIEMPO, gridPaneIcons);
-            slideIN.setFromY(-50); //Mueve nodo
-            slideIN.setToY(0); // Termina en su posición normal
-
-            FadeTransition fadeIn = new FadeTransition(TIEMPO, gridPaneIcons);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-
-            ParallelTransition showTransition = new ParallelTransition(slideIN, fadeIn);
-            showTransition.play();
-
-        } else {
-
-            TranslateTransition slideOut = new TranslateTransition(TIEMPO, gridPaneIcons);
-            slideOut.setFromY(0); //Mueve nodo
-            slideOut.setToY(-50); // Termina en su posición normal
-
-            FadeTransition fadeOut = new FadeTransition(TIEMPO, gridPaneIcons);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-
-            ParallelTransition showTransition = new ParallelTransition(slideOut, fadeOut);
-            showTransition.setOnFinished(event -> gridPaneIcons.setVisible(false));
-            showTransition.play();
 
 
-        }
-
-
-    }//showIcons
 
     private void mostrarFechayHora() {
         LocalDate hoy = LocalDate.now();
@@ -957,16 +923,46 @@ public class AgregarNotaController {
 
     }//buscarCliente
 
+    //metodo que separa la direccion en los dos campos en caso de ser necesario(direccion1 y 2)
+    private void  direccionFormatter(String direccionTxt) {
+
+        String arrayDireccion [] = direccionTxt.split(" ");
+
+
+        String direccion1 = "", direccion2 = "";
+
+        for (int i = 0; i <arrayDireccion.length ; i++) {
+
+           if (direccion1.length() < 59){
+               direccion1 += arrayDireccion[i] + " ";
+           }else {
+               if (direccion2.length() < 69)
+               direccion2 += arrayDireccion[i] + " ";
+               else{
+                   direccion2 += "...";
+                   break;
+               }
+
+           }
+
+        }
+
+        txtDireccion.setText(direccion1);
+        txtDireccion2.setText(direccion2);
+
+    }//direccionFormatter
+
 
     private void llenarNota(Cliente cliente) {
         if (cliente != null) {
-            System.out.println(cliente.getClienteId());
+
             txtNombre.setText(cliente.getNombre() + " " +
                     (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
                     (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : "")
             );
 
-            txtDireccion.setText(cliente.getDomicilio() != null ? cliente.getDomicilio() : "");
+         //   txtDireccion.setText(cliente.getDomicilio() != null ? cliente.getDomicilio() : "");
+            direccionFormatter(cliente.getDomicilio() != null ? cliente.getDomicilio() : "");
             txtRfc.setText(cliente.getRfc() != null ? cliente.getRfc() : "");
             txtCorreo.setText(cliente.getCorreo() != null ? cliente.getCorreo() : "");
 
@@ -1083,21 +1079,26 @@ public class AgregarNotaController {
 
 
                 String fechaYhora = txtAnio.getText() + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
+                String nombre =  cRegistro.getNombre() + " " + ( cRegistro.getApellido() != null ? cRegistro.getApellido() : "") + " " +
+                (cRegistro.getSegundoApellido() != null ? cRegistro.getSegundoApellido() : "");
+
                 NotaDTO.NotaDTOBuilder nuevaNotaBuilder = NotaDTO.builder()
+
+
 
                         .clienteId(cRegistro.getClienteId())
                         .vehiculoId(vRegistro.getId())
-
-                        .nombreCliente(cRegistro.getNombre())
-                        .apellido(cRegistro.getApellido())
-                        .segundoApellido(cRegistro.getSegundoApellido())
-                        .domicilio(cRegistro.getDomicilio())
-                        .rfc(cRegistro.getRfc()) //datos cliente
-                        .correo(cRegistro.getCorreo())
-                        .marca(vRegistro.getNombreMarca())
-                        .modelo(vRegistro.getNombreModelo())
-                        .categoria(vRegistro.getNombreCategoria())
-                        .anio(vRegistro.getAnio()) //datos vehiculos
+                        .nombreClienteNota(nombre)
+                        .direccion1Nota(txtDireccion.getText())
+                        .direccion2Nota(txtDireccion2.getText())
+                        .rfcNota(cRegistro.getRfc())
+                        .correoNota(cRegistro.getCorreo())
+                        .marcaNota(vRegistro.getNombreMarca())
+                        .modeloNota(vRegistro.getNombreModelo())
+                        .categoriaNota(vRegistro.getNombreCategoria())
+                        .anioNota(vRegistro.getAnio())
+                        .kilometrosNota(vRegistro.getKilometros())
+                        .placasNota(vRegistro.getPlacas())
 
                         .numNota(txtNumNota.getText())
                         .numFactura("")
@@ -1229,36 +1230,8 @@ public class AgregarNotaController {
     }//registrar
 
 
-    private float toFloatSafe(String text) {
-       text = text.replaceFirst("^\\$", "");
-
-        try {
-
-            // Normaliza comas a puntos
-            text = text.replace(",", ".");
-
-            return Float.parseFloat(text);
-        } catch (NumberFormatException e) {
-            return 0f;
-        }
-    }//toFloatSafe
-
-
-    private int toIntSafe(String texto) {
-        try {
-            if (texto == null || texto.trim().isEmpty()) {
-                return 0;
-            }
-            return (int) Double.parseDouble(texto.trim());
-
-        } catch (NumberFormatException e) {
-            return 0;
-
-        }
-    }//toFloatSafe
 
     private void checkCheckBoxes() {
-        //    String rayones = "", golpes = "", tapones = "", tapetes = "", radio = "", gato = "", llave = "", llanta = "";
 
         //rayones
         if (cbRayonesSi.isSelected() && !cbRayonesNo.isSelected())
@@ -1344,7 +1317,6 @@ public class AgregarNotaController {
         txtDireccion2.setText("");
         txtRfc.setText("");
         txtCorreo.setText("");
-        txtHoraEntrega.setText("");
         txtMarca.setText("");
         txtModelo.setText("");
         txtAnioVehiculo.setText("");

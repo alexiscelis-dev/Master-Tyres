@@ -19,20 +19,19 @@ import com.mastertyres.notaDetalle.service.NotaDetalleService;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -40,7 +39,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
-import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +47,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.NotaUtils.*;
 
 @Component
 public class EditarNotaController {
@@ -314,9 +313,9 @@ public class EditarNotaController {
         configuraciones();
         operacionesCampos();
 
-        popUpHora();
+       mostrarPopupHora(txtHoraEntrega);
 
-        btnShowIcons.setOnMouseClicked(event -> showIcons());
+        btnShowIcons.setOnMouseClicked(event -> showIcons(gridPaneIcons));
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
@@ -335,53 +334,7 @@ public class EditarNotaController {
 
 
     }//initialize
-    private void popUpHora() {
 
-        popup = new PopupControl();
-        popup.setAutoHide(true);  // <-- permite cerrar si clicas fuera
-
-        cmbHora = new ComboBox<>();
-        cmbMinuto = new ComboBox<>();
-
-        // llenar horas (00-23)
-        for (int h = 0; h < 24; h++) cmbHora.getItems().add(h);
-
-        // llenar minutos (00-59)
-        for (int m = 0; m < 60; m++) cmbMinuto.getItems().add(m);
-
-        Button btnAceptar = new Button("Aceptar");
-        Button btnCancelar = new Button("Cancelar");
-
-        btnAceptar.setOnAction(e -> {
-            if (cmbHora.getValue() != null && cmbMinuto.getValue() != null) {
-                txtHoraEntrega.setText(String.format("%02d:%02d",
-                        cmbHora.getValue(),
-                        cmbMinuto.getValue()
-                ));
-            }
-            popup.hide();
-        });
-
-        btnCancelar.setOnAction(e -> popup.hide());
-
-        HBox selectors = new HBox(10, cmbHora, cmbMinuto);
-        selectors.setAlignment(Pos.CENTER);
-
-        HBox buttons = new HBox(10, btnAceptar, btnCancelar);
-        buttons.setAlignment(Pos.CENTER);
-
-        VBox layout = new VBox(10, selectors, buttons);
-        layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-border-color: #333;");
-
-        popup.getScene().setRoot(layout);
-
-        txtHoraEntrega.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                popup.show(txtHoraEntrega, e.getScreenX(), e.getScreenY());
-            }
-        });
-    }
 
 
 
@@ -429,21 +382,19 @@ public class EditarNotaController {
             txtHoraEntrega.setText(strHoraFormateada);
 
             //datos cliente
-            txtNombre.setText(notaEditar.getNombreCliente() + " " +
-                    (notaEditar.getApellido() != null ? notaEditar.getApellido() : "") + " "
-                    + (notaEditar.getSegundoApellido() != null ? notaEditar.getSegundoApellido() : ""));
+            txtNombre.setText(notaEditar.getNombreClienteNota());
 
-            txtDireccion.setText(notaEditar.getDomicilio() != null ? notaEditar.getDomicilio() : "");
-            txtDireccion2.setText("");
-            txtRfc.setText(notaEditar.getRfc() != null ? notaEditar.getRfc() : "");
-            txtCorreo.setText(notaEditar.getCorreo() != null ? notaEditar.getCorreo() : "");
+            txtDireccion.setText(notaEditar.getDireccion1Nota() != null ? notaEditar.getDireccion1Nota() : "");
+            txtDireccion2.setText(notaEditar.getDireccion2Nota() != null ? notaEditar.getDireccion2Nota() : "");
+            txtRfc.setText(notaEditar.getRfcNota() != null ? notaEditar.getRfcNota() : "");
+            txtCorreo.setText(notaEditar.getCorreoNota() != null ? notaEditar.getCorreoNota() : "");
 
             //datos vehiculo
-            txtMarca.setText(notaEditar.getMarca());
-            txtModelo.setText(notaEditar.getModelo());
-            txtAnioVehiculo.setText(notaEditar.getAnio() + "");
-            txtKms.setText((notaEditar.getKilometros() != null ? notaEditar.getKilometros() : "") + "");
-            txtPlacas.setText(notaEditar.getPlacas() != null ? notaEditar.getPlacas() : "");
+            txtMarca.setText(notaEditar.getMarcaNota());
+            txtModelo.setText(notaEditar.getModeloNota());
+            txtAnioVehiculo.setText(notaEditar.getAnioNota() + "");
+            txtKms.setText((notaEditar.getKilometrosNota() != null ? notaEditar.getKilometrosNota() : "") + "");
+            txtPlacas.setText(notaEditar.getPlacasNota() != null ? notaEditar.getPlacasNota() : "");
             dibujarGasolina(notaEditar.getPorcentajeGas());
 
             //checkBox
@@ -542,20 +493,6 @@ public class EditarNotaController {
 
     }//llenarNota
 
-    private String eliminarCero(float cantidad) {
-        if (cantidad != 0.0)
-            return "$" + cantidad;
-        else
-            return "";
-
-    }
-
-    private String eliminarCero(int cantidad) {
-        if (cantidad != 0)
-            return cantidad + "";
-        else
-            return "";
-    }
 
     private void revisarCheckBoxes(String[] status) {
 
@@ -1109,69 +1046,9 @@ public class EditarNotaController {
                 startAngle, length, ArcType.OPEN);
     }
 
-    private float toFloatSafe(String text) {
-        text = text.replaceFirst("^\\$", "");
-
-        try {
-
-            // Normaliza comas a puntos
-            text = text.replace(",", ".");
-
-            return Float.parseFloat(text);
-        } catch (NumberFormatException e) {
-            return 0f;
-        }
-    }//toFloatSafe
-
-    private int toIntSafe(String texto) {
-        try {
-            if (texto == null || texto.trim().isEmpty()) {
-                return 0;
-            }
-            return (int) Double.parseDouble(texto.trim());
-
-        } catch (NumberFormatException e) {
-            return 0;
-
-        }
-    }//toFloatSafe
 
     //Seccion precargar en nota
-    private void showIcons() {
-        final Duration TIEMPO = Duration.millis(500);
 
-        if (!gridPaneIcons.isVisible()) {
-            gridPaneIcons.setVisible(true);
-            TranslateTransition slideIN = new TranslateTransition(TIEMPO, gridPaneIcons);
-            slideIN.setFromY(-50); //Mueve nodo
-            slideIN.setToY(0); // Termina en su posición normal
-
-            FadeTransition fadeIn = new FadeTransition(TIEMPO, gridPaneIcons);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-
-            ParallelTransition showTransition = new ParallelTransition(slideIN, fadeIn);
-            showTransition.play();
-
-        } else {
-
-            TranslateTransition slideOut = new TranslateTransition(TIEMPO, gridPaneIcons);
-            slideOut.setFromY(0); //Mueve nodo
-            slideOut.setToY(-50); // Termina en su posición normal
-
-            FadeTransition fadeOut = new FadeTransition(TIEMPO, gridPaneIcons);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-
-            ParallelTransition showTransition = new ParallelTransition(slideOut, fadeOut);
-            showTransition.setOnFinished(event -> gridPaneIcons.setVisible(false));
-            showTransition.play();
-
-
-        }
-
-
-    }//showIcons
 
     private void mostrarSlider(Window owner) {
         Stage dialog = new Stage();
@@ -1403,7 +1280,6 @@ public class EditarNotaController {
 
 
     private void checkCheckBoxes() {
-        //    String rayones = "", golpes = "", tapones = "", tapetes = "", radio = "", gato = "", llave = "", llanta = "";
 
         //rayones
         if (cbRayonesSi.isSelected() && !cbRayonesNo.isSelected())
@@ -1584,7 +1460,7 @@ public class EditarNotaController {
             try {
 
                 notaService.actualizarNota(notaRegistrar, ndRegistrar);
-             //   notaService.actualizarUpdatedAtNota(notaActualizar.getNotaId(), getFechaActual());
+
 
                 mostrarInformacion("Nota Actualizada", "", "Los cambios se guardaron correctamente.");
 
