@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.nota.model.NotaDTO;
+import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -80,6 +81,12 @@ public class EditarSaldoController {
     private void actualizar(ActionEvent event){
         String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         try {
+
+            if (Float.parseFloat(txtSaldo.getText()) == 0){
+                notaService.actualizarStatus(StatusNota.PAGADO.toString(),notaSaldo.getNotaId());
+            }else {
+                notaService.actualizarStatus(StatusNota.A_FAVOR.toString(),notaSaldo.getNotaId());
+            }
 
             notaService.actualizarSaldo(Float.parseFloat(txtSaldo.getText()),notaSaldo.getNotaId());
             notaService.actualizarUpdatedAtNota(notaSaldo.getNotaId(),fecha);

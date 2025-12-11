@@ -7,7 +7,6 @@ import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.repository.NotaRepository;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import com.mastertyres.notaDetalle.repository.NotaDetalleRepository;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,7 +58,7 @@ public class NotaService implements INotaService {
             if (porNumNota.getActive().equals(StatusNota.ACTIVE.toString()))
                 throw new NotaException("Ya existe una nota registrada con el número: " + porNumNota.getNumNota());
             else if (porNumNota.getActive().equals(StatusNota.INACTIVE.toString())) {
-                System.out.println("Numero de nota: "+ porNumNota.getNotaId());
+                porNumNota.setActive(StatusNota.ACTIVE.toString());
                 notaDetalleRepository.deleteById(porNumNota.getNotaId());
                 notaRepository.deleteById(porNumNota.getNotaId());
                 notaRepository.flush();
@@ -67,6 +66,7 @@ public class NotaService implements INotaService {
             }
 
         }
+        nota.setActive(StatusNota.ACTIVE.toString());
         notaRepository.save(nota);
         notaDetalleRepository.save(notaDetalle);
 
@@ -76,7 +76,7 @@ public class NotaService implements INotaService {
     @Override
     public NotaDTO buscarPorNumNota(String active, String numNota) {
 
-       return notaRepository.buscarPorNumNota(active,numNota);
+        return notaRepository.buscarPorNumNota(active, numNota);
 
     }
 
@@ -91,7 +91,7 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void actualizarAdeudo(float adeudo, String fechaVencimiento, Integer notaId) {
-        notaRepository.actualizarAdeudo(adeudo,fechaVencimiento,notaId);
+        notaRepository.actualizarAdeudo(adeudo, fechaVencimiento, notaId);
 
     }
 
@@ -99,14 +99,14 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void actualizarUpdatedAtNota(Integer notaId, String updatedAt) {
-        notaRepository.actualizarUpdatedAtNota(notaId,updatedAt);
+        notaRepository.actualizarUpdatedAtNota(notaId, updatedAt);
     }
 
     @Modifying
     @Transactional
     @Override
     public void actualizarSaldo(float saldo, Integer notaId) {
-        notaRepository.actualizarSaldo(saldo,notaId);
+        notaRepository.actualizarSaldo(saldo, notaId);
     }
 
 
@@ -120,13 +120,19 @@ public class NotaService implements INotaService {
     @Transactional(readOnly = true)
     @Override
     public Nota buscarPorId(Integer notaId) {
-        return notaRepository.findById(notaId).orElseThrow(()-> new NotaException("Error al guardar nota"));
+        return notaRepository.findById(notaId).orElseThrow(() -> new NotaException("Error al guardar nota"));
     }
 
     @Transactional
     @Override
     public void actualizarNumFactura(String numNota, Integer notaId) {
-        notaRepository.actualizarNumFactura(numNota,notaId);
+        notaRepository.actualizarNumFactura(numNota, notaId);
+    }
+
+    @Transactional
+    @Override
+    public void actualizarStatus(String status, Integer notaId) {
+        notaRepository.actualizarStatus(status,notaId);
     }
 
 

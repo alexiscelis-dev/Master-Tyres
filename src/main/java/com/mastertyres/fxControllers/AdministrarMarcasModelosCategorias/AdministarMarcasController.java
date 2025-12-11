@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
-import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MensajesAlert;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
@@ -158,90 +158,7 @@ public class AdministarMarcasController {
         return card;
     }
 
-//    private void cargarMarcasFiltradas(String filtro) {
-//        Pageable pageable = PageRequest.of(0, tamañoPagina);
-//
-//        // 🔍 Buscar en marcas, modelos y categorías
-//        Page<Marca> paginaMarcas = marcaService.buscarMarcasPorNombre(filtro, pageable);
-//        Page<Modelo> paginaModelos = modeloService.buscarModelosPorNombre(filtro, pageable);
-//        Page<Categoria> paginaCategorias = categoriaService.buscarCategoriasPorNombre(filtro, pageable);
-//
-//        // 🔄 Unificar resultados (solo marcas únicas)
-//        Set<Marca> marcasUnicas = new HashSet<>(paginaMarcas.getContent());
-//
-//        // 🔗 Agregar marcas encontradas desde modelos
-//        for (Modelo modelo : paginaModelos.getContent()) {
-//            if (modelo.getMarca_id() != null) {
-//                marcasUnicas.add(modelo.getMarca_id());
-//            }
-//        }
-//
-//        // 🔗 Agregar marcas encontradas a través de las categorías (por detalleCategoria)
-//        for (Categoria categoria : paginaCategorias.getContent()) {
-//            List<DetalleCategoria> detalles = detalleCategoriaService.findByCategoria(categoria);
-//            for (DetalleCategoria detalle : detalles) {
-//                if (detalle.getMarca() != null) {
-//                    marcasUnicas.add(detalle.getMarca());
-//                }
-//            }
-//        }
-//
-//        // 🧱 Mostrar resultados en la UI
-//        List<Marca> listaFinal = new ArrayList<>(marcasUnicas);
-//        mostrarMarcas(listaFinal);
-//
-//        // ⚙️ Configurar el paginador
-//        int totalPaginas = Math.max(
-//                Math.max(paginaMarcas.getTotalPages(), paginaModelos.getTotalPages()),
-//                paginaCategorias.getTotalPages()
-//        );
-//
-//        PaginadorMarcas.setPageCount(totalPaginas);
-//        PaginadorMarcas.setCurrentPageIndex(0);
-//
-//        // 📄 Escuchar cambios de página
-//        PaginadorMarcas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
-//            int pageIndex = newIndex.intValue();
-//            Pageable nuevaPagina = PageRequest.of(pageIndex, tamañoPagina);
-//
-//            Page<Marca> nuevasMarcas = marcaService.buscarMarcasPorNombre(filtro, nuevaPagina);
-//            Page<Modelo> nuevosModelos = modeloService.buscarModelosPorNombre(filtro, nuevaPagina);
-//            Page<Categoria> nuevasCategorias = categoriaService.buscarCategoriasPorNombre(filtro, nuevaPagina);
-//
-//            Set<Marca> nuevasUnicas = new HashSet<>(nuevasMarcas.getContent());
-//
-//            for (Modelo mo : nuevosModelos.getContent()) {
-//                if (mo.getMarca_id() != null) {
-//                    nuevasUnicas.add(mo.getMarca_id());
-//                }
-//            }
-//
-//            for (Categoria ca : nuevasCategorias.getContent()) {
-//                List<DetalleCategoria> detalles = detalleCategoriaService.findByCategoria(ca);
-//                for (DetalleCategoria det : detalles) {
-//                    if (det.getMarca() != null) {
-//                        nuevasUnicas.add(det.getMarca());
-//                    }
-//                }
-//            }
-//
-//            mostrarMarcasPorNombre(new ArrayList<>(nuevasUnicas));
-//        });
-//    }
 
-//    private void cargarMarcasFiltradas(String filtro) {
-//        // Buscar detalleCategoria que coincidan con el texto
-//        List<DetalleCategoria> detalles = detalleCategoriaService.buscarPorTexto(filtro);
-//
-//        // Extraer marcas únicas de los resultados
-//        List<Marca> marcasFiltradas = detalles.stream()
-//                .map(DetalleCategoria::getMarca)
-//                .distinct()
-//                .toList();
-//
-//
-//        mostrarMarcas(marcasFiltradas);
-//    }
     private void cargarMarcasFiltradas(String filtro) {
         Page<Marca> paginaFiltrada = marcaService.buscarMarcasPorNombre(filtro, PageRequest.of(0, tamañoPagina));
         mostrarMarcasPorNombre(paginaFiltrada.getContent());
@@ -258,9 +175,6 @@ public class AdministarMarcasController {
                 javafx.beans.binding.Bindings.isEmpty(TablaVehiculoMarca.getSelectionModel().getSelectedItems())
         );
 
-//        BtnAgregarModelo.disableProperty().bind(
-//                javafx.beans.binding.Bindings.isEmpty(TablaVehiculoMarca.getSelectionModel().getSelectedItems())
-//        );
 
         BtnEliminarModelo.disableProperty().bind(
                 javafx.beans.binding.Bindings.isEmpty(TablaVehiculoMarca.getSelectionModel().getSelectedItems())
@@ -292,48 +206,6 @@ public class AdministarMarcasController {
         }
     }
 
-//    private void cargarMarcas() {
-//        List<Marca> marcas = marcaService.listarMarcas();
-//        //mostrarMarcas(marcas);
-//    }
-//
-//    private void mostrarMarcas(List<Marca> marcas) {
-//        contenedorMarcas.getChildren().clear();
-//        for (Marca p : marcas) {
-//            //VBox card = crearCardMarca(p);
-//            contenedorMarcas.getChildren().add(card);
-//        }
-//    }
-//
-//    private VBox crearCardMarca(Marca p) {
-//        VBox card = new VBox();
-//        card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
-//        card.setPrefSize(500, 100);
-//
-//        // ========= TEXTO =========
-//        Label lblNombre = new Label(p.getNombreMarca());
-//        lblNombre.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
-//
-//
-//        VBox textBox = new VBox(5, lblNombre);
-//
-//        // ========= CONTENEDOR HORIZONTAL =========
-//        HBox contentBox = new HBox(10, textBox);
-//
-//        card.getChildren().add(contentBox);
-//
-//        // ========= ESTILOS INTERACTIVOS =========
-//        card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
-//        card.setOnMouseExited(e -> card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
-//
-//        // Al hacer clic
-//        card.setOnMouseClicked(event -> {
-//            card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
-//            mostrarModelos(p);
-//        });
-//
-//        return card;
-//    }
     private void mostrarModelos(Marca m){
         marcaSeleccionada = m;
         btnEditarMarca.setDisable(false);

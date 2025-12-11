@@ -1,7 +1,7 @@
 package com.mastertyres.fxControllers.agregarVehiculo;
 
 import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;

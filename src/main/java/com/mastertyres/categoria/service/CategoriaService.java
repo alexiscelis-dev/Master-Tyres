@@ -1,4 +1,4 @@
-package com.mastertyres.categoria.services;
+package com.mastertyres.categoria.service;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.repository.CategoriaRepository;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CategoriaService implements ICategoriaServices {
+public class CategoriaService implements ICategoriaService {
 
     private final CategoriaRepository categoriaRepository;
 
@@ -19,7 +19,7 @@ public class CategoriaService implements ICategoriaServices {
         this.categoriaRepository = categoriaRepository;
     }
 
-    // 🔹 Listar categorías excluyendo la genérica
+    //  Listar categorías excluyendo la genérica
     @Override
     public List<Categoria> listarCategorias() {
         return categoriaRepository.findAll()
@@ -28,12 +28,12 @@ public class CategoriaService implements ICategoriaServices {
                 .toList();
     }
 
-    // 🔹 Listar nombres sin incluir la genérica
+    //  Listar nombres sin incluir la genérica
     public List<String> listarNombresCategorias() {
         return categoriaRepository.listarNombresCategorias();
     }
 
-    // 🔹 Buscar categorías por nombre (excluyendo la genérica)
+    //  Buscar categorías por nombre (excluyendo la genérica)
     public Page<Categoria> buscarCategoriasPorNombre(String filtro, Pageable pageable) {
         return categoriaRepository.buscarCategoriasPorNombre(filtro, pageable);
     }
