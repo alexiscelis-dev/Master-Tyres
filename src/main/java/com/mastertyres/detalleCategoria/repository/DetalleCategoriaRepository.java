@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,21 +17,7 @@ import java.util.Optional;
 @Repository
 public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategoria, Integer> {
 
-//    // Obtener todos los modelos + categorias por marca
-//    @Query("""
-//       SELECT d FROM DetalleCategoria d
-//       JOIN FETCH d.modelo
-//       JOIN FETCH d.categoria
-//       WHERE d.marca.marcaId = :marcaId
-//       """)
-//    List<DetalleCategoria> findByMarcaId(@Param("marcaId") Integer marcaId);
-//
-//    @Query("SELECT d FROM DetalleCategoria d " +
-//            "JOIN FETCH d.marca " +
-//            "JOIN FETCH d.modelo " +
-//            "JOIN FETCH d.categoria " +
-//            "WHERE d.marca = :marca")
-//    List<DetalleCategoria> findByMarcaWithRelations(@Param("marca") Marca marca);
+
 
     // Obtener todos los modelos + categorías por marca, excluyendo los genéricos
     @Query("""

@@ -2,11 +2,10 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 
 import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.MensajesAlert;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.services.ModeloService;
 import javafx.beans.property.BooleanProperty;
@@ -27,26 +26,32 @@ import java.util.List;
 @Component
 public class EditarModeloController {
 
-    @FXML private TextField txtModelo;
-    @FXML private Button btnGuardar;
-    @FXML private ChoiceBox<Categoria> choiceCategoria;
+    @FXML
+    private TextField txtModelo;
+    @FXML
+    private Button btnGuardar;
+    @FXML
+    private ChoiceBox<Categoria> choiceCategoria;
 
     private BooleanProperty ModeloValido = new SimpleBooleanProperty(true);
 
     private Modelo modeloSeleccionada;
     private DetalleCategoria detalleCategoriaSeleccionado;
 
-    @Autowired private ModeloService modeloService;
-    @Autowired private CategoriaService categoriaService;
-    @Autowired private DetalleCategoriaService detalleCategoriaService;
+    @Autowired
+    private ModeloService modeloService;
+    @Autowired
+    private CategoriaService categoriaService;
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         configurarValidaciones();
         cargarCategorias();
     }
 
-    private void cargarCategorias(){
+    private void cargarCategorias() {
         List<Categoria> categorias = categoriaService.listarCategorias();
         choiceCategoria.setItems(FXCollections.observableArrayList(categorias));
         choiceCategoria.setConverter(new StringConverter<>() {
@@ -54,6 +59,7 @@ public class EditarModeloController {
             public String toString(Categoria categoria) {
                 return categoria != null ? categoria.getNombreCategoria() : "";
             }
+
             @Override
             public Categoria fromString(String string) {
                 return null;
@@ -110,7 +116,6 @@ public class EditarModeloController {
     public void GuardarCambios(ActionEvent actionEvent) {
 
 
-
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
                 "¿Desea guardar los cambios en este Modelo?",
@@ -119,7 +124,7 @@ public class EditarModeloController {
                 "Cancelar"
         );
 
-        if (confirmar){
+        if (confirmar) {
             try {
                 modeloSeleccionada.setNombreModelo(txtModelo.getText());
                 detalleCategoriaSeleccionado.setCategoria(choiceCategoria.getValue());

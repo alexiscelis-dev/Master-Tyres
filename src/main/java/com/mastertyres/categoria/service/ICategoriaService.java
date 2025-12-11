@@ -1,8 +1,8 @@
-package com.mastertyres.categoria.services;
+package com.mastertyres.categoria.service;
 
 import com.mastertyres.categoria.model.Categoria;
 import java.util.List;
 
-public interface ICategoriaServices {
+public interface ICategoriaService {
     List<Categoria> listarCategorias();
 }

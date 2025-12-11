@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.nota.model.NotaDTO;
+import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -48,7 +49,6 @@ public class EditarAdeudoController {
 
     @FXML
     private void initialize() {
-
 
 
         configuraciones();
@@ -119,10 +119,17 @@ public class EditarAdeudoController {
 
     private void actualizar(NotaDTO notaAdeudo) {
 
+        if (Float.parseFloat(txtAdeudo.getText()) == 0) {
+            notaService.actualizarStatus(StatusNota.PAGADO.toString(), notaAdeudo.getNotaId());
+            dpFecha.setValue(null);
+        } else {
+            notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), notaAdeudo.getNotaId());
+        }
+
         String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String fechaStr = null;
 
-        //if asig null si el datePicker no tiene nada seleccionado
+        //if asiga null si el datePicker no tiene nada seleccionado
         if (dpFecha.getValue() != null)
             fechaStr = dpFecha.getValue().toString();
 
@@ -130,6 +137,9 @@ public class EditarAdeudoController {
         try {
             notaService.actualizarAdeudo(Float.parseFloat(txtAdeudo.getText()), fechaStr, notaAdeudo.getNotaId());
             notaService.actualizarUpdatedAtNota(notaAdeudo.getNotaId(), fecha);
+
+
+
             Stage stage = (Stage) txtAdeudo.getScene().getWindow();
             stage.close();
             mostrarInformacion("Adeudo actualizado", "", "El adeudo se actualizo correctamente. Puede consultar mas detalles en  nota '+' Detalles cliente.");
@@ -144,7 +154,6 @@ public class EditarAdeudoController {
 
 
     }//actualizar
-
 
 
 }//class

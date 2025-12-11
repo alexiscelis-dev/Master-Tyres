@@ -1,7 +1,7 @@
 package com.mastertyres.fxControllers.agregarCliente;
 
 import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.categoria.services.CategoriaService;
+import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.MenuContextSetting;
@@ -444,14 +444,6 @@ public class AgregarClienteController {
         return resultado.toString().trim();
     }
 
-    private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
     private void cargarOpciones() {
         List<Marca> marcas = marcaService.listarMarcas();
         List<Modelo> modelos = modeloService.listarModelos();
@@ -534,7 +526,7 @@ public class AgregarClienteController {
     private void agregarVehiculo(ActionEvent event) {
 
         if (!serieValido.get() || !kilometrosValido.get() || !placasValido.get()) {
-            mostrarAlerta("Error en campos", "Por favor, corrige los campos marcados en rojo antes de agregar vehiculo");
+            mostrarWarning("Error en campos", "","Por favor, corrige los campos marcados en rojo antes de agregar vehiculo");
             return;
         }
         Vehiculo v = new Vehiculo();

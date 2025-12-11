@@ -195,7 +195,7 @@ AND (
             "JOIN v.marca m " +
             "JOIN v.modelo mo " +
             "JOIN v.categoria ca " +
-            "JOIN n.inventario i " +
+            "LEFT JOIN n.inventario i " +
             "WHERE n.active = :active AND  n.numNota = :numNota")
     NotaDTO buscarPorNumNota(@Param("active")String active, @Param("numNota")String numNota);
 
@@ -219,6 +219,11 @@ AND (
     @Modifying
     @Query("UPDATE Nota n SET n.numFactura = :numFactura WHERE n.notaId = :notaId ")
     void actualizarNumFactura(@Param("numFactura")String numFactura, @Param("notaId")Integer notaId);
+
+    @Modifying
+    @Query("UPDATE Nota n SET n.statusNota = :status WHERE n.notaId = :notaId ")
+    void actualizarStatus(@Param("status")String status,@Param("notaId")Integer notaId);
+
 
 
 

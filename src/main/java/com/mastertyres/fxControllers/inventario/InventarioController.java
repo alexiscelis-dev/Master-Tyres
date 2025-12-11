@@ -1,7 +1,5 @@
 package com.mastertyres.fxControllers.inventario;
 
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarInventarioController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -175,7 +173,7 @@ public class InventarioController {
                 String seleccion = atributoBusquedaInventario.getValue();
                 String busqueda = buscarInventarioBuscador.getText();
 
-                // 🔥 SOLO ejecutar búsqueda general si NO hay filtro
+                //  SOLO ejecutar búsqueda general si NO hay filtro
                 if (seleccion == null || seleccion.isEmpty()) {
 
                     if (busqueda == null || busqueda.isEmpty()) {
@@ -278,6 +276,7 @@ public class InventarioController {
                                         stage.setResizable(false);
                                         stage.setScene(new Scene(root));
                                         stage.showAndWait();
+                                        cargarInventario();
 
                                     } catch (IOException ex) {
                                         mostrarError("Ocurrio un error", "", "Ocurrio un error al mostrar la ventana");
@@ -637,7 +636,7 @@ public class InventarioController {
         modoBusqueda = !busqueda.trim().isEmpty();
 
         if (modoBusqueda) {
-            // 🔥 total de resultados para el buscador general
+            //  total de resultados para el buscador general
             long totalResultados = inventarioService.contarInventarioPorBusquedaGeneral(
                     StatusInventario.ACTIVE.toString(),
                     terminoBusquedaActual

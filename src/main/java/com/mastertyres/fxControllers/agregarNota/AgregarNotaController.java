@@ -1104,9 +1104,11 @@ public class AgregarNotaController {
                         .fechaYHora(fechaYhora)
                         .fechaVencimiento("")
                         .total(toFloatSafe(txtTotal.getText())) // datos nota
+
                         //obserbaciones
                         .observaciones(txtObservaciones.getText())
                         .observaciones2(txtObservaciones2.getText())
+
                         //porcentaje gasolina
                         .porcentajeGas(getPorcentajeGasNota())
                         //checkBox
@@ -1137,42 +1139,52 @@ public class AgregarNotaController {
                         .amorDelCantidad(toIntSafe(txtAmorDelCantidad.getText()))
                         .amorDelUnitario(toFloatSafe(txtAmorDelUnitario.getText()))
                         .amorDelTotal(toFloatSafe(txtAmorDelTotal.getText()))
+
                         .amorTraseros(txtAmorTraseros.getText())
                         .amorTrasCantidad(toIntSafe(txtAmorDelCantidad.getText()))
                         .amorTrasUnitario(toFloatSafe(txtAmorTrasUnitario.getText()))
                         .amorTrasTotal(toFloatSafe(txtAmorTrasTotal.getText()))
+
                         .suspension(txtSuspension.getText())
                         .suspensionCantidad(toIntSafe(txtSuspensionCantidad.getText()))
                         .suspensionUnitario(toFloatSafe(txtSuspensionUnitario.getText()))
                         .suspensionTotal(toFloatSafe(txtSuspensionTotal.getText()))
+
                         .suspension2(txtSuspension2.getText())
                         .suspensionCantidad2(toIntSafe(txtSuspensionCantidad2.getText()))
                         .suspensionUnitario2(toFloatSafe(txtSuspensionUnitario2.getText()))
                         .suspensionTotal2(toFloatSafe(txtSuspensionTotal2.getText()))
+
                         .mecanica(txtMecanica.getText())
                         .mecanicaCantidad(toIntSafe(txtMecanicaCantidad.getText()))
                         .mecanicaUnitario(toFloatSafe(txtMecanicaUnitario.getText()))
                         .mecanicaTotal(toFloatSafe(txtMecanicaTotal.getText()))
+
                         .mecanica2(txtMecanica2.getText())
                         .mecanicaCantidad2(toIntSafe(txtMecanicaCantidad2.getText()))
                         .mecanicaUnitario2(toFloatSafe(txtMecanicaUnitario2.getText()))
                         .mecanicaTotal2(toFloatSafe(txtMecanicaTotal2.getText()))
+
                         .frenos(txtFrenos.getText())
                         .frenosCantidad(toIntSafe(txtFrenosCantidad.getText()))
                         .frenosUnitario(toFloatSafe(txtFrenosUnitario.getText()))
                         .frenosTotal(toFloatSafe(txtFrenosTotal.getText()))
+
                         .frenos2(txtFrenos2.getText())
                         .frenosCantidad2(toIntSafe(txtFrenosCantidad2.getText()))
-                        .frenosUnitario2(toFloatSafe(txtFrenosUnitario.getText()))
+                        .frenosUnitario2(toFloatSafe(txtFrenosUnitario2.getText()))
                         .frenosTotal2(toFloatSafe(txtFrenosTotal2.getText()))
+
                         .otros(txtOtros.getText())
                         .otrosCantidad(toIntSafe(txtOtrosCantidad.getText()))
-                        .otrosUnitario(toFloatSafe(txtOtrosTotal.getText()))
+                        .otrosUnitario(toFloatSafe(txtOtrosUnitario.getText()))
                         .otrosTotal(toFloatSafe(txtOtrosTotal.getText()))
+
                         .otros2(txtOtros2.getText())
                         .otrosCantidad2(toIntSafe(txtOtrosCantidad2.getText()))
                         .otrosUnitario2(toFloatSafe(txtOtrosUnitario2.getText()))
                         .otrosTotal2(toFloatSafe(txtOtrosTotal2.getText()))
+
                         //subtotales de la parte de la derecha
                         .subTotalFrenos(toFloatSafe(txtSubTotalFrenos.getText()))
                         .subTotalMecanica(toFloatSafe(txtSubTotalMecanica.getText()))
@@ -1433,7 +1445,6 @@ public class AgregarNotaController {
                 "Continuar",
                 "Cancelar"
         );
-
 
         if (confirmar) {
             setInventarioNota(null);

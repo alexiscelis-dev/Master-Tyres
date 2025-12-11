@@ -1449,6 +1449,7 @@ public class EditarNotaController {
             notaRegistrar.setStatusNota(notaActualizar.getStatusNota());
             notaRegistrar.setCliente(cliente);
             notaRegistrar.setVehiculo(vehiculo);
+            notaRegistrar.setCreatedAt(LocalDateTime.now().toString());
 
 
             //datos cliente y vehiculo
@@ -1524,19 +1525,11 @@ public class EditarNotaController {
             ndRegistrar.setLlantaTotal(toFloatSafe(txtLlantasTotal.getText()));
 
 
-            System.out.println("notaRegistrar = " + notaRegistrar);
-            System.out.println("ndRegistrar = " + ndRegistrar);
-            System.out.println("cliente = " + cliente);
-            System.out.println("vehiculo = " + vehiculo);
-
 
             try {
 
                 notaService.actualizarNota(notaRegistrar, ndRegistrar);
-
-                LocalDateTime fecha = LocalDateTime.now();
-                String fechaStr = fecha.toString();
-                notaService.actualizarUpdatedAtNota(notaActualizar.getNotaId(), fechaStr);
+             //   notaService.actualizarUpdatedAtNota(notaActualizar.getNotaId(), getFechaActual());
 
                 mostrarInformacion("Nota Actualizada", "", "Los cambios se guardaron correctamente.");
 
