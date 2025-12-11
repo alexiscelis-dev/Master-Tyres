@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static com.mastertyres.common.FechaUtils.formatearFecha;
+import static com.mastertyres.common.FechaUtils.formatearFechaHora;
 
 @Component
 public class detalleVehiculo {
@@ -55,28 +57,6 @@ public class detalleVehiculo {
 
         txtFechaActualizacion.setText(txtFechaActualizacion.getText() + " " + formatearFechaHora(v.getUpdated_at()));
 
-    }
-
-    private String formatearFecha(String fecha) {
-        if (fecha == null || fecha.isBlank()) return "No especificado";
-
-        try {
-            LocalDate f = LocalDate.parse(fecha); // Para formato yyyy-MM-dd
-            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        } catch (Exception e) {
-            return "No especificado";
-        }
-    }
-
-    private String formatearFechaHora(String fechaHora) {
-        if (fechaHora == null || fechaHora.isBlank()) return "No especificado";
-
-        try {
-            LocalDateTime f = LocalDateTime.parse(fechaHora.replace(" ", "T"));
-            return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        } catch (Exception e) {
-            return "No especificado";
-        }
     }
 
     private String valorONull(String valor) {

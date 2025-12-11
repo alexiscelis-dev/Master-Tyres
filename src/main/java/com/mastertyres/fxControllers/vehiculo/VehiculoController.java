@@ -1,17 +1,15 @@
 package com.mastertyres.fxControllers.vehiculo;
 
 
-import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
+import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,13 +20,11 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
@@ -49,6 +45,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mastertyres.common.FechaUtils.getFechaFormateada;
+import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
 import static com.mastertyres.common.MensajesAlert.*;
 
 
@@ -253,25 +251,17 @@ public class VehiculoController {
 
                                     if (item != null) {
 
+                                        String ultimoServicio = "",fechaRegistro = "";
 
-                                        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                                        DateTimeFormatter registroFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                                        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                                        String fechaRegistro = "", ultimoServicio = "";
-                                        LocalDate fecha;
 
                                         if (item.getUltimoServicio() != null && !item.getUltimoServicio().isEmpty()) {
+                                            fechaRegistro = getFechaFormateadaSegundos(item.getFechaRegistro());
+                                            ultimoServicio = getFechaFormateada(item.getUltimoServicio());
 
-                                            fecha = LocalDate.parse(item.getUltimoServicio(), inputFormatter);
-                                            ultimoServicio = fecha.format(outputFormatter);
-
-                                            fecha = LocalDate.parse(item.getFechaRegistro(), registroFormatter);
-                                            fechaRegistro = fecha.format(outputFormatter);
 
                                         } else {
 
-                                            fecha = LocalDate.parse(item.getFechaRegistro(), registroFormatter);
-                                            fechaRegistro = fecha.format(outputFormatter);
+                                            fechaRegistro = getFechaFormateadaSegundos(item.getFechaRegistro());
                                             ultimoServicio = "";
 
                                         }
@@ -287,7 +277,6 @@ public class VehiculoController {
                                                 (item.getPlacas() != null ? item.getPlacas() : "") + " " +
                                                 (item.getNumSerie() != null ? item.getNumSerie() : "") + " " +
                                                 (item.getKilometros() != null ? item.getKilometros() : "") + " " +
-                                                (item.getObservaciones() != null ? item.getObservaciones() : "") + " " +
                                                 ultimoServicio + " " + fechaRegistro;
 
 
@@ -332,16 +321,7 @@ public class VehiculoController {
 
 
         //Enter buscar
-        /*buscarVehiculoBuscador.setOnKeyPressed(event -> {
 
-            if (event.getCode() == KeyCode.ENTER) {
-                String seleccion = atributoBusquedaVehiculos.getValue(), busqueda = buscarVehiculoBuscador.getText();
-
-                if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty())
-                    buscarVehiculo(seleccion.toLowerCase(), busqueda);
-
-            }
-        });*/
         buscarVehiculoBuscador.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
 
@@ -364,28 +344,7 @@ public class VehiculoController {
         });
 
         //Buscar mientras escribes
-        /*buscarVehiculoBuscador.setOnKeyReleased(event -> {
 
-            if (event.getCode() != KeyCode.ENTER) {
-                delayQuery.setOnFinished(e -> {
-                    String seleccion = atributoBusquedaVehiculos.getValue();
-                    String busqueda = buscarVehiculoBuscador.getText();
-
-                    if (seleccion == null && busqueda != null && !busqueda.isEmpty()) {
-                        buscarVehiculo(busqueda);
-                    } else {
-                        // Si no hay búsqueda, salir del modo búsqueda y recargar tabla
-                        modoBusqueda = false;
-                        terminoBusquedaActual = "";
-                        paginadorVehiculos.setPageFactory(this::crearPaginaVehiculo);
-                        paginadorVehiculos.setCurrentPageIndex(0);
-                    }
-
-                });
-                delayQuery.playFromStart();
-            }
-
-        });*/
         buscarVehiculoBuscador.setOnKeyReleased(event -> {
 
             if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
@@ -514,7 +473,7 @@ public class VehiculoController {
                         }
                     }
 
-                    // ==== 🔹 KILOMETRAJE (ej: 10000 o 0,50000) ====
+                    //  KILOMETRAJE (ej: 10000 o 0,50000) ====
                     case "kilometraje" -> {
 
                         if (busqueda.matches("\\d+")) {
@@ -928,7 +887,7 @@ public class VehiculoController {
                 }
             }
 
-            // ==== 🔹 ÚLTIMO SERVICIO (dd-MM-yyyy o rango) ====
+            // ==== ÚLTIMO SERVICIO (dd-MM-yyyy o rango) ====
             case "ultimo servicio" -> {
                 boolean consultar = false;
                 //forma dd-mm-yyyy
@@ -1099,7 +1058,7 @@ public class VehiculoController {
         modoBusqueda = !busqueda.trim().isEmpty();
 
         if (modoBusqueda) {
-            // 🔥 total de resultados para el buscador general
+            //  total de resultados para el buscador general
             long totalResultados = vehiculoService.contarVehiculosPorBusquedaGeneral(
                     StatusVehiculo.ACTIVE.toString(),
                     terminoBusquedaActual

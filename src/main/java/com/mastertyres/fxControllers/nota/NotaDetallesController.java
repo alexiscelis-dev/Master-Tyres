@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static com.mastertyres.common.FechaUtils.getFechaFormateada;
+
 @Component
 public class NotaDetallesController {
 
@@ -51,8 +53,9 @@ public class NotaDetallesController {
     }//setNotaDetalles
 
     private void llenarNota() {
-        String strAdeudo = "Sin adeudo", strSaldo = "Sin saldo disponible", strStatus = "Estado:  ",
-                strNumFactura = "", strFechaVencimiento = "", strGenero = "", strTipoCliente = "", generoComparar = "";
+        String strAdeudo = "N/A", strSaldo = "N/A", strStatus = "",
+                strNumFactura = "", strGenero = "", strTipoCliente = "",
+                generoComparar = "", fechaFormateadaVencimiento = "N/A";
 
 
         lblNumNota.setText("Numero de nota:  " + notaDetalles.getNumNota());
@@ -60,8 +63,15 @@ public class NotaDetallesController {
         strNumFactura = notaDetalles.getNumFactura() != null ? notaDetalles.getNumFactura() : "Sin facturar";
         lblNumFactura.setText("Numero de nota:  " + strNumFactura);
 
-        strFechaVencimiento = notaDetalles.getFechaVencimiento() != null ? notaDetalles.getFechaVencimiento() : "N/A";
-        lblFechaVencimiento.setText("Fecha de vencimiento:  " + strFechaVencimiento);
+
+        if (notaDetalles.getFechaVencimiento() != null) {
+
+            fechaFormateadaVencimiento = getFechaFormateada(notaDetalles.getFechaVencimiento());
+
+        }
+
+
+        lblFechaVencimiento.setText("Fecha de vencimiento:  " + fechaFormateadaVencimiento);
 
 
         if (notaDetalles.getAdeudo() != 0)
@@ -81,7 +91,7 @@ public class NotaDetallesController {
         else if (notaDetalles.getStatusNota().equals(StatusNota.A_FAVOR.toString()))
             strStatus += "Con saldo a favor";
 
-        lblStatus.setText(strStatus);
+        lblStatus.setText("Estado:  " + strStatus);
 
         String fechaBd = notaDetalles.getCreatedAt();
 
@@ -95,8 +105,8 @@ public class NotaDetallesController {
 
         generoComparar = notaDetalles.getGenero();
 
-        if (generoComparar != null){
-            switch (generoComparar){
+        if (generoComparar != null) {
+            switch (generoComparar) {
                 case "M" -> strGenero = "Masculino";
                 case "F" -> strGenero = "Femenino";
                 case "O" -> strGenero = "Otro";
@@ -107,11 +117,10 @@ public class NotaDetallesController {
 
         lblGenero.setText("Genero:  " + strGenero);
 
-        switch (notaDetalles.getTipoCliente()){
+        switch (notaDetalles.getTipoCliente()) {
             case "INDIVIDUAL" -> strTipoCliente = "INDIVIDUAL";
             case "EMPRESA" -> strTipoCliente = "EMPRESA";
         }
-
 
 
         lblTipoCliente.setText("Tipo de cliente : " + strTipoCliente);
