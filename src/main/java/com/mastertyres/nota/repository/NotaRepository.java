@@ -230,5 +230,11 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @Query("UPDATE Nota n SET n.statusNota = :status WHERE n.notaId = :notaId ")
     void actualizarStatus(@Param("status") String status, @Param("notaId") Integer notaId);
 
+    @Modifying
+    @Query("UPDATE Nota n SET n.active = :active WHERE n.notaId = :notaId")
+    void eliminarNota(@Param("active") String active, @Param("notaId") Integer notaId);
+
+
+
 
 }//clase

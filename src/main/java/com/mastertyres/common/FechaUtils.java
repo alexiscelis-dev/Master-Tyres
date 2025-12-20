@@ -1,5 +1,7 @@
 package com.mastertyres.common;
 
+import javafx.scene.control.TextField;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +56,20 @@ public class FechaUtils {
     public static String getFechaActual(){
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
+
+    public static void mostrarFechayHora(TextField txtDia, TextField txtMes, TextField txtAnio, TextField txtHoraEntrega) {
+        LocalDate hoy = LocalDate.now();
+        txtDia.setText(String.format("%02d", hoy.getDayOfMonth()));
+        txtMes.setText(String.format("%02d", hoy.getMonthValue()));
+        txtAnio.setText(String.valueOf(hoy.getYear()));
+
+        LocalDateTime fechayHora = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        String hora = fechayHora.format(formatter);
+        txtHoraEntrega.setText(hora);
+
+    }//mostrarFecha
+
 
 
 }//class

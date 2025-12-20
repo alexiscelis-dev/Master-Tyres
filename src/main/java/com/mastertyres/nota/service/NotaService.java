@@ -119,9 +119,10 @@ public class NotaService implements INotaService {
 
     @Transactional
     @Override
-    public void actualizarNota(Nota nota, NotaDetalle notaDetalle) {
+    public void actualizarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle) {
         notaRepository.save(nota);
         notaDetalleRepository.save(notaDetalle);
+        notaClienteDetRepository.save(clienteDetalle);
     }
 
     @Transactional(readOnly = true)
@@ -140,6 +141,12 @@ public class NotaService implements INotaService {
     @Override
     public void actualizarStatus(String status, Integer notaId) {
         notaRepository.actualizarStatus(status,notaId);
+    }
+
+    @Transactional
+    @Override
+    public void eliminarNota(String active, Integer notaId) {
+        notaRepository.eliminarNota(active, notaId);
     }
 
 

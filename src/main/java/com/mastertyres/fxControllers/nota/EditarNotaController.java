@@ -1,25 +1,25 @@
 package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.common.NotaUtils;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController;
 import com.mastertyres.fxControllers.EditarControllers.EditarSaldoController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
-import com.mastertyres.nota.model.Nota;
-import com.mastertyres.nota.model.NotaDTO;
-import com.mastertyres.nota.model.StatatusSiNo;
-import com.mastertyres.nota.model.StatusNota;
+import com.mastertyres.nota.model.*;
 import com.mastertyres.nota.service.NotaService;
+import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
+import com.mastertyres.notaClienteDetalle.service.NotaClienteDetService;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import com.mastertyres.notaDetalle.service.NotaDetalleService;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -47,7 +47,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.mastertyres.common.MensajesAlert.*;
-import static com.mastertyres.common.NotaUtils.*;
 
 @Component
 public class EditarNotaController {
@@ -276,7 +275,11 @@ public class EditarNotaController {
     @Autowired
     private NotaDetalleService notaDetalleService;
     @Autowired
+    private NotaClienteDetService notaClienteDetService;
+    @Autowired
     private InventarioService inventarioService;
+    @Autowired
+    private NotaUtils notaUtils;
 
 
     @FXML
@@ -292,14 +295,12 @@ public class EditarNotaController {
     @FXML
     private Button btnNotaDetalles;
     @FXML
-    private  Button btnAgregarNumFactura;
+    private Button btnAgregarNumFactura;
 
 
     private PopupControl popup;
     private ComboBox<Integer> cmbHora;
     private ComboBox<Integer> cmbMinuto;
-
-
 
 
     private int porcentajeGasNota;
@@ -313,13 +314,13 @@ public class EditarNotaController {
         configuraciones();
         operacionesCampos();
 
-       mostrarPopupHora(txtHoraEntrega);
+        notaUtils.mostrarPopupHora(txtHoraEntrega);
 
-        btnShowIcons.setOnMouseClicked(event -> showIcons(gridPaneIcons));
+        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons));
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
-        btnActualizarDatos.setOnAction(event -> actualizarDatosCliente(getNotaEditar(), true));
+        btnActualizarDatos.setOnAction(event -> actualizarDatosCliente(notaEditar.getClienteId(), notaEditar.getVehiculoId()));
 
         btnActualizarAdeudo.setOnAction(event -> actualizarAdeudo(getNotaEditar()));
 
@@ -332,10 +333,7 @@ public class EditarNotaController {
         btnAgregarNumFactura.setOnAction(event -> agregarNumFactura(notaEditar));
 
 
-
     }//initialize
-
-
 
 
     public void agregarNota(String numNota) {
@@ -383,7 +381,6 @@ public class EditarNotaController {
 
             //datos cliente
             txtNombre.setText(notaEditar.getNombreClienteNota());
-
             txtDireccion.setText(notaEditar.getDireccion1Nota() != null ? notaEditar.getDireccion1Nota() : "");
             txtDireccion2.setText(notaEditar.getDireccion2Nota() != null ? notaEditar.getDireccion2Nota() : "");
             txtRfc.setText(notaEditar.getRfcNota() != null ? notaEditar.getRfcNota() : "");
@@ -416,74 +413,74 @@ public class EditarNotaController {
 
             //Nota
             txtAlineacion.setText(notaEditar.getAlineacion());
-            txtAlineacionCantidad.setText(eliminarCero(notaEditar.getAlineacionCantidad()));
-            txtAlineacionUnitario.setText(eliminarCero(notaEditar.getAlineacionUnitario()));
-            txtAlineacionTotal.setText(eliminarCero(notaEditar.getAlineacionTotal()));
+            txtAlineacionCantidad.setText(notaUtils.eliminarCero(notaEditar.getAlineacionCantidad()));
+            txtAlineacionUnitario.setText(notaUtils.eliminarCero(notaEditar.getAlineacionUnitario()));
+            txtAlineacionTotal.setText(notaUtils.eliminarCero(notaEditar.getAlineacionTotal()));
 
             txtBalanceo.setText(notaEditar.getBalanceo());
-            txtBalanceoCantidad.setText(eliminarCero(notaEditar.getBalanceoCantidad()));
-            txtBalanceoUnitario.setText(eliminarCero(notaEditar.getBalanceoUnitario()));
-            txtBalanceoTotal.setText(eliminarCero(notaEditar.getBalanceoTotal()));
+            txtBalanceoCantidad.setText(notaUtils.eliminarCero(notaEditar.getBalanceoCantidad()));
+            txtBalanceoUnitario.setText(notaUtils.eliminarCero(notaEditar.getBalanceoUnitario()));
+            txtBalanceoTotal.setText(notaUtils.eliminarCero(notaEditar.getBalanceoTotal()));
 
             txtLlantas.setText(notaEditar.getLlantaCampo());
-            txtLlantasCantidad.setText(eliminarCero(notaEditar.getLlantaCantidad()));
-            txtLlantasUnitario.setText(eliminarCero(notaEditar.getLlantaUnitario()));
-            txtLlantasTotal.setText(eliminarCero(notaEditar.getLlantaTotal()));
+            txtLlantasCantidad.setText(notaUtils.eliminarCero(notaEditar.getLlantaCantidad()));
+            txtLlantasUnitario.setText(notaUtils.eliminarCero(notaEditar.getLlantaUnitario()));
+            txtLlantasTotal.setText(notaUtils.eliminarCero(notaEditar.getLlantaTotal()));
 
             txtAmorDelanteros.setText(notaEditar.getAmorDelanteros());
-            txtAmorDelCantidad.setText(eliminarCero(notaEditar.getAmorDelCantidad()));
-            txtAmorDelUnitario.setText(eliminarCero(notaEditar.getAmorDelUnitario()));
-            txtAmorDelTotal.setText(eliminarCero(notaEditar.getAmorDelTotal()));
+            txtAmorDelCantidad.setText(notaUtils.eliminarCero(notaEditar.getAmorDelCantidad()));
+            txtAmorDelUnitario.setText(notaUtils.eliminarCero(notaEditar.getAmorDelUnitario()));
+            txtAmorDelTotal.setText(notaUtils.eliminarCero(notaEditar.getAmorDelTotal()));
 
             txtAmorTraseros.setText(notaEditar.getAmorTraseros());
-            txtAmorTrasCantidad.setText(eliminarCero(notaEditar.getAmorTrasCantidad()));
-            txtAmorTrasUnitario.setText(eliminarCero(notaEditar.getAmorTrasUnitario()));
-            txtAmorTrasTotal.setText(eliminarCero(notaEditar.getAmorTrasTotal()));
+            txtAmorTrasCantidad.setText(notaUtils.eliminarCero(notaEditar.getAmorTrasCantidad()));
+            txtAmorTrasUnitario.setText(notaUtils.eliminarCero(notaEditar.getAmorTrasUnitario()));
+            txtAmorTrasTotal.setText(notaUtils.eliminarCero(notaEditar.getAmorTrasTotal()));
 
             txtSuspension.setText(notaEditar.getSuspension());
-            txtSuspensionCantidad.setText(eliminarCero(notaEditar.getSuspensionCantidad()));
-            txtSuspensionUnitario.setText(eliminarCero(notaEditar.getSuspensionUnitario()));
-            txtSuspensionTotal.setText(eliminarCero(notaEditar.getSuspensionTotal()));
+            txtSuspensionCantidad.setText(notaUtils.eliminarCero(notaEditar.getSuspensionCantidad()));
+            txtSuspensionUnitario.setText(notaUtils.eliminarCero(notaEditar.getSuspensionUnitario()));
+            txtSuspensionTotal.setText(notaUtils.eliminarCero(notaEditar.getSuspensionTotal()));
 
             txtSuspension2.setText(notaEditar.getSuspension2());
-            txtSuspensionCantidad2.setText(eliminarCero(notaEditar.getSuspensionCantidad2()));
-            txtSuspensionUnitario2.setText(eliminarCero(notaEditar.getSuspensionUnitario2()));
-            txtSuspensionTotal2.setText(eliminarCero(notaEditar.getSuspensionTotal2()));
+            txtSuspensionCantidad2.setText(notaUtils.eliminarCero(notaEditar.getSuspensionCantidad2()));
+            txtSuspensionUnitario2.setText(notaUtils.eliminarCero(notaEditar.getSuspensionUnitario2()));
+            txtSuspensionTotal2.setText(notaUtils.eliminarCero(notaEditar.getSuspensionTotal2()));
 
             txtMecanica.setText(notaEditar.getMecanica());
-            txtMecanicaCantidad.setText(eliminarCero(notaEditar.getMecanicaCantidad()));
-            txtMecanicaUnitario.setText(eliminarCero(notaEditar.getMecanicaUnitario()));
-            txtMecanicaTotal.setText(eliminarCero(notaEditar.getMecanicaTotal()));
+            txtMecanicaCantidad.setText(notaUtils.eliminarCero(notaEditar.getMecanicaCantidad()));
+            txtMecanicaUnitario.setText(notaUtils.eliminarCero(notaEditar.getMecanicaUnitario()));
+            txtMecanicaTotal.setText(notaUtils.eliminarCero(notaEditar.getMecanicaTotal()));
 
             txtMecanica2.setText(notaEditar.getMecanica2());
-            txtMecanicaCantidad2.setText(eliminarCero(notaEditar.getMecanicaCantidad2()));
-            txtMecanicaUnitario2.setText(eliminarCero(notaEditar.getMecanicaUnitario2()));
-            txtMecanicaTotal2.setText(eliminarCero(notaEditar.getMecanicaTotal2()));
+            txtMecanicaCantidad2.setText(notaUtils.eliminarCero(notaEditar.getMecanicaCantidad2()));
+            txtMecanicaUnitario2.setText(notaUtils.eliminarCero(notaEditar.getMecanicaUnitario2()));
+            txtMecanicaTotal2.setText(notaUtils.eliminarCero(notaEditar.getMecanicaTotal2()));
 
             txtFrenos.setText(notaEditar.getFrenos());
-            txtFrenosCantidad.setText(eliminarCero(notaEditar.getFrenosCantidad()));
-            txtFrenosUnitario.setText(eliminarCero(notaEditar.getFrenosUnitario()));
-            txtFrenosTotal.setText(eliminarCero(notaEditar.getFrenosTotal()));
+            txtFrenosCantidad.setText(notaUtils.eliminarCero(notaEditar.getFrenosCantidad()));
+            txtFrenosUnitario.setText(notaUtils.eliminarCero(notaEditar.getFrenosUnitario()));
+            txtFrenosTotal.setText(notaUtils.eliminarCero(notaEditar.getFrenosTotal()));
 
             txtFrenos2.setText(notaEditar.getFrenos2());
-            txtFrenosCantidad2.setText(eliminarCero(notaEditar.getFrenosCantidad2()));
-            txtFrenosUnitario2.setText(eliminarCero(notaEditar.getFrenosUnitario2()));
-            txtFrenosTotal2.setText(eliminarCero(notaEditar.getFrenosTotal2()));
+            txtFrenosCantidad2.setText(notaUtils.eliminarCero(notaEditar.getFrenosCantidad2()));
+            txtFrenosUnitario2.setText(notaUtils.eliminarCero(notaEditar.getFrenosUnitario2()));
+            txtFrenosTotal2.setText(notaUtils.eliminarCero(notaEditar.getFrenosTotal2()));
 
             txtOtros.setText(notaEditar.getOtros());
-            txtOtrosCantidad.setText(eliminarCero(notaEditar.getOtrosCantidad()));
-            txtOtrosUnitario.setText(eliminarCero(notaEditar.getOtrosUnitario()));
-            txtOtrosTotal.setText(eliminarCero(notaEditar.getOtrosTotal()));
+            txtOtrosCantidad.setText(notaUtils.eliminarCero(notaEditar.getOtrosCantidad()));
+            txtOtrosUnitario.setText(notaUtils.eliminarCero(notaEditar.getOtrosUnitario()));
+            txtOtrosTotal.setText(notaUtils.eliminarCero(notaEditar.getOtrosTotal()));
 
             txtOtros2.setText(notaEditar.getOtros2());
-            txtOtrosCantidad2.setText(eliminarCero(notaEditar.getOtrosCantidad2()));
-            txtOtrosUnitario2.setText(eliminarCero(notaEditar.getOtrosUnitario2()));
-            txtOtrosTotal2.setText(eliminarCero(notaEditar.getOtrosTotal2()));
+            txtOtrosCantidad2.setText(notaUtils.eliminarCero(notaEditar.getOtrosCantidad2()));
+            txtOtrosUnitario2.setText(notaUtils.eliminarCero(notaEditar.getOtrosUnitario2()));
+            txtOtrosTotal2.setText(notaUtils.eliminarCero(notaEditar.getOtrosTotal2()));
 
-            txtSubTotalFrenos.setText(eliminarCero(notaEditar.getSubTotalFrenos()));
-            txtSubTotalMecanica.setText(eliminarCero(notaEditar.getSubTotalMecanica()));
-            txtSubTotalOtros.setText(eliminarCero(notaEditar.getSubTotalOtros()));
-            txtTotal.setText(eliminarCero(notaEditar.getTotal()));
+            txtSubTotalFrenos.setText(notaUtils.eliminarCero(notaEditar.getSubTotalFrenos()));
+            txtSubTotalMecanica.setText(notaUtils.eliminarCero(notaEditar.getSubTotalMecanica()));
+            txtSubTotalOtros.setText(notaUtils.eliminarCero(notaEditar.getSubTotalOtros()));
+            txtTotal.setText(notaUtils.eliminarCero(notaEditar.getTotal()));
 
             setNotaEditar(notaEditar);
 
@@ -499,11 +496,11 @@ public class EditarNotaController {
         fillCheckBox(cbRayonesSi, cbRayonesNo, status[0]);
         fillCheckBox(cbGolpesSi, cbGolpesNo, status[1]);
         fillCheckBox(cbTaponesSi, cbTaponesNo, status[2]);
-        fillCheckBox(cbTapetesSi, cbTapetesSi, status[3]);
-        fillCheckBox(cbRadioSi, cbRadioSi, status[4]);
-        fillCheckBox(cbGatoSi, cbGatoSi, status[5]);
-        fillCheckBox(cbLlaveSi, cbLlaveSi, status[6]);
-        fillCheckBox(cbLlantaSi, cbLlantaSi, status[7]);
+        fillCheckBox(cbTapetesSi, cbTapetesNo, status[3]);
+        fillCheckBox(cbRadioSi, cbRadioNo, status[4]);
+        fillCheckBox(cbGatoSi, cbGatoNo, status[5]);
+        fillCheckBox(cbLlaveSi, cbLlaveNo, status[6]);
+        fillCheckBox(cbLlantaSi, cbLlantaNo, status[7]);
 
 
     }//revisarCheckBoxes
@@ -533,7 +530,7 @@ public class EditarNotaController {
     private void operacionesCampos() {
 //Alineacion
         txtAlineacionCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtAlineacionCantidad.getText()) * toFloatSafe(txtAlineacionUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtAlineacionCantidad.getText()) * notaUtils.toFloatSafe(txtAlineacionUnitario.getText());
 
             txtAlineacionTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -541,7 +538,7 @@ public class EditarNotaController {
         });
 
         txtAlineacionUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtAlineacionCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtAlineacionCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
             txtAlineacionTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
 
@@ -550,7 +547,7 @@ public class EditarNotaController {
         //Balanceo
 
         txtBalanceoCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtBalanceoCantidad.getText()) * toFloatSafe(txtBalanceoUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtBalanceoCantidad.getText()) * notaUtils.toFloatSafe(txtBalanceoUnitario.getText());
 
             txtBalanceoTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -558,7 +555,7 @@ public class EditarNotaController {
         });
 
         txtBalanceoUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtBalanceoCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtBalanceoCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtBalanceoTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -567,7 +564,7 @@ public class EditarNotaController {
 
         //llantas
         txtLlantasCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtLlantasCantidad.getText()) * toFloatSafe(txtLlantasUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtLlantasCantidad.getText()) * notaUtils.toFloatSafe(txtLlantasUnitario.getText());
 
             txtLlantasTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -575,7 +572,7 @@ public class EditarNotaController {
         });
 
         txtLlantasUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtLlantasCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtLlantasCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtLlantasTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -584,7 +581,7 @@ public class EditarNotaController {
 
         //amortiguadores delanteros
         txtAmorDelCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtAmorDelCantidad.getText()) * toFloatSafe(txtAmorDelUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtAmorDelCantidad.getText()) * notaUtils.toFloatSafe(txtAmorDelUnitario.getText());
 
             txtAmorDelTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -592,7 +589,7 @@ public class EditarNotaController {
         });
 
         txtAmorDelUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtAmorDelCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtAmorDelCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtAmorDelTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -602,7 +599,7 @@ public class EditarNotaController {
         //amortiguadores traseros
 
         txtAmorTrasCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtAmorTrasCantidad.getText()) * toFloatSafe(txtAmorTrasUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtAmorTrasCantidad.getText()) * notaUtils.toFloatSafe(txtAmorTrasUnitario.getText());
 
             txtAmorTrasTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -610,7 +607,7 @@ public class EditarNotaController {
         });
 
         txtAmorTrasUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtAmorTrasCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtAmorTrasCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtAmorTrasTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -620,7 +617,7 @@ public class EditarNotaController {
         //suspension
 
         txtSuspensionCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtSuspensionCantidad.getText()) * toFloatSafe(txtSuspensionUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtSuspensionCantidad.getText()) * notaUtils.toFloatSafe(txtSuspensionUnitario.getText());
 
             txtSuspensionTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -628,7 +625,7 @@ public class EditarNotaController {
         });
 
         txtSuspensionUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtSuspensionCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtSuspensionCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtSuspensionTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -638,7 +635,7 @@ public class EditarNotaController {
         //suspension 2
 
         txtSuspensionCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtSuspensionCantidad2.getText()) * toFloatSafe(txtSuspensionUnitario2.getText());
+            float num = notaUtils.toFloatSafe(txtSuspensionCantidad2.getText()) * notaUtils.toFloatSafe(txtSuspensionUnitario2.getText());
 
             txtSuspensionTotal2.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -646,7 +643,7 @@ public class EditarNotaController {
         });
 
         txtSuspensionUnitario2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtSuspensionCantidad2.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtSuspensionCantidad2.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtSuspensionTotal2.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -656,7 +653,7 @@ public class EditarNotaController {
         //Mecanica
 
         txtMecanicaCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtMecanicaCantidad.getText()) * toFloatSafe(txtMecanicaUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtMecanicaCantidad.getText()) * notaUtils.toFloatSafe(txtMecanicaUnitario.getText());
 
             txtMecanicaTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -664,7 +661,7 @@ public class EditarNotaController {
         });
 
         txtMecanicaUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtMecanicaCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtMecanicaCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtMecanicaTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -674,7 +671,7 @@ public class EditarNotaController {
         //mecanica2
 
         txtMecanicaCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtMecanicaCantidad2.getText()) * toFloatSafe(txtMecanicaUnitario2.getText());
+            float num = notaUtils.toFloatSafe(txtMecanicaCantidad2.getText()) * notaUtils.toFloatSafe(txtMecanicaUnitario2.getText());
 
             txtMecanicaTotal2.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -682,7 +679,7 @@ public class EditarNotaController {
         });
 
         txtMecanicaUnitario2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtMecanicaCantidad2.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtMecanicaCantidad2.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtMecanicaTotal2.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -692,7 +689,7 @@ public class EditarNotaController {
         //frenos
 
         txtFrenosCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtFrenosCantidad.getText()) * toFloatSafe(txtFrenosUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtFrenosCantidad.getText()) * notaUtils.toFloatSafe(txtFrenosUnitario.getText());
 
             txtFrenosTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -700,7 +697,7 @@ public class EditarNotaController {
         });
 
         txtFrenosUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtFrenosCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtFrenosCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtFrenosTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -708,7 +705,7 @@ public class EditarNotaController {
         });
 
         txtFrenosCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtFrenosCantidad2.getText()) * toFloatSafe(txtFrenosUnitario2.getText());
+            float num = notaUtils.toFloatSafe(txtFrenosCantidad2.getText()) * notaUtils.toFloatSafe(txtFrenosUnitario2.getText());
 
             txtFrenosTotal2.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -716,7 +713,7 @@ public class EditarNotaController {
         });
 
         txtFrenosUnitario2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtFrenosCantidad2.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtFrenosCantidad2.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtFrenosTotal2.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -724,7 +721,7 @@ public class EditarNotaController {
         });
         //otros
         txtOtrosCantidad.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtOtrosCantidad.getText()) * toFloatSafe(txtOtrosUnitario.getText());
+            float num = notaUtils.toFloatSafe(txtOtrosCantidad.getText()) * notaUtils.toFloatSafe(txtOtrosUnitario.getText());
 
             txtOtrosTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -732,7 +729,7 @@ public class EditarNotaController {
         });
 
         txtOtrosUnitario.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtOtrosCantidad.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtOtrosCantidad.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtOtrosTotal.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -740,7 +737,7 @@ public class EditarNotaController {
         });
         //otros2
         txtOtrosCantidad2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtOtrosCantidad2.getText()) * toFloatSafe(txtOtrosUnitario2.getText());
+            float num = notaUtils.toFloatSafe(txtOtrosCantidad2.getText()) * notaUtils.toFloatSafe(txtOtrosUnitario2.getText());
 
             txtOtrosTotal2.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -748,7 +745,7 @@ public class EditarNotaController {
         });
 
         txtOtrosUnitario2.textProperty().addListener((observable, oldValue, newValue) -> {
-            float num = toFloatSafe(txtOtrosCantidad2.getText()) * toFloatSafe(newValue.toString());
+            float num = notaUtils.toFloatSafe(txtOtrosCantidad2.getText()) * notaUtils.toFloatSafe(newValue.toString());
 
             txtOtrosTotal2.setText("$" + num);
             txtTotal.setText("$" + sumaTotal());
@@ -844,22 +841,22 @@ public class EditarNotaController {
     private float sumaTotal() {
         float suma = 0;
 
-        suma = toFloatSafe(txtAlineacionTotal.getText()) +
-                toFloatSafe(txtBalanceoTotal.getText()) +
-                toFloatSafe(txtLlantasTotal.getText()) +
-                toFloatSafe(txtAmorDelTotal.getText()) +
-                toFloatSafe(txtAmorTrasTotal.getText()) +
-                toFloatSafe(txtSuspensionTotal.getText()) +
-                toFloatSafe(txtSuspensionTotal2.getText()) +
-                toFloatSafe(txtMecanicaTotal.getText()) +
-                toFloatSafe(txtMecanicaTotal2.getText()) +
-                toFloatSafe(txtFrenosTotal.getText()) +
-                toFloatSafe(txtFrenosTotal2.getText()) +
-                toFloatSafe(txtOtrosTotal.getText()) +
-                toFloatSafe(txtOtrosTotal2.getText()) +
-                toFloatSafe(txtSubTotalMecanica.getText()) +
-                toFloatSafe(txtSubTotalFrenos.getText()) +
-                toFloatSafe(txtSubTotalOtros.getText()); //16
+        suma =  notaUtils.toFloatSafe(txtAlineacionTotal.getText()) +
+                notaUtils.toFloatSafe(txtBalanceoTotal.getText()) +
+                notaUtils.toFloatSafe(txtLlantasTotal.getText()) +
+                notaUtils.toFloatSafe(txtAmorDelTotal.getText()) +
+                notaUtils.toFloatSafe(txtAmorTrasTotal.getText()) +
+                notaUtils.toFloatSafe(txtSuspensionTotal.getText()) +
+                notaUtils.toFloatSafe(txtSuspensionTotal2.getText()) +
+                notaUtils.toFloatSafe(txtMecanicaTotal.getText()) +
+                notaUtils.toFloatSafe(txtMecanicaTotal2.getText()) +
+                notaUtils.toFloatSafe(txtFrenosTotal.getText()) +
+                notaUtils.toFloatSafe(txtFrenosTotal2.getText()) +
+                notaUtils.toFloatSafe(txtOtrosTotal.getText()) +
+                notaUtils.toFloatSafe(txtOtrosTotal2.getText()) +
+                notaUtils.toFloatSafe(txtSubTotalMecanica.getText()) +
+                notaUtils.toFloatSafe(txtSubTotalFrenos.getText()) +
+                notaUtils.toFloatSafe(txtSubTotalOtros.getText()); //16
 
 
         return suma;
@@ -1090,99 +1087,6 @@ public class EditarNotaController {
         this.porcentajeGasNota = porcentajeGasNota;
     }
 
-    @FXML
-    private void refrescar(ActionEvent event) {
-
-
-        txtNumNota.setText("");
-        txtNombre.setText("");
-        txtDireccion.setText("");
-        txtDireccion2.setText("");
-        txtRfc.setText("");
-        txtCorreo.setText("");
-        txtHoraEntrega.setText("");
-        txtMarca.setText("");
-        txtModelo.setText("");
-        txtAnioVehiculo.setText("");
-        txtKms.setText("");
-        txtPlacas.setText("");
-        cbRayonesSi.setSelected(false);
-        cbRayonesNo.setSelected(false);
-        cbGolpesSi.setSelected(false);
-        cbGolpesNo.setSelected(false);
-        cbTaponesSi.setSelected(false);
-        cbTaponesNo.setSelected(false);
-        cbTapetesSi.setSelected(false);
-        cbTapetesNo.setSelected(false);
-        cbRadioSi.setSelected(false);
-        cbRadioNo.setSelected(false);
-        cbGatoSi.setSelected(false);
-        cbGatoNo.setSelected(false);
-        cbLlaveSi.setSelected(false);
-        cbLlaveNo.setSelected(false);
-        cbLlantaSi.setSelected(false);
-        cbLlantaNo.setSelected(false);
-        txtObservaciones.setText("");
-        txtObservaciones2.setText("");
-        dibujarGasolina(50);
-        txtAlineacion.setText("");
-        txtAlineacionCantidad.setText("");
-        txtAlineacionUnitario.setText("");
-        txtAlineacionTotal.setText("");
-        txtBalanceo.setText("");
-        txtBalanceoCantidad.setText("");
-        txtBalanceoUnitario.setText("");
-        txtBalanceoTotal.setText("");
-        txtLlantas.setText("");
-        txtLlantasCantidad.setText("");
-        txtLlantasUnitario.setText("");
-        txtLlantasTotal.setText("");
-        txtAmorDelanteros.setText("");
-        txtAmorDelCantidad.setText("");
-        txtAmorDelUnitario.setText("");
-        txtAmorDelTotal.setText("");
-        txtAmorTraseros.setText("");
-        txtAmorTrasCantidad.setText("");
-        txtAmorTrasUnitario.setText("");
-        txtAmorTrasTotal.setText("");
-        txtSuspension.setText("");
-        txtSuspensionCantidad.setText("");
-        txtSuspensionUnitario.setText("");
-        txtSuspensionTotal.setText("");
-        txtSuspension2.setText("");
-        txtSuspensionCantidad2.setText("");
-        txtSuspensionUnitario2.setText("");
-        txtSuspensionTotal2.setText("");
-        txtMecanica.setText("");
-        txtMecanicaCantidad.setText("");
-        txtMecanicaUnitario.setText("");
-        txtMecanicaTotal.setText("");
-        txtMecanica2.setText("");
-        txtMecanicaCantidad2.setText("");
-        txtMecanicaUnitario2.setText("");
-        txtMecanicaTotal2.setText("");
-        txtFrenos.setText("");
-        txtFrenosCantidad.setText("");
-        txtFrenosUnitario.setText("");
-        txtFrenosTotal.setText("");
-        txtFrenos2.setText("");
-        txtFrenosCantidad2.setText("");
-        txtFrenosUnitario2.setText("");
-        txtFrenosTotal2.setText("");
-        txtOtros.setText("");
-        txtOtrosCantidad.setText("");
-        txtOtrosUnitario.setText("");
-        txtOtrosTotal.setText("");
-        txtOtros2.setText("");
-        txtOtrosCantidad2.setText("");
-        txtOtrosUnitario2.setText("");
-        txtOtrosTotal2.setText("");
-        txtSubTotalFrenos.setText("");
-        txtSubTotalMecanica.setText("");
-        txtSubTotalOtros.setText("");
-        txtTotal.setText("");
-
-    }//refrescar
 
     @FXML
     private void actualizarAdeudo(NotaDTO notaAdeudo) {
@@ -1199,8 +1103,8 @@ public class EditarNotaController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.showAndWait();
-            actualizarDatosCliente(notaAdeudo, false);
 
+            actualizarDatosCliente(notaAdeudo);
 
         } catch (Exception e) {
             mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
@@ -1211,19 +1115,75 @@ public class EditarNotaController {
 
     }//actualizarAdeudo
 
-    private void actualizarDatosCliente(NotaDTO nota, boolean mensaje) {
+    private void actualizarDatosCliente(Integer clienteId, Integer vehiculoId) {
 
 
-        if (nota != null) {
+        if (clienteId != null) {
 
-            llenarNota(nota.getNumNota());
+            try {
+                Cliente cliente = clienteService.buscarClientePorId(clienteId, StatusCliente.ACTIVE.toString());
+                Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(vehiculoId, StatusVehiculo.ACTIVE.toString());
 
-            if (mensaje)
-                mostrarInformacion("Informacion actualizada", "", "Informacion actualizada.");
+                notaUtils.campoFormatter(
+                        cliente.getNombre() + " " + (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
+                                (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : ""),
+                        txtNombre,
+                        CampoNota.NOMBRE
+                );
+
+                notaUtils.campoFormatter(cliente.getDomicilio() != null ? cliente.getDomicilio() : "", txtDireccion, txtDireccion2);
+
+
+                notaUtils.campoFormatter(
+                        cliente.getRfc() != null ? cliente.getRfc() : "",
+                        txtRfc,
+                        CampoNota.RFC
+                );
+
+                notaUtils.campoFormatter(
+                        cliente.getCorreo() != null ? cliente.getCorreo() : "",
+                        txtCorreo
+                );
+                notaUtils.campoFormatter(
+                        vehiculo.getMarca().getNombreMarca(),
+                        txtMarca,
+                        CampoNota.MARCA
+                );
+                notaUtils.campoFormatter(
+                        vehiculo.getModelo().getNombreModelo(),
+                        txtModelo,
+                        CampoNota.MODELO
+                );
+
+                txtAnioVehiculo.setText(vehiculo.getAnio() + "");
+
+                notaUtils.campoFormatter(
+                        vehiculo.getKilometros() + "",
+                        txtKms,
+                        CampoNota.KILOMETROS
+                );
+
+                txtPlacas.setText(vehiculo.getPlacas() != null ? vehiculo.getPlacas() : "");
+
+
+                mostrarInformacion("Informacion actualizada", "", "Los campos se actualizaron correctamente.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            }
 
         }
 
+
     }//actualizarDatosCliente
+
+    private void actualizarDatosCliente(NotaDTO nota) {
+
+        if (nota != null)
+            llenarNota(nota.getNumNota());
+
+    }//actualizarDatosCliente
+
 
     private void actualizarSaldo(NotaDTO notaClienteDet) {
 
@@ -1242,7 +1202,7 @@ public class EditarNotaController {
             stage.setResizable(false);
             stage.showAndWait();
 
-            actualizarDatosCliente(notaClienteDet, false);
+            actualizarDatosCliente(notaClienteDet);
 
 
         } catch (Exception e) {
@@ -1269,7 +1229,7 @@ public class EditarNotaController {
             stage.setResizable(false);
             stage.showAndWait();
 
-            actualizarDatosCliente(notaDetalles, false);
+            actualizarDatosCliente(notaDetalles);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1360,6 +1320,9 @@ public class EditarNotaController {
         if (guardar) {
             Nota notaRegistrar = notaService.buscarPorId(notaActualizar.getNotaId());
             NotaDetalle ndRegistrar = notaDetalleService.buscarNotaDetalle(notaRegistrar);
+            NotaClienteDetalle detalleCliente = notaClienteDetService.buscarclienteDetalle(notaRegistrar);
+
+
             Cliente cliente = clienteService.buscarClientePorId(notaActualizar.getClienteId(), StatusNota.ACTIVE.toString());
             Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(notaActualizar.getVehiculoId(), StatusVehiculo.ACTIVE.toString());
 
@@ -1372,7 +1335,7 @@ public class EditarNotaController {
             String fechaYHora = txtAnio.getText() + "-" + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
 
             notaRegistrar.setNumFactura(notaActualizar.getNumFactura());
-            notaRegistrar.setTotal(toFloatSafe(txtTotal.getText()));
+            notaRegistrar.setTotal(notaUtils.toFloatSafe(txtTotal.getText()));
             notaRegistrar.setFechaYhora(fechaYHora); //pendiente
             notaRegistrar.setFechaVencimiento(notaActualizar.getFechaVencimiento());
             notaRegistrar.setAdeudo(notaActualizar.getAdeudo());
@@ -1401,65 +1364,77 @@ public class EditarNotaController {
             ndRegistrar.setLlave(getLlave());
             ndRegistrar.setLlanta(getLlanta()); //terminan CkeckBox
             ndRegistrar.setAlineacion(txtAlineacion.getText()); //comienzan campos de la nota
-            ndRegistrar.setAlineacionCantidad(toIntSafe(txtAlineacionCantidad.getText()));
-            ndRegistrar.setAlineacionUnitario(toFloatSafe(txtAlineacionUnitario.getText()));
-            ndRegistrar.setAlineacionTotal(toFloatSafe(txtAlineacionTotal.getText()));
+            ndRegistrar.setAlineacionCantidad(notaUtils.toIntSafe(txtAlineacionCantidad.getText()));
+            ndRegistrar.setAlineacionUnitario(notaUtils.toFloatSafe(txtAlineacionUnitario.getText()));
+            ndRegistrar.setAlineacionTotal(notaUtils.toFloatSafe(txtAlineacionTotal.getText()));
             ndRegistrar.setBalanceo(txtBalanceo.getText());
-            ndRegistrar.setBalanceoCantidad(toIntSafe(txtBalanceoCantidad.getText()));
-            ndRegistrar.setBalanceoUnitario(toFloatSafe(txtBalanceoUnitario.getText()));
-            ndRegistrar.setBalanceoTotal(toFloatSafe(txtBalanceoTotal.getText()));
+            ndRegistrar.setBalanceoCantidad(notaUtils.toIntSafe(txtBalanceoCantidad.getText()));
+            ndRegistrar.setBalanceoUnitario(notaUtils.toFloatSafe(txtBalanceoUnitario.getText()));
+            ndRegistrar.setBalanceoTotal(notaUtils.toFloatSafe(txtBalanceoTotal.getText()));
             ndRegistrar.setAmorDelanteros(txtAmorDelanteros.getText());
-            ndRegistrar.setAmorDelCantidad(toIntSafe(txtAmorDelCantidad.getText()));
-            ndRegistrar.setAmorDelUnitario(toFloatSafe(txtAmorDelUnitario.getText()));
-            ndRegistrar.setAmorDelTotal(toFloatSafe(txtAmorDelTotal.getText()));
+            ndRegistrar.setAmorDelCantidad(notaUtils.toIntSafe(txtAmorDelCantidad.getText()));
+            ndRegistrar.setAmorDelUnitario(notaUtils.toFloatSafe(txtAmorDelUnitario.getText()));
+            ndRegistrar.setAmorDelTotal(notaUtils.toFloatSafe(txtAmorDelTotal.getText()));
             ndRegistrar.setAmorTraseros(txtAmorTraseros.getText());
-            ndRegistrar.setAmorTrasCantidad(toIntSafe(txtAmorTrasCantidad.getText()));
-            ndRegistrar.setAmorTrasUnitario(toFloatSafe(txtAmorTrasUnitario.getText()));
-            ndRegistrar.setAmorTrasTotal(toFloatSafe(txtAmorTrasTotal.getText()));
+            ndRegistrar.setAmorTrasCantidad(notaUtils.toIntSafe(txtAmorTrasCantidad.getText()));
+            ndRegistrar.setAmorTrasUnitario(notaUtils.toFloatSafe(txtAmorTrasUnitario.getText()));
+            ndRegistrar.setAmorTrasTotal(notaUtils.toFloatSafe(txtAmorTrasTotal.getText()));
             ndRegistrar.setSuspension(txtSuspension.getText());
-            ndRegistrar.setSuspensionCantidad(toIntSafe(txtSuspensionCantidad.getText()));
-            ndRegistrar.setSuspensionUnitario(toFloatSafe(txtSuspensionUnitario.getText()));
-            ndRegistrar.setSuspensionTotal(toFloatSafe(txtSuspensionTotal.getText()));
+            ndRegistrar.setSuspensionCantidad(notaUtils.toIntSafe(txtSuspensionCantidad.getText()));
+            ndRegistrar.setSuspensionUnitario(notaUtils.toFloatSafe(txtSuspensionUnitario.getText()));
+            ndRegistrar.setSuspensionTotal(notaUtils.toFloatSafe(txtSuspensionTotal.getText()));
             ndRegistrar.setSuspension2(txtSuspension2.getText());
-            ndRegistrar.setSuspensionCantidad2(toIntSafe(txtSuspensionCantidad2.getText()));
-            ndRegistrar.setSuspensionUnitario2(toFloatSafe(txtSuspensionUnitario2.getText()));
+            ndRegistrar.setSuspensionCantidad2(notaUtils.toIntSafe(txtSuspensionCantidad2.getText()));
+            ndRegistrar.setSuspensionUnitario2(notaUtils.toFloatSafe(txtSuspensionUnitario2.getText()));
             ndRegistrar.setMecanica(txtMecanica.getText());
-            ndRegistrar.setMecanicaCantidad(toIntSafe(txtMecanicaCantidad.getText()));
-            ndRegistrar.setMecanicaUnitario(toFloatSafe(txtMecanicaUnitario.getText()));
-            ndRegistrar.setMecanicaTotal(toFloatSafe(txtMecanicaTotal.getText()));
+            ndRegistrar.setMecanicaCantidad(notaUtils.toIntSafe(txtMecanicaCantidad.getText()));
+            ndRegistrar.setMecanicaUnitario(notaUtils.toFloatSafe(txtMecanicaUnitario.getText()));
+            ndRegistrar.setMecanicaTotal(notaUtils.toFloatSafe(txtMecanicaTotal.getText()));
             ndRegistrar.setMecanica2(txtMecanica2.getText());
-            ndRegistrar.setMecanicaCantidad2(toIntSafe(txtMecanicaCantidad2.getText()));
-            ndRegistrar.setMecanicaUnitario2(toFloatSafe(txtMecanicaUnitario2.getText()));
-            ndRegistrar.setMecanicaTotal2(toFloatSafe(txtMecanicaTotal2.getText()));
+            ndRegistrar.setMecanicaCantidad2(notaUtils.toIntSafe(txtMecanicaCantidad2.getText()));
+            ndRegistrar.setMecanicaUnitario2(notaUtils.toFloatSafe(txtMecanicaUnitario2.getText()));
+            ndRegistrar.setMecanicaTotal2(notaUtils.toFloatSafe(txtMecanicaTotal2.getText()));
             ndRegistrar.setFrenos(txtFrenos.getText());
-            ndRegistrar.setFrenosCantidad(toIntSafe(txtFrenosCantidad.getText()));
-            ndRegistrar.setFrenosUnitario(toFloatSafe(txtFrenosUnitario.getText()));
-            ndRegistrar.setFrenosTotal(toFloatSafe(txtFrenosTotal.getText()));
+            ndRegistrar.setFrenosCantidad(notaUtils.toIntSafe(txtFrenosCantidad.getText()));
+            ndRegistrar.setFrenosUnitario(notaUtils.toFloatSafe(txtFrenosUnitario.getText()));
+            ndRegistrar.setFrenosTotal(notaUtils.toFloatSafe(txtFrenosTotal.getText()));
             ndRegistrar.setFrenos2(txtFrenos2.getText());
-            ndRegistrar.setFrenosCantidad2(toIntSafe(txtFrenosCantidad2.getText()));
-            ndRegistrar.setFrenosUnitario2(toFloatSafe(txtFrenosUnitario2.getText()));
-            ndRegistrar.setFrenosTotal2(toFloatSafe(txtFrenosTotal2.getText()));
+            ndRegistrar.setFrenosCantidad2(notaUtils.toIntSafe(txtFrenosCantidad2.getText()));
+            ndRegistrar.setFrenosUnitario2(notaUtils.toFloatSafe(txtFrenosUnitario2.getText()));
+            ndRegistrar.setFrenosTotal2(notaUtils.toFloatSafe(txtFrenosTotal2.getText()));
             ndRegistrar.setOtros(txtOtros.getText());
-            ndRegistrar.setOtrosCantidad(toIntSafe(txtOtrosCantidad.getText()));
-            ndRegistrar.setOtrosUnitario(toFloatSafe(txtOtrosUnitario.getText()));
-            ndRegistrar.setOtrosTotal(toFloatSafe(txtOtrosTotal.getText()));
+            ndRegistrar.setOtrosCantidad(notaUtils.toIntSafe(txtOtrosCantidad.getText()));
+            ndRegistrar.setOtrosUnitario(notaUtils.toFloatSafe(txtOtrosUnitario.getText()));
+            ndRegistrar.setOtrosTotal(notaUtils.toFloatSafe(txtOtrosTotal.getText()));
             ndRegistrar.setOtros2(txtOtros2.getText());
-            ndRegistrar.setOtrosCantidad2(toIntSafe(txtOtrosCantidad2.getText()));
-            ndRegistrar.setOtrosUnitario2(toFloatSafe(txtOtrosUnitario2.getText()));
-            ndRegistrar.setOtrosTotal2(toFloatSafe(txtOtrosTotal2.getText()));
-            ndRegistrar.setSubTotalFrenos(toFloatSafe(txtSubTotalOtros.getText()));
-            ndRegistrar.setSubTotalMecanica(toFloatSafe(txtSubTotalMecanica.getText()));
-            ndRegistrar.setSubTotalOtros(toFloatSafe(txtSubTotalOtros.getText()));
+            ndRegistrar.setOtrosCantidad2(notaUtils.toIntSafe(txtOtrosCantidad2.getText()));
+            ndRegistrar.setOtrosUnitario2(notaUtils.toFloatSafe(txtOtrosUnitario2.getText()));
+            ndRegistrar.setOtrosTotal2(notaUtils.toFloatSafe(txtOtrosTotal2.getText()));
+            ndRegistrar.setSubTotalFrenos(notaUtils.toFloatSafe(txtSubTotalOtros.getText()));
+            ndRegistrar.setSubTotalMecanica(notaUtils.toFloatSafe(txtSubTotalMecanica.getText()));
+            ndRegistrar.setSubTotalOtros(notaUtils.toFloatSafe(txtSubTotalOtros.getText()));
             ndRegistrar.setLlantaCampo(txtLlantas.getText());
-            ndRegistrar.setLlantaCantidad(toIntSafe(txtLlantasCantidad.getText()));
-            ndRegistrar.setLlantaUnitario(toFloatSafe(txtLlantasUnitario.getText()));
-            ndRegistrar.setLlantaTotal(toFloatSafe(txtLlantasTotal.getText()));
+            ndRegistrar.setLlantaCantidad(notaUtils.toIntSafe(txtLlantasCantidad.getText()));
+            ndRegistrar.setLlantaUnitario(notaUtils.toFloatSafe(txtLlantasUnitario.getText()));
+            ndRegistrar.setLlantaTotal(notaUtils.toFloatSafe(txtLlantasTotal.getText()));
 
+            //actuallizar Nota Cliente Detalle
+            detalleCliente.setNombreClienteNota(txtNombre.getText());
+            detalleCliente.setDireccion1Nota(txtDireccion.getText());
+            detalleCliente.setDireccion2Nota(txtDireccion2.getText());
+            detalleCliente.setRfcNota(txtRfc.getText());
+            detalleCliente.setCorreoNota(txtCorreo.getText());
+            detalleCliente.setMarcaNota(txtMarca.getText());
+            detalleCliente.setModeloNota(txtModelo.getText());
+            detalleCliente.setCategoriaNota(detalleCliente.getCategoriaNota());
+            detalleCliente.setAnioNota(notaUtils.toIntSafe(txtAnioVehiculo.getText()));
+            detalleCliente.setKilometrosNota(notaUtils.toIntSafe(txtKms.getText()));
+            detalleCliente.setPlacasNota(txtPlacas.getText());
 
 
             try {
 
-                notaService.actualizarNota(notaRegistrar, ndRegistrar);
+                notaService.actualizarNota(notaRegistrar, ndRegistrar, detalleCliente);
 
 
                 mostrarInformacion("Nota Actualizada", "", "Los cambios se guardaron correctamente.");
@@ -1490,7 +1465,7 @@ public class EditarNotaController {
             stage.setResizable(false);
             stage.showAndWait();
 
-            actualizarDatosCliente(notaEditar, false);
+            actualizarDatosCliente(notaEditar);
 
         } catch (Exception e) {
             mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");

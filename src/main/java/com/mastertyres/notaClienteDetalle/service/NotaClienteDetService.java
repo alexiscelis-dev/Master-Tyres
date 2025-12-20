@@ -1,6 +1,9 @@
 package com.mastertyres.notaClienteDetalle.service;
 
+import com.mastertyres.nota.model.Nota;
+import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaClienteDetalle.repository.NotaClienteDetRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +15,13 @@ public class NotaClienteDetService implements INotaClienteDetService {
     @Autowired
     public NotaClienteDetService(NotaClienteDetRepository notaClienteDetRepository) {
         this.notaClienteDetRepository = notaClienteDetRepository;
+    }
+
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public NotaClienteDetalle buscarclienteDetalle(Nota nota) {
+        return notaClienteDetRepository.buscarclienteDetalle(nota);
     }
 }//class

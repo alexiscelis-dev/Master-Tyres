@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = "nota")
+@EqualsAndHashCode(exclude = "nota")
 @Builder
 public class NotaClienteDetalle {
     @Id

@@ -1,16 +1,19 @@
 package com.mastertyres.fxControllers.nota;
 
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.GenerarPDF;
+import com.mastertyres.common.NotaUtils;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
+import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
-import com.mastertyres.vehiculo.model.StatusVehiculo;
-import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
+import com.mastertyres.notaClienteDetalle.service.NotaClienteDetService;
+import com.mastertyres.notaDetalle.model.NotaDetalle;
+import com.mastertyres.notaDetalle.service.NotaDetalleService;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,11 +34,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.mastertyres.common.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class NotaController {
@@ -83,6 +87,12 @@ public class NotaController {
     ClienteService clienteService;
     @Autowired
     VehiculoService vehiculoService;
+    @Autowired
+    NotaClienteDetService notaClienteDetService;
+    @Autowired
+    private NotaDetalleService notaDetalleService;
+    @Autowired
+    NotaUtils notaUtils;
 
 
     private VentanaPrincipalController ventanaPrincipalController;
@@ -115,6 +125,8 @@ public class NotaController {
         btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
 
         btnImprimir.setOnAction(event -> imprimir(notaSeleccionada.getNumNota()));
+
+        btnEliminar.setOnAction(event -> eliminarNota(notaSeleccionada.getNotaId(),notaSeleccionada.getNumNota()));
 
     }//initialize
 
@@ -161,8 +173,11 @@ public class NotaController {
     }//mostrarNotas
 
     private VBox crearCardNota(NotaDTO nota) {
-        Cliente cliente = clienteService.buscarClientePorId(nota.getClienteId(), StatusCliente.ACTIVE.toString());
-        Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(nota.getVehiculoId(), StatusVehiculo.ACTIVE.toString());
+
+      Nota notaBuscar = notaService.buscarPorId(nota.getNotaId());
+      NotaDetalle notaDetalle = notaDetalleService.buscarNotaDetalle(notaBuscar);
+
+        NotaClienteDetalle notaClienteDetalle = notaClienteDetService.buscarclienteDetalle(notaBuscar);
 
 
 
@@ -174,15 +189,18 @@ public class NotaController {
         Label numeroNota = new Label(nota.getNumNota());
         numeroNota.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
         Label lblCliente = new Label(
-                cliente.getNombre() + " " + (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
-                        (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : "")
+                notaUtils.eliminarPuntos( notaClienteDetalle.getNombreClienteNota())
+
         );
         lblCliente.setStyle("-fx-text-fill: white;");
         Label lblVehiculo = new Label(
-                vehiculo.getMarca() + " " + vehiculo.getModelo() + " " + vehiculo.getAnio()
+                notaUtils.eliminarPuntos(notaClienteDetalle.getMarcaNota()) + " " +
+                     notaUtils.eliminarPuntos(notaClienteDetalle.getModeloNota()) + " " +
+                     notaClienteDetalle.getAnioNota()
+
         );
         lblVehiculo.setStyle("-fx-text-fill: white;");
-        Label total = new Label("Total: $" + nota.getTotal());
+        Label total = new Label("Total: $" + notaBuscar.getTotal());
         total.setStyle("-fx-text-fill: white;");
 
         VBox textBox = new VBox(5, numeroNota, lblCliente, lblVehiculo, total);
@@ -294,6 +312,27 @@ public class NotaController {
 
     }//editarNota
 
+    private void eliminarNota(Integer notaId, String numNota) {
+
+        boolean eliminar = mostrarConfirmacion("Eliminar nota",
+                "¿Estas apunto de eliminar la nota " + numNota + " esta accion no se podra deshacer",
+                "¿Desea continuar?","Eliminar","Cancelar");
+        if (eliminar){
+            try {
+                notaService.eliminarNota(StatusNota.INACTIVE.toString(), notaId);
+                notaService.actualizarUpdatedAtNota(notaId, LocalDateTime.now().toString());
+                cargarNota();
+                mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
+            }catch (Exception e){
+                e.printStackTrace();
+                mostrarError("No fue posible eliminar la nota","", "Ocurrio un error al eliminar la nota seleccionada " + e.getMessage());
+
+            }
+
+        }//
+
+
+    }//eliminarNota
 
     private void imprimir(String numNota) {
         try {
