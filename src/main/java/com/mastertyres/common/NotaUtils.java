@@ -182,7 +182,7 @@ public class NotaUtils {
 
     //metodo que separa la direccion en los dos campos en caso de ser necesario(direccion1 y 2)
     public void campoFormatter(String campoTxt, TextField txtcampo, TextField txtcampo2) {
-        if (campoTxt == null) {
+        if (campoTxt == null || campoTxt.isBlank()) {
             txtcampo.setText("");
             txtcampo2.setText("");
             return;
@@ -217,7 +217,7 @@ public class NotaUtils {
     }//campoFormatter
 
     public void campoFormatter(String campoTxt, TextField txtcampo, CampoNota tipoCampo) {
-        if (campoTxt == null) {
+        if (campoTxt == null || campoTxt.isBlank()) {
             txtcampo.setText("");
             return;
         }
@@ -242,7 +242,7 @@ public class NotaUtils {
     }//campoFormatter
 
     public void campoFormatter(String campoTxt, TextField txtcampo) {
-        if (campoTxt == null) {
+        if (campoTxt == null || campoTxt.isBlank()) {
             txtcampo.setText("");
             return;
         }
@@ -251,8 +251,8 @@ public class NotaUtils {
         StringBuilder palabra = new StringBuilder();
         int limite = longitudes.getOrDefault(CampoNota.CORREO, 68);
 
-        for (int i = 0; i < limite; i++) {
-            if (i <= limite) {
+        for (int i = 0; i < campoTxt.length(); i++) {
+            if (campoTxt.length() <= limite -3 ) {
                 if (palabra.length() <= limite - 3)
                     palabra.append(campoTxt.charAt(i));
 
@@ -260,7 +260,6 @@ public class NotaUtils {
                     palabra.append("...");
                     break;
                 }
-
             }
         }
 

@@ -37,7 +37,6 @@ import static com.mastertyres.common.MensajesAlert.*;
 import static com.mastertyres.common.MensajesAlert.mostrarError;
 
 
-
 @Component
 public class RegistrarNotaController {
     @FXML
@@ -154,19 +153,18 @@ public class RegistrarNotaController {
     }
 
 
-
     private void registrar() {
 
-        if ( notaUtils.toFloatSafe(txtAdeudo.getText()) > nota.getTotal()){
-            mostrarWarning("Cantidad incorrecta","",
-                    "La cantidad 'POR PAGAR' ( " +txtAdeudo.getText()+ " ) excede el total de la nota ( " + nota.getTotal() + " ). Ingrese una cantidad valida.");
+        if (notaUtils.toFloatSafe(txtAdeudo.getText()) > nota.getTotal()) {
+            mostrarWarning("Cantidad incorrecta", "",
+                    "La cantidad 'POR PAGAR' ( " + txtAdeudo.getText() + " ) excede el total de la nota ( " + nota.getTotal() + " ). Ingrese una cantidad valida.");
             return;
         } else if (notaUtils.toFloatSafe(txtSaldoAfavor.getText()) > nota.getTotal()) {
-            mostrarWarning("Cantidad incorrecta","",
-                    "La cantidad 'A FAVOR' ( " +txtSaldoAfavor.getText()+ " ) excede el total de la nota ( " + nota.getTotal() + " ). Ingrese una cantidad valida.");
+            mostrarWarning("Cantidad incorrecta", "",
+                    "La cantidad 'A FAVOR' ( " + txtSaldoAfavor.getText() + " ) excede el total de la nota ( " + nota.getTotal() + " ). Ingrese una cantidad valida.");
             return;
 
-        }else {
+        } else {
 
             String strNumFactura = "";
 
@@ -174,7 +172,6 @@ public class RegistrarNotaController {
                 strNumFactura = null;
             else
                 strNumFactura = txtNumFactura.getText();
-
 
 
             if (dpFecha.getValue() != null)
@@ -329,13 +326,13 @@ public class RegistrarNotaController {
 
             try {
 
-                notaService.guardarNota(nuevaNota, notaDetalle,clienteDetalle);
+                notaService.guardarNota(nuevaNota, notaDetalle, clienteDetalle);
 
                 if (actualizarInventario.get()) {
 
 
-                    inventarioService.actualizarStock(nota.getInventarioId(), llantaRegistrar.getStock()-nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
-                    inventarioService.actualizarUptatedAt(LocalDateTime.now().toString(),nota.getInventarioId());
+                    inventarioService.actualizarStock(nota.getInventarioId(), llantaRegistrar.getStock() - nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
+                    inventarioService.actualizarUptatedAt(LocalDateTime.now().toString(), nota.getInventarioId());
                 }
 
 
@@ -359,13 +356,25 @@ public class RegistrarNotaController {
         }//else
 
 
-
-
-
     }//registrar
 
     //establece reglas habilitar boton o regex
     private void configuraciones() {
+
+        dpFecha.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+
+                if (date.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #eeeeee;");
+
+                }
+
+            }
+        });
+
 
         //configuracion de campos
         RegexTools.aplicarNumerosDecimal(txtAdeudo);

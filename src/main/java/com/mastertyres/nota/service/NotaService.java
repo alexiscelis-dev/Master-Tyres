@@ -149,5 +149,11 @@ public class NotaService implements INotaService {
         notaRepository.eliminarNota(active, notaId);
     }
 
+    @Transactional
+    @Override
+    public void actualilzarFechaVencimiento(String fechaVencimiento, Integer notaId, String active) {
+        notaRepository.actualizarFechaVencimiento(fechaVencimiento, notaId, active);
+    }
+
 
 }//clase

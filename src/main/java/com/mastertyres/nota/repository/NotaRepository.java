@@ -234,6 +234,10 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @Query("UPDATE Nota n SET n.active = :active WHERE n.notaId = :notaId")
     void eliminarNota(@Param("active") String active, @Param("notaId") Integer notaId);
 
+    @Modifying
+    @Query("UPDATE Nota n SET n.fechaVencimiento = :fechaVencimiento WHERE  n.notaId = :notaId AND n.active = :active")
+    void actualizarFechaVencimiento(@Param("fechaVencimiento") String fechaVencimiento, @Param("notaId") Integer notaId, @Param("active") String active);
+
 
 
 

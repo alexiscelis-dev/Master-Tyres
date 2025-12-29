@@ -34,6 +34,8 @@ public interface INotaService {
 
     void eliminarNota(String active, Integer notaId);
 
+    void actualilzarFechaVencimiento(String fechaVencimiento, Integer notaId, String active);
+
 
 
 

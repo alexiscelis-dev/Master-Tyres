@@ -54,6 +54,9 @@ public class EditarSaldoController {
     }//initialize
 
     private void configuraciones(){
+
+
+
         MenuContextSetting.disableMenu(root);
         RegexTools.aplicarNumerosDecimal(txtSaldo);
 

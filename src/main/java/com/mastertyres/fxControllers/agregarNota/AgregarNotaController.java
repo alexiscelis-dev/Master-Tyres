@@ -634,6 +634,8 @@ public class AgregarNotaController {
 
     private void configuraciones() {
 
+
+
         //configuracion checkBox
 
         cbRayonesSi.setOnAction(event -> {
