@@ -5,6 +5,8 @@ import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.repository.NotaRepository;
+import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
+import com.mastertyres.notaClienteDetalle.repository.NotaClienteDetRepository;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import com.mastertyres.notaDetalle.repository.NotaDetalleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,13 @@ public class NotaService implements INotaService {
 
     private NotaRepository notaRepository;
     private NotaDetalleRepository notaDetalleRepository;
+    private NotaClienteDetRepository notaClienteDetRepository;
 
     @Autowired
-    public NotaService(NotaRepository notaRepository, NotaDetalleRepository notaDetalleRepository) {
+    public NotaService(NotaRepository notaRepository, NotaDetalleRepository notaDetalleRepository, NotaClienteDetRepository notaClienteDetRepository) {
         this.notaRepository = notaRepository;
         this.notaDetalleRepository = notaDetalleRepository;
+        this.notaClienteDetRepository = notaClienteDetRepository;
     }
 
 
@@ -37,7 +41,8 @@ public class NotaService implements INotaService {
         return notaRepository.listarNotas(active);
     }
 
-    // 🔹 Listar vehículos activos con paginación
+
+    //  Listar vehículos activos con paginación
     public Page<NotaDTO> listarNotasPaginado(String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.listarNotasPaginado(active, pageable);
@@ -50,7 +55,7 @@ public class NotaService implements INotaService {
 
     @Transactional
     @Override
-    public void guardarNota(Nota nota, NotaDetalle notaDetalle) {
+    public void guardarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle) {
         Nota porNumNota = notaRepository.findByNumNota(nota.getNumNota());
 
         //si no es null encontro coincidencia y ya existe
@@ -61,6 +66,7 @@ public class NotaService implements INotaService {
                 porNumNota.setActive(StatusNota.ACTIVE.toString());
                 notaDetalleRepository.deleteById(porNumNota.getNotaId());
                 notaRepository.deleteById(porNumNota.getNotaId());
+                notaClienteDetRepository.deleteById(porNumNota.getNotaId());
                 notaRepository.flush();
 
             }
@@ -69,6 +75,7 @@ public class NotaService implements INotaService {
         nota.setActive(StatusNota.ACTIVE.toString());
         notaRepository.save(nota);
         notaDetalleRepository.save(notaDetalle);
+        notaClienteDetRepository.save(clienteDetalle);
 
     }
 
@@ -112,9 +119,10 @@ public class NotaService implements INotaService {
 
     @Transactional
     @Override
-    public void actualizarNota(Nota nota, NotaDetalle notaDetalle) {
+    public void actualizarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle) {
         notaRepository.save(nota);
         notaDetalleRepository.save(notaDetalle);
+        notaClienteDetRepository.save(clienteDetalle);
     }
 
     @Transactional(readOnly = true)
@@ -133,6 +141,18 @@ public class NotaService implements INotaService {
     @Override
     public void actualizarStatus(String status, Integer notaId) {
         notaRepository.actualizarStatus(status,notaId);
+    }
+
+    @Transactional
+    @Override
+    public void eliminarNota(String active, Integer notaId) {
+        notaRepository.eliminarNota(active, notaId);
+    }
+
+    @Transactional
+    @Override
+    public void actualilzarFechaVencimiento(String fechaVencimiento, Integer notaId, String active) {
+        notaRepository.actualizarFechaVencimiento(fechaVencimiento, notaId, active);
     }
 
 

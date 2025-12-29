@@ -1,11 +1,19 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.GenerarPDF;
+import com.mastertyres.common.NotaUtils;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
+import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
+import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
+import com.mastertyres.notaClienteDetalle.service.NotaClienteDetService;
+import com.mastertyres.notaDetalle.service.NotaDetalleService;
+import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,16 +28,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.mastertyres.common.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
 public class NotaController {
@@ -73,10 +86,23 @@ public class NotaController {
     @Autowired
     private NotaService notaService;
 
+    @Autowired
+    ClienteService clienteService;
+    @Autowired
+    VehiculoService vehiculoService;
+    @Autowired
+    NotaClienteDetService notaClienteDetService;
+    @Autowired
+    private NotaDetalleService notaDetalleService;
+    @Autowired
+    NotaUtils notaUtils;
+
+
     private VentanaPrincipalController ventanaPrincipalController;
 
 
     private NotaDTO notaSeleccionada;
+    private VBox cardSeleccionada = null;
 
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
@@ -86,11 +112,13 @@ public class NotaController {
 
     private int tamañoPagina = 20;
 
-    @FXML private Pagination PaginadorNotas;
+    @FXML
+    private Pagination PaginadorNotas;
 
     @FXML
     private void initialize() {
         cargarNota();
+
 
         txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) {
@@ -103,6 +131,10 @@ public class NotaController {
         btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
 
         btnImprimir.setOnAction(event -> imprimir(notaSeleccionada.getNumNota()));
+
+        btnEliminar.setOnAction(event -> eliminarNota(notaSeleccionada.getNotaId(), notaSeleccionada.getNumNota()));
+
+        btnDarPlazo.setOnAction(event -> darPlazo(notaSeleccionada.getNotaId()));
 
     }//initialize
 
@@ -124,7 +156,7 @@ public class NotaController {
     }
 
     private void configurarPaginadorFiltradas(String filtro) {
-        Page<NotaDTO> paginaFiltrada = notaService.buscarNotas(filtro,0, tamañoPagina);
+        Page<NotaDTO> paginaFiltrada = notaService.buscarNotas(filtro, 0, tamañoPagina);
         mostrarNotas(paginaFiltrada.getContent());
         PaginadorNotas.setPageCount(paginaFiltrada.getTotalPages());
         PaginadorNotas.setCurrentPageIndex(0);
@@ -135,11 +167,13 @@ public class NotaController {
     }
 
     private void cargarNota() {
-       configurarPaginador();
+        contenedorNotas.setVgap(20);
+        configurarPaginador();
     }//cargarNota
 
     private void mostrarNotas(List<NotaDTO> notas) {
         contenedorNotas.getChildren().clear();
+        cardSeleccionada = null;
 
         for (NotaDTO nota : notas) {
             VBox card = crearCardNota(nota);
@@ -150,39 +184,108 @@ public class NotaController {
 
     private VBox crearCardNota(NotaDTO nota) {
 
+        Nota notaBuscar = notaService.buscarPorId(nota.getNotaId());
+        NotaClienteDetalle notaClienteDetalle = notaClienteDetService.buscarclienteDetalle(notaBuscar);
+
+
         VBox card = new VBox();
-        card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
+        String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
+        String estiloAzul = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #87CEEB; -fx-border-radius: 10; -fx-background-radius: 10;";
+        String estiloRojo = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FC0000; -fx-border-radius: 10; -fx-background-radius: 10;";
+        String estiloAmarillo = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FFDF00; -fx-border-radius: 10; -fx-background-radius: 10;";
+        String estiloAnaranjado = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FF9800; -fx-border-radius: 10; -fx-background-radius: 10;";
+        String estiloSeleccionado = "-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #1A1A1A;";
+
+        String estiloPorDefecto = "";
+        switch (nota.getStatusNota()) {
+            case "VENCIDO" ->{
+                LocalDate fechaVencimiento = LocalDate.parse(nota.getFechaVencimiento());
+                LocalDate hoy = LocalDate.now();
+                LocalDate fechaWarning = hoy.plusDays(5);
+
+              if (fechaVencimiento.isBefore(hoy)){
+                  estiloPorDefecto = estiloRojo;
+              } else if (fechaVencimiento.equals(hoy) || fechaVencimiento.isBefore(fechaWarning)) {
+                  notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(),nota.getNotaId());
+                  estiloPorDefecto = estiloAnaranjado;
+
+              }else {
+                  notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(),nota.getNotaId());
+                  estiloPorDefecto = estiloAmarillo;
+              }
+            }
+            case "POR_PAGAR" -> {
+                LocalDate fechaVencimiento = LocalDate.parse(nota.getFechaVencimiento());
+                LocalDate fechaWarning = LocalDate.now().plusDays(5);
+                LocalDate hoy = LocalDate.now();
+
+                if (fechaVencimiento.isBefore(hoy)) {
+                    notaService.actualizarStatus(StatusNota.VENCIDO.toString(), nota.getNotaId());
+                    estiloPorDefecto = estiloRojo;
+                } else if (fechaVencimiento.equals(hoy) || fechaVencimiento.isBefore(fechaWarning)) {
+                    estiloPorDefecto = estiloAnaranjado;
+
+
+                } else{
+                    notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
+                    estiloPorDefecto = estiloAmarillo;
+                }
+
+            }
+            case "A_FAVOR" -> estiloPorDefecto = estiloAzul;
+            case "PAGADO" -> estiloPorDefecto = estiloVerde;
+            default -> estiloPorDefecto = estiloVerde;
+        }
+
+
+        card.setStyle(estiloPorDefecto);
+        card.setUserData(estiloPorDefecto); //se guarda el estilo original
         card.setPrefSize(500, 100);
 
 
         Label numeroNota = new Label(nota.getNumNota());
         numeroNota.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
-        Label cliente = new Label(
-                nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido() : "") + " " +
-                        (nota.getSegundoApellido() != null ? nota.getSegundoApellido() : "")
+
+        Label lblCliente = new Label(
+                notaUtils.eliminarPuntos(notaClienteDetalle.getNombreClienteNota())
+
         );
-        cliente.setStyle("-fx-text-fill: white;");
-        Label vehiculo = new Label(
-                nota.getMarca() + " " + nota.getModelo() + " " + nota.getAnio()
+        lblCliente.setStyle("-fx-text-fill: white;");
+        Label lblVehiculo = new Label(
+                notaUtils.eliminarPuntos(notaClienteDetalle.getMarcaNota()) + " " +
+                        notaUtils.eliminarPuntos(notaClienteDetalle.getModeloNota()) + " " +
+                        notaClienteDetalle.getAnioNota()
+
         );
-        vehiculo.setStyle("-fx-text-fill: white;");
-        Label total = new Label("Total: $" + nota.getTotal());
+        lblVehiculo.setStyle("-fx-text-fill: white;");
+        Label total = new Label("Total: $" + notaBuscar.getTotal());
         total.setStyle("-fx-text-fill: white;");
 
-        VBox textBox = new VBox(5, numeroNota, cliente, vehiculo, total);
+        VBox textBox = new VBox(5, numeroNota, lblCliente, lblVehiculo, total);
         HBox contenBox = new HBox(10, textBox);
         card.getChildren().add(contenBox);
 
+        card.setOnMouseEntered(e -> {
+            if (card != cardSeleccionada) {
+                card.setStyle(estiloSeleccionado);
+            }
+        });
 
-        // ========= ESTILOS INTERACTIVOS =========
-        card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
-        card.setOnMouseExited(e -> card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
+        card.setOnMouseExited(e -> {
+            if (card != cardSeleccionada) {
+                card.setStyle((String) card.getUserData());
+            }
+        });
 
-        // Al hacer clic
-        card.setOnMouseClicked(event -> {
-            card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
+        card.setOnMouseClicked(e -> {
+            if (cardSeleccionada != null && cardSeleccionada != card) {
+                cardSeleccionada.setStyle((String) cardSeleccionada.getUserData());
+            }
+            cardSeleccionada = card;
+            card.setStyle(estiloSeleccionado);
             mostrarDetalleNota(nota);
         });
+
 
         return card;
     }//crearCardNota
@@ -206,7 +309,6 @@ public class NotaController {
         }
 
 
-
         String fechaStr = nota.getCreatedAt();
         String fechaStr2 = nota.getFechaVencimiento();
 
@@ -216,13 +318,13 @@ public class NotaController {
 
         if (fechaStr != null && !fechaStr.trim().isEmpty()) {
 
-          fechaFormateada =  getFechaFormateadaSegundos(fechaStr);
+            fechaFormateada = getFechaFormateadaSegundos(fechaStr);
         }
 
 
         if (fechaStr2 != null && !fechaStr2.trim().isEmpty()) {
 
-         fechaFormateada2 =  getFechaFormateada(fechaStr2);
+            fechaFormateada2 = getFechaFormateada(fechaStr2);
 
         }
 
@@ -233,9 +335,8 @@ public class NotaController {
         lblNumFactura.setText(nota.getNumFactura() != null ? nota.getNumFactura() : "Sin facturar");
 
 
-        lblCliente.setText(nota.getNombreCliente() + " " + (nota.getApellido() != null ? nota.getApellido() : "") + " " +
-                (nota.getSegundoApellido() != null ? nota.getSegundoApellido() : ""));
-        lblVehiculo.setText(nota.getMarca() + " " + nota.getModelo() + " " + nota.getAnio());
+        lblCliente.setText(nota.getNombreClienteNota());
+        lblVehiculo.setText(nota.getMarcaNota() + " " + nota.getModeloNota() + " " + nota.getAnioNota());
 
 
         lblFechaEmicion.setText(fechaFormateada);
@@ -279,6 +380,27 @@ public class NotaController {
 
     }//editarNota
 
+    private void eliminarNota(Integer notaId, String numNota) {
+
+        boolean eliminar = mostrarConfirmacion("Eliminar nota",
+                "¿Estas apunto de eliminar la nota " + numNota + " esta accion no se podra deshacer",
+                "¿Desea continuar?", "Eliminar", "Cancelar");
+        if (eliminar) {
+            try {
+                notaService.eliminarNota(StatusNota.INACTIVE.toString(), notaId);
+                notaService.actualizarUpdatedAtNota(notaId, LocalDateTime.now().toString());
+                cargarNota();
+                mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
+            } catch (Exception e) {
+                e.printStackTrace();
+                mostrarError("No fue posible eliminar la nota", "", "Ocurrio un error al eliminar la nota seleccionada " + e.getMessage());
+
+            }
+
+        }//
+
+
+    }//eliminarNota
 
     private void imprimir(String numNota) {
         try {
@@ -323,8 +445,6 @@ public class NotaController {
             GenerarPDF.generarPDF(snapshot, archivo.getAbsolutePath());
 
 
-
-
         } catch (Exception e) {
             mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
             e.printStackTrace();
@@ -333,11 +453,50 @@ public class NotaController {
 
     }//imprimir
 
+    private void darPlazo(Integer notaId){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/DarPlazo.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            DarPlazoController controller = loader.getController();
+            controller.setNota(notaId);
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setTitle("Dar plazo a nota");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            notaSeleccionada.setFechaVencimiento(controller.fecha); //actualiza la fecha antes de crear la nueva card
+             initialize();
+
+
+
+
+
+
+
+        }catch (Exception e){
+            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            e.printStackTrace();
+
+        }
+
+
+    }//darPlazo
+/*
     public NotaDTO getNotaSeleccionada() {
         return this.notaSeleccionada;
     }
 
+ */
+/*
     public void setNotaSeleccionada(final NotaDTO notaSeleccionada) {
         this.notaSeleccionada = notaSeleccionada;
     }
+
+ */
 }//class

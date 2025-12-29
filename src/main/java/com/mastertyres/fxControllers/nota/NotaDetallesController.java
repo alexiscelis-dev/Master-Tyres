@@ -1,5 +1,8 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import javafx.event.ActionEvent;
@@ -7,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -40,6 +44,9 @@ public class NotaDetallesController {
     @FXML
     private Button btnCancelar;
 
+    @Autowired
+    ClienteService clienteService;
+
     @FXML
     private void initialize() {
 
@@ -56,6 +63,8 @@ public class NotaDetallesController {
         String strAdeudo = "N/A", strSaldo = "N/A", strStatus = "",
                 strNumFactura = "", strGenero = "", strTipoCliente = "",
                 generoComparar = "", fechaFormateadaVencimiento = "N/A";
+
+        Cliente cliente = clienteService.buscarClientePorId(notaDetalles.getClienteId(), StatusCliente.ACTIVE.toString());
 
 
         lblNumNota.setText("Numero de nota:  " + notaDetalles.getNumNota());
@@ -103,7 +112,7 @@ public class NotaDetallesController {
 
         lblFechaCreacion.setText("Fecha de creacion:  " + fechaFormateada);
 
-        generoComparar = notaDetalles.getGenero();
+        generoComparar = cliente.getGenero();
 
         if (generoComparar != null) {
             switch (generoComparar) {
@@ -117,7 +126,7 @@ public class NotaDetallesController {
 
         lblGenero.setText("Genero:  " + strGenero);
 
-        switch (notaDetalles.getTipoCliente()) {
+        switch (cliente.getTipoCliente()) {
             case "INDIVIDUAL" -> strTipoCliente = "INDIVIDUAL";
             case "EMPRESA" -> strTipoCliente = "EMPRESA";
         }
