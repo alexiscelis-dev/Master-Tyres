@@ -1,11 +1,12 @@
 package com.mastertyres.nota.model;
 
-import lombok.*;
-
+import lombok.Builder;
+import lombok.Data;
 
 @Builder
 @Data
 public class NotaDTO {
+    //NotaDTO se conforma por atributos de Nota NotaDetalle y NotaClienteDetalle
 
     //Nota
     private Integer notaId;
@@ -89,29 +90,22 @@ public class NotaDTO {
     private Float adeudo;
     private Float saldoFavor;
 
+    //Nota Cliente Detalles borrar estos atributos para que no marque error
 
-    //cliente
-
+    private Integer nombreClienteDetalleId;
+   private String nombreClienteNota;
+    private String direccion1Nota;
+    private String direccion2Nota;
+    private String rfcNota;
+    private String correoNota;
+    private String marcaNota;
+    private String modeloNota;
+    private String categoriaNota;;
+    private Integer anioNota;
+    private Integer kilometrosNota;
+    private String placasNota;
     private Integer clienteId;
-    private String nombreCliente;
-    private String apellido;
-    private String segundoApellido;
-    private String domicilio;
-    private String rfc;
-    private String correo;
-    private String genero;
-    private String tipoCliente;
-
-    //vehiculo
     private Integer vehiculoId;
-    private String marca;
-    private String modelo;
-    private String categoria;
-    private Integer anio;
-    private Integer kilometros;
-    private String color;
-    private String placas;
-
 
     public NotaDTO(final Integer notaId, final String numNota, final String numFactura, final String fechaYHora,
                    final String fechaVencimiento, final String statusNota, final String createdAt, final String active,
@@ -122,19 +116,21 @@ public class NotaDTO {
                    final Integer balanceoCantidad, final Float balanceoUnitario, final Float balanceoTotal, final String amorDelanteros,
                    final Integer amorDelCantidad, final Float amorDelUnitario, final Float amorDelTotal, final String amorTraseros,
                    final Integer amorTrasCantidad, final Float amorTrasUnitario, final Float amorTrasTotal, final String suspension,
-                   final Integer suspensionCantidad, final Float suspensionUnitario, final Float suspensionTotal, final String suspension2,
-                   final Integer suspensionCantidad2, final Float suspensionUnitario2, final Float suspensionTotal2, final String mecanica,
-                   final Integer mecanicaCantidad, final Float mecanicaUnitario, final Float mecanicaTotal, final String mecanica2,
-                   final Integer mecanicaCantidad2, final Float mecanicaUnitario2, final Float mecanicaTotal2, final String frenos,
-                   final Integer frenosCantidad, final Float frenosUnitario, final Float frenosTotal, final String frenos2,
-                   final Integer frenosCantidad2, final Float frenosUnitario2, final Float frenosTotal2, final String otros,
-                   final Integer otrosCantidad, final Float otrosUnitario, final Float otrosTotal, final String otros2,
-                   final Integer otrosCantidad2, final Float otrosUnitario2, final Float otrosTotal2, final Float subTotalMecanica,
-                   final Float subTotalFrenos, final Float subTotalOtros,final String llantaCampo, final Integer llantaCantidad, final Float llantaUnitario,
-                   final Float llantaTotal, final Float adeudo, final Float saldoFavor, final Integer clienteId,
-                   final String nombreCliente, final String apellido, final String segundoApellido, final String domicilio,
-                   final String rfc, final String correo,final String genero, final String tipoCliente, final Integer vehiculoId, final String marca, final String modelo,
-                   final String categoria, final Integer anio, final Integer kilometros, final String color, final String placas) {
+                   final Integer suspensionCantidad, final Float suspensionUnitario, final Float suspensionTotal,
+                   final String suspension2, final Integer suspensionCantidad2, final Float suspensionUnitario2,
+                   final Float suspensionTotal2, final String mecanica, final Integer mecanicaCantidad,
+                   final Float mecanicaUnitario, final Float mecanicaTotal, final String mecanica2, final Integer mecanicaCantidad2,
+                   final Float mecanicaUnitario2, final Float mecanicaTotal2, final String frenos, final Integer frenosCantidad,
+                   final Float frenosUnitario, final Float frenosTotal, final String frenos2, final Integer frenosCantidad2,
+                   final Float frenosUnitario2, final Float frenosTotal2, final String otros, final Integer otrosCantidad,
+                   final Float otrosUnitario, final Float otrosTotal, final String otros2, final Integer otrosCantidad2,
+                   final Float otrosUnitario2, final Float otrosTotal2, final Float subTotalMecanica, final Float subTotalFrenos,
+                   final Float subTotalOtros, final String llantaCampo, final Integer llantaCantidad, final Float llantaUnitario,
+                   final Float llantaTotal, final Float adeudo, final Float saldoFavor, final Integer nombreClienteDetalleId,
+                   final String nombreClienteNota, final String direccion1Nota, final String direccion2Nota, final String rfcNota,
+                   final String correoNota, final String marcaNota, final String modeloNota,final String categoriaNota, final Integer anioNota,
+                   final Integer kilometrosNota, final String placasNota, final Integer clienteId, final Integer vehiculoId) {
+
         this.notaId = notaId;
         this.numNota = numNota;
         this.numFactura = numFactura;
@@ -213,25 +209,20 @@ public class NotaDTO {
         this.llantaTotal = llantaTotal;
         this.adeudo = adeudo;
         this.saldoFavor = saldoFavor;
+        this.nombreClienteDetalleId = nombreClienteDetalleId;
+        this.nombreClienteNota = nombreClienteNota;
+        this.direccion1Nota = direccion1Nota;
+        this.direccion2Nota = direccion2Nota;
+        this.rfcNota = rfcNota;
+        this.correoNota = correoNota;
+        this.marcaNota = marcaNota;
+        this.modeloNota = modeloNota;
+        this.anioNota = anioNota;
+        this.kilometrosNota = kilometrosNota;
+        this.placasNota = placasNota;
         this.clienteId = clienteId;
-        this.nombreCliente = nombreCliente;
-        this.apellido = apellido;
-        this.segundoApellido = segundoApellido;
-        this.domicilio = domicilio;
-        this.rfc = rfc;
-        this.correo = correo;
-        this.genero = genero;
-        this.tipoCliente = tipoCliente;
         this.vehiculoId = vehiculoId;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.categoria = categoria;
-        this.anio = anio;
-        this.kilometros = kilometros;
-        this.color = color;
-        this.placas = placas;
+        this.categoriaNota = categoriaNota;
     }
-
-
 
 }//class
