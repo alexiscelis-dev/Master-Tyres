@@ -2,6 +2,7 @@ package com.mastertyres.nota.service;
 
 import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
+import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface INotaService {
 
     List<NotaDTO> listarNotas(String active);
 
-    void guardarNota(Nota nota, NotaDetalle notaDetalle);
+    void guardarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle);
 
     NotaDTO buscarPorNumNota(String active, String numNota);
 
@@ -23,13 +24,19 @@ public interface INotaService {
 
     void actualizarSaldo(float saldo, Integer notaId);
 
-    void actualizarNota(Nota nota, NotaDetalle notaDetalle);
+    void actualizarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle);
 
     Nota buscarPorId(Integer notaId);
 
     void actualizarNumFactura(String numNota, Integer notaId);
 
     void actualizarStatus(String status, Integer notaId);
+
+    void eliminarNota(String active, Integer notaId);
+
+    void actualilzarFechaVencimiento(String fechaVencimiento, Integer notaId, String active);
+
+
 
 
 

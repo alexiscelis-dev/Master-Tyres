@@ -2,6 +2,7 @@ package com.mastertyres;
 
 import javafx.application.Application;
 import javafx.application.HostServices;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import static com.mastertyres.common.MensajesAlert.mostrarError;
 import static com.mastertyres.common.Setting.setPantallaSize;
 
 
@@ -20,8 +22,24 @@ public class MasterTyresApplication extends Application {
 	private static HostServices hostServices;
 
 	@Override
-	public void init() throws Exception {
-		context = new SpringApplicationBuilder(MasterTyresApplication.class).run();
+	public void init(){
+		try {
+			context = new SpringApplicationBuilder(MasterTyresApplication.class).run();
+		} catch (Exception e) {
+			Platform.runLater(() ->{
+				e.printStackTrace();
+
+
+				mostrarError("Error de Inicio",
+						"No se pudo conectar con la base de datos.",
+						"Por favor verifique que el servidor de base de datos esté encendido y configurado correctamente.\n\n" +
+								"Si el problema persiste, contacte a soporte técnico. ");
+				Platform.exit();
+				System.exit(1);
+
+			});
+		}
+
 	}
 
 	public static HostServices getAppHostServices() {
