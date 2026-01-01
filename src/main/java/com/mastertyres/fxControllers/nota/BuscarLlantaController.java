@@ -12,11 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +62,15 @@ public class BuscarLlantaController {
 
     @FXML
     private void initialize() {
+        txtBuscador.setOnKeyPressed(event -> {
+
+            if (txtBuscador.getText() != null && !txtBuscador.getText().isEmpty()) {
+                if (event.getCode() == KeyCode.ENTER)
+                    cargarLlantas(txtBuscador.getText());
+            }
+
+        });
+
         btnBuscar.setOnAction(event -> cargarLlantas(txtBuscador.getText()));
 
         tablaLlantas.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -150,8 +159,6 @@ public class BuscarLlantaController {
         }else{
 
             llantaSeleccionada.setStock(Integer.parseInt(txtStock.getText())); // se actualiza el stock con lo que se selecciona en el campo de texto
-            LocalDateTime fecha = LocalDateTime.now();
-            String fechaStr = fecha.toString();
             btnAceptar.getScene().getWindow().hide();
         }
 

@@ -63,6 +63,22 @@ public class EditarAdeudoController {
 
 
     private void configuraciones() {
+        MenuContextSetting.disableMenuDatePicker(root);
+
+        dpFecha.setDayCellFactory(picker -> new DateCell(){
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+
+                if (date.isBefore(LocalDate.now())){
+                    setDisable(true);
+                    setStyle("-fx-background-color: #eeeeee;");
+
+                }
+
+            }
+        });
+
 
         MenuContextSetting.disableMenu(root);
         MenuContextSetting.disableMenuDatePicker(dpFecha);

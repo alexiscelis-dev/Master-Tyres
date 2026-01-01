@@ -90,8 +90,6 @@
 
         <!--Dependencia para generar los PDF -->
 
-
-
             <!-- iText7 Core -->
             <dependency>
                 <groupId>com.itextpdf</groupId>
@@ -119,10 +117,6 @@
             <artifactId>javafx-swing</artifactId>
             <version>21.0.3</version>
         </dependency>
-
-
-
-
 
 
 

@@ -8,18 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class NotaDetalleService implements INotaDetalleService{
+public class NotaDetalleService implements INotaDetalleService {
 
     private NotaDetalleRepository notaDetalleRepository;
 
     @Autowired
-    public NotaDetalleService(NotaDetalleRepository notaDetalleRepository){
+    public NotaDetalleService(NotaDetalleRepository notaDetalleRepository) {
         this.notaDetalleRepository = notaDetalleRepository;
 
     }
 
- //busca por el id de la relacion el notaId
-   @Transactional(readOnly = true)
+    //busca por el id de la relacion el notaId
+    @Transactional(readOnly = true)
     @Override
     public NotaDetalle buscarNotaDetalle(Nota nota) {
         return notaDetalleRepository.BuscarNotaDetalle(nota);
