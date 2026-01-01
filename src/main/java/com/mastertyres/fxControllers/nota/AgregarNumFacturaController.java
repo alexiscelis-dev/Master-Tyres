@@ -52,8 +52,10 @@ public class AgregarNumFacturaController {
 
     }
 
-    public void setNumFactura(Integer notaId){
+    public void setNumFactura(Integer notaId, String numFactura){
         this.notaId = notaId;
+        txtNumFactura.setText(numFactura);
+
 
     }//setNumFactura
 
@@ -61,9 +63,8 @@ public class AgregarNumFacturaController {
     private void agregar(ActionEvent event){
       try {
           notaService.actualizarNumFactura(txtNumFactura.getText(),getNotaId());
-          LocalDateTime fecha = LocalDateTime.now();
-          String fechaStr = fecha.toString();
-          notaService.actualizarUpdatedAtNota(getNotaId(),fechaStr);
+
+          notaService.actualizarUpdatedAtNota(getNotaId(),LocalDateTime.now().toString());
           mostrarInformacion("Numero de factura agregado", "", "Los cambios se guardaron correctamente.");
           cancelar(null);
       }catch (Exception e){

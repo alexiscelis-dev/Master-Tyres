@@ -38,6 +38,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static com.mastertyres.common.FechaUtils.getFechaFormateada;
@@ -196,44 +197,44 @@ public class NotaController {
         String estiloAzul = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #87CEEB; -fx-border-radius: 10; -fx-background-radius: 10;";
         String estiloRojo = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FC0000; -fx-border-radius: 10; -fx-background-radius: 10;";
         String estiloAmarillo = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FFDF00; -fx-border-radius: 10; -fx-background-radius: 10;";
-        String estiloAnaranjado = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FF9800; -fx-border-radius: 10; -fx-background-radius: 10;";
+        String estiloAnaranjado = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FF4000; -fx-border-radius: 10; -fx-background-radius: 10;";
         String estiloSeleccionado = "-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #1A1A1A;";
 
         String estiloPorDefecto = "";
+
         switch (nota.getStatusNota()) {
-            case "VENCIDO" ->{
+
+            case "VENCIDO", "POR_PAGAR" -> {
                 LocalDate fechaVencimiento = LocalDate.parse(nota.getFechaVencimiento());
                 LocalDate hoy = LocalDate.now();
-                LocalDate fechaWarning = hoy.plusDays(5);
 
-              if (fechaVencimiento.isBefore(hoy)){
-                  estiloPorDefecto = estiloRojo;
-              } else if (fechaVencimiento.equals(hoy) || fechaVencimiento.isBefore(fechaWarning)) {
-                  notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(),nota.getNotaId());
-                  estiloPorDefecto = estiloAnaranjado;
 
-              }else {
-                  notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(),nota.getNotaId());
-                  estiloPorDefecto = estiloAmarillo;
-              }
-            }
-            case "POR_PAGAR" -> {
-                LocalDate fechaVencimiento = LocalDate.parse(nota.getFechaVencimiento());
-                LocalDate fechaWarning = LocalDate.now().plusDays(5);
-                LocalDate hoy = LocalDate.now();
+                long diasRestantes = ChronoUnit.DAYS.between(hoy, fechaVencimiento);
 
-                if (fechaVencimiento.isBefore(hoy)) {
-                    notaService.actualizarStatus(StatusNota.VENCIDO.toString(), nota.getNotaId());
+
+                if (diasRestantes < 0) {
+                    // Si no estaba marcado como vencido, lo actualizamos
+                    if (!nota.getStatusNota().equals("VENCIDO")) {
+                        notaService.actualizarStatus(StatusNota.VENCIDO.toString(), nota.getNotaId());
+                    }
                     estiloPorDefecto = estiloRojo;
-                } else if (fechaVencimiento.equals(hoy) || fechaVencimiento.isBefore(fechaWarning)) {
-                    estiloPorDefecto = estiloAnaranjado;
-
-
-                } else{
-                    notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
-                    estiloPorDefecto = estiloAmarillo;
                 }
 
+                else if (diasRestantes <= 5) {
+                    // Si estaba vencido, lo regresamos a POR_PAGAR
+                    if (nota.getStatusNota().equals("VENCIDO")) {
+                        notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
+                    }
+                    estiloPorDefecto = estiloAnaranjado;
+                }
+
+                else {
+                    // Si estaba vencido, lo regresamos a POR_PAGAR
+                    if (nota.getStatusNota().equals("VENCIDO")) {
+                        notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
+                    }
+                    estiloPorDefecto = estiloAmarillo;
+                }
             }
             case "A_FAVOR" -> estiloPorDefecto = estiloAzul;
             case "PAGADO" -> estiloPorDefecto = estiloVerde;
@@ -298,16 +299,28 @@ public class NotaController {
 
         btnEditar.setDisable(false);
         btnImprimir.setDisable(false);
-        btnDarPlazo.setDisable(false);
         btnEliminar.setDisable(false);
-        btnHistorial.setDisable(false);
+
 
         switch (nota.getStatusNota()) {
 
-            case "PAGADO" -> lblStatus.setText("PAGADA");
-            case "POR_PAGAR" -> lblStatus.setText("POR PAGAR");
-            case "VENCIDO" -> lblStatus.setText("VENCIDO");
-            case "A_FAVOR" -> lblStatus.setText("PAGADA, CON SALDO A FAVOR");
+            case "PAGADO" ->{
+                lblStatus.setText("PAGADA");
+                btnDarPlazo.setDisable(true);
+
+            }
+            case "POR_PAGAR" ->{
+                lblStatus.setText("POR PAGAR");
+                btnDarPlazo.setDisable(false);
+            }
+            case "VENCIDO" -> {
+                lblStatus.setText("VENCIDO");
+                btnDarPlazo.setDisable(false);
+            }
+            case "A_FAVOR" -> {
+                lblStatus.setText("PAGADA, CON SALDO A FAVOR");
+                btnDarPlazo.setDisable(true);
+            }
 
         }
 
@@ -473,12 +486,13 @@ public class NotaController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
+
             notaSeleccionada.setFechaVencimiento(controller.fecha); //actualiza la fecha antes de crear la nueva card
-             initialize();
+            notaSeleccionada.setStatusNota(controller.status);
 
 
-
-
+            cargarNota();
+            mostrarDetalleNota(notaSeleccionada);
 
 
 
@@ -490,16 +504,5 @@ public class NotaController {
 
 
     }//darPlazo
-/*
-    public NotaDTO getNotaSeleccionada() {
-        return this.notaSeleccionada;
-    }
 
- */
-/*
-    public void setNotaSeleccionada(final NotaDTO notaSeleccionada) {
-        this.notaSeleccionada = notaSeleccionada;
-    }
-
- */
 }//class

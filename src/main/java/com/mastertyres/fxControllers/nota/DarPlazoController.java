@@ -32,6 +32,9 @@ public class DarPlazoController {
     private NotaService notaService;
 
     public String fecha;
+    public String status = StatusNota.VENCIDO.toString(); // No actualiza solo le da un valor a la ventana de notas a la etiqueta status para actualizar
+                                                          // el que actualiza el status es el service
+
 
     @FXML
     private void initialize(){
@@ -80,12 +83,17 @@ public class DarPlazoController {
             String fechaVencimiento = dpFecha.getValue() != null ? dpFecha.getValue().toString() : "";
             fecha = fechaVencimiento;
             notaService.actualilzarFechaVencimiento(fechaVencimiento,notaId, StatusNota.ACTIVE.toString());
+            notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(),notaId);
+            status = StatusNota.POR_PAGAR.toString();
             mostrarInformacion("Fecha limite de pago actualizada","","Los cambios se guardaron correctamente.");
+
 
             cancelar(null);
 
 
         }catch (Exception e) {
+             String status = StatusNota.VENCIDO.toString();
+
             mostrarError("Error inesperado", "", "Ocurrió un problema al actualizar la fecha de vencimiento.");
             e.printStackTrace();
 
