@@ -482,6 +482,15 @@ public class EditarNotaController {
             txtSubTotalOtros.setText(notaUtils.eliminarCero(notaEditar.getSubTotalOtros()));
             txtTotal.setText(notaUtils.eliminarCero(notaEditar.getTotal()));
 
+            if (notaEditar.getStatusNota().equals(StatusNota.PAGADO.toString())){
+                btnActualizarAdeudo.setDisable(true);
+                btnActualizarSaldoFavor.setDisable(true);
+            } else if (notaEditar.getStatusNota().equals(StatusNota.A_FAVOR.toString())) {
+                btnActualizarAdeudo.setDisable(true);
+            } else if (notaEditar.getStatusNota().equals(StatusNota.POR_PAGAR.toString()) || notaEditar.getStatusNota().equals(StatusNota.VENCIDO.toString())) {
+                btnActualizarSaldoFavor.setDisable(true);
+            }
+
             setNotaEditar(notaEditar);
 
 
@@ -1456,7 +1465,7 @@ public class EditarNotaController {
 
             Parent root = loader.load();
             AgregarNumFacturaController controller = loader.getController();
-            controller.setNumFactura(notaEditar.getNotaId());
+            controller.setNumFactura(notaEditar.getNotaId(),notaEditar.getNumFactura());
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Agregar Numero de Factura");

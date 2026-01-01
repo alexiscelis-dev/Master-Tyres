@@ -70,7 +70,7 @@ public class NotaDetallesController {
         lblNumNota.setText("Numero de nota:  " + notaDetalles.getNumNota());
 
         strNumFactura = notaDetalles.getNumFactura() != null ? notaDetalles.getNumFactura() : "Sin facturar";
-        lblNumFactura.setText("Numero de nota:  " + strNumFactura);
+        lblNumFactura.setText("Numero de factura:  " + strNumFactura);
 
 
         if (notaDetalles.getFechaVencimiento() != null) {
