@@ -100,7 +100,7 @@ public class PromocionesActivasController {
                 "/fxmlViews/promocion/NuevaPromocion.fxml",
                 "Agregar promocion"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR PROMOCION");
 
     }
 

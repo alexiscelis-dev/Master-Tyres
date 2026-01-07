@@ -159,8 +159,6 @@ public class AgregarVehiculoController {
     }
 
 
-
-
     @FXML
     private void initialize() {
         MenuContextSetting.disableMenu(rootPane);
@@ -245,8 +243,10 @@ public class AgregarVehiculoController {
             }
         });
 
+        colObservaciones.setPrefWidth(400);
+        colObservaciones.setMinWidth(100);
+    }//initialize
 
-    }
 
     private void configurarValidaciones() {
 
@@ -445,7 +445,6 @@ public class AgregarVehiculoController {
                 choiceCategoria.getItems().clear();
             }
         });
-
 
 
         // Configurar columnas del TableView

@@ -2,9 +2,14 @@ package com.mastertyres.common;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.UnitValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 
@@ -16,35 +21,66 @@ import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
 
 public class GenerarPDF {
 
-    public static void generarPDF(WritableImage img, String ruta){
+    public static void generarPDF(WritableImage img1, WritableImage img2, String ruta) {
         try {
             // Convertir WritableImage a PNG bytes
-            ByteArrayOutputStream imageByte = new ByteArrayOutputStream();
-            ImageIO.write(SwingFXUtils.fromFXImage(img,null),"png",imageByte);
+            ByteArrayOutputStream imageByte1 = new ByteArrayOutputStream();
+            ByteArrayOutputStream imageByte2 = new ByteArrayOutputStream();
+
+            ImageIO.write(SwingFXUtils.fromFXImage(img1, null), "png", imageByte1);
+            ImageIO.write(SwingFXUtils.fromFXImage(img2, null), "png", imageByte2);
 
             //Crear PDF
             PdfWriter writer = new PdfWriter(ruta);
             PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
+            Document document = new Document(pdf, PageSize.A4.rotate());
+            document.setMargins(0, 0, 0, 0);
 
             //se crea imagen para iText
-            ImageData imageData = ImageDataFactory.create(imageByte.toByteArray());
-            com.itextpdf.layout.element.Image image = new com.itextpdf.layout.element.Image(imageData);
+            ImageData imageData1 = ImageDataFactory.create(imageByte1.toByteArray());
+            ImageData imageData2 = ImageDataFactory.create(imageByte2.toByteArray());
+            com.itextpdf.layout.element.Image image1 = new com.itextpdf.layout.element.Image(imageData1);
+            com.itextpdf.layout.element.Image image2 = new com.itextpdf.layout.element.Image(imageData2);
 
-            image.setAutoScale(true); //ajusta imagen al tamaño del PDF
-            image.scaleToFit(595, 842);
-            document.add(image);
-            document.close();
+            image1.setAutoScale(true);
+            image2.setAutoScale(true);
 
-            mostrarInformacion("Nota creada","","Se genero el documento exitosamente");
+            float pageWidth = PageSize.A4.rotate().getWidth();
+            float pageHeight = PageSize.A4.rotate().getHeight();
+
+            Table table = new Table(new float[] {pageWidth / 2, pageWidth / 2});
+            table.setWidth(UnitValue.createPointValue(pageWidth));
+            table.setFixedLayout();
+
+            Cell cell1 = new Cell()
+                    .setHeight(pageHeight)
+                    .add(image1)
+                    .setPadding(0)
+                    .setBorder(new SolidBorder(1)
+            );
+
+
+            Cell cell2 = new Cell()
+                    .setHeight(pageHeight)
+                    .add(image2)
+                    .setPadding(0)
+                    .setBorder(new SolidBorder(1));
+
+                 table.addCell(cell1);
+                 table.addCell(cell2);
+                 document.add(table);
+                 document.close();
 
 
 
-        }catch (Exception e){
+            mostrarInformacion("Nota creada", "", "Se genero el documento exitosamente");
+
+
+        } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error inesperado","","Ocurrio un error al generar el documento PDF");
+            mostrarError("Error inesperado", "", "Ocurrio un error al generar el documento PDF");
         }
 
-    }
+    }// generarPDF
 
 }//class

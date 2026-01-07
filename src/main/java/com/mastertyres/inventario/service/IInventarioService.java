@@ -38,6 +38,7 @@ public interface IInventarioService {
 
     Optional<Inventario>findByDot(String dot);
 
+
     void actualizarCreatedAt(String now, Integer id);
 
     Inventario buscarLlantaPorId(Integer idLlanta);

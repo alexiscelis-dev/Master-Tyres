@@ -160,10 +160,16 @@ public class EditarVehiculoController {
                 choiceMarca.valueProperty().isNull()
                         .or(choiceModelo.valueProperty().isNull())
                         .or(txtColor.textProperty().isEmpty())
+                        .or(txtColor.textProperty().isNull())
                         .or(spinnerAnio.valueProperty().isNull())
                         .or(serieValido.not())
                         .or(placasValido.not())
                         .or(kilometrosValido.not())
+                        .or(choiceMarca.valueProperty().isNull())
+                        .or(choiceModelo.valueProperty().isNull())
+                        .or(choiceCategoria.valueProperty().isNull())
+                        .or(serieValido.not())
+
         );
 
     }

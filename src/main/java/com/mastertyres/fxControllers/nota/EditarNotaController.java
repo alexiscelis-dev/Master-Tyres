@@ -5,7 +5,7 @@ import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.MenuContextSetting;
-import com.mastertyres.common.NotaUtils;
+import com.mastertyres.common.utils.NotaUtils;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController;
 import com.mastertyres.fxControllers.EditarControllers.EditarSaldoController;

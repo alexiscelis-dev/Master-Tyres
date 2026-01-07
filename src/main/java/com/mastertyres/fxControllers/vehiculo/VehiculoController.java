@@ -674,7 +674,7 @@ public class VehiculoController {
                 "/fxmlViews/vehiculo/AgregarVehiculo.fxml",
                 "Agregar vehiculo"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR VEHICULO");
 
     }
 
@@ -1090,7 +1090,7 @@ public class VehiculoController {
                 "/fxmlViews/marca/EditarMarcas_Modelos_Categorias.fxml",
                 "Agregar o editar marcas"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar o editar marcas");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR O EDITAR MARCAS");
 
     }
 

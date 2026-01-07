@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +34,11 @@ public class InventarioService implements IInventarioService {
         return inventarioRepository.contarInventarioActivos(active);
     }
 
-    public long contarInventarioPorBusquedaGeneral(String status, String termino){
+    public long contarInventarioPorBusquedaGeneral(String status, String termino) {
         return inventarioRepository.contarInventarioPorBusquedaGeneral(status, termino);
-    };
+    }
+
+    ;
 
     @Transactional(readOnly = true)
     @Override
@@ -58,7 +59,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Inventario>  buscadorInventarioPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+    public Page<Inventario> buscadorInventarioPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscadorInventarioPaginado(active, busqueda, pageable);
     }
@@ -82,7 +83,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Inventario>  buscarPorDotPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+    public Page<Inventario> buscarPorDotPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorDotPaginado(active, busqueda, pageable);
     }
@@ -94,7 +95,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Inventario>  buscarPorMarcaPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+    public Page<Inventario> buscarPorMarcaPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorMarcaPaginado(active, busqueda, pageable);
     }
@@ -106,7 +107,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Inventario>  buscarPorModeloPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
+    public Page<Inventario> buscarPorModeloPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorModeloPaginado(active, busqueda, pageable);
     }
@@ -120,7 +121,7 @@ public class InventarioService implements IInventarioService {
     @Transactional(readOnly = true)
     public Page<Inventario> buscarPorMedidaPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
-        return inventarioRepository.buscarPorMedidaPaginado(active, busqueda,  pageable);
+        return inventarioRepository.buscarPorMedidaPaginado(active, busqueda, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -132,7 +133,7 @@ public class InventarioService implements IInventarioService {
     @Transactional(readOnly = true)
     public Page<Inventario> buscarPorFechaPaginado(String active, LocalDate fecha, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
-        return inventarioRepository.buscarPorFechaPaginado(active, fecha,  pageable);
+        return inventarioRepository.buscarPorFechaPaginado(active, fecha, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -144,7 +145,7 @@ public class InventarioService implements IInventarioService {
     @Transactional(readOnly = true)
     public Page<Inventario> buscarPorFechaPaginadoRangos(String active, LocalDate fechaInicio, LocalDate fechaFin, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
-        return inventarioRepository.buscarPorFechaPaginado(active, fechaInicio, fechaFin,  pageable);
+        return inventarioRepository.buscarPorFechaPaginado(active, fechaInicio, fechaFin, pageable);
     }
 
     @Transactional
@@ -165,17 +166,23 @@ public class InventarioService implements IInventarioService {
     @Transactional
     @Override
     public void guardarInventario(Inventario inventario) {
-        Optional<Inventario> porBarras = inventarioRepository.findByCodigoBarras(inventario.getCodigoBarras());
 
-        if (porBarras.isPresent()) {
-            Inventario inv = porBarras.get();
+
+        //Buscar una llanta por medio del identificador llanta
+        Optional<Inventario> porIdentificador = inventarioRepository.findByIdentificadorLlanta(inventario.getIdentificadorLlanta());
+
+        if (porIdentificador.isPresent()) {
+            Inventario inv = porIdentificador.get();
+
             if (inv.getActive().equals(StatusInventario.ACTIVE.toString())) {
-                throw new InventarioException("Codigo de barras ya existe en un producto activo"); //Lanza excepcion para que en el front sepa que no se inserta
+                throw new InventarioException("La llanta ya esta registrada en el inventario");
 
             } else if (inv.getActive().equals(StatusInventario.SIN_STOCK.toString())) {
-                throw new InventarioException("Codigo de barras ya existe en un producto sin stock");
+                throw new InventarioException("Llanta registrada, no tiene stock");
+
             } else if (inv.getActive().equals(StatusInventario.INACTIVE.toString())) {
 
+                inv.setIdentificadorLlanta(inventario.getIdentificadorLlanta());
                 inv.setMarca(inventario.getMarca());
                 inv.setModelo(inventario.getModelo());
                 inv.setMedida(inventario.getMedida());
@@ -187,8 +194,7 @@ public class InventarioService implements IInventarioService {
                 inv.setObservaciones(inventario.getObservaciones());
                 inv.setImagen(inventario.getImagen());
                 inv.setActive(StatusInventario.ACTIVE.toString());
-                String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                inv.setUpdated_at(now);
+                inv.setUpdated_at(LocalDateTime.now().toString());
 
 
                 inv.setCodigoBarras(inventario.getCodigoBarras());
@@ -196,39 +202,80 @@ public class InventarioService implements IInventarioService {
 
                 inventarioRepository.save(inv);
                 return;
-
             }
 
-        }//por codigo de barras
+        }//por identificador
 
-        Optional<Inventario> porDot = inventarioRepository.findByDot(inventario.getDot());
-        if (porDot.isPresent()) {
-            Inventario inv = porDot.get();
-            if (inv.getActive().equals(StatusInventario.ACTIVE.toString())) {
-                throw new InventarioException("Codigo dot ya existe en un producto activo");
-            } else if (inv.getActive().equals(StatusInventario.SIN_STOCK.toString())) {
-                throw new InventarioException("Codigo dot ya existe en un producto sin stock");
-            } else if (inv.getActive().equals(StatusInventario.INACTIVE.toString())) {
-                inv.setMarca(inventario.getMarca());
-                inv.setModelo(inventario.getModelo());
-                inv.setMedida(inventario.getMedida());
-                inv.setIndiceCarga(inventario.getIndiceCarga());
-                inv.setIndiceVelocidad(inventario.getIndiceVelocidad());
-                inv.setStock(inventario.getStock());
-                inv.setPrecioCompra(inventario.getPrecioCompra());
-                inv.setPrecioVenta(inventario.getPrecioVenta());
-                inv.setObservaciones(inventario.getObservaciones());
-                inv.setImagen(inventario.getImagen());
-                inv.setActive(StatusInventario.ACTIVE.toString());
-                inv.setCodigoBarras(inventario.getCodigoBarras());
-                inv.setDot(inventario.getDot());
-                String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                inv.setUpdated_at(now);
 
-                inventarioRepository.save(inv);
-                return;
+        if (inventario.getCodigoBarras() != null && !inventario.getCodigoBarras().trim().isBlank()) {
+            Optional<Inventario> porBarras = inventarioRepository.findByCodigoBarras(inventario.getCodigoBarras());
+
+            if (porBarras.isPresent()) {
+                Inventario inv = porBarras.get();
+                if (inv.getActive().equals(StatusInventario.ACTIVE.toString())) {
+                    throw new InventarioException("Codigo de barras ya existe en un producto activo"); //Lanza excepcion para que en el front sepa que no se inserta
+
+                } else if (inv.getActive().equals(StatusInventario.SIN_STOCK.toString())) {
+                    throw new InventarioException("Codigo de barras ya existe en un producto sin stock");
+                } else if (inv.getActive().equals(StatusInventario.INACTIVE.toString())) {
+
+                    inv.setMarca(inventario.getMarca());
+                    inv.setModelo(inventario.getModelo());
+                    inv.setMedida(inventario.getMedida());
+                    inv.setIndiceCarga(inventario.getIndiceCarga());
+                    inv.setIndiceVelocidad(inventario.getIndiceVelocidad());
+                    inv.setStock(inventario.getStock());
+                    inv.setPrecioCompra(inventario.getPrecioCompra());
+                    inv.setPrecioVenta(inventario.getPrecioVenta());
+                    inv.setObservaciones(inventario.getObservaciones());
+                    inv.setImagen(inventario.getImagen());
+                    inv.setActive(StatusInventario.ACTIVE.toString());
+                    inv.setUpdated_at(LocalDateTime.now().toString());
+
+
+                    inv.setCodigoBarras(inventario.getCodigoBarras());
+                    inv.setDot(inventario.getDot());
+
+                    inventarioRepository.save(inv);
+                    return;
+
+                }
+
+            }//por codigo de barras
+        }
+
+        if (inventario.getDot() != null && !inventario.getDot().trim().isBlank()) {
+            Optional<Inventario> porDot = inventarioRepository.findByDot(inventario.getDot());
+            if (porDot.isPresent()) {
+                Inventario inv = porDot.get();
+                if (inv.getActive().equals(StatusInventario.ACTIVE.toString())) {
+                    throw new InventarioException("Codigo dot ya existe en un producto activo");
+                } else if (inv.getActive().equals(StatusInventario.SIN_STOCK.toString())) {
+                    throw new InventarioException("Codigo dot ya existe en un producto sin stock");
+                } else if (inv.getActive().equals(StatusInventario.INACTIVE.toString())) {
+                    inv.setMarca(inventario.getMarca());
+                    inv.setModelo(inventario.getModelo());
+                    inv.setMedida(inventario.getMedida());
+                    inv.setIndiceCarga(inventario.getIndiceCarga());
+                    inv.setIndiceVelocidad(inventario.getIndiceVelocidad());
+                    inv.setStock(inventario.getStock());
+                    inv.setPrecioCompra(inventario.getPrecioCompra());
+                    inv.setPrecioVenta(inventario.getPrecioVenta());
+                    inv.setObservaciones(inventario.getObservaciones());
+                    inv.setImagen(inventario.getImagen());
+                    inv.setActive(StatusInventario.ACTIVE.toString());
+                    inv.setCodigoBarras(inventario.getCodigoBarras());
+                    inv.setDot(inventario.getDot());
+                    inv.setUpdated_at(LocalDateTime.now().toString());
+
+                    inventarioRepository.save(inv);
+                    return;
+                }
             }
-        } //por codigo de barras
+
+
+        } //por dot
+
 
         inventarioRepository.save(inventario);
     }//guardarInventario
@@ -236,8 +283,46 @@ public class InventarioService implements IInventarioService {
     @Transactional
     @Override
     public void actualizarInventario(Inventario inventario) {
+        Optional<Inventario> porIdentificador = inventarioRepository.findByIdentificadorLlanta(inventario.getIdentificadorLlanta());
+
+        if (porIdentificador.isPresent() && !porIdentificador.get().getInventarioId().equals(inventario.getInventarioId())) {
+            Inventario inv = porIdentificador.get();
+
+            if (inv.getActive().equals(StatusInventario.ACTIVE.toString())) {
+                throw new InventarioException("No es posible actualizar una llanta con el mismo nombre y caracteristicas de una existente. \n Verifique la informacion y vuelva a intentar.");
+            } else if (inv.getActive().equals(StatusInventario.SIN_STOCK.toString())) {
+                throw new InventarioException("No es posible actualizar una llanta con el mismo nombre y caracteristicas de una existente sin stock.\n Verifique la informacion y vuelva a intentar.");
+            } else if (inv.getActive().equals(StatusInventario.INACTIVE.toString())) {
+
+                inv.setIdentificadorLlanta(inventario.getIdentificadorLlanta());
+                inv.setMarca(inventario.getMarca());
+                inv.setModelo(inventario.getModelo());
+                inv.setMedida(inventario.getMedida());
+                inv.setIndiceCarga(inventario.getIndiceCarga());
+                inv.setIndiceVelocidad(inventario.getIndiceVelocidad());
+                inv.setStock(inventario.getStock());
+                inv.setPrecioCompra(inventario.getPrecioCompra());
+                inv.setPrecioVenta(inventario.getPrecioVenta());
+                inv.setObservaciones(inventario.getObservaciones());
+                inv.setImagen(inventario.getImagen());
+                inv.setActive(StatusInventario.ACTIVE.toString());
+                inv.setCodigoBarras(inventario.getCodigoBarras());
+                inv.setDot(inventario.getDot());
+                inv.setUpdated_at(LocalDateTime.now().toString());
+
+                return;
+
+            }
+
+            inventarioRepository.save(inv);
+            return;
+
+        }
+
+
         inventarioRepository.save(inventario);
-    }
+
+    }//actualizarInventario
 
     //Metodo actualiza cuando se crea un elemento nuevo en el inventario
     @Transactional
@@ -261,6 +346,7 @@ public class InventarioService implements IInventarioService {
         return inventarioRepository.findByDot(dot);
     }
 
+
     @Transactional
     @Override
     public void actualizarCreatedAt(String now, Integer id) {
@@ -277,19 +363,17 @@ public class InventarioService implements IInventarioService {
     @Override
     public void actualizarStock(Integer inventarioId, Integer stock, String active) {
         Inventario inventario = inventarioRepository.findById(inventarioId)
-                .orElseThrow(()-> new InventarioException("No se encontro en el inventario"));
+                .orElseThrow(() -> new InventarioException("No se encontro en el inventario"));
 
-        if (stock < 0){
+        if (stock < 0) {
             throw new InventarioException("Cantidad invalida");
         }
 
-        inventario.setStock(inventario.getStock()-stock);
+        inventario.setStock(inventario.getStock() - stock);
 
-        inventarioRepository.actualizarStock(inventarioId,stock,active);
+        inventarioRepository.actualizarStock(inventarioId, stock, active);
 
     }
-
-
 
 
 }//clase

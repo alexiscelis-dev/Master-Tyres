@@ -3,7 +3,7 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.MenuContextSetting;
-import com.mastertyres.common.NotaUtils;
+import com.mastertyres.common.utils.NotaUtils;
 import com.mastertyres.common.RegexTools;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;

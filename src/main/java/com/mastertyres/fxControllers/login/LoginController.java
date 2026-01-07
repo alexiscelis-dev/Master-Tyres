@@ -43,9 +43,6 @@ public class LoginController {
             ventanaLogin.show();
 
 
-
-
-
         } catch (IOException e) {
             e.getMessage();
         }

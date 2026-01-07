@@ -3,7 +3,7 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.GenerarPDF;
-import com.mastertyres.common.NotaUtils;
+import com.mastertyres.common.utils.NotaUtils;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.nota.model.Nota;
@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
@@ -27,6 +28,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -218,17 +220,13 @@ public class NotaController {
                         notaService.actualizarStatus(StatusNota.VENCIDO.toString(), nota.getNotaId());
                     }
                     estiloPorDefecto = estiloRojo;
-                }
-
-                else if (diasRestantes <= 5) {
+                } else if (diasRestantes <= 5) {
                     // Si estaba vencido, lo regresamos a POR_PAGAR
                     if (nota.getStatusNota().equals("VENCIDO")) {
                         notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
                     }
                     estiloPorDefecto = estiloAnaranjado;
-                }
-
-                else {
+                } else {
                     // Si estaba vencido, lo regresamos a POR_PAGAR
                     if (nota.getStatusNota().equals("VENCIDO")) {
                         notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
@@ -304,12 +302,12 @@ public class NotaController {
 
         switch (nota.getStatusNota()) {
 
-            case "PAGADO" ->{
+            case "PAGADO" -> {
                 lblStatus.setText("PAGADA");
                 btnDarPlazo.setDisable(true);
 
             }
-            case "POR_PAGAR" ->{
+            case "POR_PAGAR" -> {
                 lblStatus.setText("POR PAGAR");
                 btnDarPlazo.setDisable(false);
             }
@@ -378,7 +376,7 @@ public class NotaController {
                 null,
                 "/fxmlViews/nota/NotaFormulario.fxml",
                 "Agregar Nota");
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar Nota");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR NOTA");
 
 
     }//agregarNotas
@@ -391,7 +389,7 @@ public class NotaController {
                 "Editar Nota");
         EditarNotaController controller = (EditarNotaController) controllerObj;
         controller.agregarNota(numNota);
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Editar Nota");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("EDITAR NOTA");
 
 
     }//editarNota
@@ -436,17 +434,27 @@ public class NotaController {
             root.applyCss();
             root.layout();
 
-            double escala = 0.9;
-            root.setScaleX(escala);
-            root.setScaleY(escala);
+           double anchoOriginal = root.prefWidth(-1);
+           double altoOriginal = root.prefHeight(-1);
+           double anchoSnapshot = 1200;
+           double altoSnapshot = altoOriginal * 0.90;
 
-            //  Aquí sí se renderiza bien, no como antes
             WritableImage snapshot = new WritableImage(
-                    (int) root.prefWidth(-1),
-                    (int) root.prefHeight(-1)
-            );
+                    (int) root.getBoundsInParent().getWidth(),
+                    (int) root.getBoundsInParent().getHeight()
 
-            root.snapshot(null, snapshot);
+           );
+
+           WritableImage snapshot2 = null;
+
+            SnapshotParameters params = new SnapshotParameters();
+            params.setTransform(Transform.scale(
+                    anchoSnapshot / anchoOriginal,
+                    altoSnapshot / altoOriginal
+            ));
+
+            root.snapshot(params,snapshot);
+
 
             // 5. FileChooser para guardar
             FileChooser chooser = new FileChooser();
@@ -457,8 +465,9 @@ public class NotaController {
             File archivo = chooser.showSaveDialog(root.getScene().getWindow());
             if (archivo == null) return;
 
+            snapshot2 = snapshot;
             // 6. Generar PDF
-            GenerarPDF.generarPDF(snapshot, archivo.getAbsolutePath());
+            GenerarPDF.generarPDF(snapshot, snapshot2, archivo.getAbsolutePath());
 
 
         } catch (Exception e) {
@@ -469,7 +478,7 @@ public class NotaController {
 
     }//imprimir
 
-    private void darPlazo(Integer notaId){
+    private void darPlazo(Integer notaId) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/DarPlazo.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -495,8 +504,7 @@ public class NotaController {
             mostrarDetalleNota(notaSeleccionada);
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
             e.printStackTrace();
 

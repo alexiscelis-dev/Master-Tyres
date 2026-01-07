@@ -1,76 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-
-<AnchorPane fx:id="rootPane" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/Inventario.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarInventarioController">
+<?import javafx.scene.text.Font?>
+<AnchorPane fx:id="rootPane" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
+            stylesheets="/styles_css/Inventario.css" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarInventarioController">
 
     <children>
         <ScrollPane>
             <VBox alignment="CENTER" prefHeight="500" prefWidth="600" spacing="10" styleClass="secciones">
 
                 <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
+                    <Insets bottom="20" left="20" right="20" top="20"/>
                 </padding>
 
-                <Label styleClass="seccion-titulo" text="Editar Inventario" />
+                <Label styleClass="seccion-titulo" text="Editar Inventario"/>
 
                 <GridPane hgap="10" vgap="10">
                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" prefWidth="150.0" />
-                        <ColumnConstraints prefWidth="300.0" />
-                  <ColumnConstraints />
+                        <ColumnConstraints halignment="RIGHT" prefWidth="150.0"/>
+                        <ColumnConstraints prefWidth="300.0"/>
+                        <ColumnConstraints/>
                     </columnConstraints>
 
                     <!-- Codigo de Barras -->
-                    <Label text="Codigo de barras" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <TextField fx:id="txtCodBarras" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-                    <!-- Dot -->
-                    <Label text="Dot" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <TextField fx:id="txtDot" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                     <!-- Marca -->
-                    <Label text="Marca" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <TextField fx:id="txtMarca" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label text="Marca" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <TextField fx:id="txtMarca" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                     <!-- Modelo -->
-                    <Label text="Modelo" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <TextField fx:id="txtModelo" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Label text="Modelo" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="txtModelo" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
                     <!-- Medida -->
-                    <Label text="Medida" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                    <TextField fx:id="txtMedida" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    <Label text="Medida" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                    <HBox alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                          GridPane.rowIndex="2">
+                        <ChoiceBox fx:id="choiceAncho" prefWidth="150.0" styleClass="choicebox-mini3">
+
+                        </ChoiceBox>
+                        <Label style="-fx-font-size: 18px;" text="/">
+
+                        </Label>
+
+                        <ChoiceBox fx:id="choicePerfil" prefWidth="150.0" styleClass="choicebox-mini3">
+
+                        </ChoiceBox>
+
+                        <Label text="R">
+
+                        </Label>
+
+                        <ChoiceBox fx:id="choiceRin" prefWidth="150.0" styleClass="choicebox-mini3">
+
+                        </ChoiceBox>
+
+                    </HBox>
+
+
 
                     <!-- Indice de carga  -->
-                    <Label text="Indice carga" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                    <ChoiceBox fx:id="cbIndiceCarga" styleClass="choicebox-mini3" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                    <Label text="Indice carga" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <ChoiceBox fx:id="cbIndiceCarga" styleClass="choicebox-mini3" GridPane.columnIndex="1"
+                               GridPane.rowIndex="3"/>
 
                     <!-- Indice de velocidad-->
-                    <Label text="Indice velocidad" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                    <ChoiceBox fx:id="cbIndiceVelocidad" styleClass="choicebox-mini3" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                    <Label text="Indice velocidad" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <ChoiceBox fx:id="cbIndiceVelocidad" styleClass="choicebox-mini3" GridPane.columnIndex="1"
+                               GridPane.rowIndex="4"/>
 
                     <!-- Observaciones -->
-                    <Label text="Stock" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                    <TextField fx:id="txtStock" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                    <Label text="Stock" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                    <TextField fx:id="txtStock" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
                     <!-- Precio de compra -->
-                    <Label text="Precio compra" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                    <TextField fx:id="txtPrecioC" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                    <Label text="Precio compra" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                    <TextField fx:id="txtPrecioC" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
                     <!-- Precio de venta  -->
-                    <Label text="Precio venta" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-                    <TextField fx:id="txtPrecioV" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                    <Label text="Precio venta" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                    <TextField fx:id="txtPrecioV" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
 
-                    <Label text="Observaciones" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-                    <TextField fx:id="txtObservaciones" styleClass="buscador-observaciones-editar" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+
+
+                    <Label text="Codigo de barras" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                    <TextField fx:id="txtCodBarras" styleClass="buscador" GridPane.columnIndex="1"
+                               GridPane.rowIndex="8"/>
+
+                    <!-- Dot -->
+                    <Label text="Dot" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                    <TextField fx:id="txtDot" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+
+                    <Label text="Observaciones" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+                    <TextField fx:id="txtObservaciones" styleClass="buscador-observaciones-editar"
+                               GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+
 
                     <HBox GridPane.columnIndex="1" GridPane.rowIndex="11">
-                        <TextField fx:id="txtImg" disable="false" prefHeight="26.0" prefWidth="204.0" promptText="Seleccionar imagen (Opcional)" styleClass="buscador-img" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                        <TextField fx:id="txtImg" disable="false" prefHeight="26.0" prefWidth="204.0"
+                                   promptText="Seleccionar imagen (Opcional)" styleClass="buscador-img"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="10"/>
 
-                        <Button fx:id="btnImagen" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0" styleClass="boton-img" text="..." GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="11" GridPane.vgrow="ALWAYS" />
+                        <Button fx:id="btnImagen" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0"
+                                styleClass="boton-img" text="..." GridPane.columnIndex="2" GridPane.hgrow="ALWAYS"
+                                GridPane.rowIndex="11" GridPane.vgrow="ALWAYS"/>
 
                     </HBox>
 
@@ -81,31 +120,33 @@
                     </VBox>
 
 
-
-
                     <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints  />
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+                        <RowConstraints/>
+
                     </rowConstraints>
 
                 </GridPane>
 
                 <!-- Botones -->
                 <HBox alignment="CENTER" spacing="20">
-                    <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar" />
-                    <Button fx:id="btnActualizar" onAction="#actualizarInventario" styleClass="boton-accion" text="Actualizar" />
+                    <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar"/>
+                    <Button fx:id="btnActualizar" onAction="#actualizarInventario" styleClass="boton-accion"
+                            text="Actualizar"/>
                 </HBox>
             </VBox>
         </ScrollPane>

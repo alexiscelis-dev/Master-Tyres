@@ -62,6 +62,8 @@ public class InventarioController {
     @FXML private TableColumn<Inventario, Integer> colStock;
     @FXML private TableColumn<Inventario, Float> colPrecioCom;
     @FXML private TableColumn<Inventario, Float> colPrecioVen;
+    @FXML private TableColumn<Inventario,Float> colTotalCompra;
+    @FXML private TableColumn<Inventario,Float> colTotalVenta;
     @FXML private TableColumn<Inventario, String> colObservaciones;
     @FXML private TableColumn<Inventario, String> colFechaReg;
     @FXML private TextField buscarInventarioBuscador;
@@ -112,28 +114,7 @@ public class InventarioController {
             }
         }));
 
-//        //Buscar mientras escribes
-       /* buscarInventarioBuscador.setOnKeyReleased(event -> {
 
-            if (event.getCode() != KeyCode.ENTER) {
-                delayQuery.setOnFinished(e -> {
-                    String seleccion = atributoBusquedaInventario.getValue();
-                    String busqueda = buscarInventarioBuscador.getText();
-
-                    if (seleccion == null && busqueda != null && !busqueda.isEmpty()) {
-                        buscarInventario(busqueda);
-                    } else {
-                        // Si no hay búsqueda, salir del modo búsqueda y recargar tabla
-                        modoBusqueda = false;
-                        terminoBusquedaActual = "";
-                        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
-                        paginadorInventarios.setCurrentPageIndex(0);
-                    }
-
-                });
-                delayQuery.playFromStart();
-            }
-        });*/
         buscarInventarioBuscador.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
 
@@ -155,15 +136,7 @@ public class InventarioController {
             }
         });
 
-       /* buscarInventarioBuscador.setOnKeyPressed(event -> {
 
-            if (event.getCode() == KeyCode.ENTER) {
-                String seleccion = atributoBusquedaInventario.getValue(), busqueda = buscarInventarioBuscador.getText();
-
-                if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty())
-                    buscarInventario(seleccion.toLowerCase(), busqueda);
-            }
-        });*/
         buscarInventarioBuscador.setOnKeyReleased(event -> {
 
             if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
@@ -536,6 +509,12 @@ public class InventarioController {
 
     private void cargarInventario() {
 
+        colTotalCompra.setText("$ Total Compra");
+        colTotalVenta.setText("$ Total Venta");
+        colPrecioCom.setText("$ Precio Compra");
+        colPrecioVen.setText("$ Precio Venta");
+
+
         // Helper para valores String
         final Function<String, String> safe = s ->
                 (s == null || s.trim().isEmpty()) ? "N/A" : s;
@@ -580,6 +559,14 @@ public class InventarioController {
         colPrecioVen.setCellValueFactory(data ->
                 new SimpleFloatProperty(data.getValue().getPrecioVenta()).asObject()
         );
+
+        colTotalCompra.setCellValueFactory(data ->
+                new SimpleFloatProperty(data.getValue().getPrecioCompra() * data.getValue().getStock()).asObject()
+                );
+
+        colTotalVenta.setCellValueFactory(data ->
+                new SimpleFloatProperty(data.getValue().getPrecioVenta() * data.getValue().getStock()).asObject()
+                );
 
         colFechaReg.setCellValueFactory(data -> {
 
@@ -776,7 +763,7 @@ public class InventarioController {
                 "/fxmlViews/inventario/AgregarInventario.fxml",
                 "Agregar llanta"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar llanta");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR AL INVENTARIO");
 
 
 

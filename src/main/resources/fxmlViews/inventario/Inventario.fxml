@@ -78,6 +78,8 @@
                         <TableColumn fx:id="colStock" prefWidth="80" text="Stock" />
                         <TableColumn fx:id="colPrecioCom" prefWidth="80" text="Precio compra" />
                         <TableColumn fx:id="colPrecioVen" prefWidth="80" text="Precio venta" />
+                        <TableColumn fx:id="colTotalCompra" prefWidth="80" text="Total Compra" />
+                        <TableColumn fx:id="colTotalVenta" prefWidth="80" text="Total Venta" />
                         <TableColumn fx:id="colObservaciones" prefWidth="80" text="Observaciones" />
 
                         <TableColumn fx:id="colFechaReg" prefWidth="80" text="Fecha registro" />

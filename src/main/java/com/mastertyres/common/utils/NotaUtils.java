@@ -1,4 +1,4 @@
-package com.mastertyres.common;
+package com.mastertyres.common.utils;
 
 import com.mastertyres.nota.model.CampoNota;
 import jakarta.annotation.PostConstruct;

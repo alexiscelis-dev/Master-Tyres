@@ -76,46 +76,46 @@ public class VentanaPrincipalController {
     public void initialize() {
         //viewContent(null, "RegresarMenu.fxml", "Menu");
         historialVistas.push("/fxmlViews/master_tires/RegresarMenu.fxml");
-        historialNombreVistas.push("Menu");
+        historialNombreVistas.push("MENU");
 
         // iconoMenu.setOnMouseClicked(event -> toggleSidebar());
         HBoxLogOut.setOnMouseClicked(event -> logOut(event, "/fxmlViews/login/Login.fxml"));
 
         HBoxVehiculos.setOnMouseClicked(event -> {
                     viewContent(event, "/fxmlViews/vehiculo/Vehiculo.fxml", "Vehiculos");
-                    cambiarPaginaEtiqueta.setText("Vehiculos");
+                    cambiarPaginaEtiqueta.setText("VEHICULOS");
 
                 }
         );
 
         HBoxNotas.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/nota/Nota.fxml","Notas");
-            cambiarPaginaEtiqueta.setText("Notas");
+            cambiarPaginaEtiqueta.setText("NOTAS");
         });
 
 
         HBoxClientes.setOnMouseClicked(event -> {
                     viewContent(event, "/fxmlViews/cliente/Cliente.fxml", "Clientes");
-                    cambiarPaginaEtiqueta.setText("Clientes");
+                    cambiarPaginaEtiqueta.setText("CLIENTES");
                 }
         );
         HBoxPromociones.setOnMouseClicked(event -> {
                     viewContent(event, "/fxmlViews/promocion/PromocionesActivas.fxml", "Promociones");
-                    cambiarPaginaEtiqueta.setText("Promociones");
+                    cambiarPaginaEtiqueta.setText("PROMOCIONES");
                 }
         );
         HBoxInventario.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/inventario/Inventario.fxml", "Inventario de llantas");
-            cambiarPaginaEtiqueta.setText("Inventario de llantas");
+            cambiarPaginaEtiqueta.setText("INVENTARIO DE LLANTAS");
         });
         HBoxServicios.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/vehiculo/ProximosServicios.fxml", "Proximos Servicios");
-            cambiarPaginaEtiqueta.setText("Proximos Servicios");
+            cambiarPaginaEtiqueta.setText("PROXIMOS SERVICIOS");
         });
 
         LogoPrincipal.setOnMouseClicked(event -> {
             regresarInicio("/fxmlViews/master_tires/RegresarMenu.fxml");
-            cambiarPaginaEtiqueta.setText("Inicio");
+            cambiarPaginaEtiqueta.setText("INICIO");
         });
 
 
@@ -183,7 +183,7 @@ public class VentanaPrincipalController {
         } else {
             // Si no hay historial, vuelve al inicio (o a la vista que prefieras)
             viewContentSinHistorial(null, "/fxmlViews/RegresarMenu.fxml", "Inicio");
-            cambiarPaginaEtiqueta.setText("Inicio");
+            cambiarPaginaEtiqueta.setText("INICIO");
         }
     }
 

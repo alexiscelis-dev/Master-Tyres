@@ -392,7 +392,7 @@ public class ClienteController {
                 "/fxmlViews/cliente/AgregarCliente.fxml",
                 "Agregar cliente"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR CLIENTE");
     }
 
     private VBox crearPaginaClientes(int indicePagina) {
