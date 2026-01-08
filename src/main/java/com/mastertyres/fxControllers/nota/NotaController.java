@@ -19,16 +19,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -417,66 +416,82 @@ public class NotaController {
     }//eliminarNota
 
     private void imprimir(String numNota) {
+
         try {
-            // 1. Cargar FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml"));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            // Tamaño real de la nota (según tu FXML)
+            final double NOTA_WIDTH = 945;
+            final double NOTA_HEIGHT = 1600;
+
+            // ===============================
+            // 1️⃣ Cargar FXML UNA sola vez
+            // ===============================
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml")
+            );
+            loader.setControllerFactory(
+                    ApplicationContextProvider.getApplicationContext()::getBean
+            );
+
             Parent root = loader.load();
 
-            // 2. Ejecutar tu lógica
             ImprimirNotaController controller = loader.getController();
             controller.agregarNota(numNota);
 
-            // 3. Crear una escena temporal para que JavaFX renderice bien los nodos
-            Scene tempScene = new Scene(root);
+            // ⚠️ ESTE es el nodo que se debe imprimir
+            AnchorPane rootPane = controller.getRootPane();
 
-            // 4. Forzar layout y CSS para que calcule tamaños
-            root.applyCss();
-            root.layout();
+            // ===============================
+            // 2️⃣ Forzar render COMPLETO
+            // ===============================
+            Scene tempScene = new Scene(rootPane);
+            rootPane.applyCss();
+            rootPane.layout();
 
-           double anchoOriginal = root.prefWidth(-1);
-           double altoOriginal = root.prefHeight(-1);
-           double anchoSnapshot = 1200;
-           double altoSnapshot = altoOriginal * 0.90;
+            // ===============================
+            // 3️⃣ Snapshot COMPLETO (sin ScrollPane)
+            // ===============================
+            WritableImage img1 = new WritableImage(
+                    (int) rootPane.prefWidth(-1),
+                    (int) rootPane.prefHeight(-1)
+            );
 
-            WritableImage snapshot = new WritableImage(
-                    (int) root.getBoundsInParent().getWidth(),
-                    (int) root.getBoundsInParent().getHeight()
+            rootPane.snapshot(null, img1);
 
-           );
+            // Segunda nota (misma imagen)
+            WritableImage img2 = new WritableImage(
+                    (int) rootPane.prefWidth(-1),
+                    (int) rootPane.prefHeight(-1)
+            );
+            rootPane.snapshot(null, img2);
 
-           WritableImage snapshot2 = null;
-
-            SnapshotParameters params = new SnapshotParameters();
-            params.setTransform(Transform.scale(
-                    anchoSnapshot / anchoOriginal,
-                    altoSnapshot / altoOriginal
-            ));
-
-            root.snapshot(params,snapshot);
-
-
-            // 5. FileChooser para guardar
+            // ===============================
+            // 4️⃣ Guardar PDF
+            // ===============================
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Guardar Nota en PDF");
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("PDF", "*.pdf")
+            );
             chooser.setInitialFileName("Nota_" + numNota + ".pdf");
 
-            File archivo = chooser.showSaveDialog(root.getScene().getWindow());
+            File archivo = chooser.showSaveDialog(null);
             if (archivo == null) return;
 
-            snapshot2 = snapshot;
-            // 6. Generar PDF
-            GenerarPDF.generarPDF(snapshot, snapshot2, archivo.getAbsolutePath());
-
+            // ===============================
+            // 5️⃣ Generar PDF (arriba / abajo)
+            // ===============================
+            GenerarPDF.generarPDF(img1, img2, archivo.getAbsolutePath());
 
         } catch (Exception e) {
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            mostrarError(
+                    "Error inesperado",
+                    "",
+                    "Ocurrió un problema al imprimir la nota."
+            );
             e.printStackTrace();
-
         }
+    }
 
-    }//imprimir
 
     private void darPlazo(Integer notaId) {
         try {

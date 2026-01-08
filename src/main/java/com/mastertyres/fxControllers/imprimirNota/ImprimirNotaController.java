@@ -1054,4 +1054,8 @@ public class ImprimirNotaController {
     public void setPorcentajeGasNota(final int porcentajeGasNota) {
         this.porcentajeGasNota = porcentajeGasNota;
     }
+
+    public AnchorPane getRootPane() {
+        return this.rootPane;
+    }
 }//class
