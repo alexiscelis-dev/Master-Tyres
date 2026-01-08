@@ -6,9 +6,10 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
@@ -34,7 +35,7 @@ public class GenerarPDF {
             PdfWriter writer = new PdfWriter(ruta);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf, PageSize.A4.rotate());
-            document.setMargins(0, 0, 0, 0);
+            document.setMargins(5, 0, 0, 0);
 
             //se crea imagen para iText
             ImageData imageData1 = ImageDataFactory.create(imageByte1.toByteArray());
@@ -51,20 +52,21 @@ public class GenerarPDF {
             Table table = new Table(new float[] {pageWidth / 2, pageWidth / 2});
             table.setWidth(UnitValue.createPointValue(pageWidth));
             table.setFixedLayout();
+            table.setKeepTogether(true);
 
             Cell cell1 = new Cell()
                     .setHeight(pageHeight)
                     .add(image1)
                     .setPadding(0)
-                    .setBorder(new SolidBorder(1)
-            );
+                    .setBorder(Border.NO_BORDER);
 
 
             Cell cell2 = new Cell()
+                    .setTextAlignment(TextAlignment.RIGHT)
                     .setHeight(pageHeight)
                     .add(image2)
                     .setPadding(0)
-                    .setBorder(new SolidBorder(1));
+                    .setBorder(Border.NO_BORDER);
 
                  table.addCell(cell1);
                  table.addCell(cell2);

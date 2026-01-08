@@ -431,31 +431,37 @@ public class NotaController {
 
             AnchorPane contenedorImprimir = controller.getRootPane();
 
+            double scaleX = 3.0;
+            double scaleY =2.5;
+
+            Scale scale = new Scale(scaleX,scaleY);
+            scale.setPivotY(0);
+            scale.setPivotX(0);
+            contenedorImprimir.getTransforms().add(scale);
+
+
             Scene tempScene = new Scene(contenedorImprimir);
             contenedorImprimir.applyCss();
             contenedorImprimir.layout();
 
 
+            double ancho =  contenedorImprimir.prefWidth(-1) * scaleX;
+            double alto = contenedorImprimir.prefHeight(-1) * scaleY;
 
             WritableImage nota1 = new WritableImage(
-                    (int) contenedorImprimir.prefWidth(-1),
-                    (int) contenedorImprimir.prefHeight(-1)
+                    (int) ancho,
+                    (int) alto
             );
 
             contenedorImprimir.snapshot(null, nota1);
 
             WritableImage nota2 = new WritableImage(
-                    (int) contenedorImprimir.prefWidth(-1),
-                    (int) contenedorImprimir.prefHeight(-1)
+                    (int) ancho,
+                    (int) alto
             );
             contenedorImprimir.snapshot(null, nota2);
 
-            Scale scale = new Scale();
-            scale.setX(1.30);
-            scale.setY(1.0);
-            scale.setPivotX(0);
-            scale.setPivotY(0);
-            contenedorImprimir.getTransforms().add(scale);
+            contenedorImprimir.getTransforms().remove(scale);
 
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Guardar Nota en PDF");
