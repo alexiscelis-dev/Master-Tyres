@@ -126,6 +126,7 @@
     -fx-border-color: black;
     -fx-border-width: 2px;
     -fx-border-radius: 10 0 10 0;
+    -fx-pref-height: 705px;
 
 }
 
@@ -278,6 +279,8 @@
   -fx-border-color: #63605E;
   -fx-background-radius: 5px;
   -fx-border-radius: 5px;
+  -fx-prefer-height:30px;
+  -fx-prefer-width: 90px;
  }
 
 

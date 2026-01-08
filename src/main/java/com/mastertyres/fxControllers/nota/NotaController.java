@@ -2,7 +2,6 @@ package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.GenerarPDF;
 import com.mastertyres.common.utils.NotaUtils;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -28,6 +27,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -37,6 +37,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -44,6 +45,7 @@ import java.util.List;
 
 import static com.mastertyres.common.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
+import static com.mastertyres.common.GenerarPDF.generarPDF;
 import static com.mastertyres.common.MensajesAlert.*;
 
 @Component
@@ -416,57 +418,45 @@ public class NotaController {
     }//eliminarNota
 
     private void imprimir(String numNota) {
-
         try {
-            // Tamaño real de la nota (según tu FXML)
-            final double NOTA_WIDTH = 945;
-            final double NOTA_HEIGHT = 1600;
+            final double NOTA_WITDTH = 960;
+            final double NOTA_HEIGHT = 1590;
 
-            // ===============================
-            // 1️⃣ Cargar FXML UNA sola vez
-            // ===============================
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml")
-            );
-            loader.setControllerFactory(
-                    ApplicationContextProvider.getApplicationContext()::getBean
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
 
             Parent root = loader.load();
-
             ImprimirNotaController controller = loader.getController();
             controller.agregarNota(numNota);
 
-            // ⚠️ ESTE es el nodo que se debe imprimir
-            AnchorPane rootPane = controller.getRootPane();
+            AnchorPane contenedorImprimir = controller.getRootPane();
 
-            // ===============================
-            // 2️⃣ Forzar render COMPLETO
-            // ===============================
-            Scene tempScene = new Scene(rootPane);
-            rootPane.applyCss();
-            rootPane.layout();
+            Scene tempScene = new Scene(contenedorImprimir);
+            contenedorImprimir.applyCss();
+            contenedorImprimir.layout();
 
-            // ===============================
-            // 3️⃣ Snapshot COMPLETO (sin ScrollPane)
-            // ===============================
-            WritableImage img1 = new WritableImage(
-                    (int) rootPane.prefWidth(-1),
-                    (int) rootPane.prefHeight(-1)
+
+
+            WritableImage nota1 = new WritableImage(
+                    (int) contenedorImprimir.prefWidth(-1),
+                    (int) contenedorImprimir.prefHeight(-1)
             );
 
-            rootPane.snapshot(null, img1);
+            contenedorImprimir.snapshot(null, nota1);
 
-            // Segunda nota (misma imagen)
-            WritableImage img2 = new WritableImage(
-                    (int) rootPane.prefWidth(-1),
-                    (int) rootPane.prefHeight(-1)
+            WritableImage nota2 = new WritableImage(
+                    (int) contenedorImprimir.prefWidth(-1),
+                    (int) contenedorImprimir.prefHeight(-1)
             );
-            rootPane.snapshot(null, img2);
+            contenedorImprimir.snapshot(null, nota2);
 
-            // ===============================
-            // 4️⃣ Guardar PDF
-            // ===============================
+            Scale scale = new Scale();
+            scale.setX(1.30);
+            scale.setY(1.0);
+            scale.setPivotX(0);
+            scale.setPivotY(0);
+            contenedorImprimir.getTransforms().add(scale);
+
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Guardar Nota en PDF");
             chooser.getExtensionFilters().add(
@@ -477,20 +467,25 @@ public class NotaController {
             File archivo = chooser.showSaveDialog(null);
             if (archivo == null) return;
 
-            // ===============================
-            // 5️⃣ Generar PDF (arriba / abajo)
-            // ===============================
-            GenerarPDF.generarPDF(img1, img2, archivo.getAbsolutePath());
+            generarPDF(nota1, nota2, archivo.getAbsolutePath());
 
+
+        } catch (IOException io) {
+            mostrarError("Error al generar archivo", "",
+                    "El archivo no pudo crearse o está siendo usado por otro programa.\n" +
+                          "Cierra otros programas e inténtalo de nuevo.");
         } catch (Exception e) {
+            e.printStackTrace();
             mostrarError(
                     "Error inesperado",
                     "",
                     "Ocurrió un problema al imprimir la nota."
             );
-            e.printStackTrace();
+
         }
-    }
+
+
+    }//imprimir
 
 
     private void darPlazo(Integer notaId) {

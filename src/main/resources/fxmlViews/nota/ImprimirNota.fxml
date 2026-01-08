@@ -7,14 +7,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefHeight="1600.0" prefWidth="945.0" stylesheets="@../../styles_css/Imprimir.css"
+<AnchorPane fx:id="rootPane" prefHeight="1590" prefWidth="960.0" stylesheets="@../../styles_css/Imprimir.css"
             translateX="100.0" translateY="0.0" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController">
 
 
     <children>
-
 
         <!-- StackPane centra el ScrollPane dentro del AnchorPane -->
         <StackPane fx:id="stackImprimir" alignment="CENTER" layoutY="-37.0" prefHeight="945.0" prefWidth="945.0"
@@ -497,7 +496,7 @@
                                         <ColumnConstraints prefWidth="400"/>
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints minHeight="100" vgrow="ALWAYS"/>
+                                        <RowConstraints minHeight="80" vgrow="NEVER"/>
                                     </rowConstraints>
 
                                     <children>
@@ -838,8 +837,10 @@
 
 
                         <!--Llenar informacion nota  -->
-                        <VBox styleClass="vBoxInfoNota" GridPane.columnIndex="0" GridPane.columnSpan="3"
+                        <VBox alignment="TOP_CENTER" styleClass="vBoxInfoNota" GridPane.columnIndex="0"
+                              GridPane.columnSpan="3"
                               GridPane.rowIndex="5">
+
                             <GridPane maxHeight="Infinity" VBox.vgrow="ALWAYS">
                                 <columnConstraints>
                                     <ColumnConstraints prefWidth="250"/>
@@ -873,9 +874,10 @@
                                     <RowConstraints minHeight="30" vgrow="ALWAYS"/> <!-- Frenos espacio 1-->
                                     <RowConstraints minHeight="30" vgrow="ALWAYS"/> <!-- Frenos espacio 2-->
                                     <RowConstraints minHeight="30" vgrow="ALWAYS"/> <!-- Otros-->
-                                    <RowConstraints minHeight="30" vgrow="ALWAYS"/> <!-- otros espacio 1-->
-                                    <RowConstraints minHeight="30" vgrow="ALWAYS"/> <!-- otros espacio 2-->
-                                    <RowConstraints minHeight="30" vgrow="ALWAYS"/> <!-- Total-->
+                                    <RowConstraints prefHeight="30" vgrow="ALWAYS"/> <!--otros espacio 1-->
+                                    <RowConstraints prefHeight="60" vgrow="ALWAYS"/> <!-- Total-->
+                                    <RowConstraints prefHeight="30" vgrow="ALWAYS"/> <!-- otros espacio 2-->
+
                                 </rowConstraints>
 
                                 <children>
@@ -917,7 +919,7 @@
 
                                     </VBox>
 
-                                    <VBox alignment="CENTER" prefWidth="500" styleClass="vBoxFillDerecho"
+                                    <VBox alignment="CENTER" prefHeight="35" prefWidth="500" styleClass="vBoxFillDerecho"
                                           GridPane.columnIndex="4" GridPane.rowIndex="0">
 
                                         <Label text="TOTAL" textFill="#fffdfd">
@@ -1550,8 +1552,9 @@
 
                                     </HBox>
 
-                                    <StackPane styleClass="total" GridPane.columnIndex="3" GridPane.rowIndex="22">
-                                        <Label style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: White; "
+                                    <StackPane alignment="CENTER" styleClass="total" GridPane.columnIndex="3"
+                                               GridPane.rowIndex="22">
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 17px; -fx-text-fill: White; "
                                                text="TOTAL $">
                                             <font>
                                                 <Font name="Arial" size="14.0"/>
@@ -1560,9 +1563,10 @@
                                                 <Insets left="10" top="5"/>
                                             </GridPane.margin>
                                         </Label>
+
                                     </StackPane>
 
-                                    <HBox alignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="22">
+                                    <HBox alignment="BOTTOM_CENTER" GridPane.columnIndex="4" GridPane.rowIndex="22">
                                         <TextField fx:id="txtTotal" prefWidth="105" styleClass="text-field-nota2">
 
                                         </TextField>
