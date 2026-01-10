@@ -427,7 +427,7 @@ public class NotaController {
 
             Parent root = loader.load();
             ImprimirNotaController controller = loader.getController();
-            controller.agregarNota(numNota);
+            controller.agregarNota(numNota,true);
 
             AnchorPane contenedorImprimir = controller.getRootPane();
 
@@ -437,8 +437,8 @@ public class NotaController {
             Scale scale = new Scale(scaleX,scaleY);
             scale.setPivotY(0);
             scale.setPivotX(0);
-            contenedorImprimir.getTransforms().add(scale);
 
+            contenedorImprimir.getTransforms().add(scale);
 
             Scene tempScene = new Scene(contenedorImprimir);
             contenedorImprimir.applyCss();

@@ -14,7 +14,6 @@
 
 
     <children>
-
         <!-- StackPane centra el ScrollPane dentro del AnchorPane -->
         <StackPane fx:id="stackImprimir" alignment="CENTER" layoutY="-37.0" prefHeight="945.0" prefWidth="945.0"
                    translateX="-10" translateY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -33,6 +32,7 @@
                         <padding>
                             <Insets bottom="10" left="10" right="10" top="10"/>
                         </padding>
+
 
                         <GridPane id="gridPanePrincipal" hgap="10" maxWidth="Infinity" vgap="10">
                             <columnConstraints>
@@ -64,6 +64,7 @@
                                     </image>
                                 </ImageView>
 
+
                                 <HBox alignment="CENTER" prefHeight="55.0" prefWidth="140" styleClass="vBoxNumNota"
                                       GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS"
                                       GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
@@ -75,12 +76,38 @@
                                     </Label>
 
                                     <TextField fx:id="txtNumNota" alignment="CENTER" prefHeight="25" prefWidth="150"
-                                               promptText="Numero de nota" styleClass="textfield-nota"/>
+                                               promptText="Número de nota" styleClass="textfield-nota"/>
+
+
                                     <GridPane.margin>
                                         <Insets right="15"/>
                                     </GridPane.margin>
 
                                 </HBox>
+
+                                <Label fx:id="lblNumFactura" alignment="CENTER"
+                                       style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: black; -fx-background-color: #FFFF66;"
+                                       text="Número de factura:" translateX="330" translateY="-45"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="0">
+
+                                </Label>
+
+                                <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: black; -fx-background-color: #FFFF66;"
+                                       text=" ORIGINAL" translateX="-250" translateY="-45" GridPane.columnIndex="1"
+                                       GridPane.rowIndex="0"
+                                fx:id="lbltipoNota"
+                                >
+
+                                </Label>
+
+
+                                <Label text="Because so much is riding on your tires" translateX="-268.0"
+                                       translateY="40" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <font>
+                                        <Font name="Book Antiqua" size="15.0"/>
+                                    </font>
+                                </Label>
+
 
                                 <HBox prefHeight="15" prefWidth="50" styleClass="vBoxNumNota" GridPane.columnIndex="0"
                                       GridPane.columnSpan="2" GridPane.rowIndex="1">
@@ -838,8 +865,7 @@
 
                         <!--Llenar informacion nota  -->
                         <VBox alignment="TOP_CENTER" styleClass="vBoxInfoNota" GridPane.columnIndex="0"
-                              GridPane.columnSpan="3"
-                              GridPane.rowIndex="5">
+                              GridPane.columnSpan="3" GridPane.rowIndex="5">
 
                             <GridPane maxHeight="Infinity" VBox.vgrow="ALWAYS">
                                 <columnConstraints>
@@ -919,8 +945,8 @@
 
                                     </VBox>
 
-                                    <VBox alignment="CENTER" prefHeight="35" prefWidth="500" styleClass="vBoxFillDerecho"
-                                          GridPane.columnIndex="4" GridPane.rowIndex="0">
+                                    <VBox alignment="CENTER" prefHeight="35" prefWidth="500"
+                                          styleClass="vBoxFillDerecho" GridPane.columnIndex="4" GridPane.rowIndex="0">
 
                                         <Label text="TOTAL" textFill="#fffdfd">
                                             <font>
@@ -1573,8 +1599,32 @@
 
                                     </HBox>
 
+                                    <!-- Seccionn de Firma en Nota, no se llena es firma fisica -->
+
+                                    <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="0"
+                                          GridPane.columnSpan="2" GridPane.rowIndex="22">
+                                        <GridPane.margin>
+                                            <Insets left="10" top="5"/>
+                                        </GridPane.margin>
+                                        <Label text="Firma: ">
+                                            <font>
+                                                <Font name="Arial" size="18.0"/>
+                                            </font>
+                                        </Label>
+
+                                        <HBox>
+
+                                        </HBox>
+
+                                        <TextField prefWidth="412" styleClass="text-field-nota">
+
+                                        </TextField>
+
+                                    </HBox>
+
 
                                 </children>
+
 
                             </GridPane>
 

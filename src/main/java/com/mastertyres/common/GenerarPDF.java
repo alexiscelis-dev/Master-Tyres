@@ -35,7 +35,7 @@ public class GenerarPDF {
             PdfWriter writer = new PdfWriter(ruta);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf, PageSize.A4.rotate());
-            document.setMargins(5, 0, 0, 0);
+            document.setMargins(0, 0, 0, 0);
 
             //se crea imagen para iText
             ImageData imageData1 = ImageDataFactory.create(imageByte1.toByteArray());
