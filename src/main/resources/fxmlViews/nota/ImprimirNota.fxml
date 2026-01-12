@@ -92,13 +92,14 @@
 
                                 </Label>
 
-                                <Label style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: black; -fx-background-color: #FFFF66;"
-                                       text=" ORIGINAL" translateX="-250" translateY="-45" GridPane.columnIndex="1"
-                                       GridPane.rowIndex="0"
-                                fx:id="lbltipoNota"
-                                >
-
-                                </Label>
+                                <VBox fx:id="contenedorTipoNota" alignment="CENTER" maxWidth="110"
+                                      styleClass="vBoxNumNota" translateX="-240" translateY="-45"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <Label fx:id="lbltipoNota"
+                                           style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: black;"
+                                           text=" ORIGINAL">
+                                    </Label>
+                                </VBox>
 
 
                                 <Label text="Because so much is riding on your tires" translateX="-268.0"
@@ -124,10 +125,10 @@
                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="DIA"
                                            HBox.hgrow="ALWAYS">
                                         <font>
-                                            <Font name="Arial" size="12.0"/>
+                                            <Font name="Arial" size="14.0"/>
                                         </font>
                                         <HBox.margin>
-                                            <Insets left="10.0"/>
+                                            <Insets left="10.0" top="1.0"/>
                                         </HBox.margin>
 
                                     </Label>
@@ -136,7 +137,7 @@
                                     <TextField fx:id="txtDia" alignment="BOTTOM_CENTER" nodeOrientation="LEFT_TO_RIGHT"
                                                styleClass="textfield-fecha">
                                         <HBox.margin>
-                                            <Insets top="15.0"/>
+                                            <Insets top="16.0"/>
                                         </HBox.margin>
                                     </TextField>
 
@@ -153,10 +154,10 @@
                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="MES"
                                            HBox.hgrow="ALWAYS">
                                         <font>
-                                            <Font name="Arial" size="12.0"/>
+                                            <Font name="Arial" size="14.0"/>
                                         </font>
                                         <HBox.margin>
-                                            <Insets/>
+                                            <Insets top="1.0"/>
                                         </HBox.margin>
 
                                     </Label>
@@ -165,7 +166,7 @@
                                     <TextField fx:id="txtMes" alignment="BOTTOM_CENTER" nodeOrientation="LEFT_TO_RIGHT"
                                                styleClass="textfield-fecha">
                                         <HBox.margin>
-                                            <Insets top="15.0"/>
+                                            <Insets top="16.0"/>
                                         </HBox.margin>
                                     </TextField>
 
@@ -181,15 +182,18 @@
                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="AÑO"
                                            HBox.hgrow="ALWAYS">
                                         <font>
-                                            <Font name="Arial" size="12.0"/>
+                                            <Font name="Arial" size="14.0"/>
                                         </font>
+                                        <HBox.margin>
+                                            <Insets top="1.0"/>
+                                        </HBox.margin>
 
                                     </Label>
 
                                     <TextField fx:id="txtAnio" alignment="BOTTOM_CENTER" nodeOrientation="LEFT_TO_RIGHT"
                                                styleClass="textfield-fecha">
                                         <HBox.margin>
-                                            <Insets top="15.0"/>
+                                            <Insets top="16.0"/>
                                         </HBox.margin>
                                     </TextField>
 
@@ -266,10 +270,7 @@
                                                     <Insets left="5.0"/>
                                                 </GridPane.margin>
 
-                                                <Label text="Nombre:">
-                                                    <font>
-                                                        <Font name="Arial" size="14.0"/>
-                                                    </font>
+                                                <Label styleClass="label-campos" text="Nombre:">
 
                                                 </Label>
 
@@ -288,13 +289,8 @@
                                                     <Insets left="5.0"/>
                                                 </GridPane.margin>
 
-                                                <Label text="Direccion:">
-                                                    <font>
-                                                        <Font name="Arial" size="14.0"/>
-                                                    </font>
-                                                    <GridPane.margin>
-                                                        <Insets left="5.0"/>
-                                                    </GridPane.margin>
+                                                <Label styleClass="label-campos" text="Direccion:">
+
                                                 </Label>
 
                                                 <TextField fx:id="txtDireccion" prefWidth="450"
@@ -306,7 +302,7 @@
 
                                             </HBox>
 
-                                            <TextField fx:id="txtDireccion2" prefWidth="520"
+                                            <TextField fx:id="txtDireccion2" prefWidth="525"
                                                        styleClass="text-field-nota" GridPane.columnIndex="0"
                                                        GridPane.columnSpan="2" GridPane.rowIndex="2"
                                                        GridPane.rowSpan="1">
@@ -326,19 +322,11 @@
                                                     <Insets left="5.0"/>
                                                 </GridPane.margin>
 
-                                                <Label text="RFC:">
-
-                                                    <font>
-                                                        <Font name="Arial" size="14.0"/>
-                                                    </font>
-
-                                                    <GridPane.margin>
-                                                        <Insets right="10"/>
-                                                    </GridPane.margin>
+                                                <Label styleClass="label-campos" text="RFC:">
 
                                                 </Label>
 
-                                                <TextField fx:id="txtRfc" prefWidth="480" styleClass="text-field-nota"
+                                                <TextField fx:id="txtRfc" prefWidth="484" styleClass="text-field-nota"
                                                            GridPane.columnIndex="1" GridPane.rowIndex="3">
 
                                                 </TextField>
@@ -351,13 +339,7 @@
                                                     <Insets left="5.0"/>
                                                 </GridPane.margin>
 
-                                                <Label text="Correo:">
-                                                    <font>
-                                                        <Font name="Arial" size="14.0"/>
-                                                    </font>
-                                                    <GridPane.margin>
-                                                        <Insets right="10"/>
-                                                    </GridPane.margin>
+                                                <Label styleClass="label-campos" text="Correo:">
 
                                                 </Label>
 
@@ -372,20 +354,17 @@
                                             <!-- Comienza el lado derecho del gridPane nombre, direccion etc..-->
 
 
-                                            <Label text="Hora de entrega:" GridPane.columnIndex="2"
-                                                   GridPane.rowIndex="0">
-                                                <font>
-                                                    <Font name="Arial" size="14.0"/>
-                                                </font>
+                                            <Label styleClass="label-campos2" text="Hora de entrega:"
+                                                   GridPane.columnIndex="2" GridPane.rowIndex="0">
+
                                                 <GridPane.margin>
                                                     <Insets left="15"/>
-
                                                 </GridPane.margin>
 
                                             </Label>
 
 
-                                            <TextField fx:id="txtHoraEntrega" prefWidth="205"
+                                            <TextField fx:id="txtHoraEntrega" prefWidth="210"
                                                        styleClass="text-field-nota2" GridPane.columnIndex="3"
                                                        GridPane.rowIndex="0">
                                             </TextField>
@@ -400,15 +379,11 @@
 
                                                 </GridPane.margin>
 
-                                                <Label text="Marca:">
-                                                    <font>
-                                                        <Font name="Arial" size="14.0"/>
-                                                    </font>
-
+                                                <Label styleClass="label-campos2" text="Marca:">
 
                                                 </Label>
 
-                                                <TextField fx:id="txtMarca" prefWidth="275"
+                                                <TextField fx:id="txtMarca" prefWidth="278"
                                                            styleClass="text-field-nota2 " GridPane.columnIndex="3"
                                                            GridPane.rowIndex="1">
 
@@ -423,10 +398,8 @@
 
                                                 </GridPane.margin>
 
-                                                <Label text="Modelo:">
-                                                    <font>
-                                                        <Font name="Arial" size="14.0"/>
-                                                    </font>
+                                                <Label styleClass="label-campos2" text="Modelo:">
+
                                                     <GridPane.margin>
                                                         <Insets left="15"/>
 
@@ -434,7 +407,7 @@
 
                                                 </Label>
 
-                                                <TextField fx:id="txtModelo" prefWidth="270"
+                                                <TextField fx:id="txtModelo" prefWidth="273"
                                                            styleClass="text-field-nota2 " GridPane.columnIndex="3"
                                                            GridPane.rowIndex="2">
 
@@ -450,20 +423,15 @@
 
                                                 </GridPane.margin>
                                                 <HBox alignment="CENTER_LEFT" spacing="10">
-                                                    <Label text="Año:">
-                                                        <font>
-                                                            <Font name="Arial" size="14.0"/>
-                                                        </font>
+                                                    <Label styleClass="label-campos2" text="Año:">
 
                                                     </Label>
                                                     <TextField fx:id="txtAnioVehiculo" prefWidth="80"
                                                                styleClass="text-field-nota2 ">
 
                                                     </TextField>
-                                                    <Label text="Kms:">
-                                                        <font>
-                                                            <Font name="Arial" size="14.0"/>
-                                                        </font>
+                                                    <Label styleClass="label-campos2" text="Kms:">
+
 
                                                     </Label>
 
@@ -485,11 +453,7 @@
 
                                                 </GridPane.margin>
 
-                                                <Label text="Placas">
-                                                    <font>
-                                                        <Font name="Arial" size="14.0"/>
-                                                    </font>
-
+                                                <Label styleClass="label-campos2" text="Placas">
 
                                                 </Label>
 
@@ -838,12 +802,9 @@
 
                             <HBox spacing="10" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 
-                                <Label prefHeight="16.0" prefWidth="113.0" text="Observaciones: ">
+                                <Label prefHeight="20.0" prefWidth="121.0" styleClass="label-campos2"
+                                       text="Observaciones: ">
 
-
-                                    <font>
-                                        <Font name="Arial" size="14.0"/>
-                                    </font>
 
                                 </Label>
 
@@ -962,10 +923,9 @@
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <Label text="Alineación:">
-                                            <font>
-                                                <Font name="Arial" size="14.0"/>
-                                            </font>
+                                        <Label prefHeight="20.0" prefWidth="80.0" styleClass="label-campos2"
+                                               text="Alineación:">
+
                                         </Label>
 
                                         <HBox>
@@ -983,10 +943,8 @@
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <Label text="Balanceo:">
-                                            <font>
-                                                <Font name="Arial" size="14.0"/>
-                                            </font>
+                                        <Label styleClass="label-campos2" text="Balanceo:">
+
                                         </Label>
 
                                         <HBox>
@@ -1006,7 +964,7 @@
                                         </GridPane.margin>
 
                                         <TextField fx:id="txtAlineacionCantidad" prefWidth="105"
-                                                   styleClass="text-field-nota2">
+                                                   styleClass="text-field-nota2" translateX="-2.0">
 
                                         </TextField>
 
@@ -1057,13 +1015,12 @@
 
                                     </HBox>
 
-                                    <Label text="Llantas:" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                                    <Label styleClass="label-campos2" text="Llantas:" GridPane.columnIndex="0"
+                                           GridPane.rowIndex="3">
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <font>
-                                            <Font name="Arial" size="14.0"/>
-                                        </font>
+
 
                                     </Label>
 
@@ -1107,14 +1064,14 @@
                                     </HBox>
 
 
-                                    <Label text="Amortiguadores delanteros:" GridPane.columnIndex="0"
-                                           GridPane.rowIndex="5">
+                                    <Label prefWidth="199.0" styleClass="label-campos2"
+                                           text="Amortiguadores delanteros:" GridPane.columnIndex="0"
+                                           GridPane.columnSpan="2" GridPane.rowIndex="5">
+
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <font>
-                                            <Font name="Arial" size="14.0"/>
-                                        </font>
+
 
                                     </Label>
 
@@ -1159,14 +1116,11 @@
                                     </HBox>
 
 
-                                    <Label text="Amortiguadores traseros:" GridPane.columnIndex="0"
-                                           GridPane.rowIndex="7">
+                                    <Label styleClass="label-campos2" text="Amortiguadores traseros:"
+                                           GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="7">
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <font>
-                                            <Font name="Arial" size="14.0"/>
-                                        </font>
 
                                     </Label>
 
@@ -1187,7 +1141,6 @@
 
                                         <TextField fx:id="txtAmorTrasCantidad" prefWidth="105"
                                                    styleClass="text-field-nota2">
-
 
                                         </TextField>
 
@@ -1210,13 +1163,11 @@
                                     </HBox>
 
 
-                                    <Label text="Suspensión:" GridPane.columnIndex="0" GridPane.rowIndex="9">
+                                    <Label styleClass="label-campos2" text="Suspensión:" GridPane.columnIndex="0"
+                                           GridPane.rowIndex="9">
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <font>
-                                            <Font name="Arial" size="14.0"/>
-                                        </font>
 
                                     </Label>
 
@@ -1323,13 +1274,11 @@
 
                                     </HBox>
 
-                                    <Label text="Mecanica:" GridPane.columnIndex="0" GridPane.rowIndex="12">
+                                    <Label styleClass="label-campos2" text="Mecanica:" GridPane.columnIndex="0"
+                                           GridPane.rowIndex="12">
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <font>
-                                            <Font name="Arial" size="14.0"/>
-                                        </font>
 
                                     </Label>
 
@@ -1408,13 +1357,11 @@
                                     </HBox>
 
 
-                                    <Label text="Frenos:" GridPane.columnIndex="0" GridPane.rowIndex="15">
+                                    <Label styleClass="label-campos2" text="Frenos:" GridPane.columnIndex="0"
+                                           GridPane.rowIndex="15">
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <font>
-                                            <Font name="Arial" size="14.0"/>
-                                        </font>
 
                                     </Label>
 
@@ -1494,13 +1441,12 @@
                                     </HBox>
 
 
-                                    <Label text="Otros:" GridPane.columnIndex="0" GridPane.rowIndex="18">
+                                    <Label styleClass="label-campos2" text="Otros:" GridPane.columnIndex="0"
+                                           GridPane.rowIndex="18">
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <font>
-                                            <Font name="Arial" size="14.0"/>
-                                        </font>
+
 
                                     </Label>
 
@@ -1608,7 +1554,7 @@
                                         </GridPane.margin>
                                         <Label text="Firma: ">
                                             <font>
-                                                <Font name="Arial" size="18.0"/>
+                                                <Font name="Arial Bold" size="18.0"/>
                                             </font>
                                         </Label>
 

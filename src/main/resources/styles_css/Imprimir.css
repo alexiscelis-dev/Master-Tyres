@@ -180,11 +180,12 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
     -fx-border-width: 0 0 1 0;
-    -fx-font-size: 14px;
+    -fx-font-size: 15px;
     -fx-padding: 5 0 5 0;
     -fx-text-fill: black;
     -fx-alignment: center;
     -fx-font-weight: bold;
+    -fx-font-family:"Tahoma";
 
 }
 
@@ -197,11 +198,12 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
     -fx-border-width: 0 0 2 0;
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
     -fx-padding: 5 0 5 0;
     -fx-text-fill: black;
     -fx-alignment: center;
     -fx-font-weight: bold;
+    -fx-font-family:"Tahoma";
 
 }
 
@@ -214,11 +216,11 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
     -fx-border-width: 0 0 2 0;
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
     -fx-padding: 5 0 5 0;
     -fx-text-fill: black;
     -fx-font-weight: bold;
-
+    -fx-font-family:"Tahoma";
 
 }
 
@@ -391,6 +393,7 @@ DatePicker
     -fx-text-fill: #F2F2F2;
     -fx-background-color: transparent;
     -fx-prompt-text-fill: #BBBBBB;
+
 }
 
 .date-picker .calendar-popup {
@@ -438,3 +441,18 @@ DatePicker
 #stackTransparente {
     -fx-background-color: transparent;
 }
+
+.label-campos{
+-fx-font-family:"Arial";
+-fx-font-size:16px;
+-fx-margin: 0 0 0 5;
+-fx-font-fill: #000000;
+
+}
+
+.label-campos2{
+-fx-font-family:"Arial";
+-fx-font-size:16px;
+-fx-font-fill: #000000;
+}
+

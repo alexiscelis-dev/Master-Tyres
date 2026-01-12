@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.ApplicationContextProvider;
 import com.mastertyres.common.utils.NotaUtils;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.nota.model.Nota;
@@ -13,6 +14,7 @@ import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaClienteDetalle.service.NotaClienteDetService;
 import com.mastertyres.notaDetalle.service.NotaDetalleService;
 import com.mastertyres.vehiculo.service.VehiculoService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,10 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -86,6 +85,8 @@ public class NotaController {
     private Button btnHistorial;
     @FXML
     private TextField txtBuscar;
+    @FXML
+    private LoadingComponentController loadingOverlayController;
 
     @Autowired
     private NotaService notaService;
@@ -146,8 +147,7 @@ public class NotaController {
     }//initialize
 
     private void configurarPaginador() {
-        Page<NotaDTO> paginaInicial =
-                notaService.listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+        Page<NotaDTO> paginaInicial = notaService.listarNotasPaginado("ACTIVE", 0, tamañoPagina);
 
         mostrarNotas(paginaInicial.getContent());
 
@@ -440,6 +440,7 @@ public class NotaController {
 
             contenedorImprimir.getTransforms().add(scale);
 
+
             Scene tempScene = new Scene(contenedorImprimir);
             contenedorImprimir.applyCss();
             contenedorImprimir.layout();
@@ -454,6 +455,8 @@ public class NotaController {
             );
 
             contenedorImprimir.snapshot(null, nota1);
+
+            controller.agregarNota(numNota,false);
 
             WritableImage nota2 = new WritableImage(
                     (int) ancho,
@@ -473,7 +476,29 @@ public class NotaController {
             File archivo = chooser.showSaveDialog(null);
             if (archivo == null) return;
 
-            generarPDF(nota1, nota2, archivo.getAbsolutePath());
+            loadingOverlayController.show();
+
+            Task<Void> task = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    generarPDF(nota1, nota2, archivo.getAbsolutePath());
+                    return null;
+                }
+            };
+
+            task.setOnSucceeded(e ->{
+
+                loadingOverlayController.hide();
+                mostrarInformacion("Nota creada", "", "Se generó el documento exitosamente");
+            });
+
+            task.setOnFailed(e -> {
+
+                loadingOverlayController.hide();
+                mostrarError("Error inesperado", "", "Ocurrió un problema");
+            });
+
+            new Thread(task).start();
 
 
         } catch (IOException io) {

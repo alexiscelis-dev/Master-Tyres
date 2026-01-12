@@ -100,6 +100,12 @@ public class NotaUtils {
 
     }
 
+    public String eliminarCero(int cantidad){
+        if (cantidad != 0)
+            return cantidad + "";
+        else return "";
+    }
+
     public void mostrarPopupHora(TextField txtTarget) {
 
         PopupControl popup = new PopupControl();

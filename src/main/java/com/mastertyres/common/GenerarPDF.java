@@ -17,13 +17,10 @@ import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
-
 public class GenerarPDF {
 
-    public static void generarPDF(WritableImage img1, WritableImage img2, String ruta) {
-        try {
+    public static void generarPDF(WritableImage img1, WritableImage img2, String ruta) throws Exception {
+
             // Convertir WritableImage a PNG bytes
             ByteArrayOutputStream imageByte1 = new ByteArrayOutputStream();
             ByteArrayOutputStream imageByte2 = new ByteArrayOutputStream();
@@ -73,15 +70,6 @@ public class GenerarPDF {
                  document.add(table);
                  document.close();
 
-
-
-            mostrarInformacion("Nota creada", "", "Se genero el documento exitosamente");
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarError("Error inesperado", "", "Ocurrio un error al generar el documento PDF");
-        }
 
     }// generarPDF
 

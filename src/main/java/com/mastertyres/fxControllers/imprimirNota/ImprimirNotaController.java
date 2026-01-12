@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -51,6 +52,8 @@ public class ImprimirNotaController {
     private StackPane spPorcentajeGas;
     @FXML
     private TextField txtHoraEntrega;
+    @FXML
+    private VBox contenedorTipoNota;
     @FXML
     private TextField txtNumNota;
     @FXML

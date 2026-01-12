@@ -414,6 +414,7 @@ public class EditarNotaController {
             //Nota
             txtAlineacion.setText(notaEditar.getAlineacion());
             txtAlineacionCantidad.setText(notaUtils.eliminarCero(notaEditar.getAlineacionCantidad()));
+            txtAlineacionCantidad.setText(notaEditar.getAlineacionCantidad() + "");
             txtAlineacionUnitario.setText(notaUtils.eliminarCero(notaEditar.getAlineacionUnitario()));
             txtAlineacionTotal.setText(notaUtils.eliminarCero(notaEditar.getAlineacionTotal()));
 

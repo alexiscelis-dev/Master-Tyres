@@ -43,6 +43,7 @@ import static com.mastertyres.common.MensajesAlert.mostrarError;
 
 @Component
 public class VentanaPrincipalController {
+
     @FXML private AnchorPane sidebar;
     @FXML private HBox HBoxLogOut;
     @FXML private HBox HBoxNotas;
@@ -74,6 +75,8 @@ public class VentanaPrincipalController {
 
     @FXML
     public void initialize() {
+
+
         //viewContent(null, "RegresarMenu.fxml", "Menu");
         historialVistas.push("/fxmlViews/master_tires/RegresarMenu.fxml");
         historialNombreVistas.push("MENU");
