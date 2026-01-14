@@ -1,9 +1,11 @@
 package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.utils.NotaUtils;
+import com.mastertyres.common.service.NotaUtils;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.nota.model.Nota;
@@ -14,7 +16,6 @@ import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaClienteDetalle.service.NotaClienteDetService;
 import com.mastertyres.notaDetalle.service.NotaDetalleService;
 import com.mastertyres.vehiculo.service.VehiculoService;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +26,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -42,13 +46,13 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.mastertyres.common.FechaUtils.getFechaFormateada;
-import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.GenerarPDF.generarPDF;
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
+import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NotaController {
+public class NotaController implements ILoading {
     @FXML
     private TilePane contenedorNotas;
     @FXML
@@ -85,11 +89,9 @@ public class NotaController {
     private Button btnHistorial;
     @FXML
     private TextField txtBuscar;
-    @FXML
-    private LoadingComponentController loadingOverlayController;
-
     @Autowired
     private NotaService notaService;
+
 
     @Autowired
     ClienteService clienteService;
@@ -101,6 +103,8 @@ public class NotaController {
     private NotaDetalleService notaDetalleService;
     @Autowired
     NotaUtils notaUtils;
+    @Autowired
+    private TaskService taskService;
     //cambios
 
     //Cambios despues del fork
@@ -108,12 +112,18 @@ public class NotaController {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+    private LoadingComponentController loadingOverlayController;
+
 
     private NotaDTO notaSeleccionada;
     private VBox cardSeleccionada = null;
 
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
+    }
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading){
+        this.loadingOverlayController = loading;
     }
 
     private static final int NOTAS_POR_PAGINA = 20;
@@ -390,6 +400,7 @@ public class NotaController {
                 "Editar Nota");
         EditarNotaController controller = (EditarNotaController) controllerObj;
         controller.agregarNota(numNota);
+        controller.setInitializeLoading(ventanaPrincipalController.loadingOverlayController);
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("EDITAR NOTA");
 
 
@@ -400,19 +411,25 @@ public class NotaController {
         boolean eliminar = mostrarConfirmacion("Eliminar nota",
                 "¿Estas apunto de eliminar la nota " + numNota + " esta accion no se podra deshacer",
                 "¿Desea continuar?", "Eliminar", "Cancelar");
+
         if (eliminar) {
-            try {
-                notaService.eliminarNota(StatusNota.INACTIVE.toString(), notaId);
-                notaService.actualizarUpdatedAtNota(notaId, LocalDateTime.now().toString());
-                cargarNota();
-                mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarError("No fue posible eliminar la nota", "", "Ocurrio un error al eliminar la nota seleccionada " + e.getMessage());
 
-            }
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                        notaService.eliminarNota(StatusNota.INACTIVE.toString(), notaId);
+                        notaService.actualizarUpdatedAtNota(notaId, LocalDateTime.now().toString());
+                        return null;
+                    },(resultado) ->{
+                        cargarNota();
+                        mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
+                    },(excepcion) ->{
+                        excepcion.printStackTrace();
+                        mostrarError("Error al eliminar","","No fue posible eliminar la nota. Intente de nuevo mas tarde.");
+                    },null
+            );
 
-        }//
+        }//eliminar
 
 
     }//eliminarNota
@@ -427,14 +444,15 @@ public class NotaController {
 
             Parent root = loader.load();
             ImprimirNotaController controller = loader.getController();
-            controller.agregarNota(numNota,true);
+            controller.agregarNota(numNota, true);
+
 
             AnchorPane contenedorImprimir = controller.getRootPane();
 
             double scaleX = 3.0;
-            double scaleY =2.5;
+            double scaleY = 2.5;
 
-            Scale scale = new Scale(scaleX,scaleY);
+            Scale scale = new Scale(scaleX, scaleY);
             scale.setPivotY(0);
             scale.setPivotX(0);
 
@@ -446,7 +464,7 @@ public class NotaController {
             contenedorImprimir.layout();
 
 
-            double ancho =  contenedorImprimir.prefWidth(-1) * scaleX;
+            double ancho = contenedorImprimir.prefWidth(-1) * scaleX;
             double alto = contenedorImprimir.prefHeight(-1) * scaleY;
 
             WritableImage nota1 = new WritableImage(
@@ -454,9 +472,14 @@ public class NotaController {
                     (int) alto
             );
 
+            if(this.ventanaPrincipalController != null){
+                this.ventanaPrincipalController.configurarControlador(controller);
+            }
+
+
             contenedorImprimir.snapshot(null, nota1);
 
-            controller.agregarNota(numNota,false);
+            controller.agregarNota(numNota, false);
 
             WritableImage nota2 = new WritableImage(
                     (int) ancho,
@@ -476,45 +499,42 @@ public class NotaController {
             File archivo = chooser.showSaveDialog(null);
             if (archivo == null) return;
 
-            loadingOverlayController.show();
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                        generarPDF(nota1, nota2, archivo.getAbsolutePath());
+                        return null;
+                    },
+                    (resultado) -> {
+                        mostrarInformacion("Nota creada", "", "Se generó el documento exitosamente");
+                    },
+                    (excepcion) -> {
+                        if (excepcion instanceof IOException) {
+                            mostrarError("Error al generar archivo",
+                                    "El archivo no pudo crearse o está siendo usado por otro programa.",
+                                            "Cierra otros programas e inténtalo de nuevo.");
+                        } else if (excepcion instanceof InterruptedException || excepcion instanceof java.util.concurrent.CancellationException) {
+                            mostrarWarning("Operación cancelada",
+                                    "",
+                                    "La impresión del documento fue cancelada por el usuario.");
+                        } else {
+                            excepcion.printStackTrace();
+                            mostrarWarning("Operacion cancelada", "", "La impresion del documento fue cancelada");
+                        }
 
-            Task<Void> task = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
-                    generarPDF(nota1, nota2, archivo.getAbsolutePath());
-                    return null;
-                }
-            };
-
-            task.setOnSucceeded(e ->{
-
-                loadingOverlayController.hide();
-                mostrarInformacion("Nota creada", "", "Se generó el documento exitosamente");
-            });
-
-            task.setOnFailed(e -> {
-
-                loadingOverlayController.hide();
-                mostrarError("Error inesperado", "", "Ocurrió un problema");
-            });
-
-            new Thread(task).start();
+                    }, null
+            );
 
 
-        } catch (IOException io) {
-            mostrarError("Error al generar archivo", "",
-                    "El archivo no pudo crearse o está siendo usado por otro programa.\n" +
-                          "Cierra otros programas e inténtalo de nuevo.");
         } catch (Exception e) {
             e.printStackTrace();
             mostrarError(
                     "Error inesperado",
                     "",
-                    "Ocurrió un problema al imprimir la nota."
+                    "Ocurrió un problema al preparar la nota."
             );
 
         }
-
 
     }//imprimir
 

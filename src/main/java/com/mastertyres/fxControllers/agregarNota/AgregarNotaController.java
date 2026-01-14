@@ -1,10 +1,10 @@
 package com.mastertyres.fxControllers.agregarNota;
 
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.MenuContextSetting;
-import com.mastertyres.common.utils.NotaUtils;
-import com.mastertyres.common.RegexTools;
+import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.service.NotaUtils;
+import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxControllers.nota.BuscarClienteController;
 import com.mastertyres.fxControllers.nota.BuscarLlantaController;
 import com.mastertyres.fxControllers.nota.RegistrarNotaController;
@@ -38,8 +38,8 @@ import javafx.stage.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.mastertyres.common.FechaUtils.mostrarFechayHora;
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.FechaUtils.mostrarFechayHora;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class AgregarNotaController {

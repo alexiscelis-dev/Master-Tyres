@@ -2,7 +2,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
-import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;

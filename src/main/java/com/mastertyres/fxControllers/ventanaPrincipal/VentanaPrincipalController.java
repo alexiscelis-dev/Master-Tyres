@@ -2,7 +2,9 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 
 import com.mastertyres.MasterTyresApplication;
-import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.AgregarInventario.AgregarInventarioController;
 import com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias.AgregarMarcaController;
 import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController;
@@ -13,8 +15,6 @@ import com.mastertyres.fxControllers.inventario.InventarioController;
 import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionController;
 import com.mastertyres.fxControllers.nota.NotaController;
-import com.mastertyres.fxControllers.nota.NotaController;
-import com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionController;
 import com.mastertyres.fxControllers.vehiculo.VehiculoController;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -38,7 +38,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Stack;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
@@ -57,9 +57,11 @@ public class VentanaPrincipalController {
     @FXML public Label cambiarPaginaEtiqueta;
     @FXML private ImageView irAtras;
     @FXML private ImageView imgPerfil;
+    @FXML public LoadingComponentController loadingOverlayController;
 
     @Autowired
     private ApplicationContext springContex;
+
 
     private boolean sidebarVisible = true;
     private double posicionMenu;
@@ -94,6 +96,7 @@ public class VentanaPrincipalController {
         HBoxNotas.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/nota/Nota.fxml","Notas");
             cambiarPaginaEtiqueta.setText("NOTAS");
+
         });
 
 
@@ -120,9 +123,6 @@ public class VentanaPrincipalController {
             regresarInicio("/fxmlViews/master_tires/RegresarMenu.fxml");
             cambiarPaginaEtiqueta.setText("INICIO");
         });
-
-
-
 
     }
 
@@ -197,7 +197,7 @@ public class VentanaPrincipalController {
 
     public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
 
-        try {
+        try {/*
 
             if (vistaActual != null) {
                 historialVistas.push(vistaActual);
@@ -257,6 +257,30 @@ public class VentanaPrincipalController {
             AnchorPane.setRightAnchor(contenido, 0.0);
 
             return loader.getController();
+            */
+            if (vistaActual != null){
+                historialVistas.push(vistaActual);
+            }
+            if (NombreVistaActual != null){
+                historialNombreVistas.push(NombreVistaActual);
+            }
+            vistaActual = archivoFXML;
+            NombreVistaActual = nombreVentana;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent contenido = loader.load();
+            Object controller = loader.getController();
+
+            configurarControlador(controller);
+            panelMenu.getChildren().clear();
+            panelMenu.getChildren().add(contenido);
+
+            AnchorPane.setTopAnchor(contenido, 0.0);
+            AnchorPane.setBottomAnchor(contenido, 0.0);
+            AnchorPane.setLeftAnchor(contenido, 0.0);
+            AnchorPane.setRightAnchor(contenido, 0.0);
+
+            return loader.getController();
 
 
         } catch (IOException e) {
@@ -267,6 +291,53 @@ public class VentanaPrincipalController {
         }
 
     }//ventanasSidebar
+
+    /**
+     * Método MAESTRO para configurar cualquier controlador.
+     * Sirve para ventanas normales, popups, impresiones, etc.
+     */
+    public void configurarControlador(Object controller) {
+
+        // 1. NUEVO: Inyección automática de Loading con Interfaz
+        if (controller instanceof com.mastertyres.fxComponents.interfaces.ILoading) {
+            ((com.mastertyres.fxComponents.interfaces.ILoading) controller).setInitializeLoading(this.loadingOverlayController);
+        }
+
+
+        if (controller instanceof PromocionesActivasController) {
+            ((PromocionesActivasController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof ClienteController) {
+            ((ClienteController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof VehiculoController) {
+            ((VehiculoController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof InventarioController) {
+            ((InventarioController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof ProximosServiciosController) {
+            ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
+        }
+        if (controller instanceof AgregarVehiculoController) {
+            ((AgregarVehiculoController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof AgregarClienteController) {
+            ((AgregarClienteController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof NuevaPromocionController) {
+            ((NuevaPromocionController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof AgregarInventarioController) {
+            ((AgregarInventarioController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof AgregarMarcaController) {
+            ((AgregarMarcaController) controller).setVentanaPrincipalController(this);
+        }
+        if (controller instanceof NotaController){
+            ((NotaController) controller).setVentanaPrincipalController(this);
+        }
+    }
 
 
     public Pane getPanelMenu() {
@@ -288,6 +359,10 @@ public class VentanaPrincipalController {
         }//try-catch
 
     }//regresarInicio
+    //Metodo que retorna el loading de la pantalla principal para poder hacer el loading en cualquier pantalla
+    public LoadingComponentController getLoading(){
+        return loadingOverlayController;
+    }
 
 
 

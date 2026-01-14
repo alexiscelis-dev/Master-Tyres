@@ -1,7 +1,7 @@
 package com.mastertyres.fxControllers.nota;
 
-import com.mastertyres.common.MenuContextSetting;
-import com.mastertyres.common.RegexTools;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.nota.service.NotaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
 public class AgregarNumFacturaController {

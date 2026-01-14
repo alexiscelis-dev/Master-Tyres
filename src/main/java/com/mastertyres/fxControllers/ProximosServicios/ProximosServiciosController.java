@@ -1,9 +1,7 @@
 package com.mastertyres.fxControllers.ProximosServicios;
 
 
-import com.mastertyres.common.MensajesAlert;
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.application.HostServices;

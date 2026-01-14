@@ -8,6 +8,11 @@
            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.mastertyres.fxComponents.LoadingComponentController">
 
-    <ProgressIndicator translateX="-130" maxHeight="80.0" maxWidth="80.0" stylesheets="@../../styles_css/Loading.css"/>
+    <ProgressIndicator
+            AnchorPane.topAnchor="0.0"
+            AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0"
+            stylesheets="@../../styles_css/Loading.css"/>
 
 </StackPane>

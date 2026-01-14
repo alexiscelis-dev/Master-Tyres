@@ -1,8 +1,8 @@
 package com.mastertyres.fxControllers.PromocionActiva;
 
 import com.mastertyres.MasterTyresApplication;
-import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxControllers.ClientesPromocionesController.ClientesPromocionesController;
 import com.mastertyres.fxControllers.EditarControllers.EditarPromocionController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -31,7 +31,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
 public class PromocionesActivasController {

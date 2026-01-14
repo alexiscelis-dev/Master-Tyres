@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.Setting.setPantallaSize;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.Setting.setPantallaSize;
 
 
 @SpringBootApplication
@@ -73,8 +73,6 @@ public class MasterTyresApplication extends Application {
 		Scene scene = new Scene(root);
 
         setPantallaSize(ventanaPrincipal,scene,"Master Tyres",true,true,1000,800);
-
-
 
 
 	}

@@ -10,12 +10,7 @@
             stylesheets="/styles_css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nota.NotaController">
 
-    <fx:include fx:id="loadingOverlay"
-                source="/fxmlComponentes/Loading/LoadingComponent.fxml"
-                AnchorPane.bottomAnchor="0.0"
-                AnchorPane.leftAnchor="0.0"
-                AnchorPane.rightAnchor="0.0"
-                AnchorPane.topAnchor="0.0"/>
+
 
     <AnchorPane layoutY="110.0" prefHeight="684.0" prefWidth="1244.0" AnchorPane.leftAnchor="50.0"
                 AnchorPane.rightAnchor="50.0">

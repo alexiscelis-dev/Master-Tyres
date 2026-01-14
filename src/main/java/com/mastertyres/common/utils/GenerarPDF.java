@@ -1,4 +1,4 @@
-package com.mastertyres.common;
+package com.mastertyres.common.utils;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;

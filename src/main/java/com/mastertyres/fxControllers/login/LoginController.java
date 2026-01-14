@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.login;
 
-import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

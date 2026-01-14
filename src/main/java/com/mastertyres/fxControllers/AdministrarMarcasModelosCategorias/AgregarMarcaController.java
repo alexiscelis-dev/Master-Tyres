@@ -3,7 +3,7 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
-import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -31,8 +31,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
 public class AgregarMarcaController {

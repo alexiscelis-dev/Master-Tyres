@@ -17,9 +17,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
-
 @Service
 public class InventarioService implements IInventarioService {
     private InventarioRepository inventarioRepository;
@@ -154,10 +151,8 @@ public class InventarioService implements IInventarioService {
 
         int filasEliminadas = inventarioRepository.eliminarInventario(inactive, idInventario);
 
-        if (filasEliminadas > 0)
-            mostrarInformacion("Elemento eliminado", "Elemento eliminado", "Elemento eliminado exitosamente");
-        else
-            mostrarError("Error al eliminar elemento", "Algo salio mal", "No se pudo eliminar el elemento seleccionado.");
+        if (filasEliminadas == 0)
+            throw new InventarioException("No se pudo eliminar el elemento seleccionado");
 
         return filasEliminadas;
 

@@ -10,8 +10,6 @@ public class LoadingComponentController {
     @FXML
     private StackPane rootPane;
 
-
-
     public void show() {
         rootPane.setVisible(true);
         rootPane.setMouseTransparent(false);
@@ -20,13 +18,12 @@ public class LoadingComponentController {
 
     public void hide() {
         rootPane.setVisible(false);
-        rootPane.setMouseTransparent(true);
+        rootPane.setMouseTransparent(false);
     }
 
     public boolean isVisible() {
         return rootPane.isVisible();
     }
-
 
 
 }//class

@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.nuevaPromocion;
 
-import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
@@ -28,7 +28,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 import static javafx.collections.FXCollections.observableList;
 
 @Component

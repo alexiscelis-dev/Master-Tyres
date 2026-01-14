@@ -1,8 +1,8 @@
 package com.mastertyres.fxControllers.imprimirNota;
 
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.RegexTools;
-import com.mastertyres.common.utils.NotaUtils;
+import com.mastertyres.common.utils.RegexTools;
+import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatatusSiNo;

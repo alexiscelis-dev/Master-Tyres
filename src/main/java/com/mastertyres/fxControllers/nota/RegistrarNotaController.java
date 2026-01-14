@@ -2,9 +2,9 @@ package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.common.MenuContextSetting;
-import com.mastertyres.common.utils.NotaUtils;
-import com.mastertyres.common.RegexTools;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.service.NotaUtils;
+import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.inventario.model.Inventario;
@@ -33,8 +33,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.mastertyres.common.MensajesAlert.*;
-import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component

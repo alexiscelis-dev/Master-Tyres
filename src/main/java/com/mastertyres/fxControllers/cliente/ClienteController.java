@@ -3,8 +3,8 @@ package com.mastertyres.fxControllers.cliente;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.FechaUtils;
+import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
@@ -38,9 +38,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component

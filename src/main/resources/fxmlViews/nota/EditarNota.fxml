@@ -13,11 +13,15 @@
             fx:controller="com.mastertyres.fxControllers.nota.EditarNotaController">
 
 
+
+
     <children>
+
 
 
         <!--Zona superior -->
         <StackPane translateX="990" translateY="50" styleClass="showIcons" fx:id="btnShowIcons">
+
 
 
             <StackPane.margin>
@@ -33,7 +37,8 @@
         </StackPane>
 
 
-        <StackPane translateX="1000" translateY="120" AnchorPane.topAnchor="20.0">
+        <StackPane  translateX="1000" translateY="120" AnchorPane.topAnchor="20.0">
+
 
 
             <GridPane fx:id="gridPaneIcons" alignment="CENTER" hgap="15" vgap="10" visible="false">
@@ -151,8 +156,13 @@
                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                    AnchorPane.topAnchor="-40.0">
 
+
+
+
             <!-- ScrollPane centrado -->
             <ScrollPane fitToHeight="false" fitToWidth="true" pannable="true" prefHeight="617.0" prefWidth="945.0">
+
+
 
                 <content>
 

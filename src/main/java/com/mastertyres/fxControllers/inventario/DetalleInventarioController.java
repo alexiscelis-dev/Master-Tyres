@@ -18,18 +18,18 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class DetalleInventarioController {
-    @FXML private Label txtCodBarras;
-    @FXML private Label txtDot;
-    @FXML private Label txtMarca;
-    @FXML private Label txtModelo;
-    @FXML private Label txtMedida;
-    @FXML private Label txtIdCarga;
-    @FXML private Label txtIdVelocidad;
-    @FXML private Label txtStock;
-    @FXML private Label txtPrecioC;
-    @FXML private Label txtPrecioV;
-    @FXML private Label txtObservaciones;
-    @FXML private Label txtFechaRegistro;
+    @FXML private Label lblCodBarras;
+    @FXML private Label lblDot;
+    @FXML private Label lblMarca;
+    @FXML private Label lblModelo;
+    @FXML private Label lblMedida;
+    @FXML private Label lblIdCarga;
+    @FXML private Label lblIdVelocidad;
+    @FXML private Label lblStock;
+    @FXML private Label lblPrecioC;
+    @FXML private Label lblPrecioV;
+    @FXML private Label lblObservaciones;
+    @FXML private Label lblFechaRegistro;
     @FXML private Button btnCerrar;
     @FXML private ImageView imgInventario;
     @FXML private ScrollPane scrollPane;
@@ -45,18 +45,18 @@ public class DetalleInventarioController {
 
     public void InformacionInventario(Inventario inventario) {
 
-        txtCodBarras.setText(txtCodBarras.getText() + " " + valorONull(inventario.getCodigoBarras()));
-        txtDot.setText(txtDot.getText() + " " + valorONull(inventario.getDot()));
-        txtMarca.setText(txtMarca.getText() + " " + valorONull(inventario.getMarca()));
-        txtModelo.setText(txtModelo.getText() + " " + valorONull(inventario.getModelo()));
-        txtMedida.setText(txtMedida.getText() + " " + valorONull(inventario.getMedida()));
-        txtIdCarga.setText(txtIdCarga.getText() + " " + valorONull(inventario.getIndiceCarga()));
-        txtIdVelocidad.setText(txtIdVelocidad.getText() + " " + valorONull(inventario.getIndiceVelocidad()));
-        txtStock.setText(txtStock.getText() + " " + valorONull(inventario.getStock()+""));
-        txtPrecioC.setText(txtPrecioC.getText() + " $" + valorONull(inventario.getPrecioCompra()+""));
-        txtPrecioV.setText(txtPrecioV.getText() + " $" + valorONull(inventario.getPrecioVenta()+""));
-        txtObservaciones.setText(txtObservaciones.getText() + " " + valorONull(inventario.getObservaciones()));
-        txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + formatearFechaHora(inventario.getCreated_at()));
+        lblCodBarras.setText(lblCodBarras.getText() + " " + valorONull(inventario.getCodigoBarras()));
+        lblDot.setText(lblDot.getText() + " " + valorONull(inventario.getDot()));
+        lblMarca.setText(lblMarca.getText() + " " + valorONull(inventario.getMarca()));
+        lblModelo.setText(lblModelo.getText() + " " + valorONull(inventario.getModelo()));
+        lblMedida.setText(lblMedida.getText() + " " + valorONull(inventario.getMedida()));
+        lblIdCarga.setText(lblIdCarga.getText() + " " + valorONull(inventario.getIndiceCarga()));
+        lblIdVelocidad.setText(lblIdVelocidad.getText() + " " + valorONull(inventario.getIndiceVelocidad()));
+        lblStock.setText(lblStock.getText() + " " + valorONull(inventario.getStock()+""));
+        lblPrecioC.setText(lblPrecioC.getText() + " $" + valorONull(inventario.getPrecioCompra()+""));
+        lblPrecioV.setText(lblPrecioV.getText() + " $" + valorONull(inventario.getPrecioVenta()+""));
+        lblObservaciones.setText(lblObservaciones.getText() + " " + valorONull(inventario.getObservaciones()));
+        lblFechaRegistro.setText(lblFechaRegistro.getText() + " " + formatearFechaHora(inventario.getCreated_at()));
 
         File file = new File(inventario.getImagen());
         Image image;
@@ -100,20 +100,20 @@ public class DetalleInventarioController {
 
     @FXML
     private void cerrarVentana() {
-        txtCodBarras.setText("Codigo de barras:");
-        txtDot.setText("Dot:");
-        txtMarca.setText("Marca:");
-        txtModelo.setText("Modelo:");
-        txtMedida.setText("Medida:");
-        txtIdCarga.setText("Indice de carga:");
-        txtIdVelocidad.setText("Indice de velocidad:");
-        txtStock.setText("Stock:");
-        txtPrecioC.setText("Precio de compra:");
-        txtPrecioV.setText("Precio de venta:");
-        txtObservaciones.setText("Observaciones:");
-        txtFechaRegistro.setText("Fecha de registro:");
+        lblCodBarras.setText("Codigo de barras:");
+        lblDot.setText("Dot:");
+        lblMarca.setText("Marca:");
+        lblModelo.setText("Modelo:");
+        lblMedida.setText("Medida:");
+        lblIdCarga.setText("Indice de carga:");
+        lblIdVelocidad.setText("Indice de velocidad:");
+        lblStock.setText("Stock:");
+        lblPrecioC.setText("Precio de compra:");
+        lblPrecioV.setText("Precio de venta:");
+        lblObservaciones.setText("Observaciones:");
+        lblFechaRegistro.setText("Fecha de registro:");
 
-        Stage stage = (Stage) txtCodBarras.getScene().getWindow(); //se puede utilizar cualquier campo el caso es optener la ventana en la que se esta
+        Stage stage = (Stage) btnCerrar.getScene().getWindow(); //se puede utilizar cualquier campo el caso es optener la ventana en la que se esta
         //para poder cerrarla
         stage.close();
 

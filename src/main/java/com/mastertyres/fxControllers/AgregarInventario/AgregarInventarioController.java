@@ -1,7 +1,10 @@
 package com.mastertyres.fxControllers.AgregarInventario;
 
-import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -20,13 +23,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 
-import static com.mastertyres.common.MensajesAlert.*;
 import static com.mastertyres.common.utils.InventarioUtils.generarIdentificador;
 import static com.mastertyres.common.utils.InventarioUtils.indicesChoiceBox;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class AgregarInventarioController {
+public class AgregarInventarioController implements ILoading {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -67,7 +70,9 @@ public class AgregarInventarioController {
     private Button btnRefrescar;
 
     @Autowired
-    InventarioService inventarioService;
+    private InventarioService inventarioService;
+    @Autowired
+    private TaskService taskService;
 
     private BooleanProperty codBarrasValido = new SimpleBooleanProperty(true);
     private BooleanProperty dotValido = new SimpleBooleanProperty(true);
@@ -81,13 +86,59 @@ public class AgregarInventarioController {
     private BooleanProperty precioventaValido = new SimpleBooleanProperty(true);
 
     private VentanaPrincipalController ventanaPrincipalController;
+    private LoadingComponentController loadingOverlayController;
+
 
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
 
     @FXML
     private void initialize() {
+
+        configuraciones();
+
+        btnRegistrar.setOnAction(event -> registrar());
+
+        btnImagen.setOnAction(event -> seleccionarImg());
+
+
+    }//ininitialize
+
+    private void configuraciones(){
+        txtStock.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+
+        txtPrecioC.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+
+        txtPrecioV.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+
+        choicePerfil.setOnMousePressed(event -> {
+            if (!choicePerfil.isShowing()){
+                choicePerfil.show();
+                choicePerfil.hide();
+
+            }
+        });
+
         MenuContextSetting.disableMenu(rootPane); //Quita el menu contextual del clic derecho
 
         indicesChoiceBox(cbIndiceVelocidad,cbIndiceCarga,choiceAncho,choicePerfil,choiceRin);
@@ -117,51 +168,13 @@ public class AgregarInventarioController {
             }
         });
 
-        choicePerfil.setOnMousePressed(event -> {
-            if (!choicePerfil.isShowing()){
-                choicePerfil.show();
-                choicePerfil.hide();
-
-            }
-        });
-
         choiceRin.setOnMousePressed(event -> {
             if (!choiceRin.isShowing()){
                 choiceRin.show();
                 choiceRin.hide();
             }
         });
-
-        btnRegistrar.setOnAction(event -> registrar());
-
-        btnImagen.setOnAction(event -> seleccionarImg());
-
-        txtStock.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
-                return change;
-            }
-            return null;
-        }));
-
-        txtPrecioC.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
-                return change;
-            }
-            return null;
-        }));
-
-        txtPrecioV.setTextFormatter(new TextFormatter<>(change -> {
-            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
-                return change;
-            }
-            return null;
-        }));
-
-        configurarValidaciones();
-
-    }//ininitialize
-
-
+    }
 
     private void clean() {
         txtCodBarras.setText("");
@@ -223,25 +236,40 @@ public class AgregarInventarioController {
                     .imagen(txtImg.getText() != null ? txtImg.getText() : "")
                     .build();
 
-            try {
-                inventarioService.guardarInventario(inventario);
-                mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
-                clean();
-                ventanaPrincipalController.irAtras();
-            } catch (InventarioException ie) {
-                ie.printStackTrace();
-                mostrarError("Error de inventario", "", ie.getMessage());
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarError("Error inesperado", "", "No se pudo guardar el inventario, vuelva a intentarlo más tarde.");
-            }
+
+                taskService.runTask(
+
+                        loadingOverlayController,
+                        () -> {
+                            Thread.sleep(5000);
+                            inventarioService.guardarInventario(inventario);
+                            return null;
+                        },
+                        (resultado) ->{
+                            mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
+                            clean();
+
+                        },(ex) ->{
+                            if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException){
+                                ex.printStackTrace();
+                                mostrarError("Operacion cancelada", "", "La acción fue cancelada por el usuario. ");
+                            } else if (ex.getCause() instanceof InventarioException) {
+                                ex.printStackTrace();
+                                mostrarError("Error al agregar al inventario","","" + ex.getCause().getMessage());
+                            }else {
+                                ex.printStackTrace();
+                                mostrarError("Error inesperado", "", "No se pudo guardar el inventario, vuelva a intentarlo más tarde.");
+                            }
+                        },null
+                );
+
+
 
         } else {
             mostrarWarning("Campos oblicatorios", "", "los campos marcados con '*' son obligatorios");
         }
 
     }//registrar
-
 
 
     // solo verifica si los campos necesarios estan vacios (marca,medida,stock,precios)
@@ -268,7 +296,6 @@ public class AgregarInventarioController {
             txtPrecioV.setStyle("-fx-border-color:red; -fx-border-width:2px;");
             empty = true;
         }
-
 
         return empty;
     }// empty
@@ -351,9 +378,6 @@ public class AgregarInventarioController {
             }
 
         }));
-
-
-
 
 
 

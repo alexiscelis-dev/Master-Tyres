@@ -1,7 +1,10 @@
 package com.mastertyres.fxControllers.EditarControllers;
 
-import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -24,34 +27,57 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.time.LocalDateTime;
 
-import static com.mastertyres.common.MensajesAlert.*;
 import static com.mastertyres.common.utils.InventarioUtils.generarIdentificador;
 import static com.mastertyres.common.utils.InventarioUtils.indicesChoiceBox;
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarInventarioController {
-    @FXML private AnchorPane rootPane;
-    @FXML private TextField txtCodBarras;
-    @FXML private TextField txtDot;
-    @FXML private TextField txtMarca;
-    @FXML private TextField txtModelo;
-    @FXML private ChoiceBox<String> cbIndiceCarga;
-    @FXML private ChoiceBox<String> cbIndiceVelocidad;
-    @FXML private ChoiceBox<String> choiceAncho;
-    @FXML private ChoiceBox<String> choicePerfil;
-    @FXML private ChoiceBox<String> choiceRin;
-    @FXML private TextField txtObservaciones;
-    @FXML private TextField txtPrecioV;
-    @FXML private TextField txtPrecioC;
-    @FXML private TextField txtStock;
-    @FXML private TextField txtImg;
-    @FXML private VBox vBoxImg;
-    @FXML private Button btnActualizar;
-    @FXML private Button btnCancelar;
-    @FXML private Button btnImagen;
+public class EditarInventarioController implements ILoading {
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private TextField txtCodBarras;
+    @FXML
+    private TextField txtDot;
+    @FXML
+    private TextField txtMarca;
+    @FXML
+    private TextField txtModelo;
+    @FXML
+    private ChoiceBox<String> cbIndiceCarga;
+    @FXML
+    private ChoiceBox<String> cbIndiceVelocidad;
+    @FXML
+    private ChoiceBox<String> choiceAncho;
+    @FXML
+    private ChoiceBox<String> choicePerfil;
+    @FXML
+    private ChoiceBox<String> choiceRin;
+    @FXML
+    private TextField txtObservaciones;
+    @FXML
+    private TextField txtPrecioV;
+    @FXML
+    private TextField txtPrecioC;
+    @FXML
+    private TextField txtStock;
+    @FXML
+    private TextField txtImg;
+    @FXML
+    private VBox vBoxImg;
+    @FXML
+    private Button btnActualizar;
+    @FXML
+    private Button btnCancelar;
+    @FXML
+    private Button btnImagen;
 
     @Autowired
-    InventarioService inventarioService;
+    private InventarioService inventarioService;
+    @Autowired
+    private TaskService taskService;
+
 
     private Inventario inventario;
     private BooleanProperty marcaValido = new SimpleBooleanProperty(true);
@@ -61,6 +87,7 @@ public class EditarInventarioController {
     private BooleanProperty precioVentaValido = new SimpleBooleanProperty(true);
     private BooleanProperty codBarrasValido = new SimpleBooleanProperty(true);
     private BooleanProperty dotValido = new SimpleBooleanProperty(true);
+    private LoadingComponentController loadingOverlayController;
 
 
     @FXML
@@ -70,13 +97,21 @@ public class EditarInventarioController {
 
         configuraciones();
 
+        btnActualizar.setOnAction(event -> {
+
+          actualizarInventario();
+        });
+
+
     }//initialize
 
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
 
+    }
 
-
-    private void configuraciones(){
-
+    private void configuraciones() {
 
 
         txtStock.setTextFormatter(new TextFormatter<>(change -> {
@@ -102,7 +137,7 @@ public class EditarInventarioController {
 
 
         MenuContextSetting.disableMenu(rootPane); //Desabilita el menu en los componentes
-        indicesChoiceBox(cbIndiceVelocidad,cbIndiceCarga,choiceAncho,choicePerfil,choiceRin); //Agrega la lista de indices de carga y velocidad
+        indicesChoiceBox(cbIndiceVelocidad, cbIndiceCarga, choiceAncho, choicePerfil, choiceRin); //Agrega la lista de indices de carga y velocidad
         configurarValidaciones(); //Verifica validaciones de sintaxis
 
         //Evitan que la lista del choiceBox se muestre en otro lado que no se abajo del mismo ChoiceBox
@@ -124,17 +159,17 @@ public class EditarInventarioController {
 
     public void editarInventario(Inventario inventario) {
         this.inventario = inventario;
-         char medida [] = inventario.getMedida().toCharArray();
+        char medida[] = inventario.getMedida().toCharArray();
 
-         String ancho = "";
-         String perfil = "";
-         String rin = "";
+        String ancho = "";
+        String perfil = "";
+        String rin = "";
 
-        for (int i = 0; i < 3 ; i++)
+        for (int i = 0; i < 3; i++)
             ancho += medida[i];
 
         for (int i = 4; i < 6; i++)
-            perfil += medida [i];
+            perfil += medida[i];
 
         for (int i = 7; i < 9; i++)
             rin += medida[i];
@@ -179,7 +214,6 @@ public class EditarInventarioController {
     }//editarInventario
 
 
-
     private void configurarValidaciones() {
 
         txtCodBarras.textProperty().addListener(((observable, oldText, newText) -> {
@@ -195,7 +229,7 @@ public class EditarInventarioController {
 
         txtDot.textProperty().addListener(((observable, oldtext, newTex) -> {
             if (txtDot.getText() != null)
-            txtDot.setText(txtDot.getText().toUpperCase());
+                txtDot.setText(txtDot.getText().toUpperCase());
 
             if (!txtDot.getText().matches("^$|[A-Za-z0-9]{6,9}[0-9]{4}")) {
                 dotValido.set(false);
@@ -217,8 +251,6 @@ public class EditarInventarioController {
             }
 
         }));
-
-
 
 
         txtStock.textProperty().addListener(((observable, oldtext, newText) -> {
@@ -286,7 +318,6 @@ public class EditarInventarioController {
 
     }//configurarValidaciones
 
-    @FXML
     private void actualizarInventario() {
 
         boolean confirmar = mostrarConfirmacion("Confirmar actualización",
@@ -295,59 +326,68 @@ public class EditarInventarioController {
                 "Sí, guardar",
                 "Cancelar");
 
-        if (confirmar) {
-            String codigoBarras = (txtCodBarras.getText() != null && !txtCodBarras.getText().isBlank())
-                    ? txtCodBarras.getText()
-                    : null;
+        if (!confirmar) return; //Evita que siga si el usuario cancela
 
-            String dot = (txtDot.getText() != null && !txtDot.getText().isBlank())
-                    ? txtDot.getText()
-                    : null;
+        cerrarVentana(); // cierra la ventana emergente para que al momento de actualizar el loading pueda bloaquear toda la pantalla
+        String codigoBarras = (txtCodBarras.getText() != null && !txtCodBarras.getText().isBlank())
+                ? txtCodBarras.getText()
+                : null;
 
-
-
-
-            inventario.setIdentificadorLlanta(generarIdentificador(txtMarca,txtModelo,choiceAncho,choicePerfil,choiceRin,cbIndiceCarga,cbIndiceVelocidad));
-            inventario.setCodigoBarras(codigoBarras);
-            inventario.setDot(dot);
-            inventario.setMarca(txtMarca.getText().trim());
-            inventario.setModelo(txtModelo.getText().trim());
-            inventario.setIndiceCarga(cbIndiceCarga.getValue());
-            inventario.setIndiceVelocidad(cbIndiceVelocidad.getValue());
-            inventario.setStock(Integer.parseInt(txtStock.getText()));
-            inventario.setPrecioCompra(Float.parseFloat(txtPrecioC.getText()));
-            inventario.setPrecioVenta(Float.parseFloat(txtPrecioV.getText()));
-            inventario.setObservaciones(txtObservaciones.getText());
-            inventario.setImagen(txtImg.getText());
+        String dot = (txtDot.getText() != null && !txtDot.getText().isBlank())
+                ? txtDot.getText()
+                : null;
 
 
+        inventario.setIdentificadorLlanta(generarIdentificador(txtMarca, txtModelo, choiceAncho, choicePerfil, choiceRin, cbIndiceCarga, cbIndiceVelocidad));
+        inventario.setCodigoBarras(codigoBarras);
+        inventario.setDot(dot);
+        inventario.setMarca(txtMarca.getText().trim());
+        inventario.setModelo(txtModelo.getText().trim());
+        inventario.setIndiceCarga(cbIndiceCarga.getValue());
+        inventario.setIndiceVelocidad(cbIndiceVelocidad.getValue());
+        inventario.setStock(Integer.parseInt(txtStock.getText()));
+        inventario.setPrecioCompra(Float.parseFloat(txtPrecioC.getText()));
+        inventario.setPrecioVenta(Float.parseFloat(txtPrecioV.getText()));
+        inventario.setObservaciones(txtObservaciones.getText());
+        inventario.setImagen(txtImg.getText());
 
 
-            try {
+        if (Integer.parseInt(txtStock.getText()) == 0)
+            inventario.setActive(StatusInventario.SIN_STOCK.toString());
+
+        else if (Integer.parseInt(txtStock.getText()) > 0)
+            inventario.setActive(StatusInventario.ACTIVE.toString());
 
 
-                if (Integer.parseInt(txtStock.getText()) == 0)
-                    inventario.setActive(StatusInventario.SIN_STOCK.toString());
+        taskService.runTask(
+                loadingOverlayController,
+                () ->{
 
-                else if (Integer.parseInt(txtStock.getText()) > 0)
-                    inventario.setActive(StatusInventario.ACTIVE.toString());
+                    inventarioService.actualizarUptatedAt(LocalDateTime.now().toString(), inventario.getInventarioId());
+                    inventarioService.actualizarInventario(inventario);
 
-                inventarioService.actualizarUptatedAt(LocalDateTime.now().toString(), inventario.getInventarioId());
-                inventarioService.actualizarInventario(inventario);
+                    return null;
+                },
+                (resultado) -> {
 
-                mostrarInformacion("Inventario actualizado", "", "Inventario se actualizo correctamente");
-                cerrarVentana();
 
-            }
-            catch (InventarioException invExp){
-                mostrarError("Error de inventario", invExp.getMessage(),"");
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                mostrarError("Error inesperado", "", "No se pudo actualizar el lemento seleccionado, vuelva a intentarlo más tarde.");
-            }
+                    mostrarInformacion("Inventario actualizado", "", "Inventario se actualizo correctamente");
+                    cerrarVentana();
 
-        }
+
+                },
+                (ex) -> {
+                    if (ex.getCause() instanceof InventarioException){
+                        mostrarError("Error al actualizar","","" + ex.getCause().getMessage());
+                    } else if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
+
+                        mostrarError("Operacion cancelada","","La accion fue cancelada por el usuario");
+                    }else {
+                        mostrarError("Ocurrio un error inesperado","","No fue posible actualizar el inventario. vuelva a intentarlo mas tarde");
+                    }
+                },null
+        );
+        
 
 
     }//actualizarInventario
@@ -386,5 +426,6 @@ public class EditarInventarioController {
         }
 
     } //seleccionarImg
+
 
 }//EditarInventario

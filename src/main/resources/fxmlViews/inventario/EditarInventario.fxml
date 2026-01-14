@@ -144,9 +144,9 @@
 
                 <!-- Botones -->
                 <HBox alignment="CENTER" spacing="20">
+                    <Button fx:id="btnActualizar" styleClass="boton-accion" text="Actualizar"/>
                     <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar"/>
-                    <Button fx:id="btnActualizar" onAction="#actualizarInventario" styleClass="boton-accion"
-                            text="Actualizar"/>
+
                 </HBox>
             </VBox>
         </ScrollPane>

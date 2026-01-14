@@ -4,7 +4,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
@@ -35,7 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class AgregarClienteController {

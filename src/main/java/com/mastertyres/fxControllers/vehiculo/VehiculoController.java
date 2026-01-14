@@ -2,7 +2,7 @@ package com.mastertyres.fxControllers.vehiculo;
 
 
 import com.mastertyres.cliente.model.StatusCliente;
-import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
@@ -45,9 +45,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mastertyres.common.FechaUtils.getFechaFormateada;
-import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
