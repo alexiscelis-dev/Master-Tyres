@@ -2,20 +2,10 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 
 import com.mastertyres.MasterTyresApplication;
-import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxControllers.AgregarInventario.AgregarInventarioController;
-import com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias.AgregarMarcaController;
-import com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController;
-import com.mastertyres.fxControllers.agregarCliente.AgregarClienteController;
-import com.mastertyres.fxControllers.agregarVehiculo.AgregarVehiculoController;
-import com.mastertyres.fxControllers.cliente.ClienteController;
-import com.mastertyres.fxControllers.inventario.InventarioController;
 import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
-import com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionController;
-import com.mastertyres.fxControllers.nota.NotaController;
-import com.mastertyres.fxControllers.vehiculo.VehiculoController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -292,17 +282,18 @@ public class VentanaPrincipalController {
 
     }//ventanasSidebar
 
-    /**
-     * Método MAESTRO para configurar cualquier controlador.
-     * Sirve para ventanas normales, popups, impresiones, etc.
-     */
     public void configurarControlador(Object controller) {
 
-        // 1. NUEVO: Inyección automática de Loading con Interfaz
+        // 1. Inyección automática de Loading con Interfaz
         if (controller instanceof com.mastertyres.fxComponents.interfaces.ILoading) {
             ((com.mastertyres.fxComponents.interfaces.ILoading) controller).setInitializeLoading(this.loadingOverlayController);
         }
 
+        if (controller instanceof IVentanaPrincipal){
+            ((IVentanaPrincipal) controller).setVentanaPrincipalController(this);
+        }
+
+        /*
 
         if (controller instanceof PromocionesActivasController) {
             ((PromocionesActivasController) controller).setVentanaPrincipalController(this);
@@ -316,9 +307,11 @@ public class VentanaPrincipalController {
         if (controller instanceof InventarioController) {
             ((InventarioController) controller).setVentanaPrincipalController(this);
         }
+        */
         if (controller instanceof ProximosServiciosController) {
             ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
-        }
+
+        }/*
         if (controller instanceof AgregarVehiculoController) {
             ((AgregarVehiculoController) controller).setVentanaPrincipalController(this);
         }
@@ -337,6 +330,8 @@ public class VentanaPrincipalController {
         if (controller instanceof NotaController){
             ((NotaController) controller).setVentanaPrincipalController(this);
         }
+
+         */
     }
 
 

@@ -8,6 +8,7 @@ import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
@@ -52,7 +53,7 @@ import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NotaController implements ILoading {
+public class NotaController implements IVentanaPrincipal, ILoading {
     @FXML
     private TilePane contenedorNotas;
     @FXML
@@ -118,9 +119,12 @@ public class NotaController implements ILoading {
     private NotaDTO notaSeleccionada;
     private VBox cardSeleccionada = null;
 
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
+
     }
+
     @Override
     public void setInitializeLoading(LoadingComponentController loading){
         this.loadingOverlayController = loading;

@@ -11,7 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -27,7 +29,6 @@ public class ProximosServiciosController {
 
     @FXML
     private TilePane contenedorServicios;
-
     @FXML private Label lblNombre;
     @FXML private Label lblNumeroTelefono;
     @FXML private Label lblMarca;
@@ -47,6 +48,8 @@ public class ProximosServiciosController {
         this.vehiculoService = vehiculoService;
     }
 
+
+
     private HostServices hostServices;
 
 
@@ -61,6 +64,8 @@ public class ProximosServiciosController {
     public void setHostServices(HostServices hostServices) {
         this.hostServices = hostServices;
     }
+
+
 
     @FXML
     private void initialize(){

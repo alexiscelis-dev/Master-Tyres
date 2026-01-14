@@ -7,6 +7,7 @@ import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.EditarControllers.EditarInventarioController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -52,7 +53,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @NoArgsConstructor
 @Component
-public class InventarioController implements ILoading {
+public class InventarioController implements IVentanaPrincipal, ILoading {
 
 
     @FXML
@@ -98,8 +99,6 @@ public class InventarioController implements ILoading {
     @FXML
     private Button btnRefrescar;
 
-    private VentanaPrincipalController ventanaPrincipalController;
-
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
@@ -115,7 +114,7 @@ public class InventarioController implements ILoading {
     private List<Inventario> todosLosInventarios;
     private String terminoBusquedaActual = "";
     private boolean modoBusqueda = false;
-    private LoadingComponentController loadingOverlayController;
+
 
 
     @FXML
@@ -836,9 +835,20 @@ public class InventarioController implements ILoading {
 
     }//agregarInventario
 
+    private VentanaPrincipalController ventanaPrincipalController;
+    private LoadingComponentController loadingOverlayController;
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
+
+
 
     //actualiza
     private void actualizarTabla() {
@@ -854,8 +864,5 @@ public class InventarioController implements ILoading {
         //cargarInventario();
     }
 
-    @Override
-    public void setInitializeLoading(LoadingComponentController loading) {
-        this.loadingOverlayController = loading;
-    }
+
 }//clase

@@ -7,6 +7,7 @@ import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import javafx.animation.PauseTransition;
@@ -44,14 +45,18 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class ClienteController {
+public class ClienteController implements IVentanaPrincipal {
 
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
+
+
 
     @FXML private TableView<Cliente> tablaClientes;
     @FXML private TableColumn<Cliente, String> colTipoCliente;
@@ -688,7 +693,5 @@ public class ClienteController {
         cargarDatosClientes();
         resetBusqueda();
     }
-
-
 
 }//clase

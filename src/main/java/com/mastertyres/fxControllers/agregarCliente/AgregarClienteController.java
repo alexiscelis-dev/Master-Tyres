@@ -7,6 +7,7 @@ import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -38,7 +39,7 @@ import java.util.Set;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarClienteController {
+public class AgregarClienteController  implements IVentanaPrincipal {
 
     @Autowired
     private MarcaService marcaService;
@@ -119,9 +120,6 @@ public class AgregarClienteController {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
-    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
-        this.ventanaPrincipalController = controller;
-    }
 
 
     @FXML
@@ -192,6 +190,12 @@ public class AgregarClienteController {
                 setGraphic(empty ? null : btn);
             }
         });
+
+    }//initialize
+
+    @Override
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = ventanaPrincipalController;
 
     }
 
@@ -722,4 +726,5 @@ public class AgregarClienteController {
     public void Cancelar(ActionEvent actionEvent) {
         ventanaPrincipalController.irAtras();
     }
+
 }

@@ -8,6 +8,7 @@ import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -44,7 +45,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Component
-public class AgregarVehiculoController {
+public class AgregarVehiculoController implements IVentanaPrincipal {
 
     @Autowired
     private MarcaService marcaService;
@@ -154,9 +155,7 @@ public class AgregarVehiculoController {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
-    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
-        this.ventanaPrincipalController = controller;
-    }
+
 
 
     @FXML
@@ -611,5 +610,10 @@ public class AgregarVehiculoController {
 
         ventanaPrincipalController.irAtras();
 
+    }
+
+    @Override
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
     }
 }

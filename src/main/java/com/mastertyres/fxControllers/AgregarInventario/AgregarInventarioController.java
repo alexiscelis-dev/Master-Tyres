@@ -6,6 +6,7 @@ import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import javafx.beans.property.BooleanProperty;
@@ -29,7 +30,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class AgregarInventarioController implements ILoading {
+public class AgregarInventarioController implements IVentanaPrincipal, ILoading {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -88,10 +89,12 @@ public class AgregarInventarioController implements ILoading {
     private VentanaPrincipalController ventanaPrincipalController;
     private LoadingComponentController loadingOverlayController;
 
-
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
+
     }
+
     @Override
     public void setInitializeLoading(LoadingComponentController loading) {
         this.loadingOverlayController = loading;

@@ -6,6 +6,7 @@ import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxControllers.ClientesPromocionesController.ClientesPromocionesController;
 import com.mastertyres.fxControllers.EditarControllers.EditarPromocionController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
@@ -34,7 +35,7 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class PromocionesActivasController {
+public class PromocionesActivasController implements IVentanaPrincipal {
 
     @FXML private TilePane contenedorPromociones;
     @FXML private Label lblNombre;
@@ -65,6 +66,11 @@ public class PromocionesActivasController {
         this.promocionService = promocionService;
     }
 
+    @Override
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
+
     @FXML
     private void initialize() {
 
@@ -87,9 +93,7 @@ public class PromocionesActivasController {
 
     }//initialize
 
-    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
-        this.ventanaPrincipalController = controller;
-    }
+
 
     @FXML
     private void agregarPromociones(ActionEvent event) {
@@ -339,4 +343,6 @@ public class PromocionesActivasController {
         limpiarDetallePromocion();
         cargarPromociones();
     }
+
+
 }
