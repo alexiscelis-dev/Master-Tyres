@@ -18,6 +18,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -52,6 +54,60 @@ public class NotaService implements INotaService {
         return notaRepository.buscarNotas("ACTIVE", filtro, PageRequest.of(pagina, tamanio));
     }
 
+    public Page<NotaDTO> buscarPorNumeroFactura(String numFactura, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorNumeroFactura(numFactura, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorNombreCliente(String nombreCliente, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorNombreCliente(nombreCliente, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorFechaNota(LocalDate fecha, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorFechaNota(fecha, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorVehiculo(String filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorVehiculo(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorStatusNota(String filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorStatusNota(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorFechaVencimiento(LocalDate  filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorFechaVencimiento(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorDireccion(String filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorDireccion(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorPlacas(String filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorPlacas(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorRfc(String filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorRfc(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorAdeudo(BigDecimal filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorAdeudo(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> BucarPorNumNota(String filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorNumeroNota(filtro, active, pageable);
+    }
 
     @Transactional
     @Override

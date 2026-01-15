@@ -75,6 +75,12 @@ public class MasterTyresApplication extends Application {
         setPantallaSize(ventanaPrincipal,scene,"Master Tyres",true,true,1000,800);
 
 
+		ventanaPrincipal.setOnCloseRequest(event -> {
+			Platform.exit();     // Cierra JavaFX
+			System.exit(0);      // Cierra Spring Boot
+		});
+
+
 	}
 
 	@Override

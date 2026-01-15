@@ -46,6 +46,7 @@ public class PromocionesActivasController implements IVentanaPrincipal {
     @FXML private Label lblFechaInicio;
     @FXML private Label lblFechaFin;
     @FXML private Button btnAgregarPromocion;
+    @FXML private Button btnAgregarClientesPromocion;
     @FXML private Button btnEliminarPromocion;
     @FXML private Button btnEditarPromocion;
     @FXML private Button btnClientesPromocion;
@@ -86,6 +87,11 @@ public class PromocionesActivasController implements IVentanaPrincipal {
 
         btnAgregarPromocion.setOnAction(event -> agregarPromociones(event));
 
+
+        btnAgregarClientesPromocion.setOnAction(event -> agregarCleintesPromociones(event));
+
+
+
         btnEditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
 
         btnEliminarPromocion.setOnAction(event -> eliminarPromocion());
@@ -105,6 +111,19 @@ public class PromocionesActivasController implements IVentanaPrincipal {
                 "Agregar promocion"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR PROMOCION");
+
+    }@FXML
+
+
+    private void agregarCleintesPromociones(ActionEvent event) {
+
+
+        ventanaPrincipalController.viewContent(
+                null, // no se requiere el MouseEvent
+                "/fxmlViews/promocion/NuevaPromocionCliente.fxml",
+                "Agregar promocion"
+        );
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar promocion");
 
     }
 

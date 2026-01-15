@@ -449,20 +449,24 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
         // Configurar columnas del TableView
         colNombreCompleto.setCellValueFactory(cellData ->
                 new SimpleStringProperty(
-                        cellData.getValue().getNombre() + " " +
-                                cellData.getValue().getApellido() + " " +
-                                cellData.getValue().getSegundoApellido()
+                        emptyIfNull(cellData.getValue().getNombre()) + " " +
+                                emptyIfNull(cellData.getValue().getApellido()) + " " +
+                                emptyIfNull(cellData.getValue().getSegundoApellido())
                 )
         );
+
         colTipoCliente.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getTipoCliente())
+                new SimpleStringProperty(naIfNullOrEmpty(cellData.getValue().getTipoCliente()))
         );
+
         colRfc.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getRfc())
+                new SimpleStringProperty(naIfNullOrEmpty(cellData.getValue().getRfc()))
         );
+
         colTelefono.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getNumTelefono())
+                new SimpleStringProperty(naIfNullOrEmpty(cellData.getValue().getNumTelefono()))
         );
+
 
 
         txtBuscarCliente.setOnKeyPressed(event -> {
@@ -513,6 +517,14 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
             );
             tablaClientes.setItems(filtrados);
         }
+    }
+
+    private String emptyIfNull(String value) {
+        return value == null ? "" : value;
+    }
+
+    private String naIfNullOrEmpty(String value) {
+        return (value == null || value.trim().isEmpty()) ? "N/A" : value;
     }
 
     private void limpiarCamposVehiculo() {
