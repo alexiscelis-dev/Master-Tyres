@@ -2,6 +2,7 @@ package com.mastertyres.fxControllers.ProximosServicios;
 
 
 import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.common.MenuContextSetting;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
@@ -26,6 +27,7 @@ import java.util.List;
 @Component
 public class ProximosServiciosController {
 
+    @FXML private AnchorPane rootPane;
 
     @FXML
     private TilePane contenedorServicios;
@@ -66,7 +68,7 @@ public class ProximosServiciosController {
 
     @FXML
     private void initialize(){
-
+        MenuContextSetting.disableMenu(rootPane);
         cargarServicios();
 
         txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
@@ -104,7 +106,7 @@ public class ProximosServiciosController {
             mostrarServicios(nuevaPagina.getContent());
         });
     }
-    
+
     private void cargarServiciosFiltrados(String filtro) {
         configurarPaginadorFiltradas(filtro);
     }
@@ -112,20 +114,20 @@ public class ProximosServiciosController {
     @FXML
     private void EnviarAviso(ActionEvent actionEvent){
 
-            String telefono = vehiculoSeleccion.getNumTelefono();
-            String mensaje = "Master tyres. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda hacer el servicio de tu vehiculo "+ vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio() + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
+        String telefono = vehiculoSeleccion.getNumTelefono();
+        String mensaje = "Master tyres. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda hacer el servicio de tu vehiculo "+ vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio() + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
 
-            String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
-                    java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
+        String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
+                java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
 
-            if (hostServices != null) {
-                hostServices.showDocument(url);
-            }
+        if (hostServices != null) {
+            hostServices.showDocument(url);
+        }
 
-            vehiculoService.actualizarContador(vehiculoSeleccion.getId(), vehiculoSeleccion.getContador_mensaje()+1);
-            txtBuscar.setText("");
-            limpiarDetalleVehiculo();
-            cargarServicios();
+        vehiculoService.actualizarContador(vehiculoSeleccion.getId(), vehiculoSeleccion.getContador_mensaje()+1);
+        txtBuscar.setText("");
+        limpiarDetalleVehiculo();
+        cargarServicios();
     }
 
     private void cargarServicios() {
@@ -141,35 +143,83 @@ public class ProximosServiciosController {
             contenedorServicios.getChildren().add(card);
         }
     }
+    /*
+        private VBox crearCardVehiculo(VehiculoDTO p) {
+            VBox card = new VBox();
+            card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
+            card.setPrefSize(500, 100);
 
+            Label lblNombreCliente = new Label( p.getNombreCliente() + " " + p.getApellido() + " " + p.getSegundoApellido() );
+            lblNombreCliente.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
+
+            Label lblNombreMarca  = new Label( p.getNombreMarca());
+            lblNombreMarca .setStyle("-fx-text-fill: white;");
+
+            Label lblNombreModelo = new Label( p.getNombreModelo());
+            lblNombreModelo.setStyle("-fx-text-fill: white;");
+
+            Label lblAnnio = new Label("" + p.getAnio());
+            lblAnnio.setStyle("-fx-text-fill: white;");
+
+            HBox contentBox = new HBox(10, lblNombreMarca, lblNombreModelo, lblAnnio);
+
+            VBox textBox = new VBox(5, lblNombreCliente, contentBox);
+
+            card.getChildren().add(textBox);
+
+            // ========= ESTILOS INTERACTIVOS =========
+            card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
+            card.setOnMouseExited(e -> card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
+
+            // Al hacer clic
+            card.setOnMouseClicked(event -> {
+                card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
+                mostrarDetalleVehiculo(p);
+            });
+
+            return card;
+        }
+    */
     private VBox crearCardVehiculo(VehiculoDTO p) {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
         card.setPrefSize(500, 100);
 
-        Label lblNombreCliente = new Label( p.getNombreCliente() + " " + p.getApellido() + " " + p.getSegundoApellido() );
+        Label lblNombreCliente = new Label(
+                emptyIfNull(p.getNombreCliente()) + " " +
+                        emptyIfNull(p.getApellido()) + " " +
+                        emptyIfNull(p.getSegundoApellido())
+        );
         lblNombreCliente.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
 
-        Label lblNombreMarca  = new Label( p.getNombreMarca());
-        lblNombreMarca .setStyle("-fx-text-fill: white;");
+        Label lblNombreMarca = new Label(
+                naIfNullOrEmpty(p.getNombreMarca())
+        );
+        lblNombreMarca.setStyle("-fx-text-fill: white;");
 
-        Label lblNombreModelo = new Label( p.getNombreModelo());
+        Label lblNombreModelo = new Label(
+                naIfNullOrEmpty(p.getNombreModelo())
+        );
         lblNombreModelo.setStyle("-fx-text-fill: white;");
 
-        Label lblAnnio = new Label("" + p.getAnio());
+        Label lblAnnio = new Label(
+                p.getAnio() == null ? "N/A" : String.valueOf(p.getAnio())
+        );
         lblAnnio.setStyle("-fx-text-fill: white;");
 
         HBox contentBox = new HBox(10, lblNombreMarca, lblNombreModelo, lblAnnio);
-
         VBox textBox = new VBox(5, lblNombreCliente, contentBox);
 
         card.getChildren().add(textBox);
 
-        // ========= ESTILOS INTERACTIVOS =========
-        card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
-        card.setOnMouseExited(e -> card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
+        card.setOnMouseEntered(e ->
+                card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;")
+        );
 
-        // Al hacer clic
+        card.setOnMouseExited(e ->
+                card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;")
+        );
+
         card.setOnMouseClicked(event -> {
             card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
             mostrarDetalleVehiculo(p);
@@ -177,6 +227,16 @@ public class ProximosServiciosController {
 
         return card;
     }
+
+
+    private String emptyIfNull(String value) {
+        return value == null ? "" : value;
+    }
+
+    private String naIfNullOrEmpty(String value) {
+        return (value == null || value.trim().isEmpty()) ? "N/A" : value;
+    }
+
 
     @FXML
     private void ActualizarServicio(ActionEvent actionEvent){
