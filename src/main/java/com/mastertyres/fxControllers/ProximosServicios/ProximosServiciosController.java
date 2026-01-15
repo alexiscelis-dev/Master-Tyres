@@ -116,7 +116,7 @@ public class ProximosServiciosController {
     private void EnviarAviso(ActionEvent actionEvent){
 
             String telefono = vehiculoSeleccion.getNumTelefono();
-            String mensaje = "Master tyres. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda hacer el servicio de tu vehiculo "+ vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio() + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
+            String mensaje = "Master tires. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda hacer el servicio de tu vehiculo "+ vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio() + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
 
             String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
                     java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);

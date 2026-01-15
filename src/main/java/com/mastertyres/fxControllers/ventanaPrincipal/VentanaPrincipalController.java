@@ -293,45 +293,11 @@ public class VentanaPrincipalController {
             ((IVentanaPrincipal) controller).setVentanaPrincipalController(this);
         }
 
-        /*
-
-        if (controller instanceof PromocionesActivasController) {
-            ((PromocionesActivasController) controller).setVentanaPrincipalController(this);
-        }
-        if (controller instanceof ClienteController) {
-            ((ClienteController) controller).setVentanaPrincipalController(this);
-        }
-        if (controller instanceof VehiculoController) {
-            ((VehiculoController) controller).setVentanaPrincipalController(this);
-        }
-        if (controller instanceof InventarioController) {
-            ((InventarioController) controller).setVentanaPrincipalController(this);
-        }
-        */
         if (controller instanceof ProximosServiciosController) {
             ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
+            
 
-        }/*
-        if (controller instanceof AgregarVehiculoController) {
-            ((AgregarVehiculoController) controller).setVentanaPrincipalController(this);
         }
-        if (controller instanceof AgregarClienteController) {
-            ((AgregarClienteController) controller).setVentanaPrincipalController(this);
-        }
-        if (controller instanceof NuevaPromocionController) {
-            ((NuevaPromocionController) controller).setVentanaPrincipalController(this);
-        }
-        if (controller instanceof AgregarInventarioController) {
-            ((AgregarInventarioController) controller).setVentanaPrincipalController(this);
-        }
-        if (controller instanceof AgregarMarcaController) {
-            ((AgregarMarcaController) controller).setVentanaPrincipalController(this);
-        }
-        if (controller instanceof NotaController){
-            ((NotaController) controller).setVentanaPrincipalController(this);
-        }
-
-         */
     }
 
 
