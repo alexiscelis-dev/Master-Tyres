@@ -9,14 +9,11 @@ import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
-import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
-import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaClienteDetalle.service.NotaClienteDetService;
 import com.mastertyres.notaDetalle.service.NotaDetalleService;
-import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
@@ -42,8 +39,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -342,8 +339,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
         //Nota notaBuscar = notaService.buscarPorId(nota.getNotaId());
         //NotaClienteDetalle notaClienteDetalle = notaClienteDetService.buscarclienteDetalle(notaBuscar);
-
-
 
 
         VBox card = new VBox();

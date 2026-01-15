@@ -295,7 +295,6 @@ public class VentanaPrincipalController {
 
         if (controller instanceof ProximosServiciosController) {
             ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
-            
 
         }
     }
