@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.EditarControllers;
 
-import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;

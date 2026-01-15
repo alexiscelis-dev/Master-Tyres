@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class PromocionService implements IPromocionService {
-    private String hoy= LocalDate.now().toString();
+    private String hoy = LocalDate.now().toString();
     private final PromocionesRepository promocionRepository;
 
 
@@ -64,7 +64,7 @@ public class PromocionService implements IPromocionService {
     @Override
     public Promocion buscarPromocionId(Integer id) {
         Promocion promocion = promocionRepository.findById(id).orElse(null);
-        return  promocion;
+        return promocion;
     }
 
 }//PromocionService

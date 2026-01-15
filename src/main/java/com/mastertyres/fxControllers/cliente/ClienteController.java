@@ -3,10 +3,11 @@ package com.mastertyres.fxControllers.cliente;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.FechaUtils;
+import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import javafx.animation.PauseTransition;
@@ -38,20 +39,24 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class ClienteController {
+public class ClienteController implements IVentanaPrincipal {
 
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
+
+
 
     @FXML private TableView<Cliente> tablaClientes;
     @FXML private TableColumn<Cliente, String> colTipoCliente;
@@ -392,7 +397,7 @@ public class ClienteController {
                 "/fxmlViews/cliente/AgregarCliente.fxml",
                 "Agregar cliente"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar cliente");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR CLIENTE");
     }
 
     private VBox crearPaginaClientes(int indicePagina) {
@@ -688,7 +693,5 @@ public class ClienteController {
         cargarDatosClientes();
         resetBusqueda();
     }
-
-
 
 }//clase

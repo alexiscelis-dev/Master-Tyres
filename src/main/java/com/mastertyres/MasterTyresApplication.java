@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.Setting.setPantallaSize;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.Setting.setPantallaSize;
 
 
 @SpringBootApplication
@@ -85,7 +85,13 @@ public class MasterTyresApplication extends Application {
 
 	@Override
 	public void stop() throws Exception {
-		context.stop();
+		if (context != null){
+			context.stop(); // CIERRA HIKARI para cerrar conexiones en BD
+		}
+
+		Platform.exit();
+		System.exit(0);
+
 	}
 
 	public static void main(String[] args) {

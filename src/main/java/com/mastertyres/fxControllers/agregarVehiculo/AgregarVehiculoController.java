@@ -5,9 +5,10 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -40,11 +41,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
-import static com.mastertyres.common.MensajesAlert.mostrarWarning;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Component
-public class AgregarVehiculoController {
+public class AgregarVehiculoController implements IVentanaPrincipal {
 
     @Autowired
     private MarcaService marcaService;
@@ -154,10 +155,6 @@ public class AgregarVehiculoController {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
-    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
-        this.ventanaPrincipalController = controller;
-    }
-
 
 
 
@@ -245,8 +242,10 @@ public class AgregarVehiculoController {
             }
         });
 
+        colObservaciones.setPrefWidth(400);
+        colObservaciones.setMinWidth(100);
+    }//initialize
 
-    }
 
     private void configurarValidaciones() {
 
@@ -447,7 +446,6 @@ public class AgregarVehiculoController {
         });
 
 
-
         // Configurar columnas del TableView
         colNombreCompleto.setCellValueFactory(cellData ->
                 new SimpleStringProperty(
@@ -624,5 +622,10 @@ public class AgregarVehiculoController {
 
         ventanaPrincipalController.irAtras();
 
+    }
+
+    @Override
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
     }
 }

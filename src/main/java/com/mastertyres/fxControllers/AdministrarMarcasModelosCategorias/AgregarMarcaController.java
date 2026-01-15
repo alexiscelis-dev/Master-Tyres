@@ -3,10 +3,11 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
-import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -31,11 +32,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
-import static com.mastertyres.common.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class AgregarMarcaController {
+public class AgregarMarcaController implements IVentanaPrincipal {
 
     @Autowired private MarcaService marcaService;
     @Autowired private ModeloService modeloService;
@@ -65,9 +66,12 @@ public class AgregarMarcaController {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
+
+
 
     @FXML
     private void initialize(){
@@ -272,6 +276,7 @@ public class AgregarMarcaController {
         }
         return resultado.toString().trim();
     }
+
 
     public static class ModeloCategoriaTemp {
         private final String modelo;

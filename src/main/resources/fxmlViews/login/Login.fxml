@@ -4,7 +4,10 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="383.0" prefWidth="835.0" styleClass="root" stylesheets="/styles_css/stylesLogin.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.login.LoginController">
+<AnchorPane fx:id="rootPane" prefHeight="383.0" prefWidth="835.0" styleClass="root" stylesheets="/styles_css/stylesLogin.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.login.LoginController">
+
+
+
 
     <StackPane fx:id="Panel" layoutX="49.0" prefHeight="383.0" prefWidth="926.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="49.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <HBox alignment="CENTER" spacing="0">

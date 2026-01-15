@@ -1,8 +1,13 @@
 package com.mastertyres.fxControllers.inventario;
 
-import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.EditarControllers.EditarInventarioController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -44,33 +49,55 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @NoArgsConstructor
 @Component
-public class InventarioController {
+public class InventarioController implements IVentanaPrincipal, ILoading {
 
 
-    @FXML private TableView<Inventario> tablaInventario;
-    @FXML private TableColumn<Inventario, String> colCodBarras;
-    @FXML private TableColumn<Inventario, String> colDot;
-    @FXML private TableColumn<Inventario, String> colMarca;
-    @FXML private TableColumn<Inventario, String> colModelo;
-    @FXML private TableColumn<Inventario, String> colMedida;
-    @FXML private TableColumn<Inventario, String> colIndiceCar;
-    @FXML private TableColumn<Inventario, String> colIndiceVel;
-    @FXML private TableColumn<Inventario, Integer> colStock;
-    @FXML private TableColumn<Inventario, Float> colPrecioCom;
-    @FXML private TableColumn<Inventario, Float> colPrecioVen;
-    @FXML private TableColumn<Inventario, String> colObservaciones;
-    @FXML private TableColumn<Inventario, String> colFechaReg;
-    @FXML private TextField buscarInventarioBuscador;
-    @FXML private ChoiceBox<String> atributoBusquedaInventario;
-    @FXML private HBox limpiarChoiceBox;
-    @FXML private Label statusLabel;
-    @FXML private Button btnAgregarInventario;
-
-    private VentanaPrincipalController ventanaPrincipalController;
+    @FXML
+    private TableView<Inventario> tablaInventario;
+    @FXML
+    private TableColumn<Inventario, String> colCodBarras;
+    @FXML
+    private TableColumn<Inventario, String> colDot;
+    @FXML
+    private TableColumn<Inventario, String> colMarca;
+    @FXML
+    private TableColumn<Inventario, String> colModelo;
+    @FXML
+    private TableColumn<Inventario, String> colMedida;
+    @FXML
+    private TableColumn<Inventario, String> colIndiceCar;
+    @FXML
+    private TableColumn<Inventario, String> colIndiceVel;
+    @FXML
+    private TableColumn<Inventario, Integer> colStock;
+    @FXML
+    private TableColumn<Inventario, Float> colPrecioCom;
+    @FXML
+    private TableColumn<Inventario, Float> colPrecioVen;
+    @FXML
+    private TableColumn<Inventario, Float> colTotalCompra;
+    @FXML
+    private TableColumn<Inventario, Float> colTotalVenta;
+    @FXML
+    private TableColumn<Inventario, String> colObservaciones;
+    @FXML
+    private TableColumn<Inventario, String> colFechaReg;
+    @FXML
+    private TextField buscarInventarioBuscador;
+    @FXML
+    private ChoiceBox<String> atributoBusquedaInventario;
+    @FXML
+    private HBox limpiarChoiceBox;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private Button btnAgregarInventario;
+    @FXML
+    private Button btnRefrescar;
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
@@ -78,6 +105,8 @@ public class InventarioController {
 
     @Autowired
     private InventarioService inventarioService;
+    @Autowired
+    private TaskService taskService;
 
     @FXML
     private Pagination paginadorInventarios;
@@ -85,6 +114,7 @@ public class InventarioController {
     private List<Inventario> todosLosInventarios;
     private String terminoBusquedaActual = "";
     private boolean modoBusqueda = false;
+
 
 
     @FXML
@@ -112,28 +142,7 @@ public class InventarioController {
             }
         }));
 
-//        //Buscar mientras escribes
-       /* buscarInventarioBuscador.setOnKeyReleased(event -> {
 
-            if (event.getCode() != KeyCode.ENTER) {
-                delayQuery.setOnFinished(e -> {
-                    String seleccion = atributoBusquedaInventario.getValue();
-                    String busqueda = buscarInventarioBuscador.getText();
-
-                    if (seleccion == null && busqueda != null && !busqueda.isEmpty()) {
-                        buscarInventario(busqueda);
-                    } else {
-                        // Si no hay búsqueda, salir del modo búsqueda y recargar tabla
-                        modoBusqueda = false;
-                        terminoBusquedaActual = "";
-                        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
-                        paginadorInventarios.setCurrentPageIndex(0);
-                    }
-
-                });
-                delayQuery.playFromStart();
-            }
-        });*/
         buscarInventarioBuscador.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
 
@@ -152,18 +161,12 @@ public class InventarioController {
                     // Ejecutar búsqueda específica
                     buscarInventario(seleccion.toLowerCase(), busqueda);
                 }
-            }
+
+
+            }//enter
         });
 
-       /* buscarInventarioBuscador.setOnKeyPressed(event -> {
 
-            if (event.getCode() == KeyCode.ENTER) {
-                String seleccion = atributoBusquedaInventario.getValue(), busqueda = buscarInventarioBuscador.getText();
-
-                if (seleccion != null && !seleccion.isEmpty() && busqueda != null && !busqueda.isEmpty())
-                    buscarInventario(seleccion.toLowerCase(), busqueda);
-            }
-        });*/
         buscarInventarioBuscador.setOnKeyReleased(event -> {
 
             if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
@@ -256,8 +259,29 @@ public class InventarioController {
 
                                     if (eliminar) {
 
-                                        inventarioService.eliminarInventario(StatusInventario.INACTIVE.toString(), inventarioId);
-                                        cargarInventario();
+
+                                        taskService.runTask(
+                                                loadingOverlayController,
+                                                () -> {
+
+                                                    Thread.sleep(5000);
+                                                    inventarioService.eliminarInventario(StatusInventario.INACTIVE.toString(), inventarioId);
+                                                    return null;
+                                                }, (resultado) -> {
+                                                    cargarInventario();
+                                                    mostrarInformacion("Elemento eliminado", "", "Elemento eliminado exitosamente");
+
+                                                }, (ex) -> {
+
+                                                    if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
+                                                        mostrarError("Operacion cancelada", "", "La accion fue cancelada por el usuario");
+                                                    } else if (ex.getCause() instanceof InventarioException) {
+                                                        mostrarError("Error al eliminar", "", "" + ex.getCause().getMessage());
+                                                    } else {
+                                                        mostrarError("Error al eliminar", "", "Ocurrio un error inesperado, intente de nuevo mas tarde.");
+                                                    }
+                                                }, null
+                                        );
 
                                     } else
                                         mostrarInformacion("Accion cancelada", "", "Accion cancelada");
@@ -270,7 +294,11 @@ public class InventarioController {
 
                                         Parent root = loader.load();
                                         EditarInventarioController controller = loader.getController();
+                                        if (ventanaPrincipalController != null) {
+                                            ventanaPrincipalController.configurarControlador(controller);
+                                        }
                                         controller.editarInventario(seleccionado);
+
                                         Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Editar inventario");
                                         stage.setResizable(false);
@@ -373,6 +401,19 @@ public class InventarioController {
             return fila;
         });
 
+        btnRefrescar.setOnAction(event -> {
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                    },
+                    () -> {
+                        actualizarTabla();
+                    }
+
+            );
+        });
+
+
         colObservaciones.setPrefWidth(400);
         colObservaciones.setMinWidth(100);
 
@@ -445,84 +486,83 @@ public class InventarioController {
                     paginaInventario = inventarioService.buscarPorMedidaPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
                 }
                 case "fecha de registro" -> {
-                        boolean consultar = false;
+                    boolean consultar = false;
 
-                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                            String fecha = busqueda;
-                            LocalDate fechaConsulta = null;
+                    if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+                        String fecha = busqueda;
+                        LocalDate fechaConsulta = null;
 
-                            try {
-                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        try {
+                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-                                LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-                                fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+                            LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+                            fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
 
-                                consultar = true;
+                            consultar = true;
 
-                            } catch (DateTimeParseException e) {
-                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                                consultar = false;
+                        } catch (DateTimeParseException e) {
+                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                            consultar = false;
 
-                            }
-
-                            if (consultar) {
-                                paginaInventario = inventarioService.buscarPorFechaPaginado(activo, fechaConsulta, indicePagina, INVENTARIOS_POR_PAGINA);
-                            }
-
-                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
-
-                            String fecha[] = busqueda.split(",");
-                            String consultaInicio = "", consultaFinal = "";
-
-                            try {
-                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                                LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                                LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                                //Ordenar la fecha mayor
-                                if (fecha1.isAfter(fecha2)) {
-                                    LocalDate aux = fecha1;
-                                    fecha1 = fecha2;
-                                    fecha2 = aux;
-
-                                }
-
-                                consultaInicio = fecha1.format(formatterConsulta);
-                                consultaFinal = fecha2.format(formatterConsulta);
-
-                                consultar = true;
-
-
-                            } catch (DateTimeParseException e) {
-                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                                consultar = false;
-                            }
-
-                            if (consultar) {
-                                paginaInventario = inventarioService.buscarPorFechaPaginadoRangos(activo, LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, INVENTARIOS_POR_PAGINA);
-                            }
-
-
-                        } else {
-                            List<Inventario> inventarioVacio = new ArrayList<>();
-                            tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
-                            mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                                    " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
                         }
 
-                    }
-                default -> {
-                        mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
-                    }
-                }//switch
-            } else {
-                paginaInventario = inventarioService.listarInventarioPaginado(
-                        StatusVehiculo.ACTIVE.toString(), indicePagina, INVENTARIOS_POR_PAGINA);
-            }
+                        if (consultar) {
+                            paginaInventario = inventarioService.buscarPorFechaPaginado(activo, fechaConsulta, indicePagina, INVENTARIOS_POR_PAGINA);
+                        }
 
+                    } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
+
+                        String fecha[] = busqueda.split(",");
+                        String consultaInicio = "", consultaFinal = "";
+
+                        try {
+                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                            LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+                            LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+
+                            //Ordenar la fecha mayor
+                            if (fecha1.isAfter(fecha2)) {
+                                LocalDate aux = fecha1;
+                                fecha1 = fecha2;
+                                fecha2 = aux;
+
+                            }
+
+                            consultaInicio = fecha1.format(formatterConsulta);
+                            consultaFinal = fecha2.format(formatterConsulta);
+
+                            consultar = true;
+
+
+                        } catch (DateTimeParseException e) {
+                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+                            consultar = false;
+                        }
+
+                        if (consultar) {
+                            paginaInventario = inventarioService.buscarPorFechaPaginadoRangos(activo, LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, INVENTARIOS_POR_PAGINA);
+                        }
+
+
+                    } else {
+                        List<Inventario> inventarioVacio = new ArrayList<>();
+                        tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
+                        mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+                                " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                    }
+
+                }
+                default -> {
+                    mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+                }
+            }//switch
+        } else {
+            paginaInventario = inventarioService.listarInventarioPaginado(
+                    StatusVehiculo.ACTIVE.toString(), indicePagina, INVENTARIOS_POR_PAGINA);
+        }
 
 
         tablaInventario.setItems(FXCollections.observableArrayList(paginaInventario.getContent()));
@@ -535,6 +575,12 @@ public class InventarioController {
     }
 
     private void cargarInventario() {
+
+        colTotalCompra.setText("$ Total Compra");
+        colTotalVenta.setText("$ Total Venta");
+        colPrecioCom.setText("$ Precio Compra");
+        colPrecioVen.setText("$ Precio Venta");
+
 
         // Helper para valores String
         final Function<String, String> safe = s ->
@@ -581,6 +627,14 @@ public class InventarioController {
                 new SimpleFloatProperty(data.getValue().getPrecioVenta()).asObject()
         );
 
+        colTotalCompra.setCellValueFactory(data ->
+                new SimpleFloatProperty(data.getValue().getPrecioCompra() * data.getValue().getStock()).asObject()
+        );
+
+        colTotalVenta.setCellValueFactory(data ->
+                new SimpleFloatProperty(data.getValue().getPrecioVenta() * data.getValue().getStock()).asObject()
+        );
+
         colFechaReg.setCellValueFactory(data -> {
 
             String fechaStr = data.getValue().getCreated_at();
@@ -610,7 +664,7 @@ public class InventarioController {
     }//cargarTabla
 
     private String valorONull(String valor) {
-        return (valor == null || valor.isBlank()) ? "N/A" : valor;
+        return (valor == null || valor.isBlank()) ? "N/D" : valor;
     }
 
     private void cargarDatosInventario() {
@@ -776,20 +830,28 @@ public class InventarioController {
                 "/fxmlViews/inventario/AgregarInventario.fxml",
                 "Agregar llanta"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar llanta");
-
-
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR AL INVENTARIO");
 
 
     }//agregarInventario
 
+    private VentanaPrincipalController ventanaPrincipalController;
+    private LoadingComponentController loadingOverlayController;
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
 
+
+
     //actualiza
-    @FXML
-    private void actualizarTabla(ActionEvent actionEvent){
+    private void actualizarTabla() {
         atributoBusquedaInventario.setValue(null);
         buscarInventarioBuscador.setText("");
 
@@ -801,5 +863,6 @@ public class InventarioController {
 
         //cargarInventario();
     }
+
 
 }//clase

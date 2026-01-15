@@ -2,7 +2,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
-import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
@@ -160,10 +160,16 @@ public class EditarVehiculoController {
                 choiceMarca.valueProperty().isNull()
                         .or(choiceModelo.valueProperty().isNull())
                         .or(txtColor.textProperty().isEmpty())
+                        .or(txtColor.textProperty().isNull())
                         .or(spinnerAnio.valueProperty().isNull())
                         .or(serieValido.not())
                         .or(placasValido.not())
                         .or(kilometrosValido.not())
+                        .or(choiceMarca.valueProperty().isNull())
+                        .or(choiceModelo.valueProperty().isNull())
+                        .or(choiceCategoria.valueProperty().isNull())
+                        .or(serieValido.not())
+
         );
 
     }

@@ -1,10 +1,8 @@
 package com.mastertyres.fxControllers.ProximosServicios;
 
 
-import com.mastertyres.common.MensajesAlert;
-import com.mastertyres.common.MenuContextSetting;
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.application.HostServices;
@@ -14,7 +12,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -114,8 +115,8 @@ public class ProximosServiciosController {
     @FXML
     private void EnviarAviso(ActionEvent actionEvent){
 
-        String telefono = vehiculoSeleccion.getNumTelefono();
-        String mensaje = "Master tyres. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda hacer el servicio de tu vehiculo "+ vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio() + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
+            String telefono = vehiculoSeleccion.getNumTelefono();
+            String mensaje = "Master tires. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda hacer el servicio de tu vehiculo "+ vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio() + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
 
         String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
                 java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);

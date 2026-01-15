@@ -69,8 +69,8 @@
 
             <!-- Botones -->
             <HBox spacing="20" alignment="CENTER">
+                <Button text="Actualizar" fx:id="btnCambiar"  styleClass="boton-accion" />
                 <Button text="Cancelar" onAction="#cerrarVentana" styleClass="boton-accion" />
-                <Button text="Cambiar" fx:id="btnCambiar"  styleClass="boton-accion" />
             </HBox>
         </VBox>
     </children>
