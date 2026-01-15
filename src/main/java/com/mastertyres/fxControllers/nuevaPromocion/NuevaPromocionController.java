@@ -1,7 +1,8 @@
 package com.mastertyres.fxControllers.nuevaPromocion;
 
-import com.mastertyres.common.MenuContextSetting;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
@@ -20,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,11 +30,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mastertyres.common.MensajesAlert.*;
-import static javafx.collections.FXCollections.observableList;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionController {
+public class NuevaPromocionController implements IVentanaPrincipal {
     @FXML private AnchorPane rootPane;
     @FXML private Slider porcentajeDescuento;
     @FXML private Label descuentoLabel;
@@ -65,20 +66,40 @@ public class NuevaPromocionController {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
 
+
+
     @FXML
     public void initialize() {
-        MenuContextSetting.disableMenu(rootPane);
-        MenuContextSetting.disableMenuDatePicker(rootPane);
+
+        configuraciones();
 
         cargarPorcentaje();
-        tableVehiculosParticipantes.setItems(vehiculos);
+
+      //  tableVehiculosParticipantes.setItems(vehiculos);
 
 
         cargartabla();
+
+        btnLimpiar.setOnAction(event -> clean());
+
+        btnRegistrar.setOnAction(event -> registrarPromocion());
+
+        btnAgregarVehiculo.setOnAction(event -> agregarTabla());
+
+        btnImagen.setOnAction(event -> seleccionarImg());
+
+
+    }//initialize
+
+    private void configuraciones(){
+
+        //Inicializar marca, modelo, año
+        vehiculosParticipantesInitialize();
 
         //Abre y cierra el popup del choiceBox para que aparezca en la posicion correcta y no debajo de la tabla
         choiceAnio.setOnMousePressed(event -> {
@@ -88,8 +109,19 @@ public class NuevaPromocionController {
             }
         });
 
-        //Inicializar marca, modelo, año
-        vehiculosParticipantesInitialize();
+        choiceModelo.setOnMousePressed(event -> {
+            if (!choiceModelo.isShowing()){
+                choiceModelo.show();
+                choiceModelo.hide();
+            }
+        });
+
+        choiceMarca.setOnMousePressed(event -> {
+            if (!choiceMarca.isShowing()){
+                choiceMarca.show();
+                choiceMarca.hide();
+            }
+        });
 
         precioSinDescuento.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
@@ -111,12 +143,6 @@ public class NuevaPromocionController {
                 tipoDescuento(nuevoValor.toLowerCase());
 
         });
-
-        btnLimpiar.setOnAction(event -> clean());
-
-        btnRegistrar.setOnAction(event -> registrarPromocion());
-
-        btnAgregarVehiculo.setOnAction(event -> agregarTabla());
 
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
@@ -154,11 +180,12 @@ public class NuevaPromocionController {
             }
         });
 
-        btnImagen.setOnAction(event -> seleccionarImg());
+        MenuContextSetting.disableMenu(rootPane);
+        MenuContextSetting.disableMenuDatePicker(rootPane);
 
+        tableVehiculosParticipantes.setItems(vehiculos);
 
-    }//initialize
-
+    }//configuraciones
 
     private void cargarPorcentaje() {
         List<String> tiposDescuentos = new ArrayList<>();
@@ -241,9 +268,8 @@ public class NuevaPromocionController {
 
     private void vehiculosParticipantesInitialize() {
 
-        choiceMarca.setItems(observableList(promocionService.listarMarcas()));
-        choiceModelo.setItems(observableList(promocionService.listarModelos()));
-
+        List<Marca> marcas = promocionService.listarMarcas();
+        List<Modelo> modelos = promocionService.listarModelos();
         List<Integer> anios = new ArrayList<>();
 
         int anioActual = LocalDate.now().getYear();
@@ -252,6 +278,46 @@ public class NuevaPromocionController {
             anios.add(i);
         }
         choiceAnio.getItems().setAll(anios);
+
+        choiceMarca.setItems(FXCollections.observableArrayList(marcas));
+        choiceModelo.setItems(FXCollections.observableArrayList(modelos));
+
+        choiceMarca.setConverter(new StringConverter<Marca>() {
+            @Override
+            public String toString(Marca marca) {
+                return marca != null ? marca.getNombreMarca() : "";
+            }
+
+            @Override
+            public Marca fromString(String string) {
+                return null;
+            }
+        });
+
+        choiceModelo.setConverter(new StringConverter<Modelo>() {
+            @Override
+            public String toString(Modelo modelo) {
+                return modelo != null ? modelo.getNombreModelo() : "";
+            }
+
+            @Override
+            public Modelo fromString(String string) {
+                return null;
+            }
+        });
+
+        choiceMarca.getSelectionModel().selectedItemProperty().addListener((observable, oldMarca, newMarca) -> {
+            if (newMarca != null){
+                List<Modelo> modelosFiltrados = modelos.stream()
+                        .filter(mod -> mod.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+                        .toList();
+
+                    choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+
+            }else {
+                choiceModelo.getItems().clear();
+            }
+        });
 
 
     }//vehiculosParticipantesInitialize

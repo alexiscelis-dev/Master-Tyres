@@ -1,4 +1,4 @@
-package com.mastertyres.common;
+package com.mastertyres.common.utils;
 
 
 import org.springframework.context.ApplicationContext;

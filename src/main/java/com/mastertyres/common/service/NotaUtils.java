@@ -1,4 +1,4 @@
-package com.mastertyres.common;
+package com.mastertyres.common.service;
 
 import com.mastertyres.nota.model.CampoNota;
 import jakarta.annotation.PostConstruct;
@@ -98,6 +98,12 @@ public class NotaUtils {
         else
             return "";
 
+    }
+
+    public String eliminarCero(int cantidad){
+        if (cantidad != 0)
+            return cantidad + "";
+        else return "";
     }
 
     public void mostrarPopupHora(TextField txtTarget) {

@@ -19,6 +19,8 @@ public class Inventario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inventario_id")
     private Integer inventarioId;
+    @Column(name = "identificador_llanta" )
+    private String identificadorLlanta;
     private String marca;
     private String modelo;
     private String medida;
@@ -33,7 +35,7 @@ public class Inventario {
     private float precioVenta;
     private String observaciones;
     private String imagen;
-    @Column(name = "active",insertable = false, updatable = false)
+    @Column(name = "active",insertable = false, updatable = true)
     private String active;
     @Column(name = "created_at",updatable = true)
     @CreationTimestamp
@@ -44,8 +46,6 @@ public class Inventario {
     @Column(name = "codigo_barras")
     private String codigoBarras;
     private String dot;
-
-
 
 
 }//clase

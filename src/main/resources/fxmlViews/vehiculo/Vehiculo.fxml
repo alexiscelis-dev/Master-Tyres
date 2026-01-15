@@ -75,7 +75,7 @@
                   <TableColumn fx:id="colPlacas" prefWidth="150" text="Placas" />
                   <TableColumn fx:id="colNumeroSerie" prefWidth="150" text="Numero Serie" />
                   <TableColumn fx:id="colKilometraje" prefWidth="150" text="Kilometraje" />
-                  <TableColumn fx:id="colObservaciones" prefWidth="150" text="Observaciones" />
+                  <TableColumn fx:id="colObservaciones" prefWidth="80" text="Observaciones" />
                   <TableColumn fx:id="colUltimoServicio" prefWidth="150" text="Ultimo Servicio" />
                   <TableColumn fx:id="colFechaRegistro" prefWidth="150" text="Fecha Registro" />
 
