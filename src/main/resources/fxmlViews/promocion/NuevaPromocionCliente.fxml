@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionController">
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionClienteController">
     <children>
         <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
             <children>
@@ -206,45 +206,34 @@
 
                 <VBox alignment="TOP_CENTER" minWidth="500.0" prefHeight="339.0" prefWidth="500.0" spacing="15.0" styleClass="secciones">
 
-                    <Label styleClass="seccion-titulo" text="Vehiculos participantes">
+                    <Label styleClass="seccion-titulo" text="Clientes participantes">
                         <VBox.margin>
                             <Insets bottom="35.0" />
                         </VBox.margin>
                     </Label>
                     <HBox prefHeight="80.0" prefWidth="512.0">
                         <children>
-                            <ChoiceBox fx:id="choiceMarca" prefWidth="150.0" styleClass="vehiculosParticipantes">
-                                <opaqueInsets>
-                                    <Insets />
-                                </opaqueInsets>
-                                <HBox.margin>
-                                    <Insets right="2.0" />
-                                </HBox.margin>
-                            </ChoiceBox>
-                            <ChoiceBox fx:id="choiceModelo" prefWidth="150.0" styleClass="vehiculosParticipantes">
-                                <HBox.margin>
-                                    <Insets right="2.0" />
-                                </HBox.margin>
-                            </ChoiceBox>
-                            <ChoiceBox fx:id="choiceAnio" prefWidth="150.0" styleClass="vehiculosParticipantes">
-                                <HBox.margin>
-                                    <Insets left="2.0" />
-                                </HBox.margin>
-                            </ChoiceBox>
+                            <TextField fx:id="txtBuscador" prefHeight="32.0" prefWidth="413.0" promptText="Buscar cliente" styleClass="buscador" />
+                            <Button fx:id="btnBuscar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Buscar">
+                        <HBox.margin>
+                           <Insets left="20.0" />
+                        </HBox.margin></Button>
                         </children>
                     </HBox>
                     <Button fx:id="btnAgregarVehiculo" mnemonicParsing="false" prefHeight="34.0" prefWidth="165.0" styleClass="boton-accion" text="Agregar" />
-                    <VBox id="panel para tabla" prefHeight="200.0" prefWidth="100.0">
+                    <VBox id="panel_para_tabla" prefHeight="200.0" prefWidth="100.0">
                         <children>
 
 
-                            <TableView fx:id="tableVehiculosParticipantes" minWidth="500.0" prefHeight="261.0" prefWidth="500.0">
+                            <TableView fx:id="Tabla_Clientes" minWidth="500.0" prefHeight="261.0" prefWidth="500.0">
 
 
                                 <columns>
-                                    <TableColumn fx:id="colMarca" prefWidth="166.20001220703125" text="Marca" />
-                                    <TableColumn fx:id="colModelo" minWidth="50" prefWidth="174.60003662109375" text="Modelo" />
-                                    <TableColumn fx:id="colAnio" minWidth="0.0" prefWidth="160.20001220703125" text="Año" />
+                                    <TableColumn fx:id="colNombre" prefWidth="166.20001220703125" text="Nombre" />
+                                    <TableColumn fx:id="colRFC" minWidth="50" prefWidth="174.60003662109375" text="RFC" />
+                                    <TableColumn fx:id="colCumpleanos" minWidth="0.0" prefWidth="160.20001220703125" text="Cumpleaños" />
+                                    <TableColumn fx:id="colFechaRegistro" minWidth="0.0" prefWidth="160.20001220703125" text="Fecha de registro" />
+                                    <TableColumn fx:id="colHobbie" minWidth="0.0" prefWidth="160.20001220703125" text="Hobbie" />
                                     <TableColumn fx:id="colEliminar" style="-fx-alignment: CENTER;" text="Acción" />
 
                                 </columns>

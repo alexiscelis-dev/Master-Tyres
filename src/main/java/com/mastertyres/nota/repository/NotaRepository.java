@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -73,7 +75,7 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
             "ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,c.clienteId,v.vehiculoId) " +
             "FROM Nota n " +
             "JOIN n.detalles nd " +
-            "JOIN n.notaClienteDetalles ndc " +
+            "LEFT JOIN n.notaClienteDetalles ndc " +
             "JOIN n.vehiculo v " +
             "JOIN v.cliente c " +
             "JOIN v.marca m " +
@@ -141,6 +143,430 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
             @Param("filtro") String filtro,
             Pageable pageable);
 
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND n.numFactura LIKE %:numFactura%
+""")
+    Page<NotaDTO> buscarPorNumeroFactura(
+            @Param("numFactura") String numFactura,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND n.numNota LIKE %:numNota%
+""")
+    Page<NotaDTO> buscarPorNumeroNota(
+            @Param("numNota") String numNota,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND LOWER(ndc.nombreClienteNota) LIKE LOWER(CONCAT('%', :nombreCliente, '%'))
+""")
+    Page<NotaDTO> buscarPorNombreCliente(
+            @Param("nombreCliente") String nombreCliente,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND DATE(n.fechaYhora) = :fecha
+""")
+    Page<NotaDTO> buscarPorFechaNota(
+            @Param("fecha") LocalDate fecha,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND (
+    LOWER(ndc.marcaNota) LIKE LOWER(CONCAT('%', :vehiculo, '%'))
+    OR LOWER(ndc.modeloNota) LIKE LOWER(CONCAT('%', :vehiculo, '%'))
+)
+""")
+    Page<NotaDTO> buscarPorVehiculo(
+            @Param("vehiculo") String vehiculo,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND n.statusNota = :status
+""")
+    Page<NotaDTO> buscarPorStatusNota(
+            @Param("status") String status,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND n.fechaVencimiento = :fechaVencimiento
+""")
+    Page<NotaDTO> buscarPorFechaVencimiento(
+            @Param("fechaVencimiento") LocalDate fechaVencimiento,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND (
+    LOWER(ndc.direccion1Nota) LIKE LOWER(CONCAT('%', :direccion, '%'))
+    OR LOWER(ndc.direccion2Nota) LIKE LOWER(CONCAT('%', :direccion, '%'))
+)
+""")
+    Page<NotaDTO> buscarPorDireccion(
+            @Param("direccion") String direccion,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND LOWER(ndc.placasNota) LIKE LOWER(CONCAT('%', :placas, '%'))
+""")
+    Page<NotaDTO> buscarPorPlacas(
+            @Param("placas") String placas,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND LOWER(ndc.rfcNota) LIKE LOWER(CONCAT('%', :rfc, '%'))
+""")
+    Page<NotaDTO> buscarPorRfc(
+            @Param("rfc") String rfc,
+            @Param("active") String active,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT NEW com.mastertyres.nota.model.NotaDTO(
+    n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total,
+    i.inventarioId,
+    nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta,
+    nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal,
+    nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal,
+    nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal,
+    nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal,
+    nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal,
+    nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2,
+    nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal,
+    nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2,
+    nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal,
+    nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2,
+    nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal,
+    nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2,
+    nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal,
+    n.adeudo, n.saldoFavor,
+    ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota,
+    ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota, ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,
+    c.clienteId, v.vehiculoId
+)
+FROM Nota n
+JOIN n.detalles nd
+LEFT JOIN n.notaClienteDetalles ndc
+JOIN n.vehiculo v
+JOIN v.cliente c
+LEFT JOIN n.inventario i
+WHERE n.active = :active
+AND n.adeudo = :adeudo
+""")
+    Page<NotaDTO> buscarPorAdeudo(
+            @Param("adeudo") BigDecimal adeudo,
+            @Param("active") String active,
+            Pageable pageable
+    );
 
 
     @Query("""
