@@ -42,7 +42,35 @@ public class DetalleInventarioController {
         });
 
     }//initialize
+    /*
+        public void InformacionInventario(Inventario inventario) {
 
+            txtCodBarras.setText(txtCodBarras.getText() + " " + valorONull(inventario.getCodigoBarras()));
+            txtDot.setText(txtDot.getText() + " " + valorONull(inventario.getDot()));
+            txtMarca.setText(txtMarca.getText() + " " + valorONull(inventario.getMarca()));
+            txtModelo.setText(txtModelo.getText() + " " + valorONull(inventario.getModelo()));
+            txtMedida.setText(txtMedida.getText() + " " + valorONull(inventario.getMedida()));
+            txtIdCarga.setText(txtIdCarga.getText() + " " + valorONull(inventario.getIndiceCarga()));
+            txtIdVelocidad.setText(txtIdVelocidad.getText() + " " + valorONull(inventario.getIndiceVelocidad()));
+            txtStock.setText(txtStock.getText() + " " + valorONull(inventario.getStock()+""));
+            txtPrecioC.setText(txtPrecioC.getText() + " $" + valorONull(inventario.getPrecioCompra()+""));
+            txtPrecioV.setText(txtPrecioV.getText() + " $" + valorONull(inventario.getPrecioVenta()+""));
+            txtObservaciones.setText(txtObservaciones.getText() + " " + valorONull(inventario.getObservaciones()));
+            txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + formatearFechaHora(inventario.getCreated_at()));
+
+            File file = new File(inventario.getImagen());
+            Image image;
+            if (file != null && file.exists())
+                image = new Image(file.toURI().toString());
+            else
+                image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
+
+
+            imgInventario.setImage(image);
+
+
+        }//detalleInventario
+    */
     public void InformacionInventario(Inventario inventario) {
 
         txtCodBarras.setText(txtCodBarras.getText() + " " + valorONull(inventario.getCodigoBarras()));
@@ -52,24 +80,28 @@ public class DetalleInventarioController {
         txtMedida.setText(txtMedida.getText() + " " + valorONull(inventario.getMedida()));
         txtIdCarga.setText(txtIdCarga.getText() + " " + valorONull(inventario.getIndiceCarga()));
         txtIdVelocidad.setText(txtIdVelocidad.getText() + " " + valorONull(inventario.getIndiceVelocidad()));
-        txtStock.setText(txtStock.getText() + " " + valorONull(inventario.getStock()+""));
-        txtPrecioC.setText(txtPrecioC.getText() + " $" + valorONull(inventario.getPrecioCompra()+""));
-        txtPrecioV.setText(txtPrecioV.getText() + " $" + valorONull(inventario.getPrecioVenta()+""));
+        txtStock.setText(txtStock.getText() + " " + valorONull(String.valueOf(inventario.getStock())));
+        txtPrecioC.setText(txtPrecioC.getText() + " $" + valorONull(String.valueOf(inventario.getPrecioCompra())));
+        txtPrecioV.setText(txtPrecioV.getText() + " $" + valorONull(String.valueOf(inventario.getPrecioVenta())));
         txtObservaciones.setText(txtObservaciones.getText() + " " + valorONull(inventario.getObservaciones()));
         txtFechaRegistro.setText(txtFechaRegistro.getText() + " " + formatearFechaHora(inventario.getCreated_at()));
 
-        File file = new File(inventario.getImagen());
+        String rutaImagen = inventario.getImagen();
         Image image;
-        if (file != null && file.exists())
-            image = new Image(file.toURI().toString());
-        else
-            image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
 
+        if (rutaImagen != null && !rutaImagen.isBlank()) {
+            File file = new File(rutaImagen);
+            if (file.exists()) {
+                image = new Image(file.toURI().toString());
+            } else {
+                image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
+            }
+        } else {
+            image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
+        }
 
         imgInventario.setImage(image);
-
-
-    }//detalleInventario
+    }
 
 
     private String formatearFecha(String fecha) {

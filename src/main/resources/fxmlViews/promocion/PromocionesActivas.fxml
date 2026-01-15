@@ -2,11 +2,10 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="ventanaPromocionesActivas" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.PromocionActiva.PromocionesActivasController">
     <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
         <BorderPane prefHeight="600" prefWidth="1186.0">
@@ -16,7 +15,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="10">
 
                     <TextField fx:id="txtBuscar" promptText="Buscar promoción..." styleClass="buscador" HBox.hgrow="ALWAYS" />
-               <Button onAction="#actualizar" mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion" text="">
+               <Button mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion" text="">
                    <graphic>
                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                            <image>
@@ -97,11 +96,27 @@
                            <Font name="System Bold" size="14.0" />
                         </font></Label>
                             <ListView fx:id="ListaVehiculosPromocion" styleClass="ListaVehiculos" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                          <Button fx:id="btnClientesPromocion" onAction="#AbrirClientesAplicables"  disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text=" Clientes Aplicables" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2" />
-      
-                          <Button fx:id="btnAgregarPromocion" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text=" Agregar Promoción" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
-                     <Button fx:id="btnEliminarPromocion" disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Eliminar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.rowSpan="2" />
-                     <Button fx:id="btnEditarPromocion"  disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Editar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                          <Button fx:id="btnClientesPromocion" disable="true" onAction="#AbrirClientesAplicables" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text=" Clientes Aplicables" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2">
+                        <font>
+                           <Font size="10.0" />
+                        </font></Button>
+
+                          <Button fx:id="btnAgregarPromocion" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text=" Agregar Promoción por Vehiculo" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                        <font>
+                           <Font size="10.0" />
+                        </font></Button>
+                     <Button fx:id="btnEliminarPromocion" disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Eliminar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.rowSpan="2">
+                        <font>
+                           <Font size="10.0" />
+                        </font></Button>
+                     <Button fx:id="btnEditarPromocion" disable="true" mnemonicParsing="false" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Editar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.rowSpan="2">
+                        <font>
+                           <Font size="10.0" />
+                        </font></Button>
+                     <Button fx:id="btnAgregarClientesPromocion" mnemonicParsing="false" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text=" Agregar Promoción por Cliente" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2">
+                        <font>
+                           <Font size="10.0" />
+                        </font></Button>
 
                             <columnConstraints>
                                 <ColumnConstraints minWidth="-Infinity" prefWidth="140.0" />
@@ -118,6 +133,7 @@
                                 <RowConstraints minHeight="30.0" />
                                 <RowConstraints minHeight="30.0" valignment="CENTER" />
                         <RowConstraints minHeight="100.0" prefHeight="30.0" valignment="CENTER" />
+                        <RowConstraints />
                             </rowConstraints>
                      <padding>
                         <Insets left="50.0" />
