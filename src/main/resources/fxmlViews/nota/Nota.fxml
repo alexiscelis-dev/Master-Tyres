@@ -6,6 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane fx:id="ventanaNotas" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;"
             stylesheets="/styles_css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nota.NotaController">
@@ -19,8 +21,29 @@
                 <top>
                     <HBox alignment="CENTER_LEFT" spacing="10">
 
-                        <TextField fx:id="txtBuscar" promptText="Buscar notas..." styleClass="buscador"
-                                   HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="txtBuscar" maxWidth="800.0" prefHeight="26.0" prefWidth="500.0" promptText="Buscar notas..." styleClass="buscador" HBox.hgrow="ALWAYS" />
+
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                            <Label prefHeight="18.0" prefWidth="79.0" text="Buscar por:" />
+                            <ChoiceBox fx:id="atributoBusquedaNota" prefWidth="150.0" styleClass="choicebox-mini2">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Numero de nota" />
+                                        <String fx:value="Fecha" />
+                                        <String fx:value="Nombre del Cliente" />
+                                        <String fx:value="Vehiculo" />
+                                        <String fx:value="Status de nota" />
+                                        <String fx:value="Fecha de vencimiento" />
+                                        <String fx:value="Direccion" />
+                                        <String fx:value="Placas de vehiculo" />
+                                        <String fx:value="Numero de factura" />
+                                        <String fx:value="RFC" />
+                                        <String fx:value="Adeudo" />
+                                    </FXCollections>
+                                </items>
+                            </ChoiceBox>
+                        </HBox>
+
                         <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion"
                                 text="">
                             <graphic>
