@@ -7,8 +7,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
-import static com.mastertyres.common.FechaUtils.formatearFecha;
-import static com.mastertyres.common.FechaUtils.formatearFechaHora;
+import static com.mastertyres.common.utils.FechaUtils.formatearFecha;
+import static com.mastertyres.common.utils.FechaUtils.formatearFechaHora;
 
 
 @Component

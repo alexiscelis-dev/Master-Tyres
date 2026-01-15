@@ -1,4 +1,4 @@
-package com.mastertyres.common;
+package com.mastertyres.common.utils;
 
 import javafx.scene.control.*;
 import javafx.util.converter.IntegerStringConverter;

@@ -1,7 +1,6 @@
 package com.mastertyres.inventario.repository;
 
 import com.mastertyres.inventario.model.Inventario;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -119,10 +118,14 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
 
     Optional<Inventario> findByDot(String dot);
 
+    Optional<Inventario> findByIdentificadorLlanta(String identificador);
+
     @Transactional
     @Modifying
     @Query("UPDATE Inventario i SET i.stock = :stock WHERE i.inventarioId = :inventarioId AND i.active = :active")
     void actualizarStock(@Param("inventarioId")Integer inventarioId,@Param("stock")Integer stock, @Param("active")String active);
+
+
 
 
 

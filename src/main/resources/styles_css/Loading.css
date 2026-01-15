@@ -1,0 +1,16 @@
+.progress-indicator {
+-fx-accent: #8EB83D;
+-fx-pref-width: 60px;
+-fx-pref-height: 60px;
+-fx-background-color: transparent;
+
+}
+
+.progress-indicator .percentage{
+-fx-fill: transparent;
+}
+
+
+.progress-indicator .spinner{
+-fx-stroke-width: 4px;
+}

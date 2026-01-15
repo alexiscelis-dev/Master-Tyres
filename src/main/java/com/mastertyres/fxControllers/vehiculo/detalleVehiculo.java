@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.FechaUtils.formatearFecha;
-import static com.mastertyres.common.FechaUtils.formatearFechaHora;
+import static com.mastertyres.common.utils.FechaUtils.formatearFecha;
+import static com.mastertyres.common.utils.FechaUtils.formatearFechaHora;
 
 @Component
 public class detalleVehiculo {

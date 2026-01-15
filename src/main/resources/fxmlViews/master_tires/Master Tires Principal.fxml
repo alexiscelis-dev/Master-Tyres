@@ -12,6 +12,13 @@
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController">
 
+    <fx:include fx:id="loadingOverlay"
+                source="/fxmlComponentes/Loading/LoadingComponent.fxml"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="0.0"/>
+
     <children>
         <AnchorPane fx:id="sidebar" layoutX="14.0" layoutY="114.0" prefHeight="486.0" prefWidth="340.0"
                     style="-fx-background-color: #080808;" styleClass="sidebar" AnchorPane.bottomAnchor="0.0"
@@ -228,7 +235,7 @@
                         <Image url="@../../icons/Master Tyres Logo (Fondo Blanco).png"/>
                     </image>
                 </ImageView>
-                <Label fx:id="cambiarPaginaEtiqueta" layoutX="380.0" layoutY="56.0" text="Inicio" textFill="WHITE"
+                <Label fx:id="cambiarPaginaEtiqueta" layoutX="380.0" layoutY="56.0" text="INICIO" textFill="WHITE"
                        AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="405.0">
                     <font>
                         <Font name="Roboto Bold" size="28.0"/>

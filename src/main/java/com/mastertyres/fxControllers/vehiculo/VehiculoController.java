@@ -2,9 +2,10 @@ package com.mastertyres.fxControllers.vehiculo;
 
 
 import com.mastertyres.cliente.model.StatusCliente;
-import com.mastertyres.common.ApplicationContextProvider;
+import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
@@ -45,13 +46,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.mastertyres.common.FechaUtils.getFechaFormateada;
-import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class VehiculoController {
+public class VehiculoController implements IVentanaPrincipal {
+
     @FXML private TableView<VehiculoDTO> tablaVehiculos;
     @FXML private TableColumn<VehiculoDTO, String> colCliente; //Columna Cliente es Columna Propietario
     @FXML private TableColumn<VehiculoDTO, String> colMarca;
@@ -74,6 +76,12 @@ public class VehiculoController {
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
     private VentanaPrincipalController ventanaPrincipalController;
+
+    @Override
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+
+    }
 
     @Autowired
     private VehiculoService vehiculoService;
@@ -674,7 +682,7 @@ public class VehiculoController {
                 "/fxmlViews/vehiculo/AgregarVehiculo.fxml",
                 "Agregar vehiculo"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar vehiculo");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR VEHICULO");
 
     }
 
@@ -1079,9 +1087,7 @@ public class VehiculoController {
 
     }
 
-    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
-        this.ventanaPrincipalController = controller;
-    }//setVentanaPrincipalController
+
 
     public void ModificarMarcaModeloCategoria(ActionEvent actionEvent) {
 
@@ -1090,7 +1096,7 @@ public class VehiculoController {
                 "/fxmlViews/marca/EditarMarcas_Modelos_Categorias.fxml",
                 "Agregar o editar marcas"
         );
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar o editar marcas");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR O EDITAR MARCAS");
 
     }
 

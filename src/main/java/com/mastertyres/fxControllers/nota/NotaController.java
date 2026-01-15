@@ -1,19 +1,19 @@
 package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.GenerarPDF;
-import com.mastertyres.common.NotaUtils;
+import com.mastertyres.common.service.NotaUtils;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.nota.model.Nota;
+import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
-import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaClienteDetalle.service.NotaClienteDetService;
 import com.mastertyres.notaDetalle.service.NotaDetalleService;
-import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
@@ -24,9 +24,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -37,18 +39,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.mastertyres.common.FechaUtils.getFechaFormateada;
-import static com.mastertyres.common.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
+import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NotaController {
+public class NotaController implements IVentanaPrincipal, ILoading {
     @FXML
     private TilePane contenedorNotas;
     @FXML
@@ -91,6 +95,7 @@ public class NotaController {
     @Autowired
     private NotaService notaService;
 
+
     @Autowired
     ClienteService clienteService;
     @Autowired
@@ -101,6 +106,8 @@ public class NotaController {
     private NotaDetalleService notaDetalleService;
     @Autowired
     NotaUtils notaUtils;
+    @Autowired
+    private TaskService taskService;
     //cambios
 
     private boolean modoBusqueda = false;
@@ -111,12 +118,21 @@ public class NotaController {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+    private LoadingComponentController loadingOverlayController;
+
 
     private NotaDTO notaSeleccionada;
     private VBox cardSeleccionada = null;
 
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
+
+    }
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading){
+        this.loadingOverlayController = loading;
     }
 
     private static final int NOTAS_POR_PAGINA = 20;
@@ -215,8 +231,7 @@ public class NotaController {
     }//initialize
 
     private void configurarPaginador() {
-        Page<NotaDTO> paginaInicial =
-                notaService.listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+        Page<NotaDTO> paginaInicial = notaService.listarNotasPaginado("ACTIVE", 0, tamañoPagina);
 
         mostrarNotas(paginaInicial.getContent());
 
@@ -326,8 +341,6 @@ public class NotaController {
         //NotaClienteDetalle notaClienteDetalle = notaClienteDetService.buscarclienteDetalle(notaBuscar);
 
 
-
-
         VBox card = new VBox();
         String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
         String estiloAzul = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #87CEEB; -fx-border-radius: 10; -fx-background-radius: 10;";
@@ -354,17 +367,13 @@ public class NotaController {
                         notaService.actualizarStatus(StatusNota.VENCIDO.toString(), nota.getNotaId());
                     }
                     estiloPorDefecto = estiloRojo;
-                }
-
-                else if (diasRestantes <= 5) {
+                } else if (diasRestantes <= 5) {
                     // Si estaba vencido, lo regresamos a POR_PAGAR
                     if (nota.getStatusNota().equals("VENCIDO")) {
                         notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
                     }
                     estiloPorDefecto = estiloAnaranjado;
-                }
-
-                else {
+                } else {
                     // Si estaba vencido, lo regresamos a POR_PAGAR
                     if (nota.getStatusNota().equals("VENCIDO")) {
                         notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
@@ -464,12 +473,12 @@ public class NotaController {
 
         switch (nota.getStatusNota()) {
 
-            case "PAGADO" ->{
+            case "PAGADO" -> {
                 lblStatus.setText("PAGADA");
                 btnDarPlazo.setDisable(true);
 
             }
-            case "POR_PAGAR" ->{
+            case "POR_PAGAR" -> {
                 lblStatus.setText("POR PAGAR");
                 btnDarPlazo.setDisable(false);
             }
@@ -562,7 +571,7 @@ public class NotaController {
                 null,
                 "/fxmlViews/nota/NotaFormulario.fxml",
                 "Agregar Nota");
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Agregar Nota");
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR NOTA");
 
 
     }//agregarNotas
@@ -575,7 +584,8 @@ public class NotaController {
                 "Editar Nota");
         EditarNotaController controller = (EditarNotaController) controllerObj;
         controller.agregarNota(numNota);
-        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("Editar Nota");
+        controller.setInitializeLoading(ventanaPrincipalController.loadingOverlayController);
+        ventanaPrincipalController.cambiarPaginaEtiqueta.setText("EDITAR NOTA");
 
 
     }//editarNota
@@ -585,75 +595,135 @@ public class NotaController {
         boolean eliminar = mostrarConfirmacion("Eliminar nota",
                 "¿Estas apunto de eliminar la nota " + numNota + " esta accion no se podra deshacer",
                 "¿Desea continuar?", "Eliminar", "Cancelar");
+
         if (eliminar) {
-            try {
-                notaService.eliminarNota(StatusNota.INACTIVE.toString(), notaId);
-                notaService.actualizarUpdatedAtNota(notaId, LocalDateTime.now().toString());
-                cargarNota();
-                mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarError("No fue posible eliminar la nota", "", "Ocurrio un error al eliminar la nota seleccionada " + e.getMessage());
 
-            }
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                        notaService.eliminarNota(StatusNota.INACTIVE.toString(), notaId);
+                        notaService.actualizarUpdatedAtNota(notaId, LocalDateTime.now().toString());
+                        return null;
+                    },(resultado) ->{
+                        cargarNota();
+                        mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
+                    },(excepcion) ->{
+                        excepcion.printStackTrace();
+                        mostrarError("Error al eliminar","","No fue posible eliminar la nota. Intente de nuevo mas tarde.");
+                    },null
+            );
 
-        }//
+        }//eliminar
 
 
     }//eliminarNota
 
     private void imprimir(String numNota) {
         try {
-            // 1. Cargar FXML
+            final double NOTA_WITDTH = 960;
+            final double NOTA_HEIGHT = 1590;
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/ImprimirNota.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
             Parent root = loader.load();
-
-            // 2. Ejecutar tu lógica
             ImprimirNotaController controller = loader.getController();
-            controller.agregarNota(numNota);
+            controller.agregarNota(numNota, true);
 
-            // 3. Crear una escena temporal para que JavaFX renderice bien los nodos
-            Scene tempScene = new Scene(root);
 
-            // 4. Forzar layout y CSS para que calcule tamaños
-            root.applyCss();
-            root.layout();
+            AnchorPane contenedorImprimir = controller.getRootPane();
 
-            double escala = 0.9;
-            root.setScaleX(escala);
-            root.setScaleY(escala);
+            double scaleX = 3.0;
+            double scaleY = 2.5;
 
-            //  Aquí sí se renderiza bien, no como antes
-            WritableImage snapshot = new WritableImage(
-                    (int) root.prefWidth(-1),
-                    (int) root.prefHeight(-1)
+            Scale scale = new Scale(scaleX, scaleY);
+            scale.setPivotY(0);
+            scale.setPivotX(0);
+
+            contenedorImprimir.getTransforms().add(scale);
+
+
+            Scene tempScene = new Scene(contenedorImprimir);
+            contenedorImprimir.applyCss();
+            contenedorImprimir.layout();
+
+
+            double ancho = contenedorImprimir.prefWidth(-1) * scaleX;
+            double alto = contenedorImprimir.prefHeight(-1) * scaleY;
+
+            WritableImage nota1 = new WritableImage(
+                    (int) ancho,
+                    (int) alto
             );
 
-            root.snapshot(null, snapshot);
+            if(this.ventanaPrincipalController != null){
+                this.ventanaPrincipalController.configurarControlador(controller);
+            }
 
-            // 5. FileChooser para guardar
+
+            contenedorImprimir.snapshot(null, nota1);
+
+            controller.agregarNota(numNota, false);
+
+            WritableImage nota2 = new WritableImage(
+                    (int) ancho,
+                    (int) alto
+            );
+            contenedorImprimir.snapshot(null, nota2);
+
+            contenedorImprimir.getTransforms().remove(scale);
+
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Guardar Nota en PDF");
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("PDF", "*.pdf")
+            );
             chooser.setInitialFileName("Nota_" + numNota + ".pdf");
 
-            File archivo = chooser.showSaveDialog(root.getScene().getWindow());
+            File archivo = chooser.showSaveDialog(null);
             if (archivo == null) return;
 
-            // 6. Generar PDF
-            GenerarPDF.generarPDF(snapshot, archivo.getAbsolutePath());
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                        generarPDF(nota1, nota2, archivo.getAbsolutePath());
+                        return null;
+                    },
+                    (resultado) -> {
+                        mostrarInformacion("Nota creada", "", "Se generó el documento exitosamente");
+                    },
+                    (excepcion) -> {
+                        if (excepcion instanceof IOException) {
+                            mostrarError("Error al generar archivo",
+                                    "El archivo no pudo crearse o está siendo usado por otro programa.",
+                                            "Cierra otros programas e inténtalo de nuevo.");
+                        } else if (excepcion instanceof InterruptedException || excepcion instanceof java.util.concurrent.CancellationException) {
+                            mostrarWarning("Operación cancelada",
+                                    "",
+                                    "La impresión del documento fue cancelada por el usuario.");
+                        } else {
+                            excepcion.printStackTrace();
+                            mostrarWarning("Operacion cancelada", "", "La impresion del documento fue cancelada");
+                        }
+
+                    }, null
+            );
 
 
         } catch (Exception e) {
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
             e.printStackTrace();
+            mostrarError(
+                    "Error inesperado",
+                    "",
+                    "Ocurrió un problema al preparar la nota."
+            );
 
         }
 
     }//imprimir
 
-    private void darPlazo(Integer notaId){
+
+    private void darPlazo(Integer notaId) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/nota/DarPlazo.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -679,8 +749,7 @@ public class NotaController {
             mostrarDetalleNota(notaSeleccionada);
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
             e.printStackTrace();
 

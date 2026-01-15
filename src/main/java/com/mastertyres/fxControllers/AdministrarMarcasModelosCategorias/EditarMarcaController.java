@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
-import com.mastertyres.common.MensajesAlert;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import javafx.beans.property.BooleanProperty;

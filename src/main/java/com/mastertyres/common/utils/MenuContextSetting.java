@@ -1,4 +1,4 @@
-package com.mastertyres.common;
+package com.mastertyres.common.utils;
 
 import javafx.event.Event;
 import javafx.scene.Node;

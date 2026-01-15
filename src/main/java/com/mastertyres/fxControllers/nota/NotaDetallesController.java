@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.FechaUtils.getFechaFormateada;
+import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 
 @Component
 public class NotaDetallesController {

@@ -3,10 +3,14 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.ApplicationContextProvider;
-import com.mastertyres.common.MenuContextSetting;
-import com.mastertyres.common.NotaUtils;
-import com.mastertyres.common.RegexTools;
+import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.service.NotaUtils;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.utils.RegexTools;
+import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController;
 import com.mastertyres.fxControllers.EditarControllers.EditarSaldoController;
 import com.mastertyres.inventario.model.Inventario;
@@ -46,10 +50,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.MensajesAlert.*;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class EditarNotaController {
+public class EditarNotaController implements ILoading {
 
 
     @FXML
@@ -265,6 +269,7 @@ public class EditarNotaController {
     private String gato;
     private String llave;
     private String llanta;
+    private LoadingComponentController loadingOverlayController;
 
     @Autowired
     private NotaService notaService;
@@ -280,6 +285,9 @@ public class EditarNotaController {
     private InventarioService inventarioService;
     @Autowired
     private NotaUtils notaUtils;
+    @Autowired
+    private TaskService taskService;
+
 
 
     @FXML
@@ -301,8 +309,6 @@ public class EditarNotaController {
     private PopupControl popup;
     private ComboBox<Integer> cmbHora;
     private ComboBox<Integer> cmbMinuto;
-
-
     private int porcentajeGasNota;
 
     private NotaDTO notaEditar;
@@ -334,6 +340,13 @@ public class EditarNotaController {
 
 
     }//initialize
+/*
+    public void setInitializeLoading(LoadingComponentController loading){
+        this.loadingOverlayController = loading;
+    }//setInitializeLoading
+
+
+ */
 
 
     public void agregarNota(String numNota) {
@@ -482,7 +495,7 @@ public class EditarNotaController {
             txtSubTotalOtros.setText(notaUtils.eliminarCero(notaEditar.getSubTotalOtros()));
             txtTotal.setText(notaUtils.eliminarCero(notaEditar.getTotal()));
 
-            if (notaEditar.getStatusNota().equals(StatusNota.PAGADO.toString())){
+            if (notaEditar.getStatusNota().equals(StatusNota.PAGADO.toString())) {
                 btnActualizarAdeudo.setDisable(true);
                 btnActualizarSaldoFavor.setDisable(true);
             } else if (notaEditar.getStatusNota().equals(StatusNota.A_FAVOR.toString())) {
@@ -850,7 +863,7 @@ public class EditarNotaController {
     private float sumaTotal() {
         float suma = 0;
 
-        suma =  notaUtils.toFloatSafe(txtAlineacionTotal.getText()) +
+        suma = notaUtils.toFloatSafe(txtAlineacionTotal.getText()) +
                 notaUtils.toFloatSafe(txtBalanceoTotal.getText()) +
                 notaUtils.toFloatSafe(txtLlantasTotal.getText()) +
                 notaUtils.toFloatSafe(txtAmorDelTotal.getText()) +
@@ -1127,59 +1140,73 @@ public class EditarNotaController {
     private void actualizarDatosCliente(Integer clienteId, Integer vehiculoId) {
 
 
+
         if (clienteId != null) {
 
-            try {
-                Cliente cliente = clienteService.buscarClientePorId(clienteId, StatusCliente.ACTIVE.toString());
-                Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(vehiculoId, StatusVehiculo.ACTIVE.toString());
 
-                notaUtils.campoFormatter(
-                        cliente.getNombre() + " " + (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
-                                (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : ""),
-                        txtNombre,
-                        CampoNota.NOMBRE
-                );
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                        Cliente cliente = clienteService.buscarClientePorId(clienteId, StatusCliente.ACTIVE.toString());
+                        Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(vehiculoId, StatusVehiculo.ACTIVE.toString());
 
-                notaUtils.campoFormatter(cliente.getDomicilio() != null ? cliente.getDomicilio() : "", txtDireccion, txtDireccion2);
+                        return new Object[]{cliente, vehiculo};
+
+                    }, (resultado) -> {
 
 
-                notaUtils.campoFormatter(
-                        cliente.getRfc() != null ? cliente.getRfc() : "",
-                        txtRfc,
-                        CampoNota.RFC
-                );
+                        Object[] datos = (Object[]) resultado;
+                        Cliente cliente = (Cliente) datos[0];
+                        Vehiculo vehiculo = (Vehiculo) datos[1];
 
-                notaUtils.campoFormatter(
-                        cliente.getCorreo() != null ? cliente.getCorreo() : "",
-                        txtCorreo
-                );
-                notaUtils.campoFormatter(
-                        vehiculo.getMarca().getNombreMarca(),
-                        txtMarca,
-                        CampoNota.MARCA
-                );
-                notaUtils.campoFormatter(
-                        vehiculo.getModelo().getNombreModelo(),
-                        txtModelo,
-                        CampoNota.MODELO
-                );
+                        notaUtils.campoFormatter(
+                                cliente.getNombre() + " " + (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
+                                        (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : ""),
+                                txtNombre,
+                                CampoNota.NOMBRE
+                        );
 
-                txtAnioVehiculo.setText(vehiculo.getAnio() + "");
-
-                notaUtils.campoFormatter(
-                        vehiculo.getKilometros() + "",
-                        txtKms,
-                        CampoNota.KILOMETROS
-                );
-
-                txtPlacas.setText(vehiculo.getPlacas() != null ? vehiculo.getPlacas() : "");
+                        notaUtils.campoFormatter(cliente.getDomicilio() != null ? cliente.getDomicilio() : "", txtDireccion, txtDireccion2);
 
 
-                mostrarInformacion("Informacion actualizada", "", "Los campos se actualizaron correctamente.");
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
-            }
+                        notaUtils.campoFormatter(
+                                cliente.getRfc() != null ? cliente.getRfc() : "",
+                                txtRfc,
+                                CampoNota.RFC
+                        );
+
+                        notaUtils.campoFormatter(
+                                cliente.getCorreo() != null ? cliente.getCorreo() : "",
+                                txtCorreo
+                        );
+                        notaUtils.campoFormatter(
+                                vehiculo.getMarca().getNombreMarca(),
+                                txtMarca,
+                                CampoNota.MARCA
+                        );
+                        notaUtils.campoFormatter(
+                                vehiculo.getModelo().getNombreModelo(),
+                                txtModelo,
+                                CampoNota.MODELO
+                        );
+
+                        txtAnioVehiculo.setText(vehiculo.getAnio() + "");
+
+                        notaUtils.campoFormatter(
+                                vehiculo.getKilometros() + "",
+                                txtKms,
+                                CampoNota.KILOMETROS
+                        );
+
+                        txtPlacas.setText(vehiculo.getPlacas() != null ? vehiculo.getPlacas() : "");
+
+
+                        mostrarInformacion("Informacion actualizada", "", "Los campos se actualizaron correctamente.");
+                    }, (excepcion) -> {
+                        excepcion.printStackTrace();
+                        mostrarError("Error inesperado", "Ocurrió un problema al actualizar los datos. Intente nuevamente mas tarde", "");
+                    }, null
+            );
 
         }
 
@@ -1441,18 +1468,25 @@ public class EditarNotaController {
             detalleCliente.setPlacasNota(txtPlacas.getText());
 
 
-            try {
+            taskService.runTask(
+                    loadingOverlayController,
+                    () ->{
+                        notaService.actualizarNota(notaRegistrar, ndRegistrar, detalleCliente);
+                        return  null;
+                    }, (resultado) ->{
+                        mostrarInformacion("Nota Actualizada", "", "Los cambios se guardaron correctamente.");
+                    },(excepcion) -> {
+                        excepcion.printStackTrace();
+                        if (excepcion.getCause() instanceof NotaException){
+                            mostrarError("No se pudieron guardar los cambios", "", ""+ excepcion);
+                        }else{
+                            mostrarError("Error inesperado", "Ocurrió un problema al actualizar la nota. Intente nuevamente mas tarde", "");
+                        }
 
-                notaService.actualizarNota(notaRegistrar, ndRegistrar, detalleCliente);
+                    }, null
+            );
 
 
-                mostrarInformacion("Nota Actualizada", "", "Los cambios se guardaron correctamente.");
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
-            }
         }//if guardar
 
     }//actualizarNota
@@ -1465,7 +1499,7 @@ public class EditarNotaController {
 
             Parent root = loader.load();
             AgregarNumFacturaController controller = loader.getController();
-            controller.setNumFactura(notaEditar.getNotaId(),notaEditar.getNumFactura());
+            controller.setNumFactura(notaEditar.getNotaId(), notaEditar.getNumFactura());
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Agregar Numero de Factura");
@@ -1566,5 +1600,10 @@ public class EditarNotaController {
 
     public void setLlanta(final String llanta) {
         this.llanta = llanta;
+    }
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
     }
 }//class

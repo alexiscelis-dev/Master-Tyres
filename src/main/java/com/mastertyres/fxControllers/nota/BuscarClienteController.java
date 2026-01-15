@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mastertyres.common.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
