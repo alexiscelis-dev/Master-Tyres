@@ -2,6 +2,7 @@ package com.mastertyres.vehiculo.service;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
@@ -16,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Service
 public class VehiculoService implements IVehiculoService {
@@ -166,11 +164,8 @@ public class VehiculoService implements IVehiculoService {
         int filasEliminadas = vehiculoRepository.eliminarVehiculo(eliminar, idVehiculo);
 
 
-        if (filasEliminadas > 0)
-            mostrarInformacion("Vehiculo eliminado","Vehiculo eliminado","Vehiculo eliminado exitosamente.");
-
-        else
-            mostrarError("Error al eliminar vehiculo","Algo salio mal","No se pudo eliminar el vehiculo seleccionado.");
+        if (filasEliminadas == 0)
+         throw new VehiculoException("Error interno. No se pudo eliminar el vehiculo seleccionado.");
 
         return filasEliminadas;
 
