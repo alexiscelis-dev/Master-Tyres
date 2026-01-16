@@ -141,8 +141,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                             switch (seleccion) {
 
                                 case "Eliminar" -> {
-
-
+                                    
                                     String propietario, vehiculo;
 
                                     //verificar que no contenga null  mostrar mensaje
@@ -184,12 +183,10 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                                                  }
                                              },null
                                      );
-
-
                                  }else {
                                      mostrarInformacion("Accion cancelada", "", "Accion cancelada");
                                  }
-                                 
+
                                 }//case eliminar
 
                                 case "Editar" -> {
