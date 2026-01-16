@@ -72,7 +72,6 @@ public class NuevaPromocionController implements IVentanaPrincipal {
     }
 
 
-
     @FXML
     public void initialize() {
 
@@ -81,7 +80,6 @@ public class NuevaPromocionController implements IVentanaPrincipal {
         cargarPorcentaje();
 
       //  tableVehiculosParticipantes.setItems(vehiculos);
-
 
         cargartabla();
 

@@ -2,7 +2,11 @@ package com.mastertyres.fxControllers.vehiculo;
 
 
 import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.common.exeptions.VehiculoException;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
@@ -44,7 +48,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
@@ -52,7 +55,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class VehiculoController implements IVentanaPrincipal {
+public class VehiculoController implements IVentanaPrincipal, ILoading {
 
     @FXML private TableView<VehiculoDTO> tablaVehiculos;
     @FXML private TableColumn<VehiculoDTO, String> colCliente; //Columna Cliente es Columna Propietario
@@ -85,6 +88,8 @@ public class VehiculoController implements IVentanaPrincipal {
 
     @Autowired
     private VehiculoService vehiculoService;
+    @Autowired
+    private TaskService taskService;
 
     @FXML
     private Pagination paginadorVehiculos;
@@ -92,15 +97,20 @@ public class VehiculoController implements IVentanaPrincipal {
     private List<VehiculoDTO> todosLosVehiculos;
     private String terminoBusquedaActual = "";
     private boolean modoBusqueda = false;
+    private LoadingComponentController loadingOverlayController;
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+
+    }
 
     @FXML
     public void initialize() {
         cargarVehiculos();
 
-        buscarVehiculoBuscador.setOnAction(event -> {
-            String seleccion = atributoBusquedaVehiculos.getValue();
+        configuraciones();
 
-        });
 
         //Click derecho borrar
         tablaVehiculos.setRowFactory(tabla -> {
@@ -131,11 +141,7 @@ public class VehiculoController implements IVentanaPrincipal {
                             switch (seleccion) {
 
                                 case "Eliminar" -> {
-
-
-                                    Alert ventanaEliminar = new Alert(Alert.AlertType.WARNING);
-                                    ventanaEliminar.setTitle("Eliminar vehiculo");
-
+                                    
                                     String propietario, vehiculo;
 
                                     //verificar que no contenga null  mostrar mensaje
@@ -143,35 +149,45 @@ public class VehiculoController implements IVentanaPrincipal {
                                             (vehiculoSeleccionado.getApellido() != null ? vehiculoSeleccionado.getApellido() : "") + " " +
                                             (vehiculoSeleccionado.getSegundoApellido() != null ? vehiculoSeleccionado.getSegundoApellido() : "");
 
-
-                                    String vehiculoEliminar = propietario + " " + vehiculoSeleccionado.getNombreMarca() + " " + vehiculoSeleccionado.getNombreModelo() + " " + vehiculoSeleccionado.getAnio();
-
-                                    ventanaEliminar.setHeaderText("¿Estas seguro que quieres eliminar el siguiente vehiculo? \n\n " + vehiculoEliminar);
-
-                                    ventanaEliminar.setContentText("Esta accion no se podra deshacer");
+                                    String vehiculoEliminar = propietario + " " + vehiculoSeleccionado.getNombreMarca() +
+                                            " " + vehiculoSeleccionado.getNombreModelo() + " " + vehiculoSeleccionado.getAnio();
 
 
-                                    ButtonType buttonEliminar = new ButtonType("Elimnar", ButtonBar.ButtonData.YES);
-                                    ButtonType buttonCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+                                 boolean eliminar = mostrarConfirmacion("Eliminar vehiculo",
+                                            "¿Estas seguro que quieres eliminar el siguiente vehiculo? \n\n"+vehiculoEliminar,
+                                            "Esta accion no se podra deshacer",
+                                            "Eliminar",
+                                            "Cancelar");
 
-                                    ventanaEliminar.getButtonTypes().setAll(buttonEliminar, buttonCancelar);
+                                 if (eliminar){
+                                     taskService.runTask(
+                                             loadingOverlayController,
+                                             () ->{
+                                                 vehiculoService.eliminarVehiculo(StatusVehiculo.INACTIVE.toString(),vehiculoSeleccionado.getId());
+                                                 return null;
+                                             },
+                                             (resultado) ->{
+                                                 cargarVehiculos(); //metodo que cargar los datos en la tabla
+                                                mostrarInformacion("Vehiculo eliminado","","El vehiculo se elimino exitosamente.");
+                                             },
+                                             (ex) ->{
+                                                 if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException){
+                                                     mostrarWarning("Operación cancelada",
+                                                             "",
+                                                             "La accion fue cancelada por el usuario.");
+                                                 } else if (ex.getCause() instanceof VehiculoException) {
+                                                     mostrarError("Error al eliminar vehiculo","","" + ex);
 
-                                    Optional<ButtonType> resultado = ventanaEliminar.showAndWait();
+                                                 }else {
+                                                     mostrarError("Error al eliminar vehiculo","","No se pudo eliminar el vehiculo seleccionado");
+                                                 }
+                                             },null
+                                     );
+                                 }else {
+                                     mostrarInformacion("Accion cancelada", "", "Accion cancelada");
+                                 }
 
-                                    if (resultado.isPresent() && resultado.get() == buttonEliminar) {
-
-
-                                        vehiculoService.eliminarVehiculo(StatusVehiculo.INACTIVE.toString(), vehiculoId);
-
-                                        cargarVehiculos(); //metodo que cargar los datos en la tabla
-
-                                    } else {
-                                        mostrarInformacion("Accion cancelada", "", "Accion cancelada");
-
-                                    }//else
-
-
-                                }
+                                }//case eliminar
 
                                 case "Editar" -> {
                                     try {
@@ -328,6 +344,25 @@ public class VehiculoController implements IVentanaPrincipal {
         });
 
 
+
+
+    }//initialize
+
+    private void configuraciones(){
+
+        //pone en null la lista de ChoiceBox
+        limpiarChoiceBox.setOnMouseClicked(event -> {
+
+            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
+                atributoBusquedaVehiculos.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
+
+        });
+
+        buscarVehiculoBuscador.setOnAction(event -> {
+            String seleccion = atributoBusquedaVehiculos.getValue();
+
+        });
+
         //Enter buscar
 
         buscarVehiculoBuscador.setOnKeyPressed(event -> {
@@ -379,16 +414,8 @@ public class VehiculoController implements IVentanaPrincipal {
             delayQuery.playFromStart();
         });
 
-        //pone en null la lista de ChoiceBox
-        limpiarChoiceBox.setOnMouseClicked(event -> {
 
-            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
-                atributoBusquedaVehiculos.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
-
-        });
-
-
-    }//initialize
+    }//configuraciones
 
     @FXML
     public void actualizarTabla(ActionEvent actionEvent) {
@@ -1111,6 +1138,5 @@ public class VehiculoController implements IVentanaPrincipal {
 
         cargarDatosVehiculo();  // vuelve a cargar conteo y items normales
     }
-
 
 }//clase
