@@ -263,8 +263,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                                             }).start();
 
 
-                                        } else
-                                            System.out.println("No hay celda seleccionada");
+                                        }
 
                                     }
 
@@ -630,7 +629,6 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
 
                                 paginaVehiculo = vehiculoService.buscarPorFechaRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
 
-
                             }
 
                         } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
@@ -902,7 +900,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                 }
             }
 
-            // ==== 🔹 KILOMETRAJE (ej: 10000 o 0,50000) ====
+            // ====  KILOMETRAJE (ej: 10000 o 0,50000) ====
             case "kilometraje" -> {
 
                 if (busqueda.matches("\\d+")) {
@@ -1024,7 +1022,6 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
 
                         paginaFiltrada = vehiculoService.buscarPorFechaRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta, 0, VEHICULO_POR_PAGINA);
 
-
                     }
 
                 } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
@@ -1060,7 +1057,6 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                     if (consultar) {
                         paginaFiltrada = vehiculoService.buscarPorFechaRegistroRango(StatusVehiculo.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), 0, VEHICULO_POR_PAGINA);
                     }
-
 
                 } else {
                     List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
@@ -1113,8 +1109,6 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
         paginadorVehiculos.setCurrentPageIndex(0); // Reinicia la paginación
 
     }
-
-
 
     public void ModificarMarcaModeloCategoria(ActionEvent actionEvent) {
 
