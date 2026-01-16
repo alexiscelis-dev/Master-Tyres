@@ -40,11 +40,11 @@
                 </TableView>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                       <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar">
+                       <Button fx:id="btnGuardar" onAction="#GuardarCambios" styleClass="boton-accion" text="Guardar">
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin></Button>
-                       <Button fx:id="btnGuardar" onAction="#GuardarCambios" styleClass="boton-accion" text="Guardar">
+                       <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar">
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin></Button>

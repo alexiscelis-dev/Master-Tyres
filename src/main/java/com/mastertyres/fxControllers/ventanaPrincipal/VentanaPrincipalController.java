@@ -175,7 +175,8 @@ public class VentanaPrincipalController {
             cambiarPaginaEtiqueta.setText(nombreAnterior);
         } else {
             // Si no hay historial, vuelve al inicio (o a la vista que prefieras)
-            viewContentSinHistorial(null, "/fxmlViews/RegresarMenu.fxml", "Inicio");
+
+            viewContentSinHistorial(null, "/fxmlViews/master_tires/RegresarMenu.fxml", "Inicio");
             cambiarPaginaEtiqueta.setText("INICIO");
         }
     }
@@ -187,7 +188,8 @@ public class VentanaPrincipalController {
 
     public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
 
-        try {/*
+        try {
+            /*
 
             if (vistaActual != null) {
                 historialVistas.push(vistaActual);

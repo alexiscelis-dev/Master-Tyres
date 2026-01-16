@@ -2,6 +2,7 @@ package com.mastertyres.cliente.service;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.repository.ClienteRepository;
+import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Service
 public class ClienteService implements IClienteService {
@@ -116,15 +114,9 @@ public class ClienteService implements IClienteService {
 
         int filasEliminadas = clienteRepository.eliminarCliente(eliminar, idCliente);
 
-        if (filasEliminadas > 0) {
+        if (filasEliminadas == 0)
+            throw new ClienteException("Error interno. No se pudo eliminar el cliente seleccionado.");
 
-            mostrarInformacion("Cliente eliminado","Cliente eliminado","Cliente eliminado exitosamente.");
-
-        } else {
-
-            mostrarError("Error al eliminar cliente","Algo salio mal","No se pudo eliminar el cliente seleccionado.");
-
-        }
         return filasEliminadas;
 
     }//eliminarCliente
@@ -625,9 +617,6 @@ public class ClienteService implements IClienteService {
     public Cliente buscarClientePorId(Integer clienteId, String status) {
         return clienteRepository.buscarClientePorId(clienteId,status);
     }
-
-
-
 
     public long contarClientesPorBusquedaGeneral(String status, String termino){
         return clienteRepository.contarClientesPorBusquedaGeneral(status, termino);
