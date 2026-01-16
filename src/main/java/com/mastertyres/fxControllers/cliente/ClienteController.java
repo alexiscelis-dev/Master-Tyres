@@ -3,12 +3,15 @@ package com.mastertyres.fxControllers.cliente;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.ClienteException;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
+import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
-import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -37,15 +40,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class ClienteController implements IVentanaPrincipal {
+public class ClienteController implements IVentanaPrincipal, ILoading {
 
 
     private VentanaPrincipalController ventanaPrincipalController;
@@ -83,6 +84,8 @@ public class ClienteController implements IVentanaPrincipal {
 
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private TaskService taskService;
 
     @FXML
     private Pagination paginadorClientes;
@@ -91,14 +94,87 @@ public class ClienteController implements IVentanaPrincipal {
     private String terminoBusquedaActual = "";
     private boolean modoBusqueda = false;
 
+    private LoadingComponentController loadingOverlayController;
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+
+    }
+
     @FXML
     private void initialize() {
+
+        configuraciones();
+
         cargarClientes();
 
         buscarClienteBuscador.setOnAction(event -> {
             String seleccion = atributoBusquedaClientes.getValue();
 
         });
+
+
+    }// initialize
+
+    private void configuraciones(){
+        //Enter buscar
+        buscarClienteBuscador.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+
+                String seleccion = atributoBusquedaClientes.getValue();
+                String busqueda = buscarClienteBuscador.getText();
+
+                // SOLO funciona si hay un filtro seleccionado
+                if (seleccion != null && !seleccion.isEmpty()) {
+
+                    // Si el texto está vacío, resetea y detén
+                    if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
+                        resetBusqueda();
+                        return;
+                    }
+
+                    // Ejecutar búsqueda específica
+                    buscarCliente(seleccion.toLowerCase(), busqueda);
+                }
+            }
+        });
+
+        //buscar mientras escribes
+        buscarClienteBuscador.setOnKeyReleased(event -> {
+
+            if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
+
+            delayQuery.setOnFinished(e -> {
+
+                String seleccion = atributoBusquedaClientes.getValue();
+                String busqueda = buscarClienteBuscador.getText();
+
+                //  SOLO ejecutar búsqueda general si NO hay filtro
+                if (seleccion == null || seleccion.isEmpty()) {
+
+                    if (busqueda == null || busqueda.isEmpty()) {
+                        resetBusqueda();
+                        return;
+                    }
+
+                    // Búsqueda general mientras escribe
+                    buscarCliente(busqueda);
+                }
+                // Si sí hay filtro → no hace nada, porque solo se buscan al presionar ENTER
+            });
+
+            delayQuery.playFromStart();
+        });
+
+        //pone en null la lista de ChoiceBox
+        limpiarChoiceBox.setOnMouseClicked(event -> {
+
+            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
+                atributoBusquedaClientes.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
+            resetBusqueda();
+        });
+
 
         //Click derecho borrar
         tablaClientes.setRowFactory(tabla -> {
@@ -132,9 +208,6 @@ public class ClienteController implements IVentanaPrincipal {
                                 case "Eliminar" -> {
 
 
-                                    Alert ventanaEliminar = new Alert(Alert.AlertType.WARNING);
-                                    ventanaEliminar.setTitle("Eliminar vehiculo");
-
                                     String cliente, informacionCliente;
 
                                     //verificar que no contenga null  mostrar mensaje
@@ -142,41 +215,46 @@ public class ClienteController implements IVentanaPrincipal {
                                             (clienteSeleccionado.getApellido() != null ? clienteSeleccionado.getApellido() : "") + " " +
                                             (clienteSeleccionado.getSegundoApellido() != null ? clienteSeleccionado.getSegundoApellido() : "");
 
-                                    informacionCliente = "Tipo de cliente " + clienteSeleccionado.getTipoCliente() + " " + cliente + " " + clienteSeleccionado.getCiudad() + ", " +
-                                            clienteSeleccionado.getEstado() + ", " + clienteSeleccionado.getDomicilio();
 
-                                    String clienteEliminar = cliente + " " + informacionCliente;
+                                    boolean eliminar =   mostrarConfirmacion("Eliminar cliente",
+                                            "¿Estas seguro que quieres eliminar el siguiente cliente? \n\n" +cliente,
+                                            "Esta accion no se podra deshacer",
+                                            "Eliminar",
+                                            "Cancelar");
 
-                                    ventanaEliminar.setHeaderText("¿Estas seguro que quieres eliminar el siguiente vehiculo? \n\n " + clienteEliminar);
+                                    if (eliminar){
 
-                                    ventanaEliminar.setContentText("Esta accion no se podra deshacer");
+                                        taskService.runTask(
+                                                loadingOverlayController,
+                                                () ->{
+                                                    clienteService.eliminarCliente(StatusCliente.INACTIVE.toString(),clienteSeleccionado.getClienteId());
+                                                    return null;
+                                                },
+                                                (resultado) ->{
+                                                    cargarClientes(); //metodo que cargar los datos en la tabla
+                                                    resetBusqueda();
+                                                    mostrarInformacion("Cliente eliminado","","El cliente se elimino exitosamente.");
 
+                                                },
+                                                (ex) ->{
+                                                    if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException){
+                                                        mostrarWarning("Operación cancelada",
+                                                                "",
+                                                                "La accion fue cancelada por el usuario.");
+                                                    } else if (ex instanceof ClienteException) {
+                                                        mostrarError("Error al eliminar cliente","",""+ex);
+                                                    }else {
+                                                        mostrarError("Error al eliminar cliente","","No se pudo eliminar el cliente seleccionado");
+                                                    }
+                                                },null
+                                        );
 
-                                    ButtonType buttonEliminar = new ButtonType("Elimnar", ButtonBar.ButtonData.YES);
-                                    ButtonType buttonCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-                                    ventanaEliminar.getButtonTypes().setAll(buttonEliminar, buttonCancelar);
-
-                                    Optional<ButtonType> resultado = ventanaEliminar.showAndWait();
-
-                                    if (resultado.isPresent() && resultado.get() == buttonEliminar) {
-
-                                        System.out.println("vehiculoId = " + clienteId);
-
-                                        clienteService.eliminarCliente(StatusVehiculo.INACTIVE.toString(), clienteId);
-
-
-                                        cargarClientes(); //metodo que cargar los datos en la tabla
-                                        resetBusqueda();
-
-
-                                    } else {
+                                    }else {
                                         mostrarInformacion("Accion cancelada", "", "Accion cancelada");
+                                    }
 
-                                    }//else
 
-
-                                }
+                                }//case eliminr
 
                                 case "Editar" -> {
                                     try {
@@ -258,8 +336,6 @@ public class ClienteController implements IVentanaPrincipal {
                                             }).start();
 
 
-                                        } else {
-                                            System.out.println("No hay celda seleccionada");
                                         }
 
                                     }
@@ -331,64 +407,10 @@ public class ClienteController implements IVentanaPrincipal {
             return fila;
         });
 
-        //Enter buscar
-        buscarClienteBuscador.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
 
-                String seleccion = atributoBusquedaClientes.getValue();
-                String busqueda = buscarClienteBuscador.getText();
+    }//configuraciones
 
-                // SOLO funciona si hay un filtro seleccionado
-                if (seleccion != null && !seleccion.isEmpty()) {
 
-                    // Si el texto está vacío, resetea y detén
-                    if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
-                        resetBusqueda();
-                        return;
-                    }
-
-                    // Ejecutar búsqueda específica
-                    buscarCliente(seleccion.toLowerCase(), busqueda);
-                }
-            }
-        });
-
-        //buscar mientras escribes
-        buscarClienteBuscador.setOnKeyReleased(event -> {
-
-            if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
-
-            delayQuery.setOnFinished(e -> {
-
-                String seleccion = atributoBusquedaClientes.getValue();
-                String busqueda = buscarClienteBuscador.getText();
-
-                //  SOLO ejecutar búsqueda general si NO hay filtro
-                if (seleccion == null || seleccion.isEmpty()) {
-
-                    if (busqueda == null || busqueda.isEmpty()) {
-                        resetBusqueda();
-                        return;
-                    }
-
-                    // Búsqueda general mientras escribe
-                    buscarCliente(busqueda);
-                }
-                // Si sí hay filtro → no hace nada, porque solo se buscan al presionar ENTER
-            });
-
-            delayQuery.playFromStart();
-        });
-
-        //pone en null la lista de ChoiceBox
-        limpiarChoiceBox.setOnMouseClicked(event -> {
-
-            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
-                atributoBusquedaClientes.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
-                resetBusqueda();
-        });
-
-    }// initialize
 
     @FXML
     private void agregarCliente(ActionEvent event) {
