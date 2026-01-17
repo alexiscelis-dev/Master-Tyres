@@ -2,8 +2,10 @@ package com.mastertyres.fxControllers.ventanaPrincipal;
 
 
 import com.mastertyres.MasterTyresApplication;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
 import javafx.animation.TranslateTransition;
@@ -32,7 +34,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
-public class VentanaPrincipalController {
+public class VentanaPrincipalController implements ILoading {
 
     @FXML private AnchorPane sidebar;
     @FXML private HBox HBoxLogOut;
@@ -49,9 +51,15 @@ public class VentanaPrincipalController {
     @FXML private ImageView imgPerfil;
     @FXML public LoadingComponentController loadingOverlayController;
 
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
     @Autowired
     private ApplicationContext springContex;
-
+    @Autowired
+    private TaskService taskService;
 
     private boolean sidebarVisible = true;
     private double posicionMenu;
@@ -67,7 +75,6 @@ public class VentanaPrincipalController {
 
     @FXML
     public void initialize() {
-
 
         //viewContent(null, "RegresarMenu.fxml", "Menu");
         historialVistas.push("/fxmlViews/master_tires/RegresarMenu.fxml");
@@ -89,7 +96,6 @@ public class VentanaPrincipalController {
 
         });
 
-
         HBoxClientes.setOnMouseClicked(event -> {
                     viewContent(event, "/fxmlViews/cliente/Cliente.fxml", "Clientes");
                     cambiarPaginaEtiqueta.setText("CLIENTES");
@@ -100,10 +106,12 @@ public class VentanaPrincipalController {
                     cambiarPaginaEtiqueta.setText("PROMOCIONES");
                 }
         );
+
         HBoxInventario.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/inventario/Inventario.fxml", "Inventario de llantas");
             cambiarPaginaEtiqueta.setText("INVENTARIO DE LLANTAS");
         });
+
         HBoxServicios.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/vehiculo/ProximosServicios.fxml", "Proximos Servicios");
             cambiarPaginaEtiqueta.setText("PROXIMOS SERVICIOS");
@@ -114,7 +122,7 @@ public class VentanaPrincipalController {
             cambiarPaginaEtiqueta.setText("INICIO");
         });
 
-    }
+    }//initialize
 
 
     private void logOut(MouseEvent event, String archivoFXML) {
@@ -144,6 +152,7 @@ public class VentanaPrincipalController {
 
 
     public void viewContentSinHistorial(MouseEvent event, String archivoFXML, String nombreVentana) {
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -189,73 +198,14 @@ public class VentanaPrincipalController {
     public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
 
         try {
-            /*
-
-            if (vistaActual != null) {
-                historialVistas.push(vistaActual);
-            }
-            if (NombreVistaActual != null){
-                historialNombreVistas.push(NombreVistaActual);
-            }
-            vistaActual = archivoFXML;
-            NombreVistaActual = nombreVentana;
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
-
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent contenido = loader.load();
-            Object controller = loader.getController();
-
-//verifica a que instancia pertenece el objeto para mostrar un panel(evita el error NullPointerException) por mandar un Panel null
-            if (controller instanceof PromocionesActivasController) {
-                ((PromocionesActivasController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof ClienteController) {
-                ((ClienteController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof VehiculoController) {
-                ((VehiculoController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof InventarioController) {
-                ((InventarioController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof ProximosServiciosController) {
-                ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
-            }
-            if (controller instanceof AgregarVehiculoController) {
-                ((AgregarVehiculoController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof AgregarClienteController) {
-                ((AgregarClienteController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof NuevaPromocionController) {
-                ((NuevaPromocionController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof AgregarInventarioController) {
-                ((AgregarInventarioController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof AgregarMarcaController) {
-                ((AgregarMarcaController) controller).setVentanaPrincipalController(this);
-            }
-            if (controller instanceof NotaController){
-                ((NotaController) controller).setVentanaPrincipalController(this);
-            }
-            panelMenu.getChildren().clear();
-            panelMenu.getChildren().add(contenido);
-
-            AnchorPane.setTopAnchor(contenido, 0.0);
-            AnchorPane.setBottomAnchor(contenido, 0.0);
-            AnchorPane.setLeftAnchor(contenido, 0.0);
-            AnchorPane.setRightAnchor(contenido, 0.0);
-
-            return loader.getController();
-            */
+            
             if (vistaActual != null){
                 historialVistas.push(vistaActual);
             }
             if (NombreVistaActual != null){
                 historialNombreVistas.push(NombreVistaActual);
             }
+
             vistaActual = archivoFXML;
             NombreVistaActual = nombreVentana;
             FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
@@ -325,7 +275,5 @@ public class VentanaPrincipalController {
     public LoadingComponentController getLoading(){
         return loadingOverlayController;
     }
-
-
 
 }//clase
