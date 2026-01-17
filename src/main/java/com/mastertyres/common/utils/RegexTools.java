@@ -50,7 +50,6 @@ public class RegexTools {
 
     }
 
-
     //acepta solo enteros y vacio
     public static void aplicarNumeroEntero(TextField textField) {
 
@@ -89,7 +88,6 @@ public class RegexTools {
         textField.setTextFormatter(formatter);
     }
 
-
     //acepta dos enteros 11,22 se usa para la fecha
 
     public static void aplicar2Enteros(TextField textField) {
@@ -111,7 +109,6 @@ public class RegexTools {
 
         textField.setTextFormatter(formatter);
     }
-
 
     //acepta dos enteros entre 0 y 6
     public static void aplicar6Enteros(TextField textField) {
@@ -174,6 +171,7 @@ public class RegexTools {
         textField.setTextFormatter(formatter);
 
     }
+
 
 
 

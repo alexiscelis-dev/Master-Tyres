@@ -5,6 +5,7 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
@@ -21,6 +22,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,10 +30,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import javafx.fxml.FXML;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +41,7 @@ import java.util.Set;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarClienteController  implements IVentanaPrincipal {
+public class AgregarClienteController implements IVentanaPrincipal {
 
     @Autowired
     private MarcaService marcaService;
@@ -60,52 +62,90 @@ public class AgregarClienteController  implements IVentanaPrincipal {
     private DetalleCategoriaService detalleCategoriaService;
 
     // Columnas de tabla vehiculos
-    @FXML private TableView<Vehiculo> tablaVehiculos;
-    @FXML private TableColumn<Vehiculo, String> colMarca;
-    @FXML private TableColumn<Vehiculo, String> colCategoria;
-    @FXML private TableColumn<Vehiculo, String> colColor;
-    @FXML private TableColumn<Vehiculo, String> colPlacas;
-    @FXML private TableColumn<Vehiculo, String> colAnnio;
-    @FXML private TableColumn<Vehiculo, String> colModelo;
-    @FXML private TableColumn<Vehiculo, String> colNumSerie;
-    @FXML private TableColumn<Vehiculo, String> colKilometros;
-    @FXML private TableColumn<Vehiculo, String> colultimoServicio;
-    @FXML private TableColumn<Vehiculo, String> colObservaciones;
-    @FXML private TableColumn<Vehiculo, Void> colEliminar;
+    @FXML
+    private TableView<Vehiculo> tablaVehiculos;
+    @FXML
+    private TableColumn<Vehiculo, String> colMarca;
+    @FXML
+    private TableColumn<Vehiculo, String> colCategoria;
+    @FXML
+    private TableColumn<Vehiculo, String> colColor;
+    @FXML
+    private TableColumn<Vehiculo, String> colPlacas;
+    @FXML
+    private TableColumn<Vehiculo, String> colAnnio;
+    @FXML
+    private TableColumn<Vehiculo, String> colModelo;
+    @FXML
+    private TableColumn<Vehiculo, String> colNumSerie;
+    @FXML
+    private TableColumn<Vehiculo, String> colKilometros;
+    @FXML
+    private TableColumn<Vehiculo, String> colultimoServicio;
+    @FXML
+    private TableColumn<Vehiculo, String> colObservaciones;
+    @FXML
+    private TableColumn<Vehiculo, Void> colEliminar;
 
     //Campos Cliente
 
-    @FXML private AnchorPane ventanaAgregarCliente;
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtApellido;
-    @FXML private TextField txtSegundoApellido;
-    @FXML private TextField txtTelefono;
-    @FXML private TextField txtDomicilio;
-    @FXML private TextField txtCiudad;
-    @FXML private TextField txtEstado;
-    @FXML private TextField txtHobbie;
-    @FXML private TextField txtRFC;
-    @FXML private DatePicker pickerCumpleanos;
-    @FXML private ChoiceBox<String> choiceTipoCliente;
-    @FXML private ChoiceBox<String> choiceGenero;
+    @FXML
+    private AnchorPane ventanaAgregarCliente;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtApellido;
+    @FXML
+    private TextField txtSegundoApellido;
+    @FXML
+    private TextField txtTelefono;
+    @FXML
+    private TextField txtDomicilio;
+    @FXML
+    private TextField txtCiudad;
+    @FXML
+    private TextField txtEstado;
+    @FXML
+    private TextField txtHobbie;
+    @FXML
+    private TextField txtRFC;
+    @FXML
+    private DatePicker pickerCumpleanos;
+    @FXML
+    private ChoiceBox<String> choiceTipoCliente;
+    @FXML
+    private ChoiceBox<String> choiceGenero;
 
     // Campos Vehiculo
-    @FXML private ChoiceBox<Marca> choiceMarca;
-    @FXML private ChoiceBox<Modelo> choiceModelo;
-    @FXML private ChoiceBox<Categoria> choiceCategoria;
-    @FXML private TextField txtColor;
-    @FXML private TextField txtPlacas;
-    @FXML private Spinner<Integer> spinnerAnio;
-    @FXML private TextField txtSerie;
-    @FXML private TextField txtKilometros;
-    @FXML private DatePicker pickerUltimoServicio;
-    @FXML private TextField txtObservaciones;
-    @FXML private TextField txtCorreo;
+    @FXML
+    private ChoiceBox<Marca> choiceMarca;
+    @FXML
+    private ChoiceBox<Modelo> choiceModelo;
+    @FXML
+    private ChoiceBox<Categoria> choiceCategoria;
+    @FXML
+    private TextField txtColor;
+    @FXML
+    private TextField txtPlacas;
+    @FXML
+    private Spinner<Integer> spinnerAnio;
+    @FXML
+    private TextField txtSerie;
+    @FXML
+    private TextField txtKilometros;
+    @FXML
+    private DatePicker pickerUltimoServicio;
+    @FXML
+    private TextField txtObservaciones;
+    @FXML
+    private TextField txtCorreo;
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
 
     // Botones Principales
-    @FXML private Button btnAgregarVehiculo;
-    @FXML private Button btnGuardar;
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private Button btnGuardar;
 
     //Validaciones:
     private BooleanProperty rfcValido = new SimpleBooleanProperty(true);
@@ -121,18 +161,26 @@ public class AgregarClienteController  implements IVentanaPrincipal {
     private VentanaPrincipalController ventanaPrincipalController;
 
 
-
     @FXML
     private void initialize() {
-        MenuContextSetting.disableMenu(ventanaAgregarCliente);
+
+        configuraciones();
 
         configurarValidaciones();
 
         cargarOpciones();
-        int currentYear = Year.now().getValue();
-        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
-        spinnerAnio.setValueFactory(yearFactory);
 
+
+    }//initialize
+
+    private void configuraciones() {
+
+        MenuContextSetting.disableMenu(ventanaAgregarCliente);
+        MenuContextSetting.disableMenuDatePicker(ventanaAgregarCliente);
+        RegexTools.aplicarNumeroEntero(spinnerAnio.getEditor());
+        //Impetir que se escriba en el DatePicker
+        DatePicker datePicker = new DatePicker();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         tablaVehiculos.setItems(listaVehiculos);
         colMarca.setCellValueFactory(data -> {
@@ -154,17 +202,19 @@ public class AgregarClienteController  implements IVentanaPrincipal {
         colKilometros.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getKilometros())));
         colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
         colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
-        // Botón eliminar
+
+
+        // Botón eliminar con icono
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
 
             {
                 // Quitar texto y agregar imagen
                 Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
-                ImageView iv = new ImageView(img);
-                iv.setFitWidth(18);   // tamaño icono
-                iv.setFitHeight(18);
-                btn.setGraphic(iv);
+                ImageView imgv = new ImageView(img);
+                imgv.setFitWidth(18);   // tamaño icono
+                imgv.setFitHeight(18);
+                btn.setGraphic(imgv);
 
                 btn.setOnAction(e -> {
                     Vehiculo v = getTableView().getItems().get(getIndex());
@@ -191,7 +241,50 @@ public class AgregarClienteController  implements IVentanaPrincipal {
             }
         });
 
-    }//initialize
+        //Evitar que los choiceBox se baran debajo de la tabla
+        choiceMarca.setOnMousePressed(event -> {
+            if (!choiceMarca.isShowing()) {
+                choiceMarca.show();
+                choiceMarca.hide();
+            }
+        });
+        choiceModelo.setOnMousePressed(event -> {
+            if (!choiceModelo.isShowing()) {
+                choiceModelo.show();
+                choiceModelo.hide();
+            }
+        });
+
+        choiceCategoria.setOnMousePressed(event -> {
+            if (!choiceCategoria.isShowing()) {
+                choiceCategoria.show();
+                choiceCategoria.hide();
+            }
+        });
+
+        //inizializa con el año actual
+        int currentYear = Year.now().getValue();
+        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
+        spinnerAnio.setValueFactory(yearFactory);
+
+        //eliminar contenido de DatePickerUltimoServicio
+        pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()){
+                case BACK_SPACE, DELETE ->{
+                    pickerUltimoServicio.setValue(null);
+                }
+            }
+        });
+
+        pickerCumpleanos.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()){
+                case BACK_SPACE, DELETE -> {
+                    pickerCumpleanos.setValue(null);
+                }
+            }
+        });
+
+    }//configuraciones
 
     @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
@@ -530,7 +623,7 @@ public class AgregarClienteController  implements IVentanaPrincipal {
     private void agregarVehiculo(ActionEvent event) {
 
         if (!serieValido.get() || !kilometrosValido.get() || !placasValido.get()) {
-            mostrarWarning("Error en campos", "","Por favor, corrige los campos marcados en rojo antes de agregar vehiculo");
+            mostrarWarning("Error en campos", "", "Por favor, corrige los campos marcados en rojo antes de agregar vehiculo");
             return;
         }
         Vehiculo v = new Vehiculo();
