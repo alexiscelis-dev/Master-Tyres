@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefWidth="600" prefHeight="500" xmlns="http://javafx.com/javafx/17.0.12"
+<AnchorPane fx:id="rootPane" prefWidth="600" prefHeight="500" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController"
             style="-fx-background-color: #080808;"
@@ -59,7 +59,7 @@
 
                 <!-- Ultimo servicio -->
                 <Label text="Ultimo servicio:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-                <DatePicker fx:id="dateUltimoServicio" GridPane.rowIndex="8" GridPane.columnIndex="1" styleClass="date-picker"  />
+                <DatePicker fx:id="dateUltimoServicio" editable="false" GridPane.rowIndex="8" GridPane.columnIndex="1" styleClass="date-picker"  />
 
                 <!-- Color -->
                 <Label text="Color:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>

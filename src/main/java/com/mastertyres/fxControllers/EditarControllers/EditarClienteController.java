@@ -31,14 +31,22 @@ public class EditarClienteController {
     private TextField txtCorreo;
     @FXML
     private TextField txtHobbie;
-    @FXML private TextField txtRfc;
-    @FXML private TextField txtDomicilio;
-    @FXML private TextField txtEstado;
-    @FXML private TextField txtCiudad;
-    @FXML private ChoiceBox<String> choiceGenero;
-    @FXML private ChoiceBox<String> choiceTipoCliente;
-    @FXML private DatePicker dateCumpleanos;
-    @FXML private Button btnCambiar;
+    @FXML
+    private TextField txtRfc;
+    @FXML
+    private TextField txtDomicilio;
+    @FXML
+    private TextField txtEstado;
+    @FXML
+    private TextField txtCiudad;
+    @FXML
+    private ChoiceBox<String> choiceGenero;
+    @FXML
+    private ChoiceBox<String> choiceTipoCliente;
+    @FXML
+    private DatePicker dateCumpleanos;
+    @FXML
+    private Button btnCambiar;
 
     private Cliente cliente;
 
@@ -53,8 +61,19 @@ public class EditarClienteController {
     private BooleanProperty CorreoValido = new SimpleBooleanProperty(true);
 
     public void initialize() {
+        configuraciones();
 
         configurarValidaciones();
+    }//initialize
+
+    private void configuraciones() {
+        dateCumpleanos.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case BACK_SPACE, DELETE -> {
+                    dateCumpleanos.setValue(null);
+                }
+            }
+        });
     }
 
     private void configurarValidaciones() {
@@ -182,7 +201,7 @@ public class EditarClienteController {
 
         );
 
-    }
+    }//initialize
 
     private void ObtenerFechaCumpleaños(String rfc) {
         String texto = rfc.toUpperCase();
@@ -312,7 +331,7 @@ public class EditarClienteController {
                 String rfc = txtRfc.getText().trim() != null ? txtRfc.getText().trim() : "";
                 String domicilio = txtDomicilio.getText().trim() != null ? txtDomicilio.getText().trim() : "";
                 String correo = txtCorreo.getText().trim() != null ? txtCorreo.getText().trim() : "";
-                String tipoCliente =  choiceTipoCliente.getValue() != null ? choiceTipoCliente.getValue() : "";
+                String tipoCliente = choiceTipoCliente.getValue() != null ? choiceTipoCliente.getValue() : "";
 
 
                 cliente.setNombre(txtNombre.getText().trim());
@@ -359,7 +378,6 @@ public class EditarClienteController {
         }//if
 
     }//actualizarCliente
-
 
     @FXML
     private void cerrarVentana() {

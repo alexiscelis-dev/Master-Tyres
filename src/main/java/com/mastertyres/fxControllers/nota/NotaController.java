@@ -6,6 +6,7 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.fxControllers.historial.HistorialController;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
@@ -89,13 +90,13 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     private Button btnHistorial;
     @FXML
     private TextField txtBuscar;
+    @FXML
+    private Pagination PaginadorNotas;
 
     @FXML private ChoiceBox<String> atributoBusquedaNota;
 
     @Autowired
     private NotaService notaService;
-
-
     @Autowired
     ClienteService clienteService;
     @Autowired
@@ -108,19 +109,10 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     NotaUtils notaUtils;
     @Autowired
     private TaskService taskService;
-    //cambios
 
     private boolean modoBusqueda = false;
-
-
-    //Cambios despues del fork
-
-
     private VentanaPrincipalController ventanaPrincipalController;
-
     private LoadingComponentController loadingOverlayController;
-
-
     private NotaDTO notaSeleccionada;
     private VBox cardSeleccionada = null;
 
@@ -136,13 +128,9 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     }
 
     private static final int NOTAS_POR_PAGINA = 20;
-
     private int tamañoPagina = 20;
-
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300));
 
-    @FXML
-    private Pagination PaginadorNotas;
 
     @FXML
     private void initialize() {
@@ -584,7 +572,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                 "Editar Nota");
         EditarNotaController controller = (EditarNotaController) controllerObj;
         controller.agregarNota(numNota);
-        controller.setInitializeLoading(ventanaPrincipalController.loadingOverlayController);
+     //   controller.setInitializeLoading(ventanaPrincipalController.loadingOverlayController);
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("EDITAR NOTA");
 
 
@@ -757,6 +745,25 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
 
     }//darPlazo
+
+    @FXML
+    private void historial(ActionEvent even){
+        try {
+           Object controllerObj = ventanaPrincipalController.viewContent(
+                   null,
+                   "/fxmlViews/historial/Historial.fxml",
+                   "Historial Notas"
+           );
+            HistorialController controller = (HistorialController) controllerObj;
+           ventanaPrincipalController.cambiarPaginaEtiqueta.setText("HISTORIAL DE NOTAS");
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            mostrarError("Error al cargar la vista","","Ocurrio un problema al cargar la vista. Vuelve a intentarlo mas tarde.");
+        }
+
+    }
 
     private void resetBusqueda() {
 

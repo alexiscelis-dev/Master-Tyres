@@ -155,15 +155,24 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
-
+    @Override
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
+    }
 
 
     @FXML
     private void initialize() {
-        MenuContextSetting.disableMenu(rootPane);
 
         cargarOpciones();
         configurarValidaciones();
+        configuraciones();
+
+    }//initialize
+
+    private void configuraciones(){
+
+        MenuContextSetting.disableMenu(rootPane);
 
         int currentYear = Year.now().getValue();
         SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
@@ -183,6 +192,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
             Categoria categoria = data.getValue().getCategoria();
             return new SimpleStringProperty(categoria != null ? categoria.getNombreCategoria() : "");
         });
+
         colAnnio.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAnio())));
         colColor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getColor()));
         colPlacas.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPlacas()));
@@ -190,6 +200,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
         colKilometros.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getKilometros())));
         colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
         colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
+
         // Botón eliminar
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
@@ -197,10 +208,10 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
             {
                 // Quitar texto y agregar imagen
                 Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
-                ImageView iv = new ImageView(img);
-                iv.setFitWidth(18);   // tamaño icono
-                iv.setFitHeight(18);
-                btn.setGraphic(iv);
+                ImageView imgv = new ImageView(img);
+                imgv.setFitWidth(18);   // tamaño icono
+                imgv.setFitHeight(18);
+                btn.setGraphic(imgv);
 
                 btn.setOnAction(e -> {
                     Vehiculo v = getTableView().getItems().get(getIndex());
@@ -227,6 +238,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
             }
         });
 
+
         //Cliente Seleccionado
         tablaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -244,8 +256,18 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
 
         colObservaciones.setPrefWidth(400);
         colObservaciones.setMinWidth(100);
-    }//initialize
 
+        //Hacer que se pueda borrar en los DatePicker
+        pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()){
+                case BACK_SPACE, DELETE -> {
+                    pickerUltimoServicio.setValue(null);
+                }
+            }
+        });
+
+
+    }//configuraciones
 
     private void configurarValidaciones() {
 
@@ -624,8 +646,4 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
 
     }
 
-    @Override
-    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
-        this.ventanaPrincipalController = controller;
-    }
 }

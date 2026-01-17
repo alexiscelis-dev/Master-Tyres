@@ -351,7 +351,7 @@ public class InventarioService implements IInventarioService {
     @Transactional(readOnly = true)
     @Override
     public Inventario buscarLlantaPorId(Integer idLlanta) {
-        return inventarioRepository.findById(idLlanta).orElse(null);
+        return inventarioRepository.findById(idLlanta).orElseThrow(() -> new InventarioException("No se encontro la llanta en el inventario."));
     }
 
     @Transactional

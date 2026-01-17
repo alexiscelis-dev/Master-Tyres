@@ -227,12 +227,15 @@
 
                 <HBox alignment="CENTER" prefHeight="91.0" prefWidth="560.0">
                     <children>
+                        <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar">
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin></Button>
                         <Button fx:id="btnLimpiar" mnemonicParsing="false" styleClass="boton-accion" text="Limpiar">
                             <HBox.margin>
-                                <Insets right="15.0" />
+                                <Insets />
                             </HBox.margin>
                         </Button>
-                        <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar" />
                     </children>
 
 
