@@ -7,6 +7,8 @@ import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -38,7 +40,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
-public class RegistrarNotaController {
+public class RegistrarNotaController implements ILoading {
     @FXML
     private AnchorPane root;
     @FXML
@@ -77,6 +79,12 @@ public class RegistrarNotaController {
     private BooleanProperty boolMontoFavor = new SimpleBooleanProperty(true);
     private BooleanProperty actualizarInventario = new SimpleBooleanProperty(false);
     private Runnable onRegistroCompleto;
+    private LoadingComponentController loadingOverlayController;
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
 
 
     public void agregarNota(NotaDTO nota) {
@@ -328,6 +336,7 @@ public class RegistrarNotaController {
 
                 notaService.guardarNota(nuevaNota, notaDetalle, clienteDetalle);
 
+//if que verifica si existe la llanta si existe la llanta que tiene la nota realiza la consulta (en teoria siempre debe de realizarse)
                 if (actualizarInventario.get()) {
 
 
@@ -424,6 +433,5 @@ public class RegistrarNotaController {
 
         return estado;
     }
-
 
 }//class
