@@ -121,7 +121,7 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
             dibujarGasolina(notaImprimir.getPorcentajeGas());
 
             //checkBox
-            revisarCheckBoxes();
+            revisarCheckBoxes(notaImprimir);
 
             txtObservaciones.setText(notaImprimir.getObservaciones() != null ? notaImprimir.getObservaciones() : "");
             txtObservaciones2.setText(notaImprimir.getObservaciones2() != null ? notaImprimir.getObservaciones2() : "");
@@ -278,6 +278,7 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
         this.notaImprimir = notaImprimir;
     }
 
+    /*
     private void revisarCheckBoxes() {
         String status[] = new String[8];
 
@@ -301,6 +302,8 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
 
 
     }//revisarCheckBoxes
+
+     */
 
 
 

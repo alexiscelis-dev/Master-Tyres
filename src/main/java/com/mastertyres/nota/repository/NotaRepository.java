@@ -665,6 +665,11 @@ AND n.adeudo = :adeudo
     void actualizarFechaVencimiento(@Param("fechaVencimiento") String fechaVencimiento, @Param("notaId") Integer notaId, @Param("active") String active);
 
 
+    //consultas de historial
+
+    
+
+
 
 
 }//clase

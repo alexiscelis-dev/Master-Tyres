@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.FXCollections?>
+<?import java.lang.*?>
+<?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import java.lang.*?>
-<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.historial.HistorialController">
-    <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0">
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;"
+            stylesheets="/styles_css/Historial.css" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.fxControllers.historial.HistorialController">
+    <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0" AnchorPane.leftAnchor="50.0"
+                AnchorPane.rightAnchor="50.0">
         <VBox>
+
+
             <BorderPane prefHeight="600" prefWidth="1186.0">
 
                 <!-- Parte superior: buscador y botones -->
                 <top>
                     <HBox alignment="CENTER_LEFT" spacing="10">
 
-                        <TextField fx:id="txtBuscar" maxWidth="800.0" prefHeight="26.0" prefWidth="500.0" promptText="Buscar notas..." styleClass="buscador" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="txtBuscar" maxWidth="800.0" prefHeight="26.0" prefWidth="500.0"
+                                   promptText="Buscar notas..." styleClass="buscador" HBox.hgrow="ALWAYS"/>
 
                         <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                            <Label prefHeight="18.0" prefWidth="79.0" text="Buscar por:" />
-                            <ChoiceBox fx:id="atributoBusquedaNota" prefWidth="150.0" styleClass="choicebox-mini2">
+                            <Label prefHeight="18.0" prefWidth="79.0" text="Filtrar:"/>
+                            <ChoiceBox fx:id="atributoBusquedaNota" prefWidth="150.0" styleClass="choicebox">
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
-                                        <String fx:value="Numero de nota" />
-                                        <String fx:value="Fecha" />
-                                        <String fx:value="Nombre del Cliente" />
-                                        <String fx:value="Vehiculo" />
-                                        <String fx:value="Status de nota" />
-                                        <String fx:value="Fecha de vencimiento" />
-                                        <String fx:value="Direccion" />
-                                        <String fx:value="Placas de vehiculo" />
-                                        <String fx:value="Numero de factura" />
-                                        <String fx:value="RFC" />
-                                        <String fx:value="Adeudo" />
+                                        <String fx:value="5"/>
+                                        <String fx:value="10"/>
+                                        <String fx:value="15"/>
+                                        <String fx:value="20"/>
                                     </FXCollections>
                                 </items>
                             </ChoiceBox>
@@ -58,50 +59,546 @@
 
                 <!-- División principal -->
                 <center>
-                    <SplitPane dividerPositions="0.40694650817236255" prefHeight="296.0" prefWidth="1278.0" styleClass="seccion">
+                    <SplitPane dividerPositions="0.40694650817236255" prefHeight="296.0" prefWidth="1278.0"
+                               styleClass="seccion">
                         <!-- Panel izquierdo: listado de marcas -->
-                        <ScrollPane fitToWidth="true" style="-fx-background-color: #080808; -fx-border-radius: 10; -fx-background-radius: 10;">
-                            <TilePane fx:id="contenedorNotas" alignment="CENTER" hgap="10" prefColumns="1" prefTileHeight="40.0" prefTileWidth="300.0" prefWidth="383.0" style="-fx-background-color: #080808; " vgap="10">
+                        <ScrollPane fitToWidth="true"
+                                    style="-fx-background-color: #080808; -fx-border-radius: 10; -fx-background-radius: 10;">
+                            <TilePane fx:id="contenedorNotas" alignment="CENTER" hgap="10" prefColumns="1"
+                                      prefTileHeight="40.0" prefTileWidth="300.0" prefWidth="383.0"
+                                      style="-fx-background-color: #080808; " vgap="10">
                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                 </padding>
                             </TilePane>
                         </ScrollPane>
 
-                        <!-- Panel derecho: detalles de la promoción seleccionada -->
-                        <VBox fx:id="detallePromocion" alignment="CENTER" prefHeight="483.0" prefWidth="680.0" spacing="10" style="-fx-background-color: rgba(26, 26, 26, 0.85);">
 
-                            <Label alignment="CENTER" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Nota " textAlignment="CENTER" textFill="WHITE" />
+                        <!-- Panel derecho: detalles de la promoción seleccionada -->
+                        <VBox fx:id="detallePromocion" alignment="CENTER" prefHeight="483.0" prefWidth="636.0"
+                              spacing="10" style="-fx-background-color: D9D9D9;">
+
 
                             <GridPane hgap="10" prefHeight="452.0" prefWidth="686.0" vgap="10">
 
                                 <columnConstraints>
-                                    <ColumnConstraints minWidth="-Infinity" prefWidth="140.0" />
-                                    <ColumnConstraints />
+                                    <ColumnConstraints prefWidth="1000"/>
                                 </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints fillHeight="false" prefHeight="1000"/>
+                                </rowConstraints>
+
                                 <padding>
-                                    <Insets left="50.0" />
+                                    <Insets left="50.0"/>
                                 </padding>
+                                <children>
+
+
+                                    <!-- top****************************************************-->
+
+                                    <!-- contenedor de la nota -->
+
+
+                                    <VBox fx:id="contenedorNota" alignment="CENTER" fillWidth="true" spacing="20"
+                                          styleClass="contenedor-nota" visible="true">
+
+
+                                        <GridPane maxHeight="Infinity" maxWidth="Infinity" prefWidth="634.0"
+                                                  translateX="-30" GridPane.vgrow="ALWAYS">
+                                            <columnConstraints>
+                                                <ColumnConstraints fillWidth="false" maxWidth="225.40001525878907"
+                                                                   minWidth="155.4" prefWidth="225.40001525878907"/>
+                                                <ColumnConstraints fillWidth="false" maxWidth="196.6"
+                                                                   minWidth="126.59998474121093"
+                                                                   prefWidth="126.59998474121093"/>
+                                                <ColumnConstraints fillWidth="false"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints fillHeight="false"/>
+                                                <RowConstraints fillHeight="false" maxHeight="35."
+                                                                prefHeight="30.400000000000006"/>
+                                                <RowConstraints maxHeight="322.6" minHeight="322.6" prefHeight="322.6"/>
+                                            </rowConstraints>
+
+                                            <children>
+
+                                                <Label text="Because so much is riding on your tires"
+                                                       translateX="-185.0"
+                                                       translateY="25" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                                       GridPane.ColumnSpan="2">
+                                                    <font>
+                                                        <Font name="Book Antiqua" size="8.0"/>
+                                                    </font>
+                                                </Label>
+
+                                                <!-- Imagenes -->
+
+
+                                                <ImageView fitHeight="70" fitWidth="211.0" preserveRatio="false"
+                                                           GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                                    <image>
+                                                        <Image url="@../../icons/nota/michelin.png"/>
+                                                    </image>
+                                                </ImageView>
+
+                                                <ImageView fitHeight="70" fitWidth="203.0" preserveRatio="false"
+                                                           GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                                    <image>
+                                                        <Image url="@../../icons/Master Tyres Logo.png"/>
+                                                    </image>
+                                                </ImageView>
+
+                                                <HBox alignment="CENTER" prefHeight="30.0" prefWidth="158.0"
+                                                      styleClass="vBoxNumNota" translateX="40" GridPane.columnIndex="2"
+                                                      GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS"
+                                                      GridPane.rowIndex="0" GridPane.valignment="CENTER"
+                                                      GridPane.vgrow="ALWAYS">
+
+                                                    <Label prefWidth="30" text="N°">
+                                                        <font>
+                                                            <Font name="Arial Bold" size="14.0"/>
+                                                        </font>
+
+                                                    </Label>
+
+                                                    <TextField fx:id="txtNumNota" alignment="CENTER" editable="false"
+                                                               prefHeight="25" prefWidth="80"
+                                                               styleClass="textfield-nota"/>
+                                                    <GridPane.margin>
+                                                        <Insets right="15"/>
+                                                    </GridPane.margin>
+
+                                                </HBox>
+
+                                                <Label fx:id="lblNumFactura" alignment="CENTER"
+                                                       style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: black; -fx-background-color: #FFFF66;"
+                                                       text="Número de factura:" translateX="220" translateY="-45"
+                                                       GridPane.columnIndex="1" GridPane.rowIndex="0">
+
+                                                </Label>
+
+                                                <!-- fecha -->
+
+                                                <HBox alignment="TOP_LEFT" fillHeight="false" prefHeight="28.0"
+                                                      prefWidth="270.0" styleClass="vBoxNumNota"
+                                                      GridPane.columnIndex="0" GridPane.columnSpan="2"
+                                                      GridPane.rowIndex="1" GridPane.rowSpan="1">
+
+                                                    <Label alignment="CENTER" contentDisplay="CENTER"
+                                                           minWidth="-Infinity" prefHeight="50.0" prefWidth="86.0"
+                                                           styleClass="label-fecha" text="  FECHA" textFill="#fffdfd">
+                                                        <font>
+                                                            <Font name="Arial Black" size="10.0"/>
+                                                        </font>
+
+                                                    </Label>
+
+                                                    <Label alignment="CENTER_LEFT" contentDisplay="RIGHT"
+                                                           minWidth="-Infinity" prefHeight="11.0" prefWidth="20.0"
+                                                           text="DIA" HBox.hgrow="ALWAYS">
+                                                        <font>
+                                                            <Font name="Arial" size="10.0"/>
+                                                        </font>
+                                                        <HBox.margin>
+                                                            <Insets left="10.0"/>
+                                                        </HBox.margin>
+
+                                                    </Label>
+
+
+                                                    <TextField fx:id="txtDia" alignment="BOTTOM_CENTER" editable="false"
+                                                               nodeOrientation="LEFT_TO_RIGHT"
+                                                               styleClass="textfield-fecha">
+                                                        <HBox.margin>
+                                                            <Insets top="15.0"/>
+                                                        </HBox.margin>
+                                                    </TextField>
+
+                                                    <Label text="/">
+                                                        <font>
+                                                            <Font name="Arial" size="15.0"/>
+                                                        </font>
+                                                        <HBox.margin>
+                                                            <Insets top="15.0"/>
+                                                        </HBox.margin>
+                                                    </Label>
+
+
+                                                    <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT"
+                                                           minWidth="-Infinity" text="MES" HBox.hgrow="ALWAYS">
+                                                        <font>
+                                                            <Font name="Arial" size="10.0"/>
+                                                        </font>
+                                                        <HBox.margin>
+                                                            <Insets/>
+                                                        </HBox.margin>
+
+                                                    </Label>
+
+
+                                                    <TextField fx:id="txtMes" alignment="BOTTOM_CENTER" editable="false"
+                                                               nodeOrientation="LEFT_TO_RIGHT"
+                                                               styleClass="textfield-fecha">
+                                                        <HBox.margin>
+                                                            <Insets top="15.0"/>
+                                                        </HBox.margin>
+                                                    </TextField>
+
+                                                    <Label text="/">
+                                                        <font>
+                                                            <Font name="Arial" size="15.0"/>
+                                                        </font>
+                                                        <HBox.margin>
+                                                            <Insets top="15.0"/>
+                                                        </HBox.margin>
+                                                    </Label>
+
+                                                    <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT"
+                                                           minWidth="-Infinity" text="AÑO" HBox.hgrow="ALWAYS">
+                                                        <font>
+                                                            <Font name="Arial" size="10.0"/>
+                                                        </font>
+
+                                                    </Label>
+
+                                                    <TextField fx:id="txtAnio" alignment="BOTTOM_CENTER"
+                                                               editable="false" nodeOrientation="LEFT_TO_RIGHT"
+                                                               styleClass="textfield-fecha">
+                                                        <HBox.margin>
+                                                            <Insets top="15.0"/>
+                                                        </HBox.margin>
+                                                    </TextField>
+
+
+                                                </HBox>
+                                                <VBox alignment="CENTER" GridPane.columnIndex="1"
+                                                      GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                    <Label prefHeight="18.0" prefWidth="491.0"
+                                                           text="Juan Pablo II No. 33 / Col. Obrera / La Piedad, Mich. / C.P. 59370">
+                                                        <GridPane.margin>
+                                                            <Insets left="80.0"/>
+                                                        </GridPane.margin>
+                                                        <font>
+                                                            <Font name="Arial" size="10.0"/>
+                                                        </font>
+                                                    </Label>
+
+                                                    <Label text="Tel. 52.6.13.53  /  ID 52*237908*3">
+                                                        <font>
+                                                            <Font name="Arial Black" size="10.0"/>
+                                                        </font>
+                                                    </Label>
+                                                    <GridPane.margin>
+                                                        <Insets left="80.0"/>
+                                                    </GridPane.margin>
+
+                                                </VBox>
+
+                                                <!-- Datos informacion cliente vehiculo -->
+
+                                                <VBox alignment="CENTER" prefHeight="80.0" prefWidth="100.0"
+                                                      styleClass="vBoxInfo" translateY="15" GridPane.columnIndex="0"
+                                                      GridPane.columnSpan="3" GridPane.rowIndex="2"
+                                                      GridPane.vgrow="ALWAYS">
+
+                                                    <GridPane alignment="CENTER" VBox.vgrow="ALWAYS">
+
+                                                        <Region style="-fx-background-color: Black; -fx-min-width: 2; -fx-max-width: 3;  "
+                                                                GridPane.columnIndex="2" GridPane.rowIndex="0"
+                                                                GridPane.rowSpan="5">
+                                                            <GridPane.margin>
+                                                                <Insets bottom="5" left="0" right="0" top="5"/>
+                                                            </GridPane.margin>
+                                                        </Region>
+
+
+                                                        <columnConstraints>
+                                                            <ColumnConstraints fillWidth="false" halignment="LEFT"
+                                                                               hgrow="ALWAYS" percentWidth="10.0"/>
+                                                            <ColumnConstraints fillWidth="false" halignment="LEFT"
+                                                                               hgrow="ALWAYS" maxWidth="302.0"
+                                                                               minWidth="241.0" percentWidth="50.0"
+                                                                               prefWidth="256.0"/>
+                                                            <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"
+                                                                               maxWidth="143.0" minWidth="92.0"
+                                                                               percentWidth="15.0" prefWidth="143.0"/>
+                                                            <ColumnConstraints fillWidth="false" hgrow="ALWAYS"
+                                                                               percentWidth="25.0"/>
+                                                            <ColumnConstraints/>
+
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                            <RowConstraints minHeight="70.0" valignment="CENTER"/>
+                                                            <RowConstraints minHeight="70.0" valignment="CENTER"/>
+                                                            <RowConstraints fillHeight="false" minHeight="40.0"
+                                                                            valignment="CENTER"/>
+                                                            <RowConstraints minHeight="70.0"/>
+                                                            <RowConstraints minHeight="70.0"/>
+                                                            <RowConstraints/>
+                                                        </rowConstraints>
+
+                                                        <children>
+                                                            <!-- Seccion llenar datos cliente y vehiculo  -->
+
+                                                            <!-- Comienza el lado izquierdo del gridPane nombre, direccion etc..  -->
+
+                                                            <HBox alignment="CENTER_LEFT" spacing="10"
+                                                                  GridPane.columnIndex="0" GridPane.columnSpan="2"
+                                                                  GridPane.rowIndex="0">
+
+
+                                                                <Label styleClass="label-campos" text="Nombre:"
+                                                                       translateX="5">
+
+
+                                                                </Label>
+
+                                                                <TextField fx:id="txtNombre" editable="false"
+                                                                           prefWidth="300" styleClass="text-field-nota"
+                                                                           translateX="5" GridPane.columnIndex="1"
+                                                                           GridPane.rowIndex="0">
+
+                                                                </TextField>
+
+                                                            </HBox>
+
+                                                            <HBox alignment="CENTER_LEFT" spacing="10" translateX="5"
+                                                                  GridPane.columnIndex="0" GridPane.columnSpan="2"
+                                                                  GridPane.rowIndex="1">
+
+
+                                                                <Label styleClass="label-campos" text="Direccion:">
+
+                                                                </Label>
+
+                                                                <TextField fx:id="txtDireccion" editable="false"
+                                                                           prefWidth="292" styleClass="text-field-nota"
+                                                                           GridPane.columnIndex="1"
+                                                                           GridPane.rowIndex="1">
+
+                                                                </TextField>
+
+
+                                                            </HBox>
+
+                                                            <TextField fx:id="txtDireccion2" editable="false"
+                                                                       prefWidth="350" styleClass="text-field-nota"
+                                                                       GridPane.columnIndex="0" GridPane.columnSpan="2"
+                                                                       GridPane.rowIndex="2" GridPane.rowSpan="1">
+
+                                                                <GridPane.margin>
+                                                                    <Insets bottom="0" left="10" right="0" top="0"/>
+
+                                                                </GridPane.margin>
+
+                                                            </TextField>
+
+
+                                                            <HBox alignment="CENTER_LEFT" spacing="10" translateX="5"
+                                                                  GridPane.columnIndex="0" GridPane.columnSpan="2"
+                                                                  GridPane.rowIndex="3">
+
+                                                                <Label styleClass="label-campos1" text="RFC:">
+
+
+                                                                </Label>
+
+                                                                <TextField fx:id="txtRfc" editable="false"
+                                                                           prefWidth="320" styleClass="text-field-nota"
+                                                                           GridPane.columnIndex="1"
+                                                                           GridPane.rowIndex="3">
+
+                                                                </TextField>
+
+                                                            </HBox>
+
+                                                            <HBox alignment="CENTER_LEFT" spacing="10" translateX="5"
+                                                                  GridPane.columnIndex="0" GridPane.columnSpan="2"
+                                                                  GridPane.rowIndex="4">
+
+
+                                                                <Label styleClass="label-campos1" text="Correo:">
+
+                                                                </Label>
+
+                                                                <TextField fx:id="txtCorreo" editable="false"
+                                                                           prefWidth="305" styleClass="text-field-nota">
+
+                                                                </TextField>
+
+                                                            </HBox>
+
+
+                                                            <!-- Comienza el lado derecho del gridPane nombre, direccion etc..-->
+
+
+                                                            <Label styleClass="label-campos1" text="Hora de entrega:"
+                                                                   translateX="20" GridPane.columnIndex="2"
+                                                                   GridPane.rowIndex="0">
+
+
+                                                            </Label>
+
+
+                                                            <TextField fx:id="txtHoraEntrega" editable="false"
+                                                                       prefWidth="125" styleClass="text-field-nota2"
+                                                                       translateX="20" GridPane.columnIndex="3"
+                                                                       GridPane.rowIndex="0">
+                                                            </TextField>
+
+
+                                                            <HBox alignment="CENTER_LEFT" spacing="10" translateX="20"
+                                                                  GridPane.columnIndex="2" GridPane.columnSpan="3"
+                                                                  GridPane.rowIndex="1">
+                                                                <HBox.margin>
+                                                                    <Insets left="5"/>
+                                                                </HBox.margin>
+
+
+                                                                <Label styleClass="label-campos1" text="Marca:">
+
+                                                                </Label>
+
+                                                                <TextField fx:id="txtMarca" editable="false"
+                                                                           prefWidth="170"
+                                                                           styleClass="text-field-nota2 "
+                                                                           GridPane.columnIndex="3"
+                                                                           GridPane.rowIndex="1">
+
+                                                                </TextField>
+                                                            </HBox>
+
+
+                                                            <HBox alignment="CENTER_LEFT" spacing="10" translateX="20"
+                                                                  GridPane.columnIndex="2" GridPane.columnSpan="3"
+                                                                  GridPane.rowIndex="2">
+
+                                                                <Label styleClass="label-campos1" text="Modelo:">
+
+                                                                </Label>
+
+                                                                <TextField fx:id="txtModelo" editable="false"
+                                                                           prefWidth="160"
+                                                                           styleClass="text-field-nota2 "
+                                                                           GridPane.columnIndex="3"
+                                                                           GridPane.rowIndex="2">
+
+                                                                </TextField>
+
+                                                            </HBox>
+
+
+                                                            <AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="3"
+                                                                        GridPane.rowIndex="3" GridPane.rowSpan="3">
+                                                                <GridPane.margin>
+                                                                    <Insets left="20" top="25"/>
+
+                                                                </GridPane.margin>
+                                                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                                                    <Label styleClass="label-campos1" text="Año:">
+
+                                                                    </Label>
+                                                                    <TextField fx:id="txtAnioVehiculo" editable="false"
+                                                                               prefWidth="50"
+                                                                               styleClass="text-field-nota2 ">
+
+                                                                    </TextField>
+
+                                                                    <Label text="Kms:">
+
+
+                                                                    </Label>
+
+                                                                    <TextField fx:id="txtKms" editable="false"
+                                                                               prefWidth="80"
+                                                                               styleClass="text-field-nota2 ">
+
+                                                                    </TextField>
+
+
+                                                                </HBox>
+
+
+                                                            </AnchorPane>
+
+                                                            <HBox alignment="CENTER_LEFT" spacing="10"
+                                                                  GridPane.columnIndex="2" GridPane.columnSpan="3"
+                                                                  GridPane.rowIndex="4">
+                                                                <GridPane.margin>
+                                                                    <Insets left="20"/>
+
+                                                                </GridPane.margin>
+
+                                                                <Label text="Placas">
+
+                                                                </Label>
+
+
+                                                                <TextField fx:id="txtPlacas" editable="false"
+                                                                           prefWidth="170"
+                                                                           styleClass="text-field-nota2 "
+                                                                           GridPane.columnIndex="3"
+                                                                           GridPane.rowIndex="4">
+
+                                                                </TextField>
+
+
+                                                            </HBox>
+
+
+                                                        </children>
+
+
+                                                    </GridPane>
+
+                                                    <ImageView fx:id="zoom" translateY="-200" translateX="30"
+                                                               fitHeight="30" fitWidth="30" preserveRatio="false">
+                                                        <image>
+                                                            <Image url="@../../icons/nota/zoom.png"/>
+                                                        </image>
+                                                    </ImageView>
+
+
+                                                </VBox> <!--contenedor nota -->
+
+
+                                            </children>
+
+                                        </GridPane>
+                                    </VBox>
+
+
+                                    <!-- Bottom****************************************************-->
+
+                                </children>
+
                             </GridPane>
+
+
                             <padding>
-                                <Insets left="10.0" />
+                                <Insets left="10.0"/>
                             </padding>
                         </VBox>
+
+
                         <padding>
-                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
                         </padding>
+
 
                     </SplitPane>
                 </center>
                 <padding>
-                    <Insets right="70.0" />
+                    <Insets right="70.0"/>
                 </padding>
 
             </BorderPane>
 
         </VBox>
+
+
         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
         </padding>
     </AnchorPane>
 </AnchorPane>

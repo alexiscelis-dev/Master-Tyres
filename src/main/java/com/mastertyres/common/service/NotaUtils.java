@@ -150,14 +150,14 @@ public class NotaUtils {
         });
     }
 
-    public void showIcons(GridPane gridPaneIcons) {
-        final Duration TIEMPO = Duration.millis(500);
+    public void showIcons(GridPane gridPaneIcons, double [] sliderFromTo, Duration TIEMPO) {
+
 
         if (!gridPaneIcons.isVisible()) {
             gridPaneIcons.setVisible(true);
             TranslateTransition slideIN = new TranslateTransition(TIEMPO, gridPaneIcons);
-            slideIN.setFromY(-50); //Mueve nodo
-            slideIN.setToY(0); // Termina en su posición normal
+            slideIN.setFromY(sliderFromTo[0]); //Mueve nodo
+            slideIN.setToY(sliderFromTo[1]); // Termina en su posición normal
 
             FadeTransition fadeIn = new FadeTransition(TIEMPO, gridPaneIcons);
             fadeIn.setFromValue(0);
@@ -169,8 +169,8 @@ public class NotaUtils {
         } else {
 
             TranslateTransition slideOut = new TranslateTransition(TIEMPO, gridPaneIcons);
-            slideOut.setFromY(0); //Mueve nodo
-            slideOut.setToY(-50); // Termina en su posición normal
+            slideOut.setFromY(sliderFromTo[1]); //Mueve nodo
+            slideOut.setToY(sliderFromTo[0]); // Termina en su posición normal
 
             FadeTransition fadeOut = new FadeTransition(TIEMPO, gridPaneIcons);
             fadeOut.setFromValue(1);
@@ -185,6 +185,7 @@ public class NotaUtils {
 
 
     }//showIcons
+
 
     //metodo que separa la direccion en los dos campos en caso de ser necesario(direccion1 y 2)
     public void campoFormatter(String campoTxt, TextField txtcampo, TextField txtcampo2) {
