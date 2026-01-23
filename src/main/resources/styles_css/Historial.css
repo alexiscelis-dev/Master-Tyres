@@ -1,0 +1,319 @@
+/* Scroll */
+.scroll-pane {
+    -fx-background-color: #080808;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #080808; /* rellena el fondo aunque no haya contenido */
+}
+
+/* Buscador */
+.buscador {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: transparent;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+}
+
+.buscador {
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+}
+
+.buscador:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+
+/* Botones */
+
+.boton-accion {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.boton-accion:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-background-color: #AEE83A;
+}
+
+
+.boton-accion {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.boton-accion:hover {
+    -fx-background-color: #AEE83A;
+}
+
+/* Secciones */
+
+.seccion {
+    -fx-background-color: rgba(26, 26, 26, 0.85); /* semitransparente */
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}
+
+
+/* Lista Vehiculos Compatibles */
+
+
+.ListaVehiculos {
+    -fx-background-color: #080808;
+    -fx-border-color: #8EB83D;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-padding: 2px;
+    -fx-text-fill: white;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-clip: true;
+}
+
+.ListaVehiculos:selected {
+    -fx-background-color: #8EB83D;
+}
+
+.ListaVehiculos .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.ListaVehiculos .list-cell:selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+    -fx-background-radius: 15px;
+}
+
+
+/* Tabla */
+.table-view {
+    -fx-background-color: #1A1A1A;
+    -fx-table-cell-border-color: #080808;
+    -fx-padding: 5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #1A1A1A;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white; /* Cambia a blanco u otro color con buen contraste */
+    -fx-font-weight: bold; /* Opcional: texto más grueso */
+}
+
+.table-view .column-header-background .label {
+    -fx-text-fill: white; /* O el color que prefieras */
+    -fx-font-weight: bold;
+}
+
+.label-campos{
+-fx-font-family:"Arial";
+-fx-font-size:12px;
+-fx-margin: 0 0 0 5;
+-fx-font-fill: #000000;
+
+}
+
+.label-campos2{
+-fx-font-family:"Arial";
+-fx-font-size:12px;
+-fx-text-fill: #000000;
+}
+
+
+.textfield-nota{
+
+-fx-background-color:transparent;
+-fx-background-insets:0;
+-fx-font-weight:bold;
+-fx-background-color:transparent;
+-fx-text-fill:black;
+ -fx-font-size: 16px;
+-fx-prompt-text-fill: gray;
+
+}
+.vBoxNumNota{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 10 0;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+
+}
+
+.textfield-fecha{
+-fx-pref-width: 20px;
+-fx-background-color:transparent;
+-fx-background-insets:0;
+-fx-background-color:transparent;
+-fx-text-fill: black;
+-fx-font-size: 14px;
+-fx-font-weight: bold;
+}
+
+
+.vBoxInfo{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 10 0;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+}
+
+.text-field-nota {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
+    -fx-border-width: 0 0 2 0;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+
+
+}
+
+.text-field-nota2 {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
+    -fx-border-width: 0 0 2 0;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: black;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+
+}
+
+.label-fecha{
+-fx-background-color: #63605E;
+-fx-font-weight: bold;
+ -fx-font-size: 14px;
+
+}
+
+/* Opcional: hover de los ítems */
+.choice-box .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+
+/* Estilo para un ChoiceBox más pequeño y oscuro */
+.choicebox {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 26px;
+    -fx-pref-width: 120px;
+    -fx-font-size: 12px;
+}
+
+/* Menú desplegable más compacto */
+.choicebox .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 130px;
+    -fx-pref-height: 130px;
+}
+
+/* Ítems del menú */
+.choicebox .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #FFFFFF;
+}
+
+.choicebox .menu-item {
+    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
+    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
+    -fx-pref-height: 30px; /* altura preferida para la celda */
+}
+
+
+/* Hover en ítems */
+.choicebox-mini .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.vBoxSi-No{
+
+  -fx-background-color: white;
+  -fx-border-radius: 10px;
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}
+
+.cambiar-nota{
+   -fx-pref-width:30px;
+   -fx-pref-height:30px;
+   -fx-background-color: #8EB83D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.cambiar-notan:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-background-color: #AEE83A;
+}
+
+
+
+

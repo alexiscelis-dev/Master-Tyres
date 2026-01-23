@@ -57,8 +57,8 @@
 
 
         <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
-            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar" />
             <Button fx:id="btnActualizar" disable="true" onAction="#actualizar" styleClass="boton-accion" text="Actualizar" />
+            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar" />
         </HBox>
 
     </VBox>

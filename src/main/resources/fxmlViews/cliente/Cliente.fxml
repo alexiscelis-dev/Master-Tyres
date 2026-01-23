@@ -8,13 +8,22 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.cliente.ClienteController">
+<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
+            style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.fxControllers.cliente.ClienteController">
 
     <children>
 
-        <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0" style="-fx-background-color: #080808;" styleClass="clientes-panel" stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+        <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0"
+                    style="-fx-background-color: #080808;" styleClass="clientes-panel"
+                    stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0"
+                    xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
-            <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+            <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0"
+                  AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
 
                 <!-- Zona superior: Búsqueda y botón agregar -->
                 <HBox fx:id="limpiarChoiceBox" alignment="CENTER_LEFT" spacing="10.0">
@@ -43,7 +52,7 @@
                     </HBox>
 
                     <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                        <Label prefHeight="18.0" prefWidth="79.0" text="Buscar por:" />
+                        <Label prefHeight="18.0" prefWidth="79.0" text="Buscar por:"/>
                         <ChoiceBox fx:id="atributoBusquedaClientes" prefWidth="150.0" styleClass="choicebox-mini2">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
@@ -80,22 +89,23 @@
                     </Pane>
                 </HBox>
 
+
                 <!-- Tabla de clientes -->
                 <TableView fx:id="tablaClientes" minHeight="500.0" prefHeight="500.0">
                     <columns>
-                        <TableColumn fx:id="colTipoCliente" prefWidth="150" text="Tipo Cliente" />
-                        <TableColumn fx:id="colNombre" prefWidth="150" text="Nombre" />
-                        <TableColumn fx:id="colTelefono" prefWidth="150" text="Teléfono" />
-                        <TableColumn fx:id="colCorreo" prefWidth="150" text="Correo" />
-                        <TableColumn fx:id="colRFC" prefWidth="150" text="RFC" />
-                        <TableColumn fx:id="colEstado" prefWidth="150" text="Estado" />
-                        <TableColumn fx:id="colCiudad" prefWidth="150" text="Ciudad" />
-                        <TableColumn fx:id="colDomicilio" prefWidth="150" text="Domicilio" />
-                        <TableColumn fx:id="colCumpleanos" prefWidth="150" text="Cumpleaños" />
-                        <TableColumn fx:id="colGenero" prefWidth="150" text="Genero" />
-                        <TableColumn fx:id="colHobbie" prefWidth="150" text="Hobbie" />
-                        <TableColumn fx:id="colVehiculo" prefWidth="150" text="Vehículo" />
-                        <TableColumn fx:id="colRegistro" prefWidth="150" text="Fecha registro" />
+                        <TableColumn fx:id="colTipoCliente" prefWidth="150" text="Tipo Cliente"/>
+                        <TableColumn fx:id="colNombre" prefWidth="150" text="Nombre"/>
+                        <TableColumn fx:id="colTelefono" prefWidth="150" text="Teléfono"/>
+                        <TableColumn fx:id="colCorreo" prefWidth="150" text="Correo"/>
+                        <TableColumn fx:id="colRFC" prefWidth="150" text="RFC"/>
+                        <TableColumn fx:id="colEstado" prefWidth="150" text="Estado"/>
+                        <TableColumn fx:id="colCiudad" prefWidth="150" text="Ciudad"/>
+                        <TableColumn fx:id="colDomicilio" prefWidth="150" text="Domicilio"/>
+                        <TableColumn fx:id="colCumpleanos" prefWidth="150" text="Cumpleaños"/>
+                        <TableColumn fx:id="colGenero" prefWidth="150" text="Genero"/>
+                        <TableColumn fx:id="colHobbie" prefWidth="150" text="Hobbie"/>
+                        <TableColumn fx:id="colVehiculo" prefWidth="150" text="Vehículo"/>
+                        <TableColumn fx:id="colRegistro" prefWidth="150" text="Fecha registro"/>
                     </columns>
                 </TableView>
 
