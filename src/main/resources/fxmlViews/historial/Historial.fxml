@@ -27,8 +27,12 @@
                                    promptText="Buscar notas..." styleClass="buscador" HBox.hgrow="ALWAYS"/>
 
                         <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                            <Label prefHeight="18.0" prefWidth="79.0" text="Filtrar:"/>
-                            <ChoiceBox fx:id="atributoBusquedaNota" prefWidth="150.0" styleClass="choicebox">
+                            <Label prefHeight="18.0" prefWidth="79.0" text="Filtrar:" textFill="WHITE">
+                                <font>
+                                    <Font name="System Bold" size="12.0"/>
+                                </font>
+                            </Label>
+                            <ChoiceBox fx:id="choiceLimite" prefWidth="150.0" styleClass="choicebox">
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
                                         <String fx:value="5"/>
@@ -64,7 +68,7 @@
                         <!-- Panel izquierdo: listado de marcas -->
                         <ScrollPane fitToWidth="true"
                                     style="-fx-background-color: #080808; -fx-border-radius: 10; -fx-background-radius: 10;">
-                            <TilePane fx:id="contenedorNotas" alignment="CENTER" hgap="10" prefColumns="1"
+                            <TilePane fx:id="contenedorHistorial" alignment="CENTER" hgap="10" prefColumns="1"
                                       prefTileHeight="40.0" prefTileWidth="300.0" prefWidth="383.0"
                                       style="-fx-background-color: #080808; " vgap="10">
                                 <padding>
@@ -99,16 +103,17 @@
                                     <!-- contenedor de la nota -->
 
 
-                                    <VBox fx:id="contenedorNota" alignment="CENTER" fillWidth="true" spacing="20"
+                                    <VBox alignment="CENTER" fillWidth="true" spacing="20"
                                           styleClass="contenedor-nota" visible="true">
 
 
-                                        <GridPane maxHeight="Infinity" maxWidth="Infinity" prefWidth="634.0"
+                                        <GridPane maxHeight="Infinity" maxWidth="Infinity" prefWidth="680.0"
                                                   translateX="-30" GridPane.vgrow="ALWAYS">
                                             <columnConstraints>
-                                                <ColumnConstraints fillWidth="false" maxWidth="225.40001525878907"
-                                                                   minWidth="155.4" prefWidth="225.40001525878907"/>
-                                                <ColumnConstraints fillWidth="false" maxWidth="196.6"
+                                                <ColumnConstraints fillWidth="false" hgrow="ALWAYS"
+                                                                   maxWidth="225.40001525878907" minWidth="155.4"
+                                                                   prefWidth="225.40001525878907"/>
+                                                <ColumnConstraints fillWidth="false" hgrow="ALWAYS" maxWidth="196.6"
                                                                    minWidth="126.59998474121093"
                                                                    prefWidth="126.59998474121093"/>
                                                 <ColumnConstraints fillWidth="false"/>
@@ -116,16 +121,15 @@
                                             <rowConstraints>
                                                 <RowConstraints fillHeight="false"/>
                                                 <RowConstraints fillHeight="false" maxHeight="35."
-                                                                prefHeight="30.400000000000006"/>
+                                                                prefHeight="30.400000000000006" vgrow="ALWAYS"/>
                                                 <RowConstraints maxHeight="322.6" minHeight="322.6" prefHeight="322.6"/>
                                             </rowConstraints>
 
                                             <children>
 
                                                 <Label text="Because so much is riding on your tires"
-                                                       translateX="-185.0"
-                                                       translateY="25" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                                                       GridPane.ColumnSpan="2">
+                                                       translateX="-185.0" translateY="25" GridPane.ColumnSpan="2"
+                                                       GridPane.columnIndex="1" GridPane.rowIndex="0">
                                                     <font>
                                                         <Font name="Book Antiqua" size="8.0"/>
                                                     </font>
@@ -170,9 +174,10 @@
 
                                                 </HBox>
 
-                                                <Label fx:id="lblNumFactura" alignment="CENTER"
+                                                <Label fx:id="lblNumFactura" alignment="CENTER_LEFT"
+                                                       minWidth="-Infinity" prefHeight="18.0"
                                                        style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: black; -fx-background-color: #FFFF66;"
-                                                       text="Número de factura:" translateX="220" translateY="-45"
+                                                       text="Número de factura: N/D" translateX="210" translateY="-45"
                                                        GridPane.columnIndex="1" GridPane.rowIndex="0">
 
                                                 </Label>
@@ -297,7 +302,7 @@
                                                 <!-- Datos informacion cliente vehiculo -->
 
                                                 <VBox alignment="CENTER" prefHeight="80.0" prefWidth="100.0"
-                                                      styleClass="vBoxInfo" translateY="15" GridPane.columnIndex="0"
+                                                      styleClass="vBoxInfo" translateY="30" GridPane.columnIndex="0"
                                                       GridPane.columnSpan="3" GridPane.rowIndex="2"
                                                       GridPane.vgrow="ALWAYS">
 
@@ -551,8 +556,9 @@
 
                                                     </GridPane>
 
-                                                    <ImageView fx:id="zoom" translateY="-200" translateX="30"
-                                                               fitHeight="30" fitWidth="30" preserveRatio="false">
+                                                    <ImageView fx:id="ivZoom" fitHeight="30" fitWidth="30"
+                                                               preserveRatio="false" translateX="10" translateY="-200"
+                                                               visible="true">
                                                         <image>
                                                             <Image url="@../../icons/nota/zoom.png"/>
                                                         </image>

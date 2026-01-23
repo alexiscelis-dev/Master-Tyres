@@ -19,7 +19,38 @@ import java.util.List;
 @Repository
 public interface NotaRepository extends JpaRepository<Nota, Integer> {
 
-    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    String CONSULTA_NOTA_DTO = "SELECT NEW com.mastertyres.nota.model.NotaDTO(" +
+            "n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total, " +
+            "i.inventarioId, " +
+            "nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta, " +
+            "nd.alineacion, nd.alineacionCantidad, nd.alineacionUnitario, nd.alineacionTotal, " +
+            "nd.balanceo, nd.balanceoCantidad, nd.balanceoUnitario, nd.balanceoTotal, " +
+            "nd.amorDelanteros, nd.amorDelCantidad, nd.amorDelUnitario, nd.amorDelTotal, " +
+            "nd.amorTraseros, nd.amorTrasCantidad, nd.amorTrasUnitario, nd.amorTrasTotal, " +
+            "nd.suspension, nd.suspensionCantidad, nd.suspensionUnitario, nd.suspensionTotal, " +
+            "nd.suspension2, nd.suspensionCantidad2, nd.suspensionUnitario2, nd.suspensionTotal2, " +
+            "nd.mecanica, nd.mecanicaCantidad, nd.mecanicaUnitario, nd.mecanicaTotal, " +
+            "nd.mecanica2, nd.mecanicaCantidad2, nd.mecanicaUnitario2, nd.mecanicaTotal2, " +
+            "nd.frenos, nd.frenosCantidad, nd.frenosUnitario, nd.frenosTotal, " +
+            "nd.frenos2, nd.frenosCantidad2, nd.frenosUnitario2, nd.frenosTotal2, " +
+            "nd.otros, nd.otrosCantidad, nd.otrosUnitario, nd.otrosTotal, " +
+            "nd.otros2, nd.otrosCantidad2, nd.otrosUnitario2, nd.otrosTotal2, " +
+            "nd.subTotalMecanica, nd.subTotalFrenos, nd.subTotalOtros, nd.llantaCampo, nd.llantaCantidad, nd.llantaUnitario, nd.llantaTotal, " +
+            "n.adeudo, n.saldoFavor, " +
+            "ndc.nombreClienteDetalleId, ndc.nombreClienteNota, ndc.direccion1Nota, ndc.direccion2Nota, ndc.rfcNota, ndc.correoNota, " +
+            "ndc.marcaNota, ndc.modeloNota, ndc.categoriaNota,ndc.anioNota, ndc.kilometrosNota, ndc.placasNota,c.clienteId,v.vehiculoId) " +
+            "FROM Nota n " +
+            "JOIN n.detalles nd " +
+            "JOIN n.notaClienteDetalles ndc " +
+            "JOIN n.vehiculo v " +
+            "JOIN v.cliente c " +
+            "JOIN v.marca m " +
+            "JOIN v.modelo mo " +
+            "JOIN v.categoria ca " +
+            "LEFT JOIN n.inventario i ";
+
+
+
     @Query("SELECT NEW com.mastertyres.nota.model.NotaDTO(" +
             "n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total, " +
             "i.inventarioId, " +
@@ -568,7 +599,7 @@ AND n.adeudo = :adeudo
             Pageable pageable
     );
 
-
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query("""
             SELECT DISTINCT n FROM Nota n
             LEFT JOIN FETCH n.detalles nd
@@ -583,6 +614,7 @@ AND n.adeudo = :adeudo
             """)
     List<Nota> findNotasActivasConDetalles();
 
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query("""
             SELECT DISTINCT n FROM Nota n
             LEFT JOIN FETCH n.detalles nd
@@ -598,7 +630,6 @@ AND n.adeudo = :adeudo
     Page<Nota> findNotasActivasConDetallesPaginado(Pageable pageable);
 
 
-    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query("SELECT NEW com.mastertyres.nota.model.NotaDTO(" +
             "n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total, " +
             "i.inventarioId, " +
@@ -666,8 +697,11 @@ AND n.adeudo = :adeudo
 
 
     //consultas de historial
+    @Query(CONSULTA_NOTA_DTO + " WHERE n.notaId = :notaId AND n.active = :active" )
+    List<NotaDTO> historialNota( @Param("notaId") Integer notaId, @Param("active") String active);
 
-    
+    @Query(CONSULTA_NOTA_DTO + " WHERE n.active = :active")
+    List<NotaDTO> buscarHistorial(@Param("active")String  active, Pageable pageable);
 
 
 

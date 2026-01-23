@@ -136,28 +136,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     private void initialize() {
         cargarNota();
 
-//        txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
-//
-//            if (atributoBusquedaNota.getValue() != null){
-//                String filtro = atributoBusquedaNota.getValue();
-//                modoBusqueda = true;
-//                if (newValue == null || newValue.isEmpty()) {
-//                    cargarNota();
-//                } else {
-//                    cargarNotasFiltradasConFiltro(newValue, filtro);
-//                }
-//            } else if (atributoBusquedaNota.getValue() == null){
-//                modoBusqueda = false;
-//                if (newValue == null || newValue.isEmpty()) {
-//                    cargarNota();
-//                } else {
-//                    cargarNotasFiltradas(newValue);
-//                }
-//            }
-//        });
-
-        //Enter buscar
-
         txtBuscar.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
 
@@ -207,7 +185,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
             delayQuery.playFromStart();
         });
 
-
         btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
 
         btnImprimir.setOnAction(event -> imprimir(notaSeleccionada.getNumNota()));
@@ -219,7 +196,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     }//initialize
 
     private void configurarPaginador() {
-        Page<NotaDTO> paginaInicial = notaService.listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+        Page<NotaDTO> paginaInicial = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
 
         mostrarNotas(paginaInicial.getContent());
 
@@ -228,7 +205,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
         PaginadorNotas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
             Page<NotaDTO> nuevaPagina =
-                    notaService.listarNotasPaginado("ACTIVE", newIndex.intValue(), tamañoPagina);
+                    notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), newIndex.intValue(), tamañoPagina);
 
             mostrarNotas(nuevaPagina.getContent());
         });
@@ -325,9 +302,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
     private VBox crearCardNota(NotaDTO nota) {
 
-        //Nota notaBuscar = notaService.buscarPorId(nota.getNotaId());
-        //NotaClienteDetalle notaClienteDetalle = notaClienteDetService.buscarclienteDetalle(notaBuscar);
-
 
         VBox card = new VBox();
         String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
@@ -383,10 +357,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label numeroNota = new Label(nota.getNumNota());
         numeroNota.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
 
-        /*Label lblCliente = new Label(
-                notaUtils.eliminarPuntos(notaClienteDetalle.getNombreClienteNota())
-
-        );*/
 
         String nombreCliente = nota.getNombreClienteNota() != null
                 ? notaUtils.eliminarPuntos(nota.getNombreClienteNota())
@@ -395,12 +365,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label lblCliente = new Label(nombreCliente);
 
         lblCliente.setStyle("-fx-text-fill: white;");
-        /*Label lblVehiculo = new Label(
-                notaUtils.eliminarPuntos(notaClienteDetalle.getMarcaNota()) + " " +
-                        notaUtils.eliminarPuntos(notaClienteDetalle.getModeloNota()) + " " +
-                        notaClienteDetalle.getAnioNota()
-
-        );*/
 
         String marca = nota.getMarcaNota() != null
                 ? notaUtils.eliminarPuntos(nota.getMarcaNota())
@@ -417,13 +381,14 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label lblVehiculo = new Label((marca + " " + modelo + " " + anio).trim());
 
         lblVehiculo.setStyle("-fx-text-fill: white;");
-        //Label total = new Label("Total: $" + notaBuscar.getTotal());
+
         Label total = new Label("Total: $" + nota.getTotal());
 
         total.setStyle("-fx-text-fill: white;");
 
         VBox textBox = new VBox(5, numeroNota, lblCliente, lblVehiculo, total);
         HBox contenBox = new HBox(10, textBox);
+
         card.getChildren().add(contenBox);
 
         card.setOnMouseEntered(e -> {

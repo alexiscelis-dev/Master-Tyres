@@ -235,31 +235,48 @@
 
 }
 
+/* Opcional: hover de los ítems */
+.choice-box .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
 
-/* Choice para inventario en principal */
+
+/* Estilo para un ChoiceBox más pequeño y oscuro */
 .choicebox {
     -fx-background-color: #080808;
     -fx-mark-color: #F2F2F2;
-    -fx-text-fill: #F2F2F2;
+    -fx-text-fill: #FFFFFF;
     -fx-background-radius: 5px;
     -fx-padding: 2px;
-    -fx-pref-height: 36px;
-    -fx-pref-width: 157px;
+    -fx-pref-height: 26px;
+    -fx-pref-width: 120px;
     -fx-font-size: 12px;
 }
 
-/* Menú desplegable */
+/* Menú desplegable más compacto */
 .choicebox .context-menu {
     -fx-background-color: #080808;
-    -fx-pref-width: 160px;
-    -fx-pref-height: 180px;
+    -fx-pref-width: 130px;
+    -fx-pref-height: 130px;
 }
 
 /* Ítems del menú */
 .choicebox .menu-item > .label {
     -fx-font-size: 12px;
     -fx-padding: 2 8 2 8;
-    -fx-text-fill: #F2F2F2;
+    -fx-text-fill: #FFFFFF;
+}
+
+.choicebox .menu-item {
+    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
+    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
+    -fx-pref-height: 30px; /* altura preferida para la celda */
+}
+
+
+/* Hover en ítems */
+.choicebox-mini .menu-item:focused {
+    -fx-background-color: #8EB83D;
 }
 
 .scroll-pane {
