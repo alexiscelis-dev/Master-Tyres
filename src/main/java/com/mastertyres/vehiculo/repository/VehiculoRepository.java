@@ -425,8 +425,8 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             "JOIN v.modelo mo " +
             "JOIN v.cliente c " +
             "JOIN v.categoria ca " +
-            " WHERE v.active = :active AND v.ultimoServicio = :ultimoServicio")
-    Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginado(@Param("active") String active, @Param("ultimoServicio") String ultimoServicio,  Pageable pageable);
+            " WHERE v.active = :active AND DATE(v.ultimoServicio) = :ultimoServicio")
+    Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginado(@Param("active") String active, @Param("ultimoServicio") LocalDate ultimoServicio,  Pageable pageable);
 
     @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro, v.contador_mensaje ) FROM Vehiculo v " +
@@ -443,8 +443,8 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             "JOIN v.modelo mo " +
             "JOIN v.cliente c " +
             "JOIN v.categoria ca " +
-            " WHERE v.active = :active AND v.ultimoServicio BETWEEN :servicioInicio AND :servicioFin")
-    Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginado(@Param("active") String active, @Param("servicioInicio") String servicioInicio, @Param("servicioFin") String fechaFin,  Pageable pageable);
+            " WHERE v.active = :active AND DATE(v.ultimoServicio) BETWEEN :servicioInicio AND :servicioFin")
+    Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginado(@Param("active") String active, @Param("servicioInicio") LocalDate servicioInicio, @Param("servicioFin") LocalDate fechaFin,  Pageable pageable);
 
     @Query("SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(v.vehiculoId, c.nombre, c.apellido,c.segundoApellido,c.numTelefono, m.nombreMarca, mo.nombreModelo, ca.nombreCategoria, v.anio, v.numSerie, v.observaciones, v.kilometros, v.color,v.placas, v.ultimoServicio, " +
             "v.fechaRegistro, v.contador_mensaje ) FROM Vehiculo v " +

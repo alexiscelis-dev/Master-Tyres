@@ -22,6 +22,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
+
 @Service
 public class NotaService implements INotaService {
 
@@ -42,6 +44,101 @@ public class NotaService implements INotaService {
     public List<NotaDTO> listarNotas(String active) {
         return notaRepository.listarNotas(active);
     }
+
+    public Page<NotaDTO> buscador (String filtro, String busqueda, int IndicePagina, int tamañoPagina){
+        Page<NotaDTO> paginaFiltrada;
+
+        switch (filtro.toLowerCase()){
+            case "sin filtro" ->  paginaFiltrada = buscarNotas(busqueda, IndicePagina, tamañoPagina);
+
+            case "numero de nota" ->  paginaFiltrada = BucarPorNumNota(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "fecha de emicion" -> paginaFiltrada = buscarPorFechaNota(LocalDate.parse(busqueda), "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "nombre del cliente" -> paginaFiltrada = buscarPorNombreCliente(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "vehiculo" -> paginaFiltrada = buscarPorVehiculo(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "estatus de nota" -> paginaFiltrada = buscarPorStatusNota(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "fecha de vencimiento" -> paginaFiltrada = buscarPorFechaVencimiento(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "direccion" -> paginaFiltrada = buscarPorDireccion(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "placas de vehiculo" -> paginaFiltrada = buscarPorPlacas(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "numero de factura" -> paginaFiltrada = buscarPorNumeroFactura(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "rfc" -> paginaFiltrada = buscarPorRfc(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+
+            case "adeudo" -> {
+                try {
+                    BigDecimal adeudo = new BigDecimal(busqueda.trim());
+                    paginaFiltrada = buscarPorAdeudo(
+                            adeudo, "ACTIVE", IndicePagina, tamañoPagina
+                    );
+                } catch (NumberFormatException ex) {
+                    mostrarWarning(
+                            "Valor inválido",
+                            "Adeudo incorrecto",
+                            "Ingrese un valor numérico válido para el adeudo."
+                    );
+                    return listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+                }
+            }
+
+            case "total" -> {
+                try {
+                    Double total = Double.parseDouble(busqueda.trim());
+                    paginaFiltrada = buscarPorTotal(
+                            total, "ACTIVE", IndicePagina, tamañoPagina
+                    );
+                } catch (NumberFormatException ex) {
+                    mostrarWarning(
+                            "Valor inválido",
+                            "Total incorrecto",
+                            "Ingrese un valor numérico válido para el total."
+                    );
+                    return listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+                }
+            }
+
+            case "saldo a favor" -> {
+                try {
+                    Double saldo = Double.parseDouble(busqueda.trim());
+                    paginaFiltrada = buscarPorSaldoFavor(
+                            saldo, "ACTIVE", IndicePagina, tamañoPagina
+                    );
+                } catch (NumberFormatException ex) {
+                    mostrarWarning(
+                            "Valor inválido",
+                            "Saldo incorrecto",
+                            "Ingrese un valor numérico válido para el saldo a favor."
+                    );
+                    return listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+                }
+            }
+
+            default -> paginaFiltrada = listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+        }
+        return paginaFiltrada;
+    }
+
+    public Page<NotaDTO> buscadorRangos (String filtro, String busqueda, String busqueda2, int IndicePagina, int tamañoPagina){
+        Page<NotaDTO> paginaFiltrada;
+
+        switch (filtro.toLowerCase()){
+
+            case "fecha de emicion" -> paginaFiltrada = buscarPorFechaNotaRango(busqueda, busqueda2,"ACTIVE", IndicePagina, tamañoPagina);
+
+            case "fecha de vencimiento" -> paginaFiltrada = buscarPorFechaVencimientoRango(busqueda, busqueda2, "ACTIVE", IndicePagina, tamañoPagina);
+
+            default -> paginaFiltrada = listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+        }
+        return paginaFiltrada;
+    }
+
+
 
 
     //  Listar vehículos activos con paginación
@@ -69,6 +166,11 @@ public class NotaService implements INotaService {
         return notaRepository.buscarPorFechaNota(fecha, active, pageable);
     }
 
+    public Page<NotaDTO> buscarPorFechaNotaRango(String fecha, String fecha2, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorFechaNotaRango(fecha, fecha2, active, pageable);
+    }
+
     public Page<NotaDTO> buscarPorVehiculo(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorVehiculo(filtro, active, pageable);
@@ -79,9 +181,14 @@ public class NotaService implements INotaService {
         return notaRepository.buscarPorStatusNota(filtro, active, pageable);
     }
 
-    public Page<NotaDTO> buscarPorFechaVencimiento(LocalDate  filtro, String active, int pagina, int tamanoPagina) {
+    public Page<NotaDTO> buscarPorFechaVencimiento(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorFechaVencimiento(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorFechaVencimientoRango(String filtro, String filtro2, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorFechaVencimientoRango(filtro, filtro2, active, pageable);
     }
 
     public Page<NotaDTO> buscarPorDireccion(String filtro, String active, int pagina, int tamanoPagina) {
@@ -102,6 +209,16 @@ public class NotaService implements INotaService {
     public Page<NotaDTO> buscarPorAdeudo(BigDecimal filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorAdeudo(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorTotal(Double filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorTotal(filtro, active, pageable);
+    }
+
+    public Page<NotaDTO> buscarPorSaldoFavor(Double filtro, String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
+        return notaRepository.buscarPorSaldoFavor(filtro, active, pageable);
     }
 
     public Page<NotaDTO> BucarPorNumNota(String filtro, String active, int pagina, int tamanoPagina) {

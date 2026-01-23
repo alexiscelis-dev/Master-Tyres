@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
@@ -123,6 +124,40 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
     Page<Cliente> buscarClientePorRfcPaginado(@Param("active")String active,  @Param("rfc")String rfc, Pageable pageable);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.correo, '')) LIKE LOWER (CONCAT('%', :correo , '%'))")
+    Page<Cliente> buscarClientePorCorreoPaginado(@Param("active")String active,  @Param("correo")String correo, Pageable pageable);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.fechaCumple, '')) LIKE LOWER (CONCAT('%', :cumpleanos , '%'))")
+    Page<Cliente> buscarClientePorCumpleanosPaginado(@Param("active")String active,  @Param("cumpleanos")String cumpleanos, Pageable pageable);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.created_at, '')) LIKE LOWER (CONCAT('%', :registro , '%'))")
+    Page<Cliente> buscarClientePorRegistroPaginado(@Param("active")String active,  @Param("registro")String registro, Pageable pageable);
+
+
+    // === BÚSQUEDA POR FECHA DE REGISTRO (created_at es usualmente Timestamp) ===
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND DATE(c.created_at) = :registro")
+    Page<Cliente> buscarClientePorRegistroPaginado(@Param("active") String active, @Param("registro") LocalDate registro, Pageable pageable);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND DATE(c.created_at) BETWEEN :inicio AND :fin")
+    Page<Cliente> buscarClientePorRegistroRangoPaginado(@Param("active") String active, @Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin, Pageable pageable);
+
+
+// === BÚSQUEDA POR FECHA DE NACIMIENTO (fechaCumple) ===
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.fechaCumple = :cumple")
+    Page<Cliente> buscarClientePorCumpleanosPaginado(@Param("active") String active, @Param("cumple") LocalDate cumple, Pageable pageable);
+
+//    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.fechaCumple BETWEEN :inicio AND :fin")
+//    Page<Cliente> buscarClientePorCumpleanosRangoPaginado(@Param("active") String active, @Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin, Pageable pageable);
+
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.fechaCumple BETWEEN :inicio AND :fin")
+    Page<Cliente> buscarClientePorCumpleanosRangoPaginado(
+            @Param("active") String active,
+            @Param("inicio") String inicio, // Cambiado a String
+            @Param("fin") String fin,       // Cambiado a String
+            Pageable pageable
+    );
 
     @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND ( " +
             "(LOWER (COALESCE(c.nombre, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
