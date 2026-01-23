@@ -453,6 +453,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 //        });
 //    }
 
+
     private void ConfigurarNuevoPaginadorBusqueda(String filtro, String busqueda, String busqueda2) {
         modoBusqueda = true;
         filtroActual = filtro;
@@ -509,9 +510,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
     private VBox crearCardNota(NotaDTO nota) {
 
-        //Nota notaBuscar = notaService.buscarPorId(nota.getNotaId());
-        //NotaClienteDetalle notaClienteDetalle = notaClienteDetService.buscarclienteDetalle(notaBuscar);
-
 
         VBox card = new VBox();
         String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
@@ -567,10 +565,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label numeroNota = new Label(nota.getNumNota());
         numeroNota.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
 
-        /*Label lblCliente = new Label(
-                notaUtils.eliminarPuntos(notaClienteDetalle.getNombreClienteNota())
-
-        );*/
 
         String nombreCliente = nota.getNombreClienteNota() != null
                 ? notaUtils.eliminarPuntos(nota.getNombreClienteNota())
@@ -579,12 +573,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label lblCliente = new Label(nombreCliente);
 
         lblCliente.setStyle("-fx-text-fill: white;");
-        /*Label lblVehiculo = new Label(
-                notaUtils.eliminarPuntos(notaClienteDetalle.getMarcaNota()) + " " +
-                        notaUtils.eliminarPuntos(notaClienteDetalle.getModeloNota()) + " " +
-                        notaClienteDetalle.getAnioNota()
-
-        );*/
 
         String marca = nota.getMarcaNota() != null
                 ? notaUtils.eliminarPuntos(nota.getMarcaNota())
@@ -601,13 +589,14 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label lblVehiculo = new Label((marca + " " + modelo + " " + anio).trim());
 
         lblVehiculo.setStyle("-fx-text-fill: white;");
-        //Label total = new Label("Total: $" + notaBuscar.getTotal());
+
         Label total = new Label("Total: $" + nota.getTotal());
 
         total.setStyle("-fx-text-fill: white;");
 
         VBox textBox = new VBox(5, numeroNota, lblCliente, lblVehiculo, total);
         HBox contenBox = new HBox(10, textBox);
+
         card.getChildren().add(contenBox);
 
         card.setOnMouseEntered(e -> {

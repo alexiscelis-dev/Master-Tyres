@@ -13,15 +13,11 @@
             fx:controller="com.mastertyres.fxControllers.nota.EditarNotaController">
 
 
-
-
     <children>
-
 
 
         <!--Zona superior -->
         <StackPane translateX="990" translateY="50" styleClass="showIcons" fx:id="btnShowIcons">
-
 
 
             <StackPane.margin>
@@ -37,8 +33,7 @@
         </StackPane>
 
 
-        <StackPane  translateX="1000" translateY="120" AnchorPane.topAnchor="20.0">
-
+        <StackPane translateX="1000" translateY="120" AnchorPane.topAnchor="20.0">
 
 
             <GridPane fx:id="gridPaneIcons" alignment="CENTER" hgap="15" vgap="10" visible="false">
@@ -86,7 +81,8 @@
                         </graphic>
 
                     </Button>
-                    <Button fx:id="btnActualizarSaldoFavor" GridPane.columnIndex="0" GridPane.rowIndex="2" prefHeight="25.0"
+                    <Button fx:id="btnActualizarSaldoFavor" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                            prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
@@ -99,7 +95,8 @@
                     </Button>
 
 
-                    <Button fx:id="btnAgregarNumFactura" GridPane.columnIndex="0" GridPane.rowIndex="3" prefHeight="25.0"
+                    <Button fx:id="btnAgregarNumFactura" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                            prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
@@ -139,8 +136,6 @@
                     </Button>
 
 
-
-
                 </children>
 
             </GridPane>
@@ -157,11 +152,8 @@
                    AnchorPane.topAnchor="-40.0">
 
 
-
-
             <!-- ScrollPane centrado -->
             <ScrollPane fitToHeight="false" fitToWidth="true" pannable="true" prefHeight="617.0" prefWidth="945.0">
-
 
 
                 <content>
@@ -225,6 +217,7 @@
 
                                 <HBox prefHeight="15" prefWidth="50" styleClass="vBoxNumNota" GridPane.columnIndex="0"
                                       GridPane.columnSpan="2" GridPane.rowIndex="1">
+
                                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="75.0"
                                            styleClass="label-fecha" text="  FECHA" textFill="#fffdfd">
                                         <VBox.margin>
@@ -313,6 +306,7 @@
                                     </GridPane.margin>
 
                                 </HBox>
+
                                 <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2"
                                       GridPane.rowIndex="1">
                                     <Label prefHeight="18.0" prefWidth="491.0"
@@ -376,6 +370,8 @@
 
                                             <HBox alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="0"
                                                   GridPane.columnSpan="2" GridPane.rowIndex="0">
+
+
                                                 <GridPane.margin>
                                                     <Insets left="5.0"/>
                                                 </GridPane.margin>
@@ -659,6 +655,13 @@
                                                     <Image url="@../../icons/nota/porche.png"/>
                                                 </image>
                                             </ImageView>
+
+                                            <Label text="Because so much is riding on your tires" translateX="8"
+                                                   translateY="-465">
+                                                <font>
+                                                    <Font name="Book Antiqua" size="15.0"/>
+                                                </font>
+                                            </Label>
 
 
                                         </StackPane>
@@ -1199,7 +1202,8 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  editable="false" fx:id="txtLlantas" prefWidth="520" styleClass="text-field-nota">
+                                        <TextField editable="false" fx:id="txtLlantas" prefWidth="520"
+                                                   styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1388,8 +1392,8 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="10" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtSuspensionTotal" prefWidth="105"
-                                                    styleClass="text-field-nota2">
+                                        <TextField fx:id="txtSuspensionTotal" prefWidth="105"
+                                                   styleClass="text-field-nota2">
 
                                         </TextField>
 
@@ -1671,8 +1675,8 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtOtros" prefWidth="520"
-                                                    styleClass="text-field-nota">
+                                        <TextField fx:id="txtOtros" prefWidth="520"
+                                                   styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1713,8 +1717,8 @@
                                             <Insets left="5"/>
                                         </GridPane.margin>
 
-                                        <TextField  fx:id="txtOtros2" prefWidth="520"
-                                                    styleClass="text-field-nota">
+                                        <TextField fx:id="txtOtros2" prefWidth="520"
+                                                   styleClass="text-field-nota">
 
                                         </TextField>
 
@@ -1739,8 +1743,8 @@
                                     </HBox>
 
                                     <HBox GridPane.rowIndex="20" GridPane.columnIndex="4" alignment="CENTER">
-                                        <TextField  fx:id="txtOtrosTotal2" prefWidth="105"
-                                                    styleClass="text-field-nota2">
+                                        <TextField fx:id="txtOtrosTotal2" prefWidth="105"
+                                                   styleClass="text-field-nota2">
 
                                         </TextField>
 
