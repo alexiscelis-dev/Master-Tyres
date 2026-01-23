@@ -507,7 +507,7 @@ DatePicker
 /* Menú desplegable más compacto */
 .choicebox-mini2 .context-menu {
     -fx-background-color: #080808;
-    -fx-pref-width: 130px;
+    -fx-pref-width: 160px;
     -fx-pref-height: 170px;
 }
 

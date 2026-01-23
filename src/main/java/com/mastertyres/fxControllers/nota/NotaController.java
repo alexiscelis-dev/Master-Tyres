@@ -86,18 +86,25 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     @FXML
     private Button btnEliminar;
     @FXML
+    private Button btnRefrescar;
+    @FXML
     private Button btnHistorial;
     @FXML
     private TextField txtBuscar;
-    @FXML private DatePicker dpBuscar;
-    @FXML private CheckBox chkRangoNota;
-    @FXML private DatePicker dpBuscarFin;
-    @FXML private Label lblHasta;
+    @FXML
+    private DatePicker dpBuscar;
+    @FXML
+    private CheckBox chkRangoNota;
+    @FXML
+    private DatePicker dpBuscarFin;
+    @FXML
+    private Label lblHasta;
     private boolean esRangoActual = false; // Nueva variable de clase
     @FXML
     private Pagination PaginadorNotas;
 
-    @FXML private ChoiceBox<String> atributoBusquedaNota;
+    @FXML
+    private ChoiceBox<String> atributoBusquedaNota;
 
     @Autowired
     private NotaService notaService;
@@ -136,7 +143,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     }
 
     @Override
-    public void setInitializeLoading(LoadingComponentController loading){
+    public void setInitializeLoading(LoadingComponentController loading) {
         this.loadingOverlayController = loading;
     }
 
@@ -148,48 +155,8 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     @FXML
     private void initialize() {
 
-        atributoBusquedaNota.setValue("Sin Filtro");
+        configuraciones();
 
-        cargarNota();
-
-        txtBuscar.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                accionBuscar(null);
-            }
-        });
-
-//        txtBuscar.setOnKeyPressed(event -> {
-//            if (event.getCode() != KeyCode.ENTER) return;
-//
-//            String seleccion = atributoBusquedaNota.getValue();
-//            String busqueda = txtBuscar.getText();
-//
-//            // Si no hay texto, resetear búsqueda
-//            if (busqueda == null || busqueda.isBlank()) {
-//                resetBusqueda();
-//                return;
-//            }
-//
-//            // Ejecutar búsqueda (con o sin filtro)
-//            ConfigurarNuevoPaginadorBusqueda(
-//                    seleccion == null ? "sin filtro" : seleccion.toLowerCase(),
-//                    busqueda,
-//                    0
-//            );
-//        });
-
-        // Listener para detectar cambios en el ChoiceBox
-        atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            configurarBuscador(newVal);
-        });
-
-        // Listener para el CheckBox de rango
-        chkRangoNota.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            lblHasta.setVisible(isSelected);
-            lblHasta.setManaged(isSelected);
-            dpBuscarFin.setVisible(isSelected);
-            dpBuscarFin.setManaged(isSelected);
-        });
 
         btnEditar.setOnAction(event ->
                 editarNota(notaSeleccionada.getNumNota()));
@@ -205,7 +172,43 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
         btnDarPlazo.setOnAction(event ->
                 darPlazo(notaSeleccionada.getNotaId()));
-    }
+
+        btnRefrescar.setOnAction(event -> {
+            cargarNota();
+        });
+
+
+
+    }//initialize
+
+    private void configuraciones(){
+
+        atributoBusquedaNota.setValue("Sin Filtro");
+
+        cargarNota();
+
+        txtBuscar.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                accionBuscar(null);
+            }
+        });
+
+        // Listener para detectar cambios en el ChoiceBox
+        atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            configurarBuscador(newVal);
+        });
+
+        // Listener para el CheckBox de rango
+        chkRangoNota.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            lblHasta.setVisible(isSelected);
+            lblHasta.setManaged(isSelected);
+            dpBuscarFin.setVisible(isSelected);
+            dpBuscarFin.setManaged(isSelected);
+        });
+
+
+    }//configuraciones
+
     private void configurarBuscador(String criterio) {
         if (criterio == null) return;
 
@@ -228,7 +231,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         }
     }
 
-
     private void cargarPagina(int indicePagina) {
         Page<NotaDTO> pagina;
 
@@ -247,7 +249,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
     }
 
-
     private void ConfigurarNuevoPaginadorBusqueda(String filtro, String busqueda, String busqueda2) {
         modoBusqueda = true;
         filtroActual = filtro;
@@ -260,7 +261,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         PaginadorNotas.setCurrentPageIndex(0);
         cargarPagina(0);
     }
-
 
     private void configurarPaginador() {
 
@@ -525,7 +525,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                 "Editar Nota");
         EditarNotaController controller = (EditarNotaController) controllerObj;
         controller.agregarNota(numNota);
-     //   controller.setInitializeLoading(ventanaPrincipalController.loadingOverlayController);
+        //   controller.setInitializeLoading(ventanaPrincipalController.loadingOverlayController);
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("EDITAR NOTA");
 
 
@@ -545,13 +545,13 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                         notaService.eliminarNota(StatusNota.INACTIVE.toString(), notaId);
                         notaService.actualizarUpdatedAtNota(notaId, LocalDateTime.now().toString());
                         return null;
-                    },(resultado) ->{
+                    }, (resultado) -> {
                         cargarNota();
                         mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
-                    },(excepcion) ->{
+                    }, (excepcion) -> {
                         excepcion.printStackTrace();
-                        mostrarError("Error al eliminar","","No fue posible eliminar la nota. Intente de nuevo mas tarde.");
-                    },null
+                        mostrarError("Error al eliminar", "", "No fue posible eliminar la nota. Intente de nuevo mas tarde.");
+                    }, null
             );
 
         }//eliminar
@@ -597,7 +597,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                     (int) alto
             );
 
-            if(this.ventanaPrincipalController != null){
+            if (this.ventanaPrincipalController != null) {
                 this.ventanaPrincipalController.configurarControlador(controller);
             }
 
@@ -637,7 +637,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                         if (excepcion instanceof IOException) {
                             mostrarError("Error al generar archivo",
                                     "El archivo no pudo crearse o está siendo usado por otro programa.",
-                                            "Cierra otros programas e inténtalo de nuevo.");
+                                    "Cierra otros programas e inténtalo de nuevo.");
                         } else if (excepcion instanceof InterruptedException || excepcion instanceof java.util.concurrent.CancellationException) {
                             mostrarWarning("Operación cancelada",
                                     "",
@@ -699,39 +699,23 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     }//darPlazo
 
     @FXML
-    private void historial(ActionEvent even){
+    private void historial(ActionEvent even) {
         try {
-           Object controllerObj = ventanaPrincipalController.viewContent(
-                   null,
-                   "/fxmlViews/historial/Historial.fxml",
-                   "Historial Notas"
-           );
+            Object controllerObj = ventanaPrincipalController.viewContent(
+                    null,
+                    "/fxmlViews/historial/Historial.fxml",
+                    "Historial Notas"
+            );
             HistorialController controller = (HistorialController) controllerObj;
-           ventanaPrincipalController.cambiarPaginaEtiqueta.setText("HISTORIAL DE NOTAS");
+            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("HISTORIAL DE NOTAS");
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error al cargar la vista","","Ocurrio un problema al cargar la vista. Vuelve a intentarlo mas tarde.");
+            mostrarError("Error al cargar la vista", "", "Ocurrio un problema al cargar la vista. Vuelve a intentarlo mas tarde.");
         }
 
     }
-
-//    private void resetBusqueda() {
-//
-//        modoBusqueda = false;
-//        //modoBusquedaConFiltro = false;
-//
-////        filtroActual = null;
-////        textoBusquedaActual = null;
-//
-//        txtBuscar.clear();
-//        atributoBusquedaNota.setValue("Sin Filto");
-//
-//        PaginadorNotas.setCurrentPageIndex(0);
-//
-//        cargarNota();
-//    }
 
     private void resetBusqueda() {
 
@@ -746,80 +730,48 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         cargarPagina(0);
     }
 
-//    public void accionBuscar(ActionEvent actionEvent) {
-//        String seleccion = atributoBusquedaNota.getValue();
-//
-//        String busqueda;
-//        String busqueda2 = "";
-//        if (atributoBusquedaNota.getValue().equals("Fecha de emicion") || atributoBusquedaNota.getValue().equals("Fecha de vencimiento")){
-//            busqueda = dpBuscar.getValue().toString();
-//            if (chkRangoNota.isSelected()){
-//                busqueda2 = dpBuscarFin.getValue().toString();
-//                if (busqueda2 == null || busqueda2.isBlank()) {
-//                    resetBusqueda();
-//                    return;
-//                }
-//            }
-//        }else {
-//            busqueda = txtBuscar.getText();
-//        }
-//
-//        // Si no hay texto, resetear búsqueda
-//        if (busqueda == null || busqueda.isBlank()) {
-//            resetBusqueda();
-//            return;
-//        }
-//
-//        // Ejecutar búsqueda (con o sin filtro)
-//        ConfigurarNuevoPaginadorBusqueda(
-//                seleccion == null ? "sin filtro" : seleccion.toLowerCase(),
-//                busqueda,
-//                0
-//        );
-//
-//    }
-public void accionBuscar(ActionEvent actionEvent) {
-    String seleccion = atributoBusquedaNota.getValue();
-    if (seleccion == null) return;
+    public void accionBuscar(ActionEvent actionEvent) {
+        String seleccion = atributoBusquedaNota.getValue();
+        if (seleccion == null) return;
 
-    String busqueda = "";
-    String busqueda2 = "";
-    boolean esFecha = seleccion.equals("Fecha de emicion") || seleccion.equals("Fecha de vencimiento");
+        String busqueda = "";
+        String busqueda2 = "";
+        boolean esFecha = seleccion.equals("Fecha de emicion") || seleccion.equals("Fecha de vencimiento");
 
-    if (esFecha) {
-        // VALIDACIÓN 1: Fecha de inicio nula
-        if (dpBuscar.getValue() == null) {
-            mostrarWarning("Fecha requerida", null, "Por favor seleccione la fecha inicial.");
-            return;
-        }
-
-        busqueda = dpBuscar.getValue().toString();
-
-        if (chkRangoNota.isSelected()) {
-            // VALIDACIÓN 2: Fecha final nula en rango
-            if (dpBuscarFin.getValue() == null) {
-                mostrarWarning("Rango incompleto", null, "Ha activado búsqueda por rango, seleccione la fecha final.");
+        if (esFecha) {
+            // VALIDACIÓN 1: Fecha de inicio nula
+            if (dpBuscar.getValue() == null) {
+                mostrarWarning("Fecha requerida", null, "Por favor seleccione la fecha inicial.");
                 return;
             }
 
-            // VALIDACIÓN 3: Orden de fechas (Inicio no puede ser mayor a Fin)
-            if (dpBuscar.getValue().isAfter(dpBuscarFin.getValue())) {
-                // Invertimos o avisamos. Aquí avisaremos:
-                mostrarWarning("Rango inválido", "Fecha incoherente", "La fecha de inicio no puede ser posterior a la fecha final.");
+            busqueda = dpBuscar.getValue().toString();
+
+            if (chkRangoNota.isSelected()) {
+                // VALIDACIÓN 2: Fecha final nula en rango
+                if (dpBuscarFin.getValue() == null) {
+                    mostrarWarning("Rango incompleto", null, "Ha activado búsqueda por rango, seleccione la fecha final.");
+                    return;
+                }
+
+                // VALIDACIÓN 3: Orden de fechas (Inicio no puede ser mayor a Fin)
+                if (dpBuscar.getValue().isAfter(dpBuscarFin.getValue())) {
+                    // Invertimos o avisamos. Aquí avisaremos:
+                    mostrarWarning("Rango inválido", "Fecha incoherente", "La fecha de inicio no puede ser posterior a la fecha final.");
+                    return;
+                }
+
+                busqueda2 = dpBuscarFin.getValue().toString();
+            }
+        } else {
+            busqueda = txtBuscar.getText();
+            if (busqueda == null || busqueda.isBlank()) {
+                resetBusqueda();
                 return;
             }
+        }
 
-            busqueda2 = dpBuscarFin.getValue().toString();
-        }
-    } else {
-        busqueda = txtBuscar.getText();
-        if (busqueda == null || busqueda.isBlank()) {
-            resetBusqueda();
-            return;
-        }
+        // Si pasó las validaciones, configuramos el paginador
+        ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
     }
-
-    // Si pasó las validaciones, configuramos el paginador
-    ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
-}
 }//class

@@ -236,35 +236,44 @@
 }
 
 /* Estilo para un ChoiceBox más pequeño y oscuro */
-.choicebox-mini2 {
-    -fx-background-color: #080808;
+
+.choice-box .menu-item {
+    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
+    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
+    -fx-pref-height: 30px; /* altura preferida para la celda */
+}
+
+.choice-box,
+.compact-choicebox {
+    -fx-background-color: #1A1A1A;
     -fx-mark-color: #F2F2F2;
     -fx-text-fill: #F2F2F2;
-    -fx-background-radius: 5px;
     -fx-padding: 2px;
-    -fx-pref-height: 36px;
-    -fx-pref-width: 120px;
-    -fx-font-size: 12px;
+    -fx-background-radius: 5px;
+    -fx-pref-width: 150px;
+    -fx-font-size: 13px;
 }
 
-/* Menú desplegable más compacto */
-.choicebox-mini2 .context-menu {
-    -fx-background-color: #080808;
-    -fx-pref-width: 130px;
-    -fx-pref-height: 170px;
+
+/* Estilo para el menú desplegable del ChoiceBox */
+.choice-box .context-menu {
+    -fx-background-color: #1A1A1A;
+    -fx-pref-width: 150px;
+    -fx-pref-height: 190px;
 }
 
-/* Ítems del menú */
-.choicebox-mini2 .menu-item > .label {
-    -fx-font-size: 12px;
-    -fx-padding: 2 8 2 8;
+/* Estilo para los ítems dentro del menú */
+.choice-box .menu-item > .label {
+    -fx-font-size: 13px;
+    -fx-padding: 4 10 4 10;
     -fx-text-fill: #F2F2F2;
 }
 
-/* Hover en ítems */
-.choicebox-mini2 .menu-item:focused {
+/* Opcional: hover de los ítems */
+.choice-box .menu-item:focused {
     -fx-background-color: #8EB83D;
 }
+
 
 
 

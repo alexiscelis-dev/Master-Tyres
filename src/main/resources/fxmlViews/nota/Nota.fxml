@@ -76,7 +76,7 @@
                             </ChoiceBox>
                         </HBox>
 
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion"
+                        <Button fx:id="btnRefrescar" mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion"
                                 text="">
                             <graphic>
                                 <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
