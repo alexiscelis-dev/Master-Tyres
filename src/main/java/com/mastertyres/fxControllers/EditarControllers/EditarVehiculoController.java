@@ -3,6 +3,8 @@ package com.mastertyres.fxControllers.EditarControllers;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
@@ -16,6 +18,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,8 @@ import java.util.List;
 
 @Component
 public class EditarVehiculoController {
-
+    @FXML
+    private AnchorPane rootPane;
     @FXML private ChoiceBox<Marca> choiceMarca;
     @FXML private ChoiceBox<Modelo> choiceModelo;
     @FXML private ChoiceBox<Categoria> choiceCategoria;
@@ -68,11 +72,8 @@ public class EditarVehiculoController {
 
     @FXML
     public void initialize() {
-        // Configurar spinner para año
-        int anioActual = LocalDate.now().getYear();
-        SpinnerValueFactory<Integer> valueFactory =
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, anioActual, anioActual);
-        spinnerAnio.setValueFactory(valueFactory);
+
+        configuraciones();
 
         // Cargar marcas, modelos y categorías
         cargarOpciones();
@@ -82,7 +83,28 @@ public class EditarVehiculoController {
 
         // Acción de cambiar
         btnCambiar.setOnAction(event -> actualizarVehiculo());
-    }
+    }//initialize
+
+    private void configuraciones(){
+        MenuContextSetting.disableMenuDatePicker(rootPane);
+        MenuContextSetting.disableMenu(rootPane);
+        RegexTools.aplicarNumeroEntero(spinnerAnio.getEditor());
+        dateUltimoServicio.getEditor().setOnKeyPressed(event ->{
+            switch (event.getCode()){
+                case BACK_SPACE, DELETE -> {
+                    dateUltimoServicio.setValue(null);
+                }
+            }
+        });
+
+
+        // Configurar spinner para año
+        int anioActual = LocalDate.now().getYear();
+        SpinnerValueFactory<Integer> valueFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, anioActual, anioActual);
+        spinnerAnio.setValueFactory(valueFactory);
+
+    }//configuraciones
 
     private void configurarValidaciones() {
 

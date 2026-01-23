@@ -153,7 +153,6 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
 
                                 case "Eliminar" -> {
 
-
                                     String propietario, vehiculo;
 
                                     //verificar que no contenga null  mostrar mensaje
@@ -195,12 +194,10 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                                                  }
                                              },null
                                      );
-
-
                                  }else {
                                      mostrarInformacion("Accion cancelada", "", "Accion cancelada");
                                  }
-                                 
+
                                 }//case eliminar
 
                                 case "Editar" -> {
@@ -277,8 +274,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                                             }).start();
 
 
-                                        } else
-                                            System.out.println("No hay celda seleccionada");
+                                        }
 
                                     }
 
@@ -1057,7 +1053,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                 }
             }
 
-            // ==== 🔹 KILOMETRAJE (ej: 10000 o 0,50000) ====
+            // ====  KILOMETRAJE (ej: 10000 o 0,50000) ====
             case "kilometraje" -> {
 
                 if (busqueda.matches("\\d+")) {

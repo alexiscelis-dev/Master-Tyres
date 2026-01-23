@@ -48,7 +48,7 @@
                                     </FXCollections>
                                 </items>
                             </ChoiceBox>
-                            <DatePicker fx:id="pickerCumpleanos" promptText="Cumpleaños" styleClass="date-picker" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                            <DatePicker fx:id="pickerCumpleanos" editable="false" promptText="Cumpleaños" styleClass="date-picker" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
                             <TextField fx:id="txtNombre" promptText="*Nombre" styleClass="buscador" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                             <TextField fx:id="txtApellido" promptText="*Primer Apellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -110,7 +110,7 @@
 
                             <!-- Fila 4 -->
                             <Label text="Último Servicio:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                            <DatePicker fx:id="pickerUltimoServicio" promptText="Último Servicio" styleClass="date-picker" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                            <DatePicker fx:id="pickerUltimoServicio" editable="false" promptText="Último Servicio" styleClass="date-picker" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
 
                             <!-- Fila 5 -->
                             <TextField fx:id="txtObservaciones" prefHeight="60.0" promptText="Observaciones" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="5" />

@@ -641,3 +641,10 @@ SpinnerAnnio
     -fx-scale-y: 1.1;
     -fx-background-color: #AEE83A;
 }
+
+.secciones {
+    -fx-background-color: rgba(26, 26, 26, 0.85); /* semitransparente */
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}
