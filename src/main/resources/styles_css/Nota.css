@@ -330,7 +330,7 @@
     -fx-font-size: 14px;
     -fx-text-fill: White; /* color del texto */
     -fx-mark-color: #8EB83D; /* color del círculo de selección */
-    -fx-cursor: hand; /* cambia el cursor al pasar por encima */
+    -fx-cursor: hand; /* cambia el cursor al pasar por encimfa */
 }
 
 

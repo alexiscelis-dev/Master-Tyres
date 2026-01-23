@@ -6,6 +6,7 @@ import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.service.NotaService;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -66,7 +67,8 @@ public class HistorialController extends BaseNota implements ILoading {
 
 
     private void cargarNota(){
-        contenedorHistorial.setVgap(20);
+        contenedorHistorial.setVgap(55);
+        contenedorHistorial.setPadding(new Insets(30,10,30,10));
         configurarChoiceBox();
     }//cargarNota
 
@@ -98,43 +100,21 @@ public class HistorialController extends BaseNota implements ILoading {
         String estiloSeleccionado = "-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #1A1A1A;";
         String estiloPorDefecto = "";
         card.setStyle(estiloVerde);
-        card.setUserData(estiloPorDefecto);
+        card.setUserData(estiloVerde);
 
         card.setPrefSize(500, 100);
 
         Label numeroNota = new Label(cardHistorial.getNumNota());
         numeroNota.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
 
-
-        String nombreCliente = cardHistorial.getNombreClienteNota() != null
-                ? notaUtils.eliminarPuntos(cardHistorial.getNombreClienteNota())
-                : "SIN CLIENTE";
-
-        Label lblCliente = new Label(nombreCliente);
-
-        lblCliente.setStyle("-fx-text-fill: white;");
-
-        String marca = cardHistorial.getMarcaNota() != null
-                ? notaUtils.eliminarPuntos(cardHistorial.getMarcaNota())
-                : "";
-
-        String modelo = cardHistorial.getModeloNota() != null
-                ? notaUtils.eliminarPuntos(cardHistorial.getModeloNota())
-                : "";
-
-        String anio = cardHistorial.getAnioNota() != null
-                ? cardHistorial.getAnioNota().toString()
-                : "";
-
-        Label lblVehiculo = new Label((marca + " " + modelo + " " + anio).trim());
-
-        lblVehiculo.setStyle("-fx-text-fill: white;");
+        Label fechaYHora = new Label(cardHistorial.getFechaYHora());
+        fechaYHora.setStyle("-fx-text-fill: white;");
 
         Label total = new Label("Total: $" + cardHistorial.getTotal());
 
         total.setStyle("-fx-text-fill: white;");
 
-        VBox textBox = new VBox(5, numeroNota, lblCliente, lblVehiculo, total);
+        VBox textBox = new VBox(5, numeroNota, fechaYHora, total);
         HBox contenBox = new HBox(10, textBox);
 
         card.getChildren().add(contenBox);

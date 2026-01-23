@@ -41,7 +41,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -229,79 +228,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         }
     }
 
-//    private void configurarBuscador(String criterio) {
-//        // Normalizamos para evitar errores con nulos
-//        if (criterio == null) return;
-//
-//        boolean esBusquedaPorFecha = criterio.equals("Fecha de emicion") ||
-//                criterio.equals("Fecha de vencimiento");
-//
-//        if (esBusquedaPorFecha) {
-//            // Ocultar TextField
-//            txtBuscar.setVisible(false);
-//            txtBuscar.setManaged(false); // managed false hace que el espacio se libere
-//
-//            // Mostrar DatePicker
-//            dpBuscar.setVisible(true);
-//            dpBuscar.setManaged(true);
-//
-//            // Opcional: Limpiar el campo anterior para evitar confusiones
-//            txtBuscar.setText("");
-//        } else {
-//            // Mostrar TextField
-//            txtBuscar.setVisible(true);
-//            txtBuscar.setManaged(true);
-//
-//            // Ocultar DatePicker
-//            dpBuscar.setVisible(false);
-//            dpBuscar.setManaged(false);
-//
-//            // Opcional: Limpiar fecha
-//            dpBuscar.setValue(null);
-//        }
-//    }
-
-//    private void initialize() {
-//        atributoBusquedaNota.setValue("Sin Filtro");
-//
-//        cargarNota();
-//
-//        txtBuscar.setOnKeyPressed(event -> {
-//            if (event.getCode() == KeyCode.ENTER) {
-//
-//                String seleccion = atributoBusquedaNota.getValue();
-//                String busqueda = txtBuscar.getText();
-//
-//                // SOLO funciona si hay un filtro seleccionado
-//                if (seleccion != null && !seleccion.isEmpty()) {
-//
-//                    // Si el texto está vacío, resetea y detén
-//                    if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
-//                        resetBusqueda();
-//                        return;
-//                    }
-//
-//                    // Ejecutar búsqueda específica
-//                    ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda,0);
-//                }else {
-//
-//                    ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda,0);
-//
-//                }
-//            }
-//        });
-//
-//
-//
-//        btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
-//
-//        btnImprimir.setOnAction(event -> imprimir(notaSeleccionada.getNumNota()));
-//
-//        btnEliminar.setOnAction(event -> eliminarNota(notaSeleccionada.getNotaId(), notaSeleccionada.getNumNota()));
-//
-//        btnDarPlazo.setOnAction(event -> darPlazo(notaSeleccionada.getNotaId()));
-//
-//    }//initialize
 
     private void cargarPagina(int indicePagina) {
         Page<NotaDTO> pagina;
@@ -321,138 +247,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
     }
 
-//    private void cargarPagina(int indicePagina) {
-//
-//        Page<NotaDTO> pagina;
-//
-//        if (modoBusqueda) {
-//
-//            if (chkRangoNota.isSelected()){
-//                pagina =notaService.buscadorRangos(
-//                        filtroActual,
-//                        textoBusquedaActual,
-//                        textoBusquedaActual2,
-//                        indicePagina,
-//                        tamañoPagina
-//                );
-//            }else {
-//
-//                pagina = notaService.buscador(
-//                        filtroActual,
-//                        textoBusquedaActual,
-//                        indicePagina,
-//                        tamañoPagina
-//                );
-//            }
-//
-//        } else {
-//            pagina = notaService.listarNotasPaginado(
-//                    "ACTIVE",
-//                    indicePagina,
-//                    tamañoPagina
-//            );
-//        }
-//
-//        mostrarNotas(pagina.getContent());
-//        PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
-//    }
-
-//    private void configurarPaginadorFiltradas(String filtro) {
-//        Page<NotaDTO> paginaFiltrada = notaService.buscarNotas(filtro, 0, tamañoPagina);
-//        mostrarNotas(paginaFiltrada.getContent());
-//        PaginadorNotas.setPageCount(paginaFiltrada.getTotalPages());
-//        PaginadorNotas.setCurrentPageIndex(0);
-//        PaginadorNotas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
-//            Page<NotaDTO> nuevaPagina = notaService.buscarNotas(filtro, newIndex.intValue(), tamañoPagina);
-//            mostrarNotas(nuevaPagina.getContent());
-//        });
-//    }
-//
-//    private void configurarPaginadorFiltradasConFiltro(String filtro, String busqueda, int IndicePagina){
-//        Page<NotaDTO> paginaFiltrada = Page.empty();
-//
-//        try {
-//            String caso = filtro.toLowerCase();
-//            if (modoBusqueda){
-//                switch (caso){
-//                    case "numero de nota" ->  paginaFiltrada = notaService.BucarPorNumNota(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "fecha" -> paginaFiltrada = notaService.buscarPorFechaNota(LocalDate.parse(busqueda), "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "nombre del cliente" -> paginaFiltrada = notaService.buscarPorNombreCliente(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "vehiculo" -> paginaFiltrada = notaService.buscarPorVehiculo(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "status de nota" -> paginaFiltrada = notaService.buscarPorStatusNota(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "fecha de vencimiento" -> paginaFiltrada = notaService.buscarPorFechaVencimiento(LocalDate.parse(busqueda), "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "direccion" -> paginaFiltrada = notaService.buscarPorDireccion(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "placas de vehiculo" -> paginaFiltrada = notaService.buscarPorPlacas(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "numero de factura" -> paginaFiltrada = notaService.buscarPorNumeroFactura(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "rfc" -> paginaFiltrada = notaService.buscarPorRfc(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "adeudo" -> {
-//                        try {
-//                            BigDecimal adeudo = new BigDecimal(busqueda.trim());
-//                            paginaFiltrada = notaService.buscarPorAdeudo(
-//                                    adeudo, "ACTIVE", IndicePagina, tamañoPagina
-//                            );
-//                        } catch (NumberFormatException ex) {
-//                            mostrarWarning(
-//                                    "Valor inválido",
-//                                    "Adeudo incorrecto",
-//                                    "Ingrese un valor numérico válido para el adeudo."
-//                            );
-//                            return;
-//                        }
-//                    }
-//
-//                    default -> mostrarWarning("Búsqueda no válida", "", "Seleccione un campo de búsqueda correcto.");
-//                }
-//                int totalPaginas = paginaFiltrada.getTotalPages();
-//                PaginadorNotas.setPageCount(Math.max(totalPaginas, 1));
-//            } else {
-//                paginaFiltrada = notaService.listarNotasPaginado(
-//                        StatusNota.ACTIVE.toString(), IndicePagina, NOTAS_POR_PAGINA);
-//            }
-//
-//            mostrarNotas(paginaFiltrada.getContent());
-//            PaginadorNotas.setPageCount(Math.max(paginaFiltrada.getTotalPages(), 1));
-//
-//        } catch (Exception e) {
-//            mostrarError("Error en búsqueda", "Ocurrió un error al buscar los vehículos.", e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-//    }
-
-//    private void ConfigurarNuevoPaginadorBusqueda (String filtro, String busqueda, int IndicePagina){
-//        Page<NotaDTO> paginaFiltrada = notaService.buscador(filtro, busqueda, IndicePagina, tamañoPagina);
-//        int totalPaginas = paginaFiltrada.getTotalPages();
-//        PaginadorNotas.setPageCount(Math.max(totalPaginas, 1));
-//        mostrarNotas(paginaFiltrada.getContent());
-//    }
-
-//    private void configurarPaginador() {
-//        Page<NotaDTO> paginaInicial = notaService.listarNotasPaginado("ACTIVE", 0, tamañoPagina);
-//
-//        mostrarNotas(paginaInicial.getContent());
-//
-//        PaginadorNotas.setPageCount(paginaInicial.getTotalPages());
-//        PaginadorNotas.setCurrentPageIndex(0);
-//
-//        PaginadorNotas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
-//            Page<NotaDTO> nuevaPagina =
-//                    notaService.listarNotasPaginado("ACTIVE", newIndex.intValue(), tamañoPagina);
-//
-//            mostrarNotas(nuevaPagina.getContent());
-//        });
-//    }
-
 
     private void ConfigurarNuevoPaginadorBusqueda(String filtro, String busqueda, String busqueda2) {
         modoBusqueda = true;
@@ -467,20 +261,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         cargarPagina(0);
     }
 
-//    private void ConfigurarNuevoPaginadorBusqueda(String filtro, String busqueda, int indicePagina) {
-//
-//        modoBusqueda = true;
-//        filtroActual = filtro;
-//        textoBusquedaActual = busqueda;
-//
-//        if (chkRangoNota.isSelected()){
-//            textoBusquedaActual2 = dpBuscarFin.getValue().toString();
-//        }
-//
-//
-//        PaginadorNotas.setCurrentPageIndex(0);
-//        cargarPagina(0);
-//    }
 
     private void configurarPaginador() {
 
