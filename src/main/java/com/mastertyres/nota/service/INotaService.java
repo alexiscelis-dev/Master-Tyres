@@ -36,6 +36,16 @@ public interface INotaService {
 
     void actualilzarFechaVencimiento(String fechaVencimiento, Integer notaId, String active);
 
+    //consultas de historial
+
+    List<NotaDTO> historialNota(Integer notaId,  String active);
+
+    List<NotaDTO> buscarHistorial(int cantidadResultados);
+
+
+
+
+
 
 
 

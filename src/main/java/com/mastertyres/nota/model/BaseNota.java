@@ -752,12 +752,33 @@ public abstract class BaseNota {
 
     }//checkCheckBoxes
 
-
-
-
     protected void setPorcentajeGasNota(final int porcentajeGasNota) {
         this.porcentajeGasNota = porcentajeGasNota;
     }
+
+    protected void revisarCheckBoxes(NotaDTO nota) {
+        String status[] = new String[8];
+
+        status[0] = nota.getRayones();
+        status[1] = nota.getGolpes();
+        status[2] = nota.getTapones();
+        status[3] = nota.getTapetes();
+        status[4] = nota.getRadio();
+        status[5] = nota.getGato();
+        status[6] = nota.getLlave();
+        status[7] = nota.getLlanta();
+
+        fillCheckBox(cbRayonesSi, cbRayonesNo, status[0]);
+        fillCheckBox(cbGolpesSi, cbGolpesNo, status[1]);
+        fillCheckBox(cbTaponesSi, cbTaponesNo, status[2]);
+        fillCheckBox(cbTapetesSi, cbTapetesNo, status[3]);
+        fillCheckBox(cbRadioSi, cbRadioNo, status[4]);
+        fillCheckBox(cbGatoSi, cbGatoNo, status[5]);
+        fillCheckBox(cbLlaveSi, cbLlaveNo, status[6]);
+        fillCheckBox(cbLlantaSi, cbLlantaNo, status[7]);
+
+
+    }//revisarCheckBoxes
 
 
 }//clase

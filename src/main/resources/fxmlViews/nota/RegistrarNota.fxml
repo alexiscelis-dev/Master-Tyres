@@ -58,22 +58,20 @@
         <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="600.0">
 
             <StackPane>
-                <HBox fx:id="hbAdeudo" visible="false" spacing="20" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="200.0" promptText="Ingrese el monto del adeudo" styleClass="buscador" >
+                <HBox fx:id="hbAdeudo" alignment="CENTER_LEFT" spacing="20" visible="false">
+                    <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="200.0" promptText="Ingrese el monto del adeudo" styleClass="buscador">
 
                     </TextField>
 
 
-                    <DatePicker  editable="false" fx:id="dpFecha" promptText="Fecha de vencimiento"
-                                prefHeight="26.0" prefWidth="165.0" styleClass="date-picker" >
+                    <DatePicker fx:id="dpFecha" editable="false" prefHeight="26.0" prefWidth="165.0" promptText="Fecha de vencimiento" styleClass="date-picker">
 
                     </DatePicker>
 
                 </HBox>
 
 
-                <TextField fx:id="txtSaldoAfavor" prefHeight="26.0" prefWidth="200.0"
-                           promptText="Ingrese el monto del saldo a favor" styleClass="buscador" visible="false">
+                <TextField fx:id="txtSaldoAfavor" prefHeight="26.0" prefWidth="200.0" promptText="Ingrese el monto del saldo a favor" styleClass="buscador" visible="false">
 
                 </TextField>
             <opaqueInsets>
@@ -104,8 +102,8 @@
 
 
         <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
-            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar" />
             <Button fx:id="btnRegistrar" styleClass="boton-accion" text="Registrar" />
+            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar" />
         </HBox>
 
     </VBox>
