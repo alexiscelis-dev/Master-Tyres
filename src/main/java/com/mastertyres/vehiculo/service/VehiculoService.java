@@ -368,15 +368,15 @@ public class VehiculoService implements IVehiculoService {
     }
 
     // 🔹 Buscar por fecha de registro exacta
-    public Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginado(String active, String fecha, int pagina, int tamanoPagina) {
+    public Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginado(String active, LocalDate fecha, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina);
         return vehiculoRepository.buscarVehiculoPorUltimoServicioPaginado(active, fecha, pageable);
     }
 
     // 🔹 Buscar por fecha de registro exacta
-    public Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginadoRango(String active, String fechaInicio, String fechaFin , int pagina, int tamanoPagina) {
+    public Page<VehiculoDTO> buscarVehiculoPorUltimoServicioPaginadoRango(String active, LocalDate fechaInicio, LocalDate fechaFin , int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina);
-        return vehiculoRepository.buscarVehiculoPorUltimoServicioPaginado(active, fechaInicio, fechaInicio, pageable);
+        return vehiculoRepository.buscarVehiculoPorUltimoServicioPaginado(active, fechaInicio, fechaFin, pageable);
     }
 
     // 🔹 Buscar por rango de fecha de registro

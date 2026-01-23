@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -546,6 +547,157 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNumTelefono
 
     @Transactional(readOnly = true)
+    public Page<Cliente> buscarClientePorCumpleanosPaginado(String active, String cumpleanos, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Cliente> clientes = clienteRepository.buscarClientePorCumpleanosPaginado(active, cumpleanos, pageable);
+
+        if (clientes.isEmpty()) return clientes;
+
+        // Inicializamos la lista de vehículos
+        for (Cliente cliente : clientes.getContent()) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.getContent().stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.getContent().stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorCumpleanos
+
+    @Transactional(readOnly = true)
+    public Page<Cliente> buscarClientePorCumpleanosRangoPaginado(String active, String cumpleanos, String cumpleanos2, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Cliente> clientes = clienteRepository.buscarClientePorCumpleanosRangoPaginado(active, cumpleanos, cumpleanos2, pageable);
+
+        if (clientes.isEmpty()) return clientes;
+
+        // Inicializamos la lista de vehículos
+        for (Cliente cliente : clientes.getContent()) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.getContent().stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.getContent().stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorCumpleanos
+
+    @Transactional(readOnly = true)
+    public Page<Cliente> buscarClientePorRegistroPaginado(String active, String registro, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Cliente> clientes = clienteRepository.buscarClientePorRegistroPaginado(active, registro, pageable);
+
+        if (clientes.isEmpty()) return clientes;
+
+        // Inicializamos la lista de vehículos
+        for (Cliente cliente : clientes.getContent()) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.getContent().stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.getContent().stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorCumpleanos
+
+    @Transactional(readOnly = true)
+    public Page<Cliente> buscarClientePorRegistroRangoPaginado(String active, LocalDate registro, LocalDate registro2, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Cliente> clientes = clienteRepository.buscarClientePorRegistroRangoPaginado(active, registro, registro2, pageable);
+
+        if (clientes.isEmpty()) return clientes;
+
+        // Inicializamos la lista de vehículos
+        for (Cliente cliente : clientes.getContent()) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.getContent().stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.getContent().stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorCumpleanos
+
+    @Transactional(readOnly = true)
+    public Page<Cliente> buscarClientePorCorreoPaginado(String active, String registro, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Cliente> clientes = clienteRepository.buscarClientePorCorreoPaginado(active, registro, pageable);
+
+        if (clientes.isEmpty()) return clientes;
+
+        // Inicializamos la lista de vehículos
+        for (Cliente cliente : clientes.getContent()) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.getContent().stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.getContent().stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+
+    }//buscarClientePorCumpleanos
+
+
+    @Transactional(readOnly = true)
     public Page<Cliente> buscadorClientesPaginado(String status, String busqueda, int pagina, int limite) {
         Pageable pageable = PageRequest.of(pagina, limite, Sort.by("clienteId").ascending());
 
@@ -582,7 +734,6 @@ public class ClienteService implements IClienteService {
 
         return paginaClientes;
     }
-
 
     @Transactional(readOnly = true)
     public List<Cliente> buscadorClientes(String status, String busqueda) {

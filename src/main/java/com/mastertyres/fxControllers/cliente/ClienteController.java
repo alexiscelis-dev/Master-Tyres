@@ -39,6 +39,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
@@ -75,6 +76,9 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
     @FXML private TableColumn<Cliente, String> colVehiculo;
     @FXML private TextField buscarClienteBuscador;
     @FXML private ChoiceBox<String> atributoBusquedaClientes;
+    @FXML private DatePicker dpBuscarCliente, dpClienteFin;
+    @FXML private CheckBox chkRangoCliente;
+    @FXML private Label lblHastaCliente;
     @FXML private Label statusLabel;
     @FXML private HBox limpiarChoiceBox;
     @FXML private Button refrescar;
@@ -92,6 +96,7 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
     private static final int CLIENTES_POR_PAGINA = 20;
     private List<Cliente> todosLosClientes;
     private String terminoBusquedaActual = "";
+    private String terminoBusquedaFechaActual = "";
     private boolean modoBusqueda = false;
 
     private LoadingComponentController loadingOverlayController;
@@ -114,8 +119,67 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
 
         });
 
+        // Listener para detectar cambios en el ChoiceBox
+//        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+//            configurarBuscador(newVal);
+//        });
+
+        // Listener para el ChoiceBox del Inventario
+        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            boolean esFecha = "Fecha de registro".equals(newVal);
+            actualizarVisibilidaddeDatePicker(esFecha);
+        });
+        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            boolean esFecha = "Fecha de registro".equals(newVal) || "Fecha de nacimiento".equals(newVal);
+            actualizarVisibilidaddeDatePicker(esFecha);
+        });
+
+        // Listener para el CheckBox de Rango
+        chkRangoCliente.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            actualizarVisibilidadRango(isSelected);
+        });
+
 
     }// initialize
+
+    private void actualizarVisibilidaddeDatePicker (boolean esFecha){
+        // Alternar entre Texto y Fecha
+        buscarClienteBuscador.setVisible(!esFecha);
+        buscarClienteBuscador.setManaged(!esFecha);
+
+        dpBuscarCliente.setVisible(esFecha);
+        dpBuscarCliente.setManaged(esFecha);
+        chkRangoCliente.setVisible(esFecha);
+        chkRangoCliente.setManaged(esFecha);
+
+        if (!esFecha) {
+            chkRangoCliente.setSelected(false);
+            actualizarVisibilidadRango(false);
+        }
+    }
+
+    private void actualizarVisibilidadRango(boolean mostrar) {
+        lblHastaCliente.setVisible(mostrar);
+        lblHastaCliente.setManaged(mostrar);
+        dpClienteFin.setVisible(mostrar);
+        dpClienteFin.setManaged(mostrar);
+    }
+
+    private void configurarBuscador(String criterio) {
+        boolean esFecha = "Fecha de nacimiento".equals(criterio) || "Fecha de registro".equals(criterio);
+
+        // Intercambiar visibilidad
+        buscarClienteBuscador.setVisible(!esFecha);
+        buscarClienteBuscador.setManaged(!esFecha);
+
+        dpBuscarCliente.setVisible(esFecha);
+        dpBuscarCliente.setManaged(esFecha);
+
+        // Limpiar campos al cambiar de filtro para evitar búsquedas cruzadas
+        buscarClienteBuscador.clear();
+        dpBuscarCliente.setValue(null);
+    }
+
 
     private void configuraciones(){
         //Enter buscar
@@ -456,6 +520,8 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
             // Dependiendo del atributo de búsqueda
             String key = atributoBusquedaClientes.getValue();
             switch (key.toLowerCase()) {
+                case "sin filtro" -> paginaClientes = clienteService.buscadorClientesPaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "nombre" -> paginaClientes = clienteService.buscarClientePorNombrePaginado(
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "telefono" -> paginaClientes = clienteService.buscarClientePorNumTelefonoPaginado(
@@ -470,6 +536,84 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "rfc" -> paginaClientes = clienteService.buscarClientePorRfcPaginado(
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "correo" -> paginaClientes = clienteService.buscarClientePorCorreoPaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+//                case "fecha de nacimiento" -> paginaClientes = clienteService.buscarClientePorCumpleanosPaginado(
+//                        StatusCliente.ACTIVE.toString(), terminoBusquedaFechaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "fecha de nacimiento" -> {
+                    LocalDate fechaInicio = dpBuscarCliente.getValue();
+
+                    if (chkRangoCliente.isSelected()) {
+                        LocalDate fechaFin = dpClienteFin.getValue();
+
+                        if (fechaInicio == null || fechaFin == null) {
+                            mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas.");
+                            paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+                        } else {
+                            if (fechaInicio.isAfter(fechaFin)) {
+                                LocalDate aux = fechaInicio;
+                                fechaInicio = fechaFin;
+                                fechaFin = aux;
+                            }
+                            // CORRECCIÓN AQUÍ: Agregar .toString() a ambos
+                            paginaClientes = clienteService.buscarClientePorCumpleanosRangoPaginado(
+                                    StatusCliente.ACTIVE.toString(),
+                                    fechaInicio.toString(),
+                                    fechaFin.toString(),
+                                    indicePagina,
+                                    CLIENTES_POR_PAGINA
+                            );
+                        }
+                    } else {
+                        if (fechaInicio == null) {
+                            mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha.");
+                            paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+                        } else {
+                            // Aquí ya tenías el .toString(), lo cual está bien
+                            paginaClientes = clienteService.buscarClientePorCumpleanosPaginado(
+                                    StatusCliente.ACTIVE.toString(),
+                                    fechaInicio.toString(),
+                                    indicePagina,
+                                    CLIENTES_POR_PAGINA
+                            );
+                        }
+                    }
+                }
+//                case "fecha de registro" -> paginaClientes = clienteService.buscarClientePorRegistroPaginado(
+//                        StatusCliente.ACTIVE.toString(), terminoBusquedaFechaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "fecha de registro" -> {
+                    LocalDate fechaInicio = dpBuscarCliente.getValue();
+
+                    // 1. Verificamos si es búsqueda por RANGO
+                    if (chkRangoCliente.isSelected()) {
+                        LocalDate fechaFin = dpClienteFin.getValue();
+
+                        // Validación: Si faltan fechas en el rango
+                        if (fechaInicio == null || fechaFin == null) {
+                            mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para el rango.");
+                            // Cargamos lista normal por defecto para no dejar la vista rota
+                            paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+                        } else {
+                            // Ordenar fechas si el usuario las puso al revés
+                            if (fechaInicio.isAfter(fechaFin)) {
+                                LocalDate aux = fechaInicio;
+                                fechaInicio = fechaFin;
+                                fechaFin = aux;
+                            }
+                            paginaClientes = clienteService.buscarClientePorRegistroRangoPaginado(StatusCliente.ACTIVE.toString(), fechaInicio, fechaFin, indicePagina, CLIENTES_POR_PAGINA);
+                        }
+                    }
+                    // 2. Búsqueda por FECHA ÚNICA
+                    else {
+                        if (fechaInicio == null) {
+                            mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                            paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+                        } else {
+                            paginaClientes = clienteService.buscarClientePorRegistroPaginado(StatusCliente.ACTIVE.toString(), fechaInicio.toString(), indicePagina, CLIENTES_POR_PAGINA);
+                        }
+                    }
+
+                }
                 default -> paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
             }
         } else {
@@ -607,6 +751,7 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
     private void buscarCliente(String seleccion, String busqueda) {
 
         terminoBusquedaActual = busqueda;
+        terminoBusquedaFechaActual = dpBuscarCliente.getValue() != null ? dpBuscarCliente.getValue().toString() : LocalDate.now().toString();
         modoBusqueda = !busqueda.trim().isEmpty();
         //atributoBusquedaClientes.setValue(seleccion);
 
@@ -614,12 +759,19 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
         Page<Cliente> paginaFiltrada;
 
         switch (seleccion) {
+            case "sin filtro" -> paginaFiltrada =
+                    clienteService.buscadorClientesPaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
             case "nombre" -> paginaFiltrada =
                     clienteService.buscarClientePorNombrePaginado(
                             StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "telefono" -> paginaFiltrada =
                     clienteService.buscarClientePorNumTelefonoPaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+
+            case "correo" -> paginaFiltrada =
+                    clienteService.buscarClientePorCorreoPaginado(
                             StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "estado" -> paginaFiltrada =
@@ -641,6 +793,87 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
             case "rfc" -> paginaFiltrada =
                     clienteService.buscarClientePorRfcPaginado(
                             StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+
+//            case "fecha de nacimiento" -> paginaFiltrada =
+//                    clienteService.buscarClientePorCumpleanosPaginado(
+//                            StatusCliente.ACTIVE.toString(), terminoBusquedaFechaActual, 0, CLIENTES_POR_PAGINA);
+
+            case "fecha de nacimiento" -> {
+                LocalDate fechaInicio = dpBuscarCliente.getValue();
+
+                if (chkRangoCliente.isSelected()) {
+                    LocalDate fechaFin = dpClienteFin.getValue();
+
+                    if (fechaInicio == null || fechaFin == null) {
+                        mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas.");
+                        paginaFiltrada = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
+                    } else {
+                        if (fechaInicio.isAfter(fechaFin)) {
+                            LocalDate aux = fechaInicio;
+                            fechaInicio = fechaFin;
+                            fechaFin = aux;
+                        }
+                        // CORRECCIÓN AQUÍ: Agregar .toString() a ambos
+                        paginaFiltrada = clienteService.buscarClientePorCumpleanosRangoPaginado(
+                                StatusCliente.ACTIVE.toString(),
+                                fechaInicio.toString(),
+                                fechaFin.toString(),
+                                0,
+                                CLIENTES_POR_PAGINA
+                        );
+                    }
+                } else {
+                    if (fechaInicio == null) {
+                        mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha.");
+                        paginaFiltrada = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
+                    } else {
+                        // Aquí ya tenías el .toString(), lo cual está bien
+                        paginaFiltrada = clienteService.buscarClientePorCumpleanosPaginado(
+                                StatusCliente.ACTIVE.toString(),
+                                fechaInicio.toString(),
+                                0,
+                                CLIENTES_POR_PAGINA
+                        );
+                    }
+                }
+            }
+//            case "fecha de registro" -> paginaFiltrada =
+//                    clienteService.buscarClientePorRegistroPaginado(
+//                            StatusCliente.ACTIVE.toString(), terminoBusquedaFechaActual, 0, CLIENTES_POR_PAGINA);
+
+            case "fecha de registro" -> {
+                LocalDate fechaInicio = dpBuscarCliente.getValue();
+
+                // 1. Verificamos si es búsqueda por RANGO
+                if (chkRangoCliente.isSelected()) {
+                    LocalDate fechaFin = dpClienteFin.getValue();
+
+                    // Validación: Si faltan fechas en el rango
+                    if (fechaInicio == null || fechaFin == null) {
+                        mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para el rango.");
+                        // Cargamos lista normal por defecto para no dejar la vista rota
+                        paginaFiltrada = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
+                    } else {
+                        // Ordenar fechas si el usuario las puso al revés
+                        if (fechaInicio.isAfter(fechaFin)) {
+                            LocalDate aux = fechaInicio;
+                            fechaInicio = fechaFin;
+                            fechaFin = aux;
+                        }
+                        paginaFiltrada = clienteService.buscarClientePorRegistroRangoPaginado(StatusCliente.ACTIVE.toString(), fechaInicio, fechaFin, 0, CLIENTES_POR_PAGINA);
+                    }
+                }
+                // 2. Búsqueda por FECHA ÚNICA
+                else {
+                    if (fechaInicio == null) {
+                        mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                        paginaFiltrada = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
+                    } else {
+                        paginaFiltrada = clienteService.buscarClientePorRegistroPaginado(StatusCliente.ACTIVE.toString(), fechaInicio.toString(), 0, CLIENTES_POR_PAGINA);
+                    }
+                }
+
+            }
 
             default -> paginaFiltrada =
                     clienteService.listarClientesConVehiculosPaginado(
@@ -716,4 +949,30 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
         resetBusqueda();
     }
 
+    public void accionBuscarCliente(ActionEvent actionEvent) {
+
+        String seleccion = atributoBusquedaClientes.getValue();
+
+        String busqueda;
+        if (atributoBusquedaClientes.getValue().equals("Fecha de nacimiento") || atributoBusquedaClientes.getValue().equals("Fecha de registro")){
+            busqueda = dpBuscarCliente.getValue().toString();
+        }else {
+            busqueda = buscarClienteBuscador.getText();
+        }
+
+
+        // SOLO funciona si hay un filtro seleccionado
+        if (seleccion != null && !seleccion.isEmpty()) {
+
+            // Si el texto está vacío, resetea y detén
+            if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
+                resetBusqueda();
+                return;
+            }
+
+            // Ejecutar búsqueda específica
+            buscarCliente(seleccion.toLowerCase(), busqueda);
+        }
+
+    }
 }//clase
