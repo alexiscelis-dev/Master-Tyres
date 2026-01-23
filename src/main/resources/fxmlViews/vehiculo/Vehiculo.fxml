@@ -18,14 +18,33 @@
 
             <!-- Zona superior: Búsqueda y botón agregar -->
             <HBox fx:id="limpiarChoiceBox" alignment="CENTER_LEFT" spacing="10.0">
-               <TextField fx:id="buscarVehiculoBuscador" prefHeight="26.0" prefWidth="448.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
+               <HBox alignment="CENTER_LEFT" spacing="5.0" fx:id="contenedorBusqueda">
+                  <TextField fx:id="buscarVehiculoBuscador" prefHeight="26.0" prefWidth="300.0" promptText="Buscar Vehiculo..." styleClass="buscador" />
+
+                  <DatePicker fx:id="dpVehiculoInicio" prefHeight="26.0" prefWidth="150.0" promptText="Fecha" visible="false" managed="false" />
+
+                  <CheckBox fx:id="chkRangoFechas" text="Rango" visible="false" managed="false" />
+
+                  <Label fx:id="lblHasta" text="a" visible="false" managed="false" />
+
+                  <DatePicker fx:id="dpVehiculoFin" prefHeight="26.0" prefWidth="150.0" promptText="Fecha fin" visible="false" managed="false" />
+
+                  <Button mnemonicParsing="false" onAction="#accionBuscarVehiculo" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
+                     <graphic>
+                        <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
+                           <image>
+                              <Image url="@/icons/lupa.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </HBox>
 
                <HBox alignment="CENTER_RIGHT" spacing="5.0">
                   <Label prefWidth="79.0" text="Buscar por: " />
                   <ChoiceBox fx:id="atributoBusquedaVehiculos" prefWidth="150.0" styleClass="choicebox-mini2">
                      <items>
                         <FXCollections fx:factory="observableArrayList">
-
                            <String fx:value="Propietario" />
                            <String fx:value="Marca" />
                            <String fx:value="Modelo" />
@@ -47,7 +66,6 @@
                      <Button fx:id="btnModificarMarcaModeloCategoria" layoutX="1.0" layoutY="1.0" onAction="#ModificarMarcaModeloCategoria" prefHeight="25.0" prefWidth="181.0" styleClass="boton-accion" text="Administrar Marcas" />
                      <Button fx:id="btnAgregarVehiculo" layoutX="195.0" layoutY="1.0" onAction="#agregarVehiculo" prefHeight="25.0" prefWidth="150.0" styleClass="boton-accion" text="Agregar Vehiculo" />
                      <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizarTabla" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
-
                         <graphic>
                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                               <image>
@@ -58,10 +76,7 @@
                      </Button>
                   </children>
                </Pane>
-
-
             </HBox>
-
 
             <!-- Tabla de clientes -->
             <TableView fx:id="tablaVehiculos" prefHeight="500.0" style="-fx-background-color: #1A1A1A;">

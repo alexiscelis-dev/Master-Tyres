@@ -74,6 +74,9 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
     @FXML private ChoiceBox<String> atributoBusquedaVehiculos;
     @FXML private Label statusLabel;
     @FXML private HBox limpiarChoiceBox;
+    @FXML private DatePicker dpVehiculoInicio, dpVehiculoFin;
+    @FXML private CheckBox chkRangoFechas;
+    @FXML private Label lblHasta;
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
@@ -109,8 +112,16 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
     public void initialize() {
         cargarVehiculos();
 
-        configuraciones();
+        atributoBusquedaVehiculos.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            ConfigurarMostarDatePicker1(newVal);
+        });
 
+        // 2. Listener para el CheckBox (Mostrar/Ocultar segunda fecha)
+        chkRangoFechas.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            ConfigurarMostrarDatepicker2(isSelected);
+        });
+
+        configuraciones();
 
         //Click derecho borrar
         tablaVehiculos.setRowFactory(tabla -> {
@@ -346,10 +357,40 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
             return fila;
         });
 
-
-
-
     }//initialize
+
+    private void ConfigurarMostarDatePicker1(String criterio){
+        boolean esFecha = "Ultimo Servicio".equals(criterio) || "Fecha Registro".equals(criterio);
+
+        // Alternar TextField vs Controles de Fecha
+        buscarVehiculoBuscador.setVisible(!esFecha);
+        buscarVehiculoBuscador.setManaged(!esFecha);
+
+        dpVehiculoInicio.setVisible(esFecha);
+        dpVehiculoInicio.setManaged(esFecha);
+        chkRangoFechas.setVisible(esFecha);
+        chkRangoFechas.setManaged(esFecha);
+
+        // Si cambiamos a texto, ocultamos el resto del rango forzosamente
+        if (!esFecha) {
+            ocultarRangoSegundoNivel();
+            chkRangoFechas.setSelected(false);
+        }
+    }
+
+    private void ConfigurarMostrarDatepicker2(Boolean criterio){
+        lblHasta.setVisible(criterio);
+        lblHasta.setManaged(criterio);
+        dpVehiculoFin.setVisible(criterio);
+        dpVehiculoFin.setManaged(criterio);
+    }
+
+    private void ocultarRangoSegundoNivel() {
+        lblHasta.setVisible(false);
+        lblHasta.setManaged(false);
+        dpVehiculoFin.setVisible(false);
+        dpVehiculoFin.setManaged(false);
+    }
 
     private void configuraciones(){
 
@@ -532,153 +573,264 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                     }
 
                     // ==== 🔹 ÚLTIMO SERVICIO (dd-MM-yyyy o rango) ====
-                    case "ultimo servicio" -> {
-                        boolean consultar = false;
-                        //forma dd-mm-yyyy
-                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                            String fecha = busqueda;
-                            String fechaConsulta = "";
+//                    case "ultimo servicio" -> {
+//                        boolean consultar = false;
+//                        //forma dd-mm-yyyy
+//                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+//                            String fecha = busqueda;
+//                            String fechaConsulta = "";
+//
+//
+//                            try {
+//                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                                LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+//
+//                                fechaConsulta = fechaLD.format(formatterConsulta);
+//
+//                                consultar = true;
+//
+//                            } catch (DateTimeParseException e) {
+//                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                                consultar = false;
+//
+//                            }
+//                            if (consultar) {
+//
+//                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
+//
+//                            }
+//
+//                            // forma dd-mm-yyyy,dd-mm-yyyy
+//                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
+//                            String[] fecha = busqueda.split(",");
+//                            String consultaInicio = "", consultaFinal = "";
+//
+//                            try {
+//                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                                LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+//                                LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+//
+//                                //ordenar fecha mayor al inicio para hacer la consulta
+//                                if (fecha1.isAfter(fecha2)) {
+//                                    LocalDate aux = fecha1;
+//                                    fecha1 = fecha2;
+//                                    fecha2 = aux;
+//
+//                                }
+//                                consultaInicio = fecha1.format(formatterConsulta);
+//                                consultaFinal = fecha2.format(formatterConsulta);
+//
+//                                consultar = true;
+//
+//                            } catch (DateTimeParseException e) {
+//                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                                consultar = false;
+//                            }
+//
+//                            if (consultar) {
+//                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(StatusVehiculo.ACTIVE.toString(), consultaInicio, consultaFinal, indicePagina, VEHICULO_POR_PAGINA);
+//                            }
+//
+//                        } else {
+//                            List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
+//                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
+//                            mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+//                                    " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+//
+//                        }
+//                    }
+//
+//
+//                    case "fecha registro" -> {
+//                        boolean consultar = false;
+//
+//                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+//                            String fecha = busqueda;
+//                            LocalDate fechaConsulta = null;
+//
+//
+//                            try {
+//                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                                LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+//                                fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+//
+//                                consultar = true;
+//
+//
+//
+//                            } catch (DateTimeParseException e) {
+//                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                                consultar = false;
+//
+//                            }
+//
+//                            if (consultar) {
+//
+//                                paginaVehiculo = vehiculoService.buscarPorFechaRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
+//
+//
+//                            }
+//
+//                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
+//
+//                            String[] fecha = busqueda.split(",");
+//                            String consultaInicio = "", consultaFinal = "";
+//
+//
+//                            try {
+//                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                                LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+//                                LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+//
+//                                //ordenar fecha mayor al inicio para hacer la consulta
+//                                if (fecha1.isAfter(fecha2)) {
+//                                    LocalDate aux = fecha1;
+//                                    fecha1 = fecha2;
+//                                    fecha2 = aux;
+//                                }
+//
+//                                consultaInicio = fecha1.format(formatterConsulta);
+//                                consultaFinal = fecha2.format(formatterConsulta);
+//
+//                                consultar = true;
+//
+//                            } catch (DateTimeParseException e) {
+//                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                                consultar = false;
+//                            }
+//
+//                            if (consultar) {
+//                                paginaVehiculo = vehiculoService.buscarPorFechaRegistroRango(StatusVehiculo.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, VEHICULO_POR_PAGINA);
+//                            }
+//
+//
+//                        } else {
+//                            List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
+//                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
+//                            mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+//                                    " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+//
+//                        }
+//
+//                    }
+
+                    // ==== 🔹 ÚLTIMO SERVICIO (dd-MM-yyyy o rango) ====
+                    case "fecha registro" -> {
+                        LocalDate fechaInicio = dpVehiculoInicio.getValue();
+
+                        if (chkRangoFechas.isSelected()) {
+                            // LÓGICA DE RANGO
+                            LocalDate fechaFin = dpVehiculoFin.getValue();
+
+                            if (fechaInicio == null || fechaFin == null) {
+                                mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para realizar la búsqueda por rango.");
+                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(),indicePagina,VEHICULO_POR_PAGINA);
 
 
-                            try {
-                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
 
-                                LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-
-                                fechaConsulta = fechaLD.format(formatterConsulta);
-
-                                consultar = true;
-
-                            } catch (DateTimeParseException e) {
-                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                                consultar = false;
+                                VBox contenedor = new VBox(tablaVehiculos);
+                                contenedor.setMinHeight(500);
+                                contenedor.setPrefHeight(500);
+                                contenedor.setStyle("-fx-background-color: transparent;");
+                                return contenedor;
 
                             }
-                            if (consultar) {
 
-                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
-
+                            // Validar y ordenar si el usuario puso la fecha mayor al inicio
+                            if (fechaInicio.isAfter(fechaFin)) {
+                                LocalDate aux = fechaInicio;
+                                fechaInicio = fechaFin;
+                                fechaFin = aux;
                             }
 
-                            // forma dd-mm-yyyy,dd-mm-yyyy
-                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-                            String[] fecha = busqueda.split(",");
-                            String consultaInicio = "", consultaFinal = "";
-
-                            try {
-                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                                LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                                LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                                //ordenar fecha mayor al inicio para hacer la consulta
-                                if (fecha1.isAfter(fecha2)) {
-                                    LocalDate aux = fecha1;
-                                    fecha1 = fecha2;
-                                    fecha2 = aux;
-
-                                }
-                                consultaInicio = fecha1.format(formatterConsulta);
-                                consultaFinal = fecha2.format(formatterConsulta);
-
-                                consultar = true;
-
-                            } catch (DateTimeParseException e) {
-                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                                consultar = false;
-                            }
-
-                            if (consultar) {
-                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(StatusVehiculo.ACTIVE.toString(), consultaInicio, consultaFinal, indicePagina, VEHICULO_POR_PAGINA);
-                            }
+                            paginaVehiculo = vehiculoService.buscarPorFechaRegistroRango(
+                                    StatusVehiculo.ACTIVE.toString(),
+                                    fechaInicio,
+                                    fechaFin,
+                                    indicePagina,
+                                    VEHICULO_POR_PAGINA
+                            );
 
                         } else {
-                            List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-                            mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                                    " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                            // LÓGICA DE FECHA ÚNICA
+                            if (fechaInicio == null) {
+                                mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(),indicePagina,VEHICULO_POR_PAGINA);
 
+
+                                tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
+
+                                VBox contenedor = new VBox(tablaVehiculos);
+                                contenedor.setMinHeight(500);
+                                contenedor.setPrefHeight(500);
+                                contenedor.setStyle("-fx-background-color: transparent;");
+                                return contenedor;
+                            }
+
+                            paginaVehiculo = vehiculoService.buscarPorFechaRegistro(
+                                    StatusVehiculo.ACTIVE.toString(),
+                                    fechaInicio,
+                                    indicePagina,
+                                    VEHICULO_POR_PAGINA
+                            );
                         }
                     }
 
+                    case "ultimo servicio" -> {
+                        LocalDate fechaInicio = dpVehiculoInicio.getValue();
 
-                    case "fecha registro" -> {
-                        boolean consultar = false;
-
-                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                            String fecha = busqueda;
-                            LocalDate fechaConsulta = null;
-
-
-                            try {
-                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                                LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-                                fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
-
-                                consultar = true;
+                        if (chkRangoFechas.isSelected()) {
+                            LocalDate fechaFin = dpVehiculoFin.getValue();
+                            if (fechaInicio == null || fechaFin == null) {
+                                mostrarWarning("Fechas incompletas", "Rango no válido", "Seleccione ambas fechas para el último servicio.");
+                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(),indicePagina,VEHICULO_POR_PAGINA);
 
 
+                                tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
 
-                            } catch (DateTimeParseException e) {
-                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                                consultar = false;
-
+                                VBox contenedor = new VBox(tablaVehiculos);
+                                contenedor.setMinHeight(500);
+                                contenedor.setPrefHeight(500);
+                                contenedor.setStyle("-fx-background-color: transparent;");
+                                return contenedor;
                             }
 
-                            if (consultar) {
-
-                                paginaVehiculo = vehiculoService.buscarPorFechaRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
-
-
+                            if (fechaInicio.isAfter(fechaFin)) {
+                                LocalDate aux = fechaInicio;
+                                fechaInicio = fechaFin;
+                                fechaFin = aux;
                             }
 
-                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-
-                            String[] fecha = busqueda.split(",");
-                            String consultaInicio = "", consultaFinal = "";
-
-
-                            try {
-                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                                LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                                LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                                //ordenar fecha mayor al inicio para hacer la consulta
-                                if (fecha1.isAfter(fecha2)) {
-                                    LocalDate aux = fecha1;
-                                    fecha1 = fecha2;
-                                    fecha2 = aux;
-                                }
-
-                                consultaInicio = fecha1.format(formatterConsulta);
-                                consultaFinal = fecha2.format(formatterConsulta);
-
-                                consultar = true;
-
-                            } catch (DateTimeParseException e) {
-                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                                consultar = false;
-                            }
-
-                            if (consultar) {
-                                paginaVehiculo = vehiculoService.buscarPorFechaRegistroRango(StatusVehiculo.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, VEHICULO_POR_PAGINA);
-                            }
-
-
+                            // Asumiendo que tienes este método en tu servicio
+                            paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(
+                                    StatusVehiculo.ACTIVE.toString(), fechaInicio, fechaFin, indicePagina, VEHICULO_POR_PAGINA);
                         } else {
-                            List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-                            mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                                    " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                            if (fechaInicio == null) {
+                                mostrarWarning("Fecha no seleccionada", "", "Seleccione una fecha de último servicio.");
+                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(),indicePagina,VEHICULO_POR_PAGINA);
 
+
+                                tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
+
+                                VBox contenedor = new VBox(tablaVehiculos);
+                                contenedor.setMinHeight(500);
+                                contenedor.setPrefHeight(500);
+                                contenedor.setStyle("-fx-background-color: transparent;");
+                                return contenedor;
+                            }
+
+                            paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(
+                                    StatusVehiculo.ACTIVE.toString(), fechaInicio, indicePagina, VEHICULO_POR_PAGINA);
                         }
-
                     }
 
                     default -> mostrarWarning("Búsqueda no válida", "", "Seleccione un campo de búsqueda correcto.");
@@ -926,153 +1078,228 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
             }
 
             // ==== ÚLTIMO SERVICIO (dd-MM-yyyy o rango) ====
-            case "ultimo servicio" -> {
-                boolean consultar = false;
-                //forma dd-mm-yyyy
-                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                    String fecha = busqueda;
-                    String fechaConsulta = "";
+//            case "ultimo servicio" -> {
+//                boolean consultar = false;
+//                //forma dd-mm-yyyy
+//                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+//                    String fecha = busqueda;
+//                    String fechaConsulta = "";
+//
+//
+//                    try {
+//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+//
+//                        fechaConsulta = fechaLD.format(formatterConsulta);
+//
+//                        consultar = true;
+//
+//                    } catch (DateTimeParseException e) {
+//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                        consultar = false;
+//
+//                    }
+//                    if (consultar) {
+//
+//                        paginaFiltrada = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(StatusVehiculo.ACTIVE.toString(), fechaConsulta, 0, VEHICULO_POR_PAGINA);
+//
+//                    }
+//
+//                    // forma dd-mm-yyyy,dd-mm-yyyy
+//                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
+//                    String[] fecha = busqueda.split(",");
+//                    String consultaInicio = "", consultaFinal = "";
+//
+//                    try {
+//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+//                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+//
+//                        //ordenar fecha mayor al inicio para hacer la consulta
+//                        if (fecha1.isAfter(fecha2)) {
+//                            LocalDate aux = fecha1;
+//                            fecha1 = fecha2;
+//                            fecha2 = aux;
+//
+//                        }
+//                        consultaInicio = fecha1.format(formatterConsulta);
+//                        consultaFinal = fecha2.format(formatterConsulta);
+//
+//                        consultar = true;
+//
+//                    } catch (DateTimeParseException e) {
+//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                        consultar = false;
+//                    }
+//
+//                    if (consultar) {
+//                        paginaFiltrada = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(StatusVehiculo.ACTIVE.toString(), consultaInicio, consultaFinal, 0, VEHICULO_POR_PAGINA);
+//                    }
+//
+//                } else {
+//                    List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
+//                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
+//                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+//                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+//
+//                }
+//            }
+//
+//
+//            case "fecha registro" -> {
+//                boolean consultar = false;
+//
+//                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+//                    String fecha = busqueda;
+//                    LocalDate fechaConsulta = null;
+//
+//
+//                    try {
+//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+//                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+//
+//                        consultar = true;
+//
+//
+//
+//                    } catch (DateTimeParseException e) {
+//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                        consultar = false;
+//
+//                    }
+//
+//                    if (consultar) {
+//
+//                        paginaFiltrada = vehiculoService.buscarPorFechaRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta, 0, VEHICULO_POR_PAGINA);
+//
+//
+//                    }
+//
+//                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
+//
+//                    String[] fecha = busqueda.split(",");
+//                    String consultaInicio = "", consultaFinal = "";
+//
+//
+//                    try {
+//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+//                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+//
+//                        //ordenar fecha mayor al inicio para hacer la consulta
+//                        if (fecha1.isAfter(fecha2)) {
+//                            LocalDate aux = fecha1;
+//                            fecha1 = fecha2;
+//                            fecha2 = aux;
+//                        }
+//
+//                        consultaInicio = fecha1.format(formatterConsulta);
+//                        consultaFinal = fecha2.format(formatterConsulta);
+//
+//                        consultar = true;
+//
+//                    } catch (DateTimeParseException e) {
+//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                        consultar = false;
+//                    }
+//
+//                    if (consultar) {
+//                        paginaFiltrada = vehiculoService.buscarPorFechaRegistroRango(StatusVehiculo.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), 0, VEHICULO_POR_PAGINA);
+//                    }
+//
+//
+//                } else {
+//                    List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
+//                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
+//                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+//                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+//
+//                }
+//
+//            }
 
+            // ==== 🔹 ÚLTIMO SERVICIO (dd-MM-yyyy o rango) ====
+            case "fecha registro" -> {
+                LocalDate fechaInicio = dpVehiculoInicio.getValue();
 
-                    try {
-                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                if (chkRangoFechas.isSelected()) {
+                    // LÓGICA DE RANGO
+                    LocalDate fechaFin = dpVehiculoFin.getValue();
 
-                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-
-                        fechaConsulta = fechaLD.format(formatterConsulta);
-
-                        consultar = true;
-
-                    } catch (DateTimeParseException e) {
-                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                        consultar = false;
+                    if (fechaInicio == null || fechaFin == null) {
+                        mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para realizar la búsqueda por rango.");
+                        return;
 
                     }
-                    if (consultar) {
 
-                        paginaFiltrada = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(StatusVehiculo.ACTIVE.toString(), fechaConsulta, 0, VEHICULO_POR_PAGINA);
-
+                    // Validar y ordenar si el usuario puso la fecha mayor al inicio
+                    if (fechaInicio.isAfter(fechaFin)) {
+                        LocalDate aux = fechaInicio;
+                        fechaInicio = fechaFin;
+                        fechaFin = aux;
                     }
 
-                    // forma dd-mm-yyyy,dd-mm-yyyy
-                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-                    String[] fecha = busqueda.split(",");
-                    String consultaInicio = "", consultaFinal = "";
-
-                    try {
-                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                        //ordenar fecha mayor al inicio para hacer la consulta
-                        if (fecha1.isAfter(fecha2)) {
-                            LocalDate aux = fecha1;
-                            fecha1 = fecha2;
-                            fecha2 = aux;
-
-                        }
-                        consultaInicio = fecha1.format(formatterConsulta);
-                        consultaFinal = fecha2.format(formatterConsulta);
-
-                        consultar = true;
-
-                    } catch (DateTimeParseException e) {
-                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                        consultar = false;
-                    }
-
-                    if (consultar) {
-                        paginaFiltrada = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(StatusVehiculo.ACTIVE.toString(), consultaInicio, consultaFinal, 0, VEHICULO_POR_PAGINA);
-                    }
+                    paginaFiltrada = vehiculoService.buscarPorFechaRegistroRango(
+                            StatusVehiculo.ACTIVE.toString(),
+                            fechaInicio,
+                            fechaFin,
+                            0,
+                            VEHICULO_POR_PAGINA
+                    );
 
                 } else {
-                    List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                    // LÓGICA DE FECHA ÚNICA
+                    if (fechaInicio == null) {
+                        mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                        return;
+                    }
 
+                    paginaFiltrada = vehiculoService.buscarPorFechaRegistro(
+                            StatusVehiculo.ACTIVE.toString(),
+                            fechaInicio,
+                            0,
+                            VEHICULO_POR_PAGINA
+                    );
                 }
             }
 
+            case "ultimo servicio" -> {
+                LocalDate fechaInicio = dpVehiculoInicio.getValue();
 
-            case "fecha registro" -> {
-                boolean consultar = false;
-
-                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                    String fecha = busqueda;
-                    LocalDate fechaConsulta = null;
-
-
-                    try {
-                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
-
-                        consultar = true;
-
-
-
-                    } catch (DateTimeParseException e) {
-                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                        consultar = false;
-
+                if (chkRangoFechas.isSelected()) {
+                    LocalDate fechaFin = dpVehiculoFin.getValue();
+                    if (fechaInicio == null || fechaFin == null) {
+                        mostrarWarning("Fechas incompletas", "Rango no válido", "Seleccione ambas fechas para el último servicio.");
+                        return;
                     }
 
-                    if (consultar) {
-
-                        paginaFiltrada = vehiculoService.buscarPorFechaRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta, 0, VEHICULO_POR_PAGINA);
-
-
+                    if (fechaInicio.isAfter(fechaFin)) {
+                        LocalDate aux = fechaInicio;
+                        fechaInicio = fechaFin;
+                        fechaFin = aux;
                     }
 
-                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-
-                    String[] fecha = busqueda.split(",");
-                    String consultaInicio = "", consultaFinal = "";
-
-
-                    try {
-                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                        //ordenar fecha mayor al inicio para hacer la consulta
-                        if (fecha1.isAfter(fecha2)) {
-                            LocalDate aux = fecha1;
-                            fecha1 = fecha2;
-                            fecha2 = aux;
-                        }
-
-                        consultaInicio = fecha1.format(formatterConsulta);
-                        consultaFinal = fecha2.format(formatterConsulta);
-
-                        consultar = true;
-
-                    } catch (DateTimeParseException e) {
-                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                        consultar = false;
-                    }
-
-                    if (consultar) {
-                        paginaFiltrada = vehiculoService.buscarPorFechaRegistroRango(StatusVehiculo.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), 0, VEHICULO_POR_PAGINA);
-                    }
-
-
+                    // Asumiendo que tienes este método en tu servicio
+                    paginaFiltrada = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(
+                            StatusVehiculo.ACTIVE.toString(), fechaInicio, fechaFin, 0, VEHICULO_POR_PAGINA);
                 } else {
-                    List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-                    tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+                    if (fechaInicio == null) {
+                        mostrarWarning("Fecha no seleccionada", "", "Seleccione una fecha de último servicio.");
+                        return;
+                    }
 
+                    paginaFiltrada = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(
+                            StatusVehiculo.ACTIVE.toString(), fechaInicio, 0, VEHICULO_POR_PAGINA);
                 }
-
             }
 
             default -> paginaFiltrada =
@@ -1117,8 +1344,6 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
 
     }
 
-
-
     public void ModificarMarcaModeloCategoria(ActionEvent actionEvent) {
 
         ventanaPrincipalController.viewContent(
@@ -1142,4 +1367,75 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
         cargarDatosVehiculo();  // vuelve a cargar conteo y items normales
     }
 
+    public void accionBuscarVehiculo(ActionEvent actionEvent) {
+        String seleccion = atributoBusquedaVehiculos.getValue();
+
+        // 1. Verificación inicial del ChoiceBox
+        if (seleccion == null || seleccion.isEmpty()) {
+            return;
+        }
+
+        // Determinamos si la búsqueda es por alguna de las opciones de fecha
+        boolean esFecha = seleccion.equals("Fecha Registro") || seleccion.equals("Ultimo Servicio");
+
+        if (esFecha) {
+            // 2. VALIDACIÓN DE FECHAS (Evitamos .toString() antes de tiempo)
+            LocalDate inicio = dpVehiculoInicio.getValue();
+
+            if (inicio == null) {
+                mostrarWarning("Campo requerido", "Fecha inicial vacía",
+                        "Por favor, seleccione la fecha para realizar la búsqueda.");
+                return;
+            }
+
+            // 3. VALIDACIÓN DE RANGO (Si el checkbox está marcado)
+            if (chkRangoFechas.isSelected()) {
+                if (dpVehiculoFin.getValue() == null) {
+                    mostrarWarning("Campo requerido", "Fecha final vacía",
+                            "Ha activado la búsqueda por rango. Por favor, seleccione la fecha final.");
+                    return;
+                }
+            }
+
+            // Si todo es correcto, disparamos la búsqueda.
+            // Pasamos el toString() solo ahora que sabemos que 'inicio' NO es null.
+            buscarVehiculo(seleccion.toLowerCase(), inicio.toString());
+
+        } else {
+            // 4. VALIDACIÓN DE TEXTO NORMAL
+            String texto = buscarVehiculoBuscador.getText();
+
+            if (texto == null || texto.isBlank()) {
+                resetBusqueda();
+                return;
+            }
+
+            buscarVehiculo(seleccion.toLowerCase(), texto);
+        }
+    }
+
+//    public void accionBuscarVehiculo(ActionEvent actionEvent) {
+//        String seleccion = atributoBusquedaVehiculos.getValue();
+//        String busqueda;
+//        //String busqueda2;
+//        if (atributoBusquedaVehiculos.getValue().equals("Fecha Registro") || atributoBusquedaVehiculos.getValue().equals("Ultimo Servicio")){
+//            //busqueda2 = dpVehiculoFin.getValue().toString();
+//            busqueda = dpVehiculoInicio.getValue().toString();
+//        }else {
+//            busqueda = buscarVehiculoBuscador.getText();
+//        }
+//
+//        // SOLO funciona si hay un filtro seleccionado
+//        if (seleccion != null && !seleccion.isEmpty()) {
+//
+//            // Si el texto está vacío, resetea y detén
+//            if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
+//                resetBusqueda();
+//                return;
+//            }
+//
+//            // Ejecutar búsqueda específica
+//            buscarVehiculo(seleccion.toLowerCase(), busqueda);
+//        }
+//    }
 }//clase

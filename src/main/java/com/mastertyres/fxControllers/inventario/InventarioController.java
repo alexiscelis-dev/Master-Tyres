@@ -90,6 +90,9 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
     private TextField buscarInventarioBuscador;
     @FXML
     private ChoiceBox<String> atributoBusquedaInventario;
+    @FXML private DatePicker dpInventarioInicio, dpInventarioFin;
+    @FXML private CheckBox chkRangoInventario;
+    @FXML private Label lblHastaInventario;
     @FXML
     private HBox limpiarChoiceBox;
     @FXML
@@ -119,6 +122,17 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
 
     @FXML
     private void initialize() {
+
+        // Listener para el ChoiceBox del Inventario
+        atributoBusquedaInventario.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            boolean esFecha = "Fecha de registro".equals(newVal);
+            actualizarVisibilidaddeDatePicker(esFecha);
+        });
+
+        // Listener para el CheckBox de Rango
+        chkRangoInventario.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            actualizarVisibilidadRango(isSelected);
+        });
 
         cargarInventario();
 
@@ -420,6 +434,29 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
 
     }//initialize
 
+    private void actualizarVisibilidaddeDatePicker (boolean esFecha){
+        // Alternar entre Texto y Fecha
+        buscarInventarioBuscador.setVisible(!esFecha);
+        buscarInventarioBuscador.setManaged(!esFecha);
+
+        dpInventarioInicio.setVisible(esFecha);
+        dpInventarioInicio.setManaged(esFecha);
+        chkRangoInventario.setVisible(esFecha);
+        chkRangoInventario.setManaged(esFecha);
+
+        if (!esFecha) {
+            chkRangoInventario.setSelected(false);
+            actualizarVisibilidadRango(false);
+        }
+    }
+
+    private void actualizarVisibilidadRango(boolean mostrar) {
+        lblHastaInventario.setVisible(mostrar);
+        lblHastaInventario.setManaged(mostrar);
+        dpInventarioFin.setVisible(mostrar);
+        dpInventarioFin.setManaged(mostrar);
+    }
+
     private void resetBusqueda() {
         modoBusqueda = false;
         terminoBusquedaActual = "";
@@ -432,6 +469,177 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
         cargarDatosInventario();  // vuelve a cargar conteo y items normales
     }
 
+    private void buscarInventario(String busqueda) {
+        terminoBusquedaActual = busqueda;
+        modoBusqueda = !busqueda.trim().isEmpty();
+
+        if (modoBusqueda) {
+            //  total de resultados para el buscador general
+            long totalResultados = inventarioService.contarInventarioPorBusquedaGeneral(
+                    StatusInventario.ACTIVE.toString(),
+                    terminoBusquedaActual
+            );
+
+            int totalPaginas = (int) Math.ceil((double) totalResultados / INVENTARIOS_POR_PAGINA);
+
+            paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
+        } else {
+            // Si no hay búsqueda, restaurar paginación normal
+            long totalClientes = inventarioService.contarInventariosActivos(StatusInventario.ACTIVE.toString());
+            int totalPaginas = (int) Math.ceil((double) totalClientes / INVENTARIOS_POR_PAGINA);
+            paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
+        }
+
+        paginadorInventarios.setCurrentPageIndex(0); // Reinicia la paginación
+        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
+
+    }
+
+    private void buscarInventario(String seleccion, String busqueda) { // porque se va a buscar, vehiculo a buscar
+
+        terminoBusquedaActual = busqueda;
+        modoBusqueda = !busqueda.trim().isEmpty();
+        String activo = StatusInventario.ACTIVE.toString();
+        //atributoBusquedaInventario.setValue(seleccion);
+
+        Page<Inventario> paginaFiltrada = null;
+
+        switch (seleccion) {
+            case "codigo de barras" -> {
+                paginaFiltrada = inventarioService.buscarPorCodBarrasPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "dot" -> {
+                paginaFiltrada = inventarioService.buscarPorDotPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "marca" -> {
+                paginaFiltrada = inventarioService.buscarPorMarcaPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "modelo" -> {
+                paginaFiltrada = inventarioService.buscarPorModeloPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+            case "medida" -> {
+                paginaFiltrada = inventarioService.buscarPorMedidaPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
+            }
+//            case "fecha de registro" -> {
+//                boolean consultar = false;
+//
+//                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+//                    String fecha = busqueda;
+//                    LocalDate fechaConsulta = null;
+//
+//                    try {
+//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+//                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+//
+//                        consultar = true;
+//
+//                    } catch (DateTimeParseException e) {
+//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                        consultar = false;
+//
+//                    }
+//
+//                    if (consultar) {
+//                        paginaFiltrada = inventarioService.buscarPorFechaPaginado(activo, fechaConsulta, 0, INVENTARIOS_POR_PAGINA);
+//                    }
+//
+//                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
+//
+//                    String fecha[] = busqueda.split(",");
+//                    String consultaInicio = "", consultaFinal = "";
+//
+//                    try {
+//                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+//                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+//
+//                        //Ordenar la fecha mayor
+//                        if (fecha1.isAfter(fecha2)) {
+//                            LocalDate aux = fecha1;
+//                            fecha1 = fecha2;
+//                            fecha2 = aux;
+//
+//                        }
+//
+//                        consultaInicio = fecha1.format(formatterConsulta);
+//                        consultaFinal = fecha2.format(formatterConsulta);
+//
+//                        consultar = true;
+//
+//
+//                    } catch (DateTimeParseException e) {
+//                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                        consultar = false;
+//                    }
+//
+//                    if (consultar) {
+//                        paginaFiltrada = inventarioService.buscarPorFechaPaginadoRangos(activo, LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), 0, INVENTARIOS_POR_PAGINA);
+//                    }
+//
+//
+//                } else {
+//                    List<Inventario> inventarioVacio = new ArrayList<>();
+//                    tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
+//                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+//                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+//                }
+//
+//            }
+//
+            case "fecha de registro" -> {
+                LocalDate fechaInicio = dpInventarioInicio.getValue();
+
+                // 1. Verificamos si es búsqueda por RANGO
+                if (chkRangoInventario.isSelected()) {
+                    LocalDate fechaFin = dpInventarioFin.getValue();
+
+                    // Validación: Si faltan fechas en el rango
+                    if (fechaInicio == null || fechaFin == null) {
+                        mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para el rango.");
+                        // Cargamos lista normal por defecto para no dejar la vista rota
+                        paginaFiltrada = inventarioService.listarInventarioPaginado(activo, 0, INVENTARIOS_POR_PAGINA);
+                    } else {
+                        // Ordenar fechas si el usuario las puso al revés
+                        if (fechaInicio.isAfter(fechaFin)) {
+                            LocalDate aux = fechaInicio;
+                            fechaInicio = fechaFin;
+                            fechaFin = aux;
+                        }
+                        paginaFiltrada = inventarioService.buscarPorFechaPaginadoRangos(activo, fechaInicio, fechaFin, 0, INVENTARIOS_POR_PAGINA);
+                    }
+                }
+                // 2. Búsqueda por FECHA ÚNICA
+                else {
+                    if (fechaInicio == null) {
+                        mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                        paginaFiltrada = inventarioService.listarInventarioPaginado(activo, 0, INVENTARIOS_POR_PAGINA);
+                    } else {
+                        paginaFiltrada = inventarioService.buscarPorFechaPaginado(activo, fechaInicio, 0, INVENTARIOS_POR_PAGINA);
+                    }
+                }
+
+            }
+
+            default -> {
+                mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+            }
+        }
+
+        // ACTUALIZA EL PAGECOUNT CON EL TOTAL DE COINCIDENCIAS
+        int totalPaginas = paginaFiltrada.getTotalPages();
+        paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
+
+
+        // Reinicia el paginador para la búsqueda
+        paginadorInventarios.setPageFactory(this::crearPaginaInventarioFiltro);
+        paginadorInventarios.setCurrentPageIndex(0);
+
+    }//buscarVehiculo
 
     private VBox crearPaginaInventario(int indicePagina) {
         Page<Inventario> paginaInventario;
@@ -485,76 +693,110 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
                 case "medida" -> {
                     paginaInventario = inventarioService.buscarPorMedidaPaginado(activo, busqueda, indicePagina, INVENTARIOS_POR_PAGINA);
                 }
+//                case "fecha de registro" -> {
+//                    boolean consultar = false;
+//
+//                    if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
+//                        String fecha = busqueda;
+//                        LocalDate fechaConsulta = null;
+//
+//                        try {
+//                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                            LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
+//                            fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
+//
+//                            consultar = true;
+//
+//                        } catch (DateTimeParseException e) {
+//                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                            consultar = false;
+//
+//                        }
+//
+//                        if (consultar) {
+//                            paginaInventario = inventarioService.buscarPorFechaPaginado(activo, fechaConsulta, indicePagina, INVENTARIOS_POR_PAGINA);
+//                        }
+//
+//                    } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
+//
+//                        String fecha[] = busqueda.split(",");
+//                        String consultaInicio = "", consultaFinal = "";
+//
+//                        try {
+//                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//
+//                            LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
+//                            LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
+//
+//                            //Ordenar la fecha mayor
+//                            if (fecha1.isAfter(fecha2)) {
+//                                LocalDate aux = fecha1;
+//                                fecha1 = fecha2;
+//                                fecha2 = aux;
+//
+//                            }
+//
+//                            consultaInicio = fecha1.format(formatterConsulta);
+//                            consultaFinal = fecha2.format(formatterConsulta);
+//
+//                            consultar = true;
+//
+//
+//                        } catch (DateTimeParseException e) {
+//                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
+//                            consultar = false;
+//                        }
+//
+//                        if (consultar) {
+//                            paginaInventario = inventarioService.buscarPorFechaPaginadoRangos(activo, LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, INVENTARIOS_POR_PAGINA);
+//                        }
+//
+//
+//                    } else {
+//                        List<Inventario> inventarioVacio = new ArrayList<>();
+//                        tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
+//                        mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
+//                                " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
+//                    }
+//
+//                }
+
                 case "fecha de registro" -> {
-                    boolean consultar = false;
+                    LocalDate fechaInicio = dpInventarioInicio.getValue();
 
-                    if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                        String fecha = busqueda;
-                        LocalDate fechaConsulta = null;
+                    // 1. Verificamos si es búsqueda por RANGO
+                    if (chkRangoInventario.isSelected()) {
+                        LocalDate fechaFin = dpInventarioFin.getValue();
 
-                        try {
-                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                            LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-                            fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
-
-                            consultar = true;
-
-                        } catch (DateTimeParseException e) {
-                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                            consultar = false;
-
-                        }
-
-                        if (consultar) {
-                            paginaInventario = inventarioService.buscarPorFechaPaginado(activo, fechaConsulta, indicePagina, INVENTARIOS_POR_PAGINA);
-                        }
-
-                    } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
-
-                        String fecha[] = busqueda.split(",");
-                        String consultaInicio = "", consultaFinal = "";
-
-                        try {
-                            DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                            DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                            LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                            LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                            //Ordenar la fecha mayor
-                            if (fecha1.isAfter(fecha2)) {
-                                LocalDate aux = fecha1;
-                                fecha1 = fecha2;
-                                fecha2 = aux;
-
+                        // Validación: Si faltan fechas en el rango
+                        if (fechaInicio == null || fechaFin == null) {
+                            mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para el rango.");
+                            // Cargamos lista normal por defecto para no dejar la vista rota
+                            paginaInventario = inventarioService.listarInventarioPaginado(activo, indicePagina, INVENTARIOS_POR_PAGINA);
+                        } else {
+                            // Ordenar fechas si el usuario las puso al revés
+                            if (fechaInicio.isAfter(fechaFin)) {
+                                LocalDate aux = fechaInicio;
+                                fechaInicio = fechaFin;
+                                fechaFin = aux;
                             }
-
-                            consultaInicio = fecha1.format(formatterConsulta);
-                            consultaFinal = fecha2.format(formatterConsulta);
-
-                            consultar = true;
-
-
-                        } catch (DateTimeParseException e) {
-                            mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                            consultar = false;
+                            paginaInventario = inventarioService.buscarPorFechaPaginadoRangos(activo, fechaInicio, fechaFin, indicePagina, INVENTARIOS_POR_PAGINA);
                         }
-
-                        if (consultar) {
-                            paginaInventario = inventarioService.buscarPorFechaPaginadoRangos(activo, LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, INVENTARIOS_POR_PAGINA);
-                        }
-
-
-                    } else {
-                        List<Inventario> inventarioVacio = new ArrayList<>();
-                        tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
-                        mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                                " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
                     }
-
+                    // 2. Búsqueda por FECHA ÚNICA
+                    else {
+                        if (fechaInicio == null) {
+                            mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                            paginaInventario = inventarioService.listarInventarioPaginado(activo, indicePagina, INVENTARIOS_POR_PAGINA);
+                        } else {
+                            paginaInventario = inventarioService.buscarPorFechaPaginado(activo, fechaInicio, indicePagina, INVENTARIOS_POR_PAGINA);
+                        }
+                    }
                 }
+
                 default -> {
                     mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
                 }
@@ -685,143 +927,6 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
 
     }//cargarDatosInventario
 
-    private void buscarInventario(String busqueda) {
-        terminoBusquedaActual = busqueda;
-        modoBusqueda = !busqueda.trim().isEmpty();
-
-        if (modoBusqueda) {
-            //  total de resultados para el buscador general
-            long totalResultados = inventarioService.contarInventarioPorBusquedaGeneral(
-                    StatusInventario.ACTIVE.toString(),
-                    terminoBusquedaActual
-            );
-
-            int totalPaginas = (int) Math.ceil((double) totalResultados / INVENTARIOS_POR_PAGINA);
-
-            paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
-        } else {
-            // Si no hay búsqueda, restaurar paginación normal
-            long totalClientes = inventarioService.contarInventariosActivos(StatusInventario.ACTIVE.toString());
-            int totalPaginas = (int) Math.ceil((double) totalClientes / INVENTARIOS_POR_PAGINA);
-            paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
-        }
-
-        paginadorInventarios.setCurrentPageIndex(0); // Reinicia la paginación
-        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
-
-    }
-
-    private void buscarInventario(String seleccion, String busqueda) { // porque se va a buscar, vehiculo a buscar
-
-        terminoBusquedaActual = busqueda;
-        modoBusqueda = !busqueda.trim().isEmpty();
-        String activo = StatusInventario.ACTIVE.toString();
-        //atributoBusquedaInventario.setValue(seleccion);
-
-        Page<Inventario> paginaFiltrada = null;
-
-        switch (seleccion) {
-            case "codigo de barras" -> {
-                paginaFiltrada = inventarioService.buscarPorCodBarrasPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
-            }
-            case "dot" -> {
-                paginaFiltrada = inventarioService.buscarPorDotPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
-            }
-            case "marca" -> {
-                paginaFiltrada = inventarioService.buscarPorMarcaPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
-            }
-            case "modelo" -> {
-                paginaFiltrada = inventarioService.buscarPorModeloPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
-            }
-            case "medida" -> {
-                paginaFiltrada = inventarioService.buscarPorMedidaPaginado(activo, busqueda, 0, INVENTARIOS_POR_PAGINA);
-            }
-            case "fecha de registro" -> {
-                boolean consultar = false;
-
-                if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                    String fecha = busqueda;
-                    LocalDate fechaConsulta = null;
-
-                    try {
-                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                        LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-                        fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
-
-                        consultar = true;
-
-                    } catch (DateTimeParseException e) {
-                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                        consultar = false;
-
-                    }
-
-                    if (consultar) {
-                        paginaFiltrada = inventarioService.buscarPorFechaPaginado(activo, fechaConsulta, 0, INVENTARIOS_POR_PAGINA);
-                    }
-
-                } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {  //rango de fechas
-
-                    String fecha[] = busqueda.split(",");
-                    String consultaInicio = "", consultaFinal = "";
-
-                    try {
-                        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-                        LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-                        LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-
-                        //Ordenar la fecha mayor
-                        if (fecha1.isAfter(fecha2)) {
-                            LocalDate aux = fecha1;
-                            fecha1 = fecha2;
-                            fecha2 = aux;
-
-                        }
-
-                        consultaInicio = fecha1.format(formatterConsulta);
-                        consultaFinal = fecha2.format(formatterConsulta);
-
-                        consultar = true;
-
-
-                    } catch (DateTimeParseException e) {
-                        mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-                        consultar = false;
-                    }
-
-                    if (consultar) {
-                        paginaFiltrada = inventarioService.buscarPorFechaPaginadoRangos(activo, LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), 0, INVENTARIOS_POR_PAGINA);
-                    }
-
-
-                } else {
-                    List<Inventario> inventarioVacio = new ArrayList<>();
-                    tablaInventario.setItems(FXCollections.observableList(inventarioVacio));
-                    mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-                            " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
-                }
-
-            }
-            default -> {
-                mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
-            }
-        }
-
-        // ACTUALIZA EL PAGECOUNT CON EL TOTAL DE COINCIDENCIAS
-        int totalPaginas = paginaFiltrada.getTotalPages();
-        paginadorInventarios.setPageCount(Math.max(totalPaginas, 1));
-
-
-        // Reinicia el paginador para la búsqueda
-        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
-        paginadorInventarios.setCurrentPageIndex(0);
-
-    }//buscarVehiculo
-
     @FXML
     private void agregarInventario(ActionEvent event) {
 
@@ -848,8 +953,6 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
         this.ventanaPrincipalController = controller;
     }
 
-
-
     //actualiza
     private void actualizarTabla() {
         atributoBusquedaInventario.setValue(null);
@@ -865,4 +968,66 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
     }
 
 
+    public void accionBuscarInventario(ActionEvent actionEvent) {
+        String seleccion = atributoBusquedaInventario.getValue();
+
+        // 1. Evitar error si no han seleccionado nada en el ChoiceBox
+        if (seleccion == null) {
+            return;
+        }
+
+        boolean esFecha = seleccion.equals("Fecha de registro");
+
+        if (esFecha) {
+            // VALIDACIÓN DE FECHAS (Sin usar .toString() prematuro)
+            if (dpInventarioInicio.getValue() == null) {
+                mostrarWarning("Campo requerido", "Fecha inicial vacía", "Por favor seleccione una fecha.");
+                return;
+            }
+
+            if (chkRangoInventario.isSelected() && dpInventarioFin.getValue() == null) {
+                mostrarWarning("Campo requerido", "Fecha final vacía", "Por favor seleccione la fecha final para el rango.");
+                return;
+            }
+
+            // Si pasó las validaciones, mandamos un trigger (puede ser cualquier string)
+            buscarInventario(seleccion.toLowerCase(), "FECHA_VALIDA");
+
+        } else {
+            // VALIDACIÓN DE TEXTO
+            String texto = buscarInventarioBuscador.getText();
+            if (texto == null || texto.isBlank()) {
+                resetBusqueda();
+                return;
+            }
+            buscarInventario(seleccion.toLowerCase(), texto);
+        }
+    }
+
+//    public void accionBuscarInventario(ActionEvent actionEvent) {
+//
+//        String seleccion = atributoBusquedaInventario.getValue();
+//        String busqueda;
+//
+//
+//        if (atributoBusquedaInventario.getValue().toString().equals("Fecha de registro")){
+//            busqueda = dpInventarioInicio.getValue().toString();
+//        }else{
+//            busqueda = buscarInventarioBuscador.getText();
+//        }
+//
+//        // SOLO funciona si hay un filtro seleccionado
+//        if (seleccion != null && !seleccion.isEmpty()) {
+//
+//            // Si el texto está vacío, resetea y detén
+//            if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
+//                resetBusqueda();
+//                return;
+//            }
+//
+//            // Ejecutar búsqueda específica
+//            buscarInventario(seleccion.toLowerCase(), busqueda);
+//        }
+//
+//    }
 }//clase

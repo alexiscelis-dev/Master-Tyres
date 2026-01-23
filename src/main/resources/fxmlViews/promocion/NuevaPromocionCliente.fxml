@@ -215,12 +215,12 @@
                         <children>
                             <TextField fx:id="txtBuscador" prefHeight="32.0" prefWidth="413.0" promptText="Buscar cliente" styleClass="buscador" />
                             <Button fx:id="btnBuscar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Buscar">
-                        <HBox.margin>
-                           <Insets left="20.0" />
-                        </HBox.margin></Button>
+                                <HBox.margin>
+                                    <Insets left="20.0" />
+                                </HBox.margin>
+                            </Button>
                         </children>
                     </HBox>
-                    <Button fx:id="btnAgregarVehiculo" mnemonicParsing="false" prefHeight="34.0" prefWidth="165.0" styleClass="boton-accion" text="Agregar" />
                     <VBox id="panel_para_tabla" prefHeight="200.0" prefWidth="100.0">
                         <children>
 
@@ -229,13 +229,13 @@
 
 
                                 <columns>
+                                    <TableColumn fx:id="colSeleccionCliente" prefWidth="166.20001220703125" text="Seleccionar" />
                                     <TableColumn fx:id="colNombre" prefWidth="166.20001220703125" text="Nombre" />
                                     <TableColumn fx:id="colRFC" minWidth="50" prefWidth="174.60003662109375" text="RFC" />
                                     <TableColumn fx:id="colCumpleanos" minWidth="0.0" prefWidth="160.20001220703125" text="Cumpleaños" />
                                     <TableColumn fx:id="colFechaRegistro" minWidth="0.0" prefWidth="160.20001220703125" text="Fecha de registro" />
                                     <TableColumn fx:id="colHobbie" minWidth="0.0" prefWidth="160.20001220703125" text="Hobbie" />
                                     <TableColumn fx:id="colEliminar" style="-fx-alignment: CENTER;" text="Acción" />
-
                                 </columns>
                             </TableView>
                         </children>
@@ -244,17 +244,18 @@
                 </VBox>
                 <HBox alignment="BOTTOM_CENTER" prefHeight="140.0" prefWidth="500.0">
                     <children>
-                        <Button fx:id="btnLimpiar" mnemonicParsing="false" styleClass="boton-accion" text="Limpiar">
+                        <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar">
                             <HBox.margin>
                                 <Insets right="15.0" />
                             </HBox.margin>
                         </Button>
-                        <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar" />
+                        <Button fx:id="btnLimpiar" mnemonicParsing="false" styleClass="boton-accion" text="Limpiar">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Button>
                     </children>
-
-
                 </HBox>
-
             </children>
         </VBox>
     </children>
