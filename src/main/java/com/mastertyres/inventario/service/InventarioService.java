@@ -35,7 +35,7 @@ public class InventarioService implements IInventarioService {
         return inventarioRepository.contarInventarioPorBusquedaGeneral(status, termino);
     }
 
-    ;
+
 
     @Transactional(readOnly = true)
     @Override
@@ -368,6 +368,12 @@ public class InventarioService implements IInventarioService {
 
         inventarioRepository.actualizarStock(inventarioId, stock, active);
 
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Inventario> first100Inventario(String active) {
+        return inventarioRepository.first100Inventario(active);
     }
 
 

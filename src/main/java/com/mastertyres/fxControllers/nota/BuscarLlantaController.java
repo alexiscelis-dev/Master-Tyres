@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -13,6 +14,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,8 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Component
 public class BuscarLlantaController {
+    @FXML
+    private AnchorPane root;
     @FXML
     private Button btnBuscar;
     @FXML
@@ -52,6 +56,7 @@ public class BuscarLlantaController {
 
     private Inventario llantaSeleccionada;
 
+
     public Inventario getLlantaSeleccionada() {
         return llantaSeleccionada;
     }
@@ -62,16 +67,18 @@ public class BuscarLlantaController {
 
     @FXML
     private void initialize() {
-        txtBuscador.setOnKeyPressed(event -> {
+        configuraciones();
 
-            if (txtBuscador.getText() != null && !txtBuscador.getText().isEmpty()) {
-                if (event.getCode() == KeyCode.ENTER)
-                    cargarLlantas(txtBuscador.getText());
-            }
-
-        });
+        cargarLlantasInicio();
 
         btnBuscar.setOnAction(event -> cargarLlantas(txtBuscador.getText()));
+
+
+    }//initialize
+
+    private void configuraciones(){
+
+        MenuContextSetting.disableMenu(root);
 
         tablaLlantas.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -82,7 +89,16 @@ public class BuscarLlantaController {
             }
         });
 
-    }//initialize
+        txtBuscador.setOnKeyPressed(event -> {
+
+            if (txtBuscador.getText() != null && !txtBuscador.getText().isEmpty()) {
+                if (event.getCode() == KeyCode.ENTER)
+                    cargarLlantas(txtBuscador.getText());
+            }
+
+        });
+
+    }//configuraciones
 
     @FXML
     private void cancelar(ActionEvent event) {
@@ -92,6 +108,13 @@ public class BuscarLlantaController {
     }//cancelar
 
     private void cargarLlantas(String busqueda) {
+        cargarLlantas();
+
+        cargarDatosLlantas(busqueda);
+
+    }//cargarLlantas
+
+    private void cargarLlantas(){
         colMarca.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getMarca()
         ));
@@ -109,17 +132,14 @@ public class BuscarLlantaController {
         ));
         colStock.setCellValueFactory(data -> new SimpleIntegerProperty(
                 data.getValue().getStock()).asObject());
-
-
-        cargarDatosLlantas(busqueda);
-
-    }//cargarLlantas
+    }
 
     private void cargarDatosLlantas(String busqueda) {
         try {
-            if (busqueda != null && !busqueda.isEmpty()) {
+            if (busqueda != null && !busqueda.isEmpty() ) {
                 List<Inventario> inventarios = inventarioService.buscadorInventario(StatusInventario.ACTIVE.toString(), busqueda);
                 tablaLlantas.getItems().setAll(FXCollections.observableList(inventarios));
+
 
             } else {
                 List<Inventario> inventarioVacio = new ArrayList<>();
@@ -132,6 +152,19 @@ public class BuscarLlantaController {
         }
 
     }//cargarDatosLlantas
+
+    //Este metodo carga las llantas en la tabla cuando inicia la ventana mientras que cargarLlantas lo hace en la busqueda
+    private void cargarLlantasInicio(){
+        cargarLlantas();
+
+        try {
+            List<Inventario> inventarios = inventarioService.first100Inventario(StatusInventario.ACTIVE.toString());
+            tablaLlantas.getItems().setAll(FXCollections.observableList(inventarios));
+        }catch (Exception e){
+            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde.");
+        }
+
+    }//cargarLlantasInicio
 
     @FXML
     private void aceptar(ActionEvent event) {

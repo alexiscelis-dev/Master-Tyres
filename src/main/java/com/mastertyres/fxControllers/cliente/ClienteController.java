@@ -120,9 +120,6 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
         });
 
         // Listener para detectar cambios en el ChoiceBox
-//        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-//            configurarBuscador(newVal);
-//        });
 
         // Listener para el ChoiceBox del Inventario
         atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {

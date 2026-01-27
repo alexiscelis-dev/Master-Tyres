@@ -2,11 +2,11 @@ package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.common.service.NotaUtils;
-import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.service.NotaUtils;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.inventario.model.Inventario;
@@ -36,7 +36,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.mastertyres.common.utils.MensajesAlert.*;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
@@ -77,7 +76,7 @@ public class RegistrarNotaController implements ILoading {
     private BooleanProperty boolMontoAdeudo = new SimpleBooleanProperty(true);
     private BooleanProperty boolFechaVencimiento = new SimpleBooleanProperty(true);
     private BooleanProperty boolMontoFavor = new SimpleBooleanProperty(true);
-    private BooleanProperty actualizarInventario = new SimpleBooleanProperty(false);
+    private BooleanProperty boolActualizarInventario = new SimpleBooleanProperty(false);
     private Runnable onRegistroCompleto;
     private LoadingComponentController loadingOverlayController;
 
@@ -164,12 +163,13 @@ public class RegistrarNotaController implements ILoading {
             mostrarWarning("Cantidad incorrecta", "",
                     "La cantidad 'POR PAGAR' ( " + txtAdeudo.getText() + " ) excede el total de la nota ( " + nota.getTotal() + " ). Ingrese una cantidad valida.");
             return;
-        } else if (notaUtils.toFloatSafe(txtSaldoAfavor.getText()) > nota.getTotal()) {
+        }
+
+        if (notaUtils.toFloatSafe(txtSaldoAfavor.getText()) > nota.getTotal()) {
             mostrarWarning("Cantidad incorrecta", "",
                     "La cantidad 'A FAVOR' ( " + txtSaldoAfavor.getText() + " ) excede el total de la nota ( " + nota.getTotal() + " ). Ingrese una cantidad valida.");
             return;
-
-        } else {
+        }
 
             String strNumFactura = "";
 
@@ -222,9 +222,9 @@ public class RegistrarNotaController implements ILoading {
             //se busca llanta antes de crear instancia
             if (nota.getInventarioId() != null) {
                 llantaRegistrar = inventarioService.buscarLlantaPorId(nota.getInventarioId());
-                actualizarInventario.set(true);
+                boolActualizarInventario.set(true);
             } else {
-                actualizarInventario.set(false);
+                boolActualizarInventario.set(false);
             }
 
 
@@ -334,13 +334,12 @@ public class RegistrarNotaController implements ILoading {
                 notaService.guardarNota(nuevaNota, notaDetalle, clienteDetalle);
 
 //if que verifica si existe la llanta si existe la llanta que tiene la nota realiza la consulta (en teoria siempre debe de realizarse)
-                if (actualizarInventario.get()) {
+                if (boolActualizarInventario.get()) {
 
 
                     inventarioService.actualizarStock(nota.getInventarioId(), llantaRegistrar.getStock() - nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
                     inventarioService.actualizarUptatedAt(LocalDateTime.now().toString(), nota.getInventarioId());
                 }
-
 
                 cancelar(null);
                 if (onRegistroCompleto != null) {
@@ -359,7 +358,7 @@ public class RegistrarNotaController implements ILoading {
                 mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
                 e.printStackTrace();
             }
-        }//else
+
 
 
     }//registrar

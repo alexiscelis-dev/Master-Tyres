@@ -45,6 +45,8 @@ public interface IInventarioService {
 
     void actualizarStock(Integer inventarioId, Integer stock, String active);
 
+    List<Inventario>  first100Inventario(String active);
+
 
 
 
