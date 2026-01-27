@@ -267,6 +267,8 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
         });
 
 
+
+
     }//configuraciones
 
     private void configurarValidaciones() {

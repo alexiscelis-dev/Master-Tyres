@@ -44,8 +44,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -101,6 +99,7 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
     private Button btnAgregarInventario;
     @FXML
     private Button btnRefrescar;
+
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
@@ -1004,30 +1003,5 @@ public class InventarioController implements IVentanaPrincipal, ILoading {
         }
     }
 
-//    public void accionBuscarInventario(ActionEvent actionEvent) {
-//
-//        String seleccion = atributoBusquedaInventario.getValue();
-//        String busqueda;
-//
-//
-//        if (atributoBusquedaInventario.getValue().toString().equals("Fecha de registro")){
-//            busqueda = dpInventarioInicio.getValue().toString();
-//        }else{
-//            busqueda = buscarInventarioBuscador.getText();
-//        }
-//
-//        // SOLO funciona si hay un filtro seleccionado
-//        if (seleccion != null && !seleccion.isEmpty()) {
-//
-//            // Si el texto está vacío, resetea y detén
-//            if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
-//                resetBusqueda();
-//                return;
-//            }
-//
-//            // Ejecutar búsqueda específica
-//            buscarInventario(seleccion.toLowerCase(), busqueda);
-//        }
-//
-//    }
+
 }//clase

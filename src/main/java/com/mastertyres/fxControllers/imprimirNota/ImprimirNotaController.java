@@ -278,34 +278,6 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
         this.notaImprimir = notaImprimir;
     }
 
-    /*
-    private void revisarCheckBoxes() {
-        String status[] = new String[8];
-
-        status[0] = notaImprimir.getRayones();
-        status[1] = notaImprimir.getGolpes();
-        status[2] = notaImprimir.getTapones();
-        status[3] = notaImprimir.getTapetes();
-        status[4] = notaImprimir.getRadio();
-        status[5] = notaImprimir.getGato();
-        status[6] = notaImprimir.getLlave();
-        status[7] = notaImprimir.getLlanta();
-
-        fillCheckBox(cbRayonesSi, cbRayonesNo, status[0]);
-        fillCheckBox(cbGolpesSi, cbGolpesNo, status[1]);
-        fillCheckBox(cbTaponesSi, cbTaponesNo, status[2]);
-        fillCheckBox(cbTapetesSi, cbTapetesNo, status[3]);
-        fillCheckBox(cbRadioSi, cbRadioNo, status[4]);
-        fillCheckBox(cbGatoSi, cbGatoNo, status[5]);
-        fillCheckBox(cbLlaveSi, cbLlaveNo, status[6]);
-        fillCheckBox(cbLlantaSi, cbLlantaNo, status[7]);
-
-
-    }//revisarCheckBoxes
-
-     */
-
-
 
 
 }//class

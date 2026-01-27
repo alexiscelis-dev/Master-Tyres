@@ -18,9 +18,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
@@ -51,39 +53,38 @@ public class NotaService implements INotaService {
         switch (filtro.toLowerCase()){
             case "sin filtro" ->  paginaFiltrada = buscarNotas(busqueda, IndicePagina, tamañoPagina);
 
-            case "numero de nota" ->  paginaFiltrada = BucarPorNumNota(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+            case "numero de nota" ->  paginaFiltrada = BucarPorNumNota(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "fecha de emicion" -> paginaFiltrada = buscarPorFechaNota(LocalDate.parse(busqueda), "ACTIVE", IndicePagina, tamañoPagina);
+            case "fecha de emicion" -> paginaFiltrada = buscarPorFechaNota(LocalDate.parse(busqueda), StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "nombre del cliente" -> paginaFiltrada = buscarPorNombreCliente(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+            case "nombre del cliente" -> paginaFiltrada = buscarPorNombreCliente(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "vehiculo" -> paginaFiltrada = buscarPorVehiculo(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+            case "vehiculo" -> paginaFiltrada = buscarPorVehiculo(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "estatus de nota" -> paginaFiltrada = buscarPorStatusNota(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+            case "fecha de vencimiento" -> paginaFiltrada = buscarPorFechaVencimiento(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "fecha de vencimiento" -> paginaFiltrada = buscarPorFechaVencimiento(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-
-            case "direccion" -> paginaFiltrada = buscarPorDireccion(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+            case "direccion" -> paginaFiltrada = buscarPorDireccion(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
             case "placas de vehiculo" -> paginaFiltrada = buscarPorPlacas(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
 
-            case "numero de factura" -> paginaFiltrada = buscarPorNumeroFactura(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+            case "numero de factura" -> paginaFiltrada = buscarPorNumeroFactura(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "rfc" -> paginaFiltrada = buscarPorRfc(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+            case "rfc" -> paginaFiltrada = buscarPorRfc(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
             case "adeudo" -> {
                 try {
                     BigDecimal adeudo = new BigDecimal(busqueda.trim());
                     paginaFiltrada = buscarPorAdeudo(
-                            adeudo, "ACTIVE", IndicePagina, tamañoPagina
+                            adeudo, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
                     );
                 } catch (NumberFormatException ex) {
+
                     mostrarWarning(
                             "Valor inválido",
                             "Adeudo incorrecto",
                             "Ingrese un valor numérico válido para el adeudo."
                     );
-                    return listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+                    return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
                 }
             }
 
@@ -99,7 +100,7 @@ public class NotaService implements INotaService {
                             "Total incorrecto",
                             "Ingrese un valor numérico válido para el total."
                     );
-                    return listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+                    return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
                 }
             }
 
@@ -107,7 +108,7 @@ public class NotaService implements INotaService {
                 try {
                     Double saldo = Double.parseDouble(busqueda.trim());
                     paginaFiltrada = buscarPorSaldoFavor(
-                            saldo, "ACTIVE", IndicePagina, tamañoPagina
+                            saldo, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
                     );
                 } catch (NumberFormatException ex) {
                     mostrarWarning(
@@ -115,11 +116,11 @@ public class NotaService implements INotaService {
                             "Saldo incorrecto",
                             "Ingrese un valor numérico válido para el saldo a favor."
                     );
-                    return listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+                    return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
                 }
             }
 
-            default -> paginaFiltrada = listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+            default -> paginaFiltrada = listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
         }
         return paginaFiltrada;
     }
@@ -133,7 +134,7 @@ public class NotaService implements INotaService {
 
             case "fecha de vencimiento" -> paginaFiltrada = buscarPorFechaVencimientoRango(busqueda, busqueda2, "ACTIVE", IndicePagina, tamañoPagina);
 
-            default -> paginaFiltrada = listarNotasPaginado("ACTIVE", 0, tamañoPagina);
+            default -> paginaFiltrada = listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
         }
         return paginaFiltrada;
     }
@@ -176,10 +177,6 @@ public class NotaService implements INotaService {
         return notaRepository.buscarPorVehiculo(filtro, active, pageable);
     }
 
-    public Page<NotaDTO> buscarPorStatusNota(String filtro, String active, int pagina, int tamanoPagina) {
-        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
-        return notaRepository.buscarPorStatusNota(filtro, active, pageable);
-    }
 
     public Page<NotaDTO> buscarPorFechaVencimiento(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
@@ -256,14 +253,17 @@ public class NotaService implements INotaService {
     @Override
     public NotaDTO buscarPorNumNota(String active, String numNota) {
 
-        return notaRepository.buscarPorNumNota(active, numNota);
+        return Optional.ofNullable(notaRepository.buscarPorNumNota(active, numNota)).
+                orElseThrow(() -> new NotaException("Tuvimos problemas al obtener la nota proporcionada"));
 
     }
 
     @Transactional(readOnly = true)
     @Override
     public Nota findByNumNota(String numNota) {
-        return notaRepository.findByNumNota(numNota);
+        return Optional.
+                ofNullable(notaRepository.findByNumNota(numNota)).
+                orElseThrow(() -> new NotaException("Tuvimos problemas al obtener la nota proporcionada"));
     }
 
 
@@ -328,17 +328,12 @@ public class NotaService implements INotaService {
         notaRepository.actualizarFechaVencimiento(fechaVencimiento, notaId, active);
     }
 
-    @Override
-    public List<NotaDTO> historialNota(Integer notaId,  String active) {
-       return notaRepository.historialNota(notaId, active);
-    }
 
     @Override
-    public List<NotaDTO> buscarHistorial(int cantidadResultados) {
-        Sort orderBy = Sort.by("createdAt").ascending();
+    public List<NotaDTO> buscarHistorial(int cantidadResultados, String nombreCliente) {
 
-        Pageable configuracion = PageRequest.of(0, cantidadResultados,orderBy);
-        return  notaRepository.buscarHistorial(StatusNota.ACTIVE.toString(),configuracion);
+        Pageable configuracion = PageRequest.of(0, cantidadResultados);
+        return  notaRepository.buscarHistorial(StatusNota.ACTIVE.toString(),nombreCliente, configuracion);
     }
 
 

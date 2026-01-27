@@ -180,12 +180,12 @@
 }
 
 .textfield-fecha{
--fx-pref-width: 20px;
+
 -fx-background-color:transparent;
 -fx-background-insets:0;
 -fx-background-color:transparent;
 -fx-text-fill: black;
--fx-font-size: 14px;
+-fx-font-size: 10px;
 -fx-font-weight: bold;
 }
 
@@ -208,7 +208,7 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
     -fx-border-width: 0 0 2 0;
-    -fx-font-size: 14px;
+    -fx-font-size: 10px;
     -fx-padding: 5 0 5 0;
     -fx-text-fill: black;
     -fx-font-weight: bold;
@@ -220,7 +220,7 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
     -fx-border-width: 0 0 2 0;
-    -fx-font-size: 14px;
+    -fx-font-size: 10px;
     -fx-padding: 5 0 5 0;
     -fx-text-fill: black;
     -fx-alignment: center;
@@ -231,7 +231,7 @@
 .label-fecha{
 -fx-background-color: #63605E;
 -fx-font-weight: bold;
- -fx-font-size: 14px;
+ -fx-font-size: 10px;
 
 }
 
@@ -312,6 +312,14 @@
     -fx-background-color: #AEE83A;
 }
 
+.zoom{
+-fx-cursor: hand;
+}
+
+.zoom:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
 
 
 

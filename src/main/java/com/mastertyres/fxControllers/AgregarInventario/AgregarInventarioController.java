@@ -221,8 +221,6 @@ public class AgregarInventarioController implements IVentanaPrincipal, ILoading 
                     : null;
 
 
-
-
             Inventario inventario = Inventario.builder()
                     .identificadorLlanta(identificadorLlanta)
                     .codigoBarras(codigoBarras)
@@ -244,7 +242,6 @@ public class AgregarInventarioController implements IVentanaPrincipal, ILoading 
 
                         loadingOverlayController,
                         () -> {
-                            Thread.sleep(5000);
                             inventarioService.guardarInventario(inventario);
                             return null;
                         },

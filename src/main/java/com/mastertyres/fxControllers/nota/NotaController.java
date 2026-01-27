@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
@@ -174,16 +175,22 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                 darPlazo(notaSeleccionada.getNotaId()));
 
         btnRefrescar.setOnAction(event -> {
-            cargarNota();
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                    },
+                    () -> {
+                        resetBusqueda();
+                        cargarNota();
+                    }
+            );
         });
-
 
 
     }//initialize
 
-    private void configuraciones(){
+    private void configuraciones() {
 
-        atributoBusquedaNota.setValue("Sin Filtro");
 
         cargarNota();
 
@@ -205,6 +212,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
             dpBuscarFin.setVisible(isSelected);
             dpBuscarFin.setManaged(isSelected);
         });
+
 
 
     }//configuraciones
@@ -229,25 +237,35 @@ public class NotaController implements IVentanaPrincipal, ILoading {
             dpBuscar.setValue(null);
             dpBuscarFin.setValue(null);
         }
-    }
+    }//configurarBuscador
 
     private void cargarPagina(int indicePagina) {
         Page<NotaDTO> pagina;
 
-        if (modoBusqueda) {
-            // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
-            if (esRangoActual) {
-                pagina = notaService.buscadorRangos(filtroActual, textoBusquedaActual, textoBusquedaActual2, indicePagina, tamañoPagina);
+        try {
+
+            if (modoBusqueda) {
+                // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
+                if (esRangoActual) {
+                    pagina = notaService.buscadorRangos(filtroActual, textoBusquedaActual, textoBusquedaActual2, indicePagina, tamañoPagina);
+                } else {
+                    pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
+                }
             } else {
-                pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
+                pagina = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
             }
-        } else {
-            pagina = notaService.listarNotasPaginado("ACTIVE", indicePagina, tamañoPagina);
+
+            mostrarNotas(pagina.getContent());
+            PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
+
+        }catch (NotaException ne){
+            mostrarError("Error de busqueda","",""+ne);
+        }
+        catch (Exception e) {
+            mostrarError("Error inesperado", "","Ocurrio un problema al mostrar las notas");
         }
 
-        mostrarNotas(pagina.getContent());
-        PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
-    }
+    }//cargarPagina
 
     private void ConfigurarNuevoPaginadorBusqueda(String filtro, String busqueda, String busqueda2) {
         modoBusqueda = true;
@@ -438,8 +456,8 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         String fechaStr = nota.getCreatedAt();
         String fechaStr2 = nota.getFechaVencimiento();
 
-        String fechaFormateada = "N/A";
-        String fechaFormateada2 = "N/A";
+        String fechaFormateada = "N/D";
+        String fechaFormateada2 = "N/D";
 
 
         if (fechaStr != null && !fechaStr.trim().isEmpty()) {
@@ -525,7 +543,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                 "Editar Nota");
         EditarNotaController controller = (EditarNotaController) controllerObj;
         controller.agregarNota(numNota);
-        //   controller.setInitializeLoading(ventanaPrincipalController.loadingOverlayController);
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("EDITAR NOTA");
 
 

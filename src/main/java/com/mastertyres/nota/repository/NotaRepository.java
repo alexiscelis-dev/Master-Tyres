@@ -98,21 +98,14 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
                                          Pageable pageable);
 
     @Query(SELECT_NOTA_DTO + " WHERE n.active = :active AND n.numNota LIKE %:numNota%")
-    Page<NotaDTO> buscarPorNumeroNota(
-            @Param("numNota") String numNota,
-            @Param("active") String active,
-            Pageable pageable
-    );
+    Page<NotaDTO> buscarPorNumeroNota(@Param("numNota") String numNota,
+                                      @Param("active") String active,
+                                      Pageable pageable);
 
-    @Query( SELECT_NOTA_DTO + " "+"""
-            WHERE n.active = :active
-            AND LOWER(ndc.nombreClienteNota) LIKE LOWER(CONCAT('%', :nombreCliente, '%'))
-            """)
-    Page<NotaDTO> buscarPorNombreCliente(
-            @Param("nombreCliente") String nombreCliente,
-            @Param("active") String active,
-            Pageable pageable
-    );
+    @Query( SELECT_NOTA_DTO + " WHERE n.active = :active AND LOWER(ndc.nombreClienteNota) LIKE LOWER(CONCAT('%', :nombreCliente, '%')) ")
+    Page<NotaDTO> buscarPorNombreCliente(@Param("nombreCliente") String nombreCliente,
+                                         @Param("active") String active,
+                                         Pageable pageable);
 
 
     @Query(SELECT_NOTA_DTO + " WHERE n.active = :active AND DATE(n.fechaYhora) = :fecha")
@@ -131,10 +124,6 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
             "OR LOWER(ndc.modeloNota) LIKE LOWER(CONCAT('%', :vehiculo, '%')))")
     Page<NotaDTO> buscarPorVehiculo(@Param("vehiculo") String vehiculo, @Param("active") String active, Pageable pageable);
 
-    @Query( SELECT_NOTA_DTO + " WHERE n.active = :active AND n.statusNota = :status")
-    Page<NotaDTO> buscarPorStatusNota(@Param("status") String status,
-                                      @Param("active") String active,
-                                      Pageable pageable);
 
     @Query( SELECT_NOTA_DTO + " WHERE n.active = :active AND n.fechaVencimiento = :fechaVencimiento")
     Page<NotaDTO> buscarPorFechaVencimiento( @Param("fechaVencimiento") String fechaVencimiento,
@@ -250,11 +239,11 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
 
 
     //consultas de historial
-    @Query(SELECT_NOTA_DTO + " WHERE n.notaId = :notaId AND n.active = :active")
-    List<NotaDTO> historialNota(@Param("notaId") Integer notaId, @Param("active") String active);
 
-    @Query(SELECT_NOTA_DTO + " WHERE n.active = :active")
-    List<NotaDTO> buscarHistorial(@Param("active") String active, Pageable pageable);
+
+    @Query(SELECT_NOTA_DTO + " WHERE n.active = :active " +
+            " AND LOWER(ndc.nombreClienteNota) LIKE LOWER(CONCAT('%', :nombreCliente, '%')) ORDER BY n.createdAt DESC")
+    List<NotaDTO> buscarHistorial(@Param("active") String active,@Param("nombreCliente")String nombreCliente,  Pageable pageable);
 
 
 }//clase

@@ -128,7 +128,7 @@ public class BuscarLlantaController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde.");
         }
 
     }//cargarDatosLlantas
