@@ -3,7 +3,9 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -16,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +27,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class EditarModeloController {
+public class EditarModeloController implements IFxController {
 
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TextField txtModelo;
     @FXML
@@ -47,8 +52,21 @@ public class EditarModeloController {
 
     @FXML
     private void initialize() {
-        configurarValidaciones();
+
+        configuraciones();
+        listeners();
         cargarCategorias();
+
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+        MenuContextSetting.disableMenu(rootPane);
+    }
+
+    @Override
+    public void listeners() {
+        configurarValidaciones();
     }
 
     private void cargarCategorias() {
@@ -146,4 +164,5 @@ public class EditarModeloController {
 
     }
 
-}
+
+}//class

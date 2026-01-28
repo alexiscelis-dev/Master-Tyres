@@ -1,5 +1,6 @@
-package com.mastertyres.fxControllers.EditarControllers;
+package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.nota.model.NotaDTO;
@@ -23,7 +24,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class EditarSaldoController {
+public class EditarSaldoController implements IFxController {
     @FXML
     private AnchorPane root;
     @FXML
@@ -44,18 +45,14 @@ public class EditarSaldoController {
 
     @FXML
     private void initialize(){
+
        configuraciones();
-
-       cbLiquidar.selectedProperty().addListener((observable, oldValue, newValue) -> {
-           revisarCheckBox();
-       });
-
+       listeners();
 
     }//initialize
 
-    private void configuraciones(){
-
-
+    @Override
+    public void configuraciones(){
 
         MenuContextSetting.disableMenu(root);
         RegexTools.aplicarNumerosDecimal(txtSaldo);
@@ -64,7 +61,17 @@ public class EditarSaldoController {
                 txtSaldo.textProperty().isNull()
                         .or(txtSaldo.textProperty().isEmpty())
         );
+
     }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        cbLiquidar.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            revisarCheckBox();
+        });
+
+    }//listeners
 
     private void revisarCheckBox() {
         if (cbLiquidar.isSelected())
@@ -106,7 +113,6 @@ public class EditarSaldoController {
         }
 
     }//actualizar
-
 
 
     @FXML

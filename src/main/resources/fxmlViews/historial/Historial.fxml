@@ -20,21 +20,45 @@
             <BorderPane prefHeight="600" prefWidth="1186.0">
 
                 <!-- Parte superior: buscador y botones -->
+
                 <top>
                     <HBox alignment="CENTER_LEFT" spacing="10">
 
-                        <TextField fx:id="txtBuscar" maxWidth="800.0" prefHeight="26.0" prefWidth="500.0"
-                                   promptText="Buscar notas..." styleClass="buscador" HBox.hgrow="ALWAYS"/>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
+                            <TextField fx:id="txtBuscar" maxWidth="600.0" prefHeight="26.0" prefWidth="350.0"
+                                       promptText="Buscar notas..." styleClass="buscador" HBox.hgrow="ALWAYS"/>
+
+                            <DatePicker fx:id="dpBuscar" managed="false" prefHeight="26.0" prefWidth="150.0"
+                                        promptText="Fecha..." visible="false"/>
+
+                            <CheckBox fx:id="chkRangoNota" managed="false" text="Rango" visible="false"/>
+
+                            <Label fx:id="lblHasta" managed="false" text="a" visible="false"/>
+
+                            <DatePicker fx:id="dpBuscarFin" managed="false" prefHeight="26.0" prefWidth="150.0"
+                                        promptText="Fecha fin..." visible="false"/>
+
+                            <Button fx:id="btnBuscar" mnemonicParsing="false" prefHeight="26.0" prefWidth="40.0"
+                                    styleClass="boton-accion">
+                                <graphic>
+                                    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
+                                        <image>
+                                            <Image url="@/icons/lupa.png"/>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                                <tooltip>
+                                    <Tooltip text="Buscar"/>
+                                </tooltip>
+                            </Button>
+                        </HBox>
 
                         <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                            <Label prefHeight="18.0" prefWidth="79.0" text="Filtrar:" textFill="WHITE">
-                                <font>
-                                    <Font name="System Bold" size="12.0"/>
-                                </font>
-                            </Label>
-                            <ChoiceBox fx:id="choiceLimite" prefWidth="150.0" styleClass="choicebox">
+                            <Label prefHeight="18.0" prefWidth="79.0" text="Filtrar:"/>
+                            <ChoiceBox fx:id="choiceLimite" prefWidth="150.0" styleClass="choicebox-mini2">
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Sin Filtro"/>
                                         <String fx:value="5"/>
                                         <String fx:value="10"/>
                                         <String fx:value="15"/>
@@ -44,7 +68,7 @@
                             </ChoiceBox>
                         </HBox>
 
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion"
+                        <Button fx:id="btnRefrescar" mnemonicParsing="false" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion"
                                 text="">
                             <graphic>
                                 <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
@@ -54,13 +78,13 @@
                                 </ImageView>
                             </graphic>
                         </Button>
+
                         <padding>
                             <Insets bottom="20.0" right="20.0" top="20.0"/>
                         </padding>
 
                     </HBox>
                 </top>
-
                 <!-- División principal -->
                 <center>
                     <SplitPane dividerPositions="0.40694650817236255" prefHeight="296.0" prefWidth="1278.0"
@@ -103,8 +127,8 @@
                                     <!-- contenedor de la nota -->
 
 
-                                    <VBox alignment="CENTER" fillWidth="true" spacing="20"
-                                          styleClass="contenedor-nota" visible="true">
+                                    <VBox alignment="CENTER" fillWidth="true" spacing="20" styleClass="contenedor-nota"
+                                          visible="true">
 
 
                                         <GridPane maxHeight="Infinity" maxWidth="Infinity" prefWidth="680.0"
@@ -184,17 +208,14 @@
 
                                                 <!-- fecha -->
 
-                                                <HBox alignment="TOP_LEFT" fillHeight="false" prefHeight="28.0"
-                                                      prefWidth="270.0" styleClass="vBoxNumNota"
+                                                <HBox alignment="TOP_LEFT" fillHeight="false" prefHeight="60.0"
+                                                      prefWidth="270.0" spacing="5" styleClass="vBoxNumNota"
                                                       GridPane.columnIndex="0" GridPane.columnSpan="2"
                                                       GridPane.rowIndex="1" GridPane.rowSpan="1">
 
                                                     <Label alignment="CENTER" contentDisplay="CENTER"
                                                            minWidth="-Infinity" prefHeight="50.0" prefWidth="86.0"
                                                            styleClass="label-fecha" text="  FECHA" textFill="#fffdfd">
-                                                        <font>
-                                                            <Font name="Arial Black" size="10.0"/>
-                                                        </font>
 
                                                     </Label>
 
@@ -205,21 +226,22 @@
                                                             <Font name="Arial" size="10.0"/>
                                                         </font>
                                                         <HBox.margin>
-                                                            <Insets left="10.0"/>
+                                                            <Insets/>
                                                         </HBox.margin>
 
                                                     </Label>
 
 
-                                                    <TextField fx:id="txtDia" alignment="BOTTOM_CENTER" editable="false"
-                                                               nodeOrientation="LEFT_TO_RIGHT"
-                                                               styleClass="textfield-fecha">
+                                                    <Label fx:id="lblDia" alignment="BOTTOM_CENTER"
+                                                           nodeOrientation="LEFT_TO_RIGHT"
+                                                           prefWidth="40.0" styleClass="textfield-fecha"
+                                                           translateX="-5.0">
                                                         <HBox.margin>
                                                             <Insets top="15.0"/>
                                                         </HBox.margin>
-                                                    </TextField>
+                                                    </Label>
 
-                                                    <Label text="/">
+                                                    <Label text="/" translateX="-5.0">
                                                         <font>
                                                             <Font name="Arial" size="15.0"/>
                                                         </font>
@@ -230,7 +252,8 @@
 
 
                                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT"
-                                                           minWidth="-Infinity" text="MES" HBox.hgrow="ALWAYS">
+                                                           minWidth="-Infinity" text="MES" translateX="-10.0"
+                                                           HBox.hgrow="ALWAYS">
                                                         <font>
                                                             <Font name="Arial" size="10.0"/>
                                                         </font>
@@ -241,15 +264,15 @@
                                                     </Label>
 
 
-                                                    <TextField fx:id="txtMes" alignment="BOTTOM_CENTER" editable="false"
-                                                               nodeOrientation="LEFT_TO_RIGHT"
-                                                               styleClass="textfield-fecha">
+                                                    <Label fx:id="lblMes" alignment="BOTTOM_CENTER"
+                                                           nodeOrientation="LEFT_TO_RIGHT" prefWidth="40.0"
+                                                           styleClass="textfield-fecha" translateX="-15.0">
                                                         <HBox.margin>
                                                             <Insets top="15.0"/>
                                                         </HBox.margin>
-                                                    </TextField>
+                                                    </Label>
 
-                                                    <Label text="/">
+                                                    <Label text="/" translateX="-15.0">
                                                         <font>
                                                             <Font name="Arial" size="15.0"/>
                                                         </font>
@@ -259,20 +282,21 @@
                                                     </Label>
 
                                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT"
-                                                           minWidth="-Infinity" text="AÑO" HBox.hgrow="ALWAYS">
+                                                           minWidth="-Infinity" text="AÑO" translateX="-20.0"
+                                                           HBox.hgrow="ALWAYS">
                                                         <font>
                                                             <Font name="Arial" size="10.0"/>
                                                         </font>
 
                                                     </Label>
 
-                                                    <TextField fx:id="txtAnio" alignment="BOTTOM_CENTER"
-                                                               editable="false" nodeOrientation="LEFT_TO_RIGHT"
-                                                               styleClass="textfield-fecha">
+                                                    <Label fx:id="lblAnio" alignment="BOTTOM_CENTER" layoutX="5.0"
+                                                           nodeOrientation="LEFT_TO_RIGHT" prefWidth="45.0"
+                                                           styleClass="textfield-fecha" translateX="-25.0">
                                                         <HBox.margin>
                                                             <Insets top="15.0"/>
                                                         </HBox.margin>
-                                                    </TextField>
+                                                    </Label>
 
 
                                                 </HBox>
@@ -403,7 +427,7 @@
                                                                   GridPane.columnIndex="0" GridPane.columnSpan="2"
                                                                   GridPane.rowIndex="3">
 
-                                                                <Label styleClass="label-campos1" text="RFC:">
+                                                                <Label styleClass="label-campos2" text="RFC:">
 
 
                                                                 </Label>
@@ -422,7 +446,7 @@
                                                                   GridPane.rowIndex="4">
 
 
-                                                                <Label styleClass="label-campos1" text="Correo:">
+                                                                <Label styleClass="label-campos2" text="Correo:">
 
                                                                 </Label>
 
@@ -437,7 +461,7 @@
                                                             <!-- Comienza el lado derecho del gridPane nombre, direccion etc..-->
 
 
-                                                            <Label styleClass="label-campos1" text="Hora de entrega:"
+                                                            <Label styleClass="label-campos2" text="Hora de entrega:"
                                                                    translateX="20" GridPane.columnIndex="2"
                                                                    GridPane.rowIndex="0">
 
@@ -460,7 +484,7 @@
                                                                 </HBox.margin>
 
 
-                                                                <Label styleClass="label-campos1" text="Marca:">
+                                                                <Label styleClass="label-campos2" text="Marca:">
 
                                                                 </Label>
 
@@ -478,7 +502,7 @@
                                                                   GridPane.columnIndex="2" GridPane.columnSpan="3"
                                                                   GridPane.rowIndex="2">
 
-                                                                <Label styleClass="label-campos1" text="Modelo:">
+                                                                <Label styleClass="label-campos2" text="Modelo:">
 
                                                                 </Label>
 
@@ -500,7 +524,7 @@
 
                                                                 </GridPane.margin>
                                                                 <HBox alignment="CENTER_LEFT" spacing="10">
-                                                                    <Label styleClass="label-campos1" text="Año:">
+                                                                    <Label styleClass="label-campos2" text="Año:">
 
                                                                     </Label>
                                                                     <TextField fx:id="txtAnioVehiculo" editable="false"
@@ -509,7 +533,7 @@
 
                                                                     </TextField>
 
-                                                                    <Label text="Kms:">
+                                                                    <Label styleClass="label-campos2" text="Kms:">
 
 
                                                                     </Label>
@@ -534,7 +558,7 @@
 
                                                                 </GridPane.margin>
 
-                                                                <Label text="Placas">
+                                                                <Label styleClass="label-campos2" text="Placas">
 
                                                                 </Label>
 
@@ -556,7 +580,7 @@
 
                                                     </GridPane>
 
-                                                    <ImageView fx:id="ivZoom" fitHeight="30" fitWidth="30"
+                                                    <ImageView styleClass="zoom" fx:id="ivZoom" fitHeight="30" fitWidth="30"
                                                                preserveRatio="false" translateX="10" translateY="-200"
                                                                visible="true">
                                                         <image>

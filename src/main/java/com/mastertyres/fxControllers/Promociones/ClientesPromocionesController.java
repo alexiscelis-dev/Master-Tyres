@@ -1,7 +1,8 @@
-package com.mastertyres.fxControllers.ClientesPromocionesController;
+package com.mastertyres.fxControllers.Promociones;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.promociones.model.Promocion;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ClientesPromocionesController {
+public class ClientesPromocionesController implements IFxController {
 
     @Autowired
     private ClienteService clienteService;
@@ -36,6 +37,15 @@ public class ClientesPromocionesController {
 
     @FXML
     public void initialize() {
+
+      configuraciones();
+      listeners();
+
+    }//initialize
+
+
+    @Override
+    public void configuraciones(){
 
         tablaClientes.setEditable(true);
 
@@ -61,6 +71,12 @@ public class ClientesPromocionesController {
 
 
         tablaClientes.setItems(data);
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
     }
 
     public void LlenarTabla(Promocion promocionSeleccionada) {

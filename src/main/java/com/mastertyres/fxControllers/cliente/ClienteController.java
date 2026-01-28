@@ -4,12 +4,13 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoading;
-import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.vehiculo.model.Vehiculo;
@@ -27,6 +28,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -47,7 +49,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class ClienteController implements IVentanaPrincipal, ILoading {
+public class ClienteController implements IVentanaPrincipal, IFxController, ILoading {
 
 
     private VentanaPrincipalController ventanaPrincipalController;
@@ -59,7 +61,7 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
     }
 
 
-
+    @FXML private AnchorPane rootPane;
     @FXML private TableView<Cliente> tablaClientes;
     @FXML private TableColumn<Cliente, String> colTipoCliente;
     @FXML private TableColumn<Cliente, String> colNombreEmpresa;
@@ -112,34 +114,8 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
     private void initialize() {
 
         configuraciones();
-
+        listeners();
         cargarClientes();
-
-        buscarClienteBuscador.setOnAction(event -> {
-            String seleccion = atributoBusquedaClientes.getValue();
-
-        });
-
-        // Listener para detectar cambios en el ChoiceBox
-//        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-//            configurarBuscador(newVal);
-//        });
-
-        // Listener para el ChoiceBox del Inventario
-        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            boolean esFecha = "Fecha de registro".equals(newVal);
-            actualizarVisibilidaddeDatePicker(esFecha);
-        });
-        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            boolean esFecha = "Fecha de registro".equals(newVal) || "Fecha de nacimiento".equals(newVal);
-            actualizarVisibilidaddeDatePicker(esFecha);
-        });
-
-        // Listener para el CheckBox de Rango
-        chkRangoCliente.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            actualizarVisibilidadRango(isSelected);
-        });
-
 
     }// initialize
 
@@ -181,64 +157,10 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
         dpBuscarCliente.setValue(null);
     }
 
-    private void configuraciones(){
-        //Enter buscar
-        buscarClienteBuscador.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
+    @Override
+    public void configuraciones(){
 
-                String seleccion = atributoBusquedaClientes.getValue();
-                String busqueda = buscarClienteBuscador.getText();
-
-                // SOLO funciona si hay un filtro seleccionado
-                if (seleccion != null && !seleccion.isEmpty()) {
-
-                    // Si el texto está vacío, resetea y detén
-                    if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
-                        resetBusqueda();
-                        return;
-                    }
-
-                    // Ejecutar búsqueda específica
-                    buscarCliente(seleccion.toLowerCase(), busqueda);
-                }
-            }
-        });
-
-        //buscar mientras escribes
-        buscarClienteBuscador.setOnKeyReleased(event -> {
-
-            if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
-
-            delayQuery.setOnFinished(e -> {
-
-                String seleccion = atributoBusquedaClientes.getValue();
-                String busqueda = buscarClienteBuscador.getText();
-
-                //  SOLO ejecutar búsqueda general si NO hay filtro
-                if (seleccion == null || seleccion.isEmpty()) {
-
-                    if (busqueda == null || busqueda.isEmpty()) {
-                        resetBusqueda();
-                        return;
-                    }
-
-                    // Búsqueda general mientras escribe
-                    buscarCliente(busqueda);
-                }
-                // Si sí hay filtro → no hace nada, porque solo se buscan al presionar ENTER
-            });
-
-            delayQuery.playFromStart();
-        });
-
-        //pone en null la lista de ChoiceBox
-        limpiarChoiceBox.setOnMouseClicked(event -> {
-
-            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
-                atributoBusquedaClientes.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
-            resetBusqueda();
-        });
-
+        MenuContextSetting.disableMenu(rootPane);
 
         //Click derecho borrar
         tablaClientes.setRowFactory(tabla -> {
@@ -471,8 +393,96 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
             return fila;
         });
 
-
     }//configuraciones
+
+    @Override
+    public void listeners() {
+
+
+        //buscar mientras escribes
+        buscarClienteBuscador.setOnKeyReleased(event -> {
+
+            if (event.getCode() == KeyCode.ENTER) return; // ignorar enter aquí
+
+            delayQuery.setOnFinished(e -> {
+
+                String seleccion = atributoBusquedaClientes.getValue();
+                String busqueda = buscarClienteBuscador.getText();
+
+                //  SOLO ejecutar búsqueda general si NO hay filtro
+                if (seleccion == null || seleccion.isEmpty()) {
+
+                    if (busqueda == null || busqueda.isEmpty()) {
+                        resetBusqueda();
+                        return;
+                    }
+
+                    // Búsqueda general mientras escribe
+                    buscarCliente(busqueda);
+                }
+                // Si sí hay filtro → no hace nada, porque solo se buscan al presionar ENTER
+            });
+
+            delayQuery.playFromStart();
+        });
+
+
+        //Enter buscar
+        buscarClienteBuscador.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+
+                String seleccion = atributoBusquedaClientes.getValue();
+                String busqueda = buscarClienteBuscador.getText();
+
+                // SOLO funciona si hay un filtro seleccionado
+                if (seleccion != null && !seleccion.isEmpty()) {
+
+                    // Si el texto está vacío, resetea y detén
+                    if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
+                        resetBusqueda();
+                        return;
+                    }
+
+                    // Ejecutar búsqueda específica
+                    buscarCliente(seleccion.toLowerCase(), busqueda);
+                }
+            }
+        });
+
+
+        // Listener para detectar cambios en el ChoiceBox
+
+        // Listener para el ChoiceBox del Inventario
+        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            boolean esFecha = "Fecha de registro".equals(newVal);
+            actualizarVisibilidaddeDatePicker(esFecha);
+        });
+        atributoBusquedaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            boolean esFecha = "Fecha de registro".equals(newVal) || "Fecha de nacimiento".equals(newVal);
+            actualizarVisibilidaddeDatePicker(esFecha);
+        });
+
+        // Listener para el CheckBox de Rango
+        chkRangoCliente.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            actualizarVisibilidadRango(isSelected);
+        });
+
+        buscarClienteBuscador.setOnAction(event -> {
+            String seleccion = atributoBusquedaClientes.getValue();
+
+        });
+
+
+        //pone en null la lista de ChoiceBox
+        limpiarChoiceBox.setOnMouseClicked(event -> {
+
+            if ((event.getButton() == MouseButton.PRIMARY || event.getButton() == MouseButton.MIDDLE) && event.getClickCount() == 2)
+                atributoBusquedaClientes.setValue(null); // pone el valor en null para que vuelva a buscar dinamicamente
+            resetBusqueda();
+        });
+
+    }//listeners
+
 
     @FXML
     private void agregarCliente(ActionEvent event) {
@@ -983,4 +993,4 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
         }
 
     }
-}//clase
+}//class

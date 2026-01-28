@@ -18,7 +18,7 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
     @Query("SELECT i FROM Inventario i WHERE i.active = :active")
     List<Inventario> listarInventario(@Param("active")String active);
 
-    @Query("SELECT i FROM Inventario i WHERE i.active = :active")
+    @Query("SELECT i FROM Inventario i WHERE i.active = :active ORDER BY i.identificadorLlanta ASC")
     Page<Inventario> listarInventarioPaginada(@Param("active")String active, Pageable pageable);
 
     @Query("SELECT COUNT(v) FROM Inventario v WHERE v.active = :active")
@@ -124,6 +124,9 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
     @Modifying
     @Query("UPDATE Inventario i SET i.stock = :stock WHERE i.inventarioId = :inventarioId AND i.active = :active")
     void actualizarStock(@Param("inventarioId")Integer inventarioId,@Param("stock")Integer stock, @Param("active")String active);
+
+    @Query("SELECT i FROM Inventario i WHERE i.active = :active ORDER BY i.identificadorLlanta ASC LIMIT 100")
+    List<Inventario> first100Inventario(@Param("active")String active);
 
 
 

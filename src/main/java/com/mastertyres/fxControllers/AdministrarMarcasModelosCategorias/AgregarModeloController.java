@@ -2,7 +2,9 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
@@ -21,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class AgregarModeloController {
+public class AgregarModeloController implements IFxController {
 
     @Autowired
     private MarcaService marcaService;
@@ -41,6 +44,8 @@ public class AgregarModeloController {
     @Autowired private DetalleCategoriaService detalleCategoriaService;
     @Autowired private VehiculoRepository vehiculoRepository;
 
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TableView<DetalleCategoria> tablaVehiculos;
     @FXML
@@ -68,8 +73,21 @@ public class AgregarModeloController {
     private void initialize(){
 
         cargarOpciones();
+        configuraciones();
+        listeners();
+
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+        MenuContextSetting.disableMenu(rootPane);
+    }
+
+    @Override
+    public void listeners() {
         configurarValidaciones();
     }
+
 
     public void setMarcaModelos(Marca m) {
         //this.detalleCategoriaSeleccionada = m;
@@ -77,37 +95,7 @@ public class AgregarModeloController {
         cargarVehiculos();
     }
 
-//    private void cargarVehiculos() {
-//        listaVehiculos.clear();
-//        listaVehiculos.addAll(detalleCategoriaService.getByMarca(marcaSeleccionada.getMarcaId()));
-//        tablaVehiculos.setItems(listaVehiculos);
-//
-//        colModelo.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getModelo().getNombreModelo()));
-//        colCategoria.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCategoria().getNombreCategoria()));
-//
-//        // Botón eliminar
-//        colEliminar.setCellFactory(col -> new TableCell<>() {
-//            private final Button btn = new Button();
-//            {
-//                Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
-//                ImageView iv = new ImageView(img);
-//                iv.setFitWidth(18);
-//                iv.setFitHeight(18);
-//                btn.setGraphic(iv);
-//                btn.setStyle("-fx-background-color: red;");
-//                btn.setOnAction(e -> {
-//                    DetalleCategoria d = getTableView().getItems().get(getIndex());
-//                    listaVehiculos.remove(d);
-//                });
-//            }
-//            @Override
-//            protected void updateItem(Void item, boolean empty) {
-//                super.updateItem(item, empty);
-//                setGraphic(empty ? null : btn);
-//            }
-//        });
-//
-//    }
+
     private void cargarVehiculos() {
         listaVehiculos.clear();
         listaExistentes.clear();
@@ -203,41 +191,7 @@ public class AgregarModeloController {
         );
     }
 
-//    @FXML
-//    private void agregarVehiculo() {
-//        String modeloNombre = txtModelo.getText();
-//        Categoria categoria = choiceCategoria.getValue();
-//
-//        if (modeloNombre.isEmpty() || categoria == null) {
-//            mostrarError("Error", "Campos Vacíos", "Debes ingresar un modelo y seleccionar una categoría.");
-//            return;
-//        }
-//
-//        //  Validación de duplicados
-//        boolean existe = listaVehiculos.stream().anyMatch(
-//                v -> v.getModelo().getNombreModelo().equalsIgnoreCase(modeloNombre) &&
-//                        v.getCategoria().getCategoriaId().equals(categoria.getCategoriaId())
-//        );
-//
-//        if (existe) {
-//            mostrarError("Duplicado", "Modelo y Categoría repetidos",
-//                    "Ya existe este modelo con la misma categoría en la tabla.");
-//            return;
-//        }
-//
-//        Modelo modelo = new Modelo();
-//        modelo.setNombreModelo(modeloNombre);
-//
-//        DetalleCategoria detalle = new DetalleCategoria();
-//        detalle.setMarca(marcaSeleccionada);
-//        detalle.setModelo(modelo);
-//        detalle.setCategoria(categoria);
-//
-//        listaVehiculos.add(detalle);
-//
-//        txtModelo.clear();
-//        choiceCategoria.setValue(null);
-//    }
+
     @FXML
     private void agregarVehiculo() {
         String modeloNombre = txtModelo.getText();
@@ -340,4 +294,4 @@ public class AgregarModeloController {
         stage.close();
     }
 
-}
+}//class

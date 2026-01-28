@@ -1,5 +1,6 @@
-package com.mastertyres.fxControllers.EditarControllers;
+package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.nota.model.NotaDTO;
@@ -24,7 +25,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class EditarAdeudoController {
+public class EditarAdeudoController implements IFxController {
 
     @FXML
     private AnchorPane root;
@@ -50,27 +51,22 @@ public class EditarAdeudoController {
     @FXML
     private void initialize() {
 
-
         configuraciones();
-        cbLiquidar.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            revisarCheckBox(notaAdeudo.getAdeudo());
-        });
-
-        btnActualizar.setOnAction(event -> actualizar(notaAdeudo));
-
+        listeners();
 
     }//initialize
 
+    @Override
+    public void configuraciones() {
 
-    private void configuraciones() {
         MenuContextSetting.disableMenuDatePicker(root);
 
-        dpFecha.setDayCellFactory(picker -> new DateCell(){
+        dpFecha.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
 
-                if (date.isBefore(LocalDate.now())){
+                if (date.isBefore(LocalDate.now())) {
                     setDisable(true);
                     setStyle("-fx-background-color: #eeeeee;");
 
@@ -94,7 +90,19 @@ public class EditarAdeudoController {
 
         );
 
-    }
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        cbLiquidar.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            revisarCheckBox(notaAdeudo.getAdeudo());
+        });
+
+        btnActualizar.setOnAction(event -> actualizar(notaAdeudo));
+
+    }//listeners
 
     private void revisarCheckBox(float conAdeudo) {
         if (cbLiquidar.isSelected()) {
@@ -153,7 +161,6 @@ public class EditarAdeudoController {
         try {
             notaService.actualizarAdeudo(Float.parseFloat(txtAdeudo.getText()), fechaStr, notaAdeudo.getNotaId());
             notaService.actualizarUpdatedAtNota(notaAdeudo.getNotaId(), fecha);
-
 
 
             Stage stage = (Stage) txtAdeudo.getScene().getWindow();

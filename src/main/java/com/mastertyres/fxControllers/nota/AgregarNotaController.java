@@ -1,14 +1,12 @@
-package com.mastertyres.fxControllers.agregarNota;
+package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoading;
-import com.mastertyres.fxControllers.nota.BuscarClienteController;
-import com.mastertyres.fxControllers.nota.BuscarLlantaController;
-import com.mastertyres.fxControllers.nota.RegistrarNotaController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.CampoNota;
@@ -30,7 +28,7 @@ import org.springframework.stereotype.Component;
 import static com.mastertyres.common.utils.FechaUtils.mostrarFechayHora;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 @Component
-public class AgregarNotaController extends BaseNota implements ILoading {
+public class AgregarNotaController extends BaseNota implements IFxController, ILoading {
 
     private BooleanProperty boolTotal = new SimpleBooleanProperty(true);
     private LoadingComponentController loadingOverlayController;
@@ -47,23 +45,87 @@ public class AgregarNotaController extends BaseNota implements ILoading {
     @FXML
     private void initialize() {
 
-        notaUtils.mostrarPopupHora(txtHoraEntrega);
-
         configuraciones();
-        operacionesCampos();
-
-        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons,SLIDE_FROM_TO,TIEMPO));
-
-        spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
-        dibujarGasolina(50);
-
-
-        btnGuardar.setOnAction(event -> registrar(clienteNota, vehiculosNota, inventarioNota));
-
+        listeners();
 
     }//initialize
 
-    private void configuraciones() {
+    @Override
+    public void configuraciones() {
+
+        dibujarGasolina(50);
+
+        notaUtils.mostrarPopupHora(txtHoraEntrega);
+
+        //Iniciliza la fecha y hora del dia y sistema
+        mostrarFechayHora(txtDia, txtMes, txtAnio, txtHoraEntrega);
+
+        //deshabilita los menu del clic derecho en los campos de texto
+        MenuContextSetting.disableMenu(rootPane);
+
+        //validaciones Regex
+        RegexTools.aplicarNumerosDecimalNota(txtTotal);
+        RegexTools.aplicar24Horas(txtHoraEntrega);
+        RegexTools.aplicar6Enteros(txtNumNota);
+        RegexTools.aplicar2Enteros(txtDia);
+        RegexTools.aplicar2Enteros(txtMes);
+        RegexTools.aplicar4Enteros(txtAnio);
+        RegexTools.aplicar4Enteros(txtAnioVehiculo);
+        RegexTools.aplicarNumeroEntero(txtKms);
+
+        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
+        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
+        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
+        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
+        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
+        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
+        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
+        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
+        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
+        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
+        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
+        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
+        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
+
+        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        operacionesCampos();
+
+        spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
         //configuracion checkBox
 
@@ -148,69 +210,11 @@ public class AgregarNotaController extends BaseNota implements ILoading {
             }
         });
 
+        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons,SLIDE_FROM_TO,TIEMPO));
 
-        //Iniciliza la fecha y hora del dia y sistema
-        mostrarFechayHora(txtDia, txtMes, txtAnio, txtHoraEntrega);
+        btnGuardar.setOnAction(event -> registrar(clienteNota, vehiculosNota, inventarioNota));
 
-        //deshabilita los menu del clic derecho en los campos de texto
-        MenuContextSetting.disableMenu(rootPane);
-
-        //validaciones Regex
-        RegexTools.aplicarNumerosDecimalNota(txtTotal);
-        RegexTools.aplicar24Horas(txtHoraEntrega);
-        RegexTools.aplicar6Enteros(txtNumNota);
-        RegexTools.aplicar2Enteros(txtDia);
-        RegexTools.aplicar2Enteros(txtMes);
-        RegexTools.aplicar4Enteros(txtAnio);
-        RegexTools.aplicar4Enteros(txtAnioVehiculo);
-        RegexTools.aplicarNumeroEntero(txtKms);
-
-        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
-        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
-        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
-        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
-        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
-        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
-        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
-        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
-        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
-        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
-        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
-        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
-        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
-
-        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
-
-    }//configuraciones
+    }//listeners
 
     @FXML
     private void buscarCliente(ActionEvent event) {

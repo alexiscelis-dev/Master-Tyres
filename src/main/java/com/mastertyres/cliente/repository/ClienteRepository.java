@@ -1,11 +1,13 @@
 package com.mastertyres.cliente.repository;
 
 import com.mastertyres.cliente.model.Cliente;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,10 +31,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     List<Cliente> findClientesAplicables(@Param("promocionId") Integer promocionId);
 
 
-
-    //@Query("SELECT DISTINCT c FROM Cliente c LEFT JOIN FETCH c.vehiculos v LEFT JOIN FETCH v.marca LEFT JOIN FETCH v.modelo WHERE c.active = :active")
-    //List<Cliente> listarCliente(@Param("active") String active);
-
     @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.active = 'ACTIVE' AND c.rfc = :rfc")
     boolean existeClientePorRFC(@Param("rfc") String rfc);
 
@@ -43,7 +41,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT c FROM Cliente c WHERE c.active = :active")
     List<Cliente> listarClientesActivos(@Param("active") String active);
 
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active")
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active ORDER BY c.nombre ASC, c.apellido ASC, c.segundoApellido ASC")
     Page<Cliente> listarClientesActivos(@Param("active") String active, Pageable pageable);
 
 
@@ -150,8 +148,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.fechaCumple = :cumple")
     Page<Cliente> buscarClientePorCumpleanosPaginado(@Param("active") String active, @Param("cumple") LocalDate cumple, Pageable pageable);
 
-//    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.fechaCumple BETWEEN :inicio AND :fin")
-//    Page<Cliente> buscarClientePorCumpleanosRangoPaginado(@Param("active") String active, @Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin, Pageable pageable);
 
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.fechaCumple BETWEEN :inicio AND :fin")
     Page<Cliente> buscarClientePorCumpleanosRangoPaginado(
@@ -161,6 +157,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             Pageable pageable
     );
 
+    @QueryHints({ @QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true") })
     @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND ( " +
             "(LOWER (COALESCE(c.nombre, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
             "(LOWER (COALESCE(c.apellido, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
@@ -173,7 +170,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "(LOWER (COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
             "(LOWER (COALESCE(c.tipoCliente, '')) LIKE LOWER (CONCAT('%', :busqueda , '%')))) ")
 
-    List<Cliente>buscadorClientes(@Param("status")String status,@Param("busqueda") String busqueda);
+    List<Cliente>buscadorClientes(@Param("status")String status, @Param("busqueda") String busqueda);
 
 
     @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND (" +
@@ -219,6 +216,13 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
             "LOWER(COALESCE(c.correo, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.fechaCumple, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) )")
     long contarClientesPorBusquedaGeneral(String status, String busqueda);
+
+    @QueryHints({ @QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true") })
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active ORDER BY c.nombre ASC, c.apellido ASC, c.segundoApellido ASC LIMIT 100")
+    List<Cliente> first100Buscador(@Param("active") String active);
+
+
+
 
 
 

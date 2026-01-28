@@ -1,5 +1,6 @@
-package com.mastertyres.fxControllers.nuevaPromocion;
+package com.mastertyres.fxControllers.Promociones;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
@@ -33,7 +34,7 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionController implements IVentanaPrincipal {
+public class NuevaPromocionController implements IVentanaPrincipal, IFxController {
     @FXML private AnchorPane rootPane;
     @FXML private Slider porcentajeDescuento;
     @FXML private Label descuentoLabel;
@@ -75,51 +76,19 @@ public class NuevaPromocionController implements IVentanaPrincipal {
     @FXML
     public void initialize() {
 
-        configuraciones();
-
-        cargarPorcentaje();
-
-      //  tableVehiculosParticipantes.setItems(vehiculos);
-
-        cargartabla();
-
-        btnLimpiar.setOnAction(event -> clean());
-
-        btnRegistrar.setOnAction(event -> registrarPromocion());
-
-        btnAgregarVehiculo.setOnAction(event -> agregarTabla());
-
-        btnImagen.setOnAction(event -> seleccionarImg());
-
-
-    }//initialize
-
-    private void configuraciones(){
-
         //Inicializar marca, modelo, año
         vehiculosParticipantesInitialize();
 
-        //Abre y cierra el popup del choiceBox para que aparezca en la posicion correcta y no debajo de la tabla
-        choiceAnio.setOnMousePressed(event -> {
-            if (!choiceAnio.isShowing()) {
-                choiceAnio.show();
-                choiceAnio.hide();
-            }
-        });
+        configuraciones();
+        listeners();
+        cargartabla();
 
-        choiceModelo.setOnMousePressed(event -> {
-            if (!choiceModelo.isShowing()){
-                choiceModelo.show();
-                choiceModelo.hide();
-            }
-        });
+    }//initialize
 
-        choiceMarca.setOnMousePressed(event -> {
-            if (!choiceMarca.isShowing()){
-                choiceMarca.show();
-                choiceMarca.hide();
-            }
-        });
+    @Override
+    public void configuraciones(){
+
+        cargarPorcentaje();
 
         precioSinDescuento.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
@@ -128,19 +97,6 @@ public class NuevaPromocionController implements IVentanaPrincipal {
             return null;
         }));
 
-        porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
-
-            obtenerPorcentaje(valNuevo.doubleValue());
-
-        });
-
-        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
-
-
-            if (nuevoValor != null && !nuevoValor.isEmpty())
-                tipoDescuento(nuevoValor.toLowerCase());
-
-        });
 
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
@@ -184,6 +140,55 @@ public class NuevaPromocionController implements IVentanaPrincipal {
         tableVehiculosParticipantes.setItems(vehiculos);
 
     }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        btnLimpiar.setOnAction(event -> clean());
+
+        btnRegistrar.setOnAction(event -> registrarPromocion());
+
+        btnAgregarVehiculo.setOnAction(event -> agregarTabla());
+
+        btnImagen.setOnAction(event -> seleccionarImg());
+
+        //Abre y cierra el popup del choiceBox para que aparezca en la posicion correcta y no debajo de la tabla
+        choiceAnio.setOnMousePressed(event -> {
+            if (!choiceAnio.isShowing()) {
+                choiceAnio.show();
+                choiceAnio.hide();
+            }
+        });
+
+        choiceModelo.setOnMousePressed(event -> {
+            if (!choiceModelo.isShowing()){
+                choiceModelo.show();
+                choiceModelo.hide();
+            }
+        });
+
+        choiceMarca.setOnMousePressed(event -> {
+            if (!choiceMarca.isShowing()){
+                choiceMarca.show();
+                choiceMarca.hide();
+            }
+        });
+
+        porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
+
+            obtenerPorcentaje(valNuevo.doubleValue());
+
+        });
+
+        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
+
+
+            if (nuevoValor != null && !nuevoValor.isEmpty())
+                tipoDescuento(nuevoValor.toLowerCase());
+
+        });
+
+    }//listeners
 
     private void cargarPorcentaje() {
         List<String> tiposDescuentos = new ArrayList<>();
