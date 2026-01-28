@@ -95,6 +95,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :estado , '%'))")
     Page<Cliente> buscarClientePorEstadoPaginado(@Param("active")String active, @Param("estado")String estado, Pageable pageable);
 
+    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER (COALESCE(c.nombreEmpresa, '')) LIKE LOWER (CONCAT('%', :nombreEmpresa , '%'))")
+    Page<Cliente> buscarClientePorNombreEmpresaPaginado(@Param("active")String active, @Param("nombreEmpresa")String nombreEmpresa, Pageable pageable);
 
     @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :ciudad , '%'))")
     List<Cliente> buscarClientePorCiudad(@Param("active")String active, @Param("ciudad")String ciudad);
@@ -173,6 +175,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND (" +
             "LOWER(COALESCE(c.nombre, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.nombreEmpresa, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.apellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.segundoApellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.hobbie, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
@@ -197,6 +200,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     @Query("SELECT COUNT(c) FROM Cliente c WHERE c.active = :status AND (" +
             "LOWER(COALESCE(c.nombre, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
+            "LOWER(COALESCE(c.nombreEmpresa, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.apellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.segundoApellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.hobbie, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +

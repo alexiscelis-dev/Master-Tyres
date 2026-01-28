@@ -27,6 +27,8 @@ public class Cliente {
     //atributos
     @Column(name = "nombre_cliente")
     private String nombre;
+    @Column(name = "nombre_empresa")
+    private String nombreEmpresa;
     @Column(name = "apellido_cliente")
     private String apellido;
     @Column(name = "segundo_apellido")

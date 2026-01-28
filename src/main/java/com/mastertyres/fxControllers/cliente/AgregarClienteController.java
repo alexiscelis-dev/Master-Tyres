@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.agregarCliente;
+package com.mastertyres.fxControllers.cliente;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
@@ -94,6 +94,8 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     private AnchorPane ventanaAgregarCliente;
     @FXML
     private TextField txtNombre;
+    @FXML
+    private TextField txtNombreEmpresa;
     @FXML
     private TextField txtApellido;
     @FXML
@@ -204,7 +206,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
         colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
 
-
         // Botón eliminar con icono
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
@@ -285,7 +286,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                 choiceModelo.hide();
             }
         });
-
         choiceCategoria.setOnMousePressed(event -> {
             if (!choiceCategoria.isShowing()) {
                 choiceCategoria.show();
@@ -686,6 +686,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         txtNombre.clear();
         txtApellido.clear();
         txtSegundoApellido.clear();
+        txtNombreEmpresa.clear();
         txtDomicilio.clear();
         txtEstado.clear();
         txtCiudad.clear();
@@ -768,6 +769,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         cliente.setUpdated_at(LocalDate.now().toString());  // <<< AGREGADO
         cliente.setNombre(txtNombre.getText());
         cliente.setApellido(txtApellido.getText());
+        cliente.setNombreEmpresa(txtNombreEmpresa.getText());
         cliente.setSegundoApellido(txtSegundoApellido.getText());
         cliente.setHobbie(txtHobbie.getText());
         cliente.setRfc(txtRFC.getText());

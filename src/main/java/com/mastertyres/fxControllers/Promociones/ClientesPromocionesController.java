@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.ClientesPromocionesController;
+package com.mastertyres.fxControllers.Promociones;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
