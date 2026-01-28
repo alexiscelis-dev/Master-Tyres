@@ -1,4 +1,4 @@
-package com.mastertyres.fxComponents.interfaces;
+package com.mastertyres.common.interfaces;
 
 import com.mastertyres.fxComponents.LoadingComponentController;
 

@@ -1,11 +1,13 @@
 package com.mastertyres.fxControllers.historial;
 
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.fxControllers.nota.NotaPreviewController;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
@@ -21,6 +23,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -37,7 +40,9 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class HistorialController extends BaseNota implements ILoading {
+public class HistorialController extends BaseNota implements IFxController, ILoading {
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TilePane contenedorHistorial;
     @FXML
@@ -80,26 +85,34 @@ public class HistorialController extends BaseNota implements ILoading {
     @FXML
     private void initialize() {
 
+        configuraciones();
+        listeners();
+
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+
+        MenuContextSetting.disableMenu(rootPane);
+        choiceLimite.setValue("Sin Filtro");
+        ivZoom.setVisible(false);
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
         btnBuscar.setOnAction(event -> cargarNota());
 
         ivZoom.setOnMouseClicked(event -> {
             if (notaVentana != null)
-            zoomDetalles(notaVentana);
+                zoomDetalles(notaVentana);
 
         });
 
         btnRefrescar.setOnAction(event -> modoReset());
 
-        configuraciones();
-
-
-    }//initialize
-
-    private void configuraciones() {
-        choiceLimite.setValue("Sin Filtro");
-        ivZoom.setVisible(false);
-        
-    }//configuraciones
+    }//listeners
 
     private void zoom() {
 
@@ -112,7 +125,7 @@ public class HistorialController extends BaseNota implements ILoading {
         });
     }//zoom
 
-    private void zoomDetalles(NotaDTO notaVentana){
+    private void zoomDetalles(NotaDTO notaVentana) {
 
         taskService.runTask(
                 loadingOverlayController,
@@ -121,10 +134,10 @@ public class HistorialController extends BaseNota implements ILoading {
                     loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
 
                     Parent root = loader.load();
-                     Object [] resultado = {root,loader};
-                     return resultado;
+                    Object[] resultado = {root, loader};
+                    return resultado;
 
-                },(resultado)->{
+                }, (resultado) -> {
                     Parent root = (Parent) resultado[0];
                     FXMLLoader loader = (FXMLLoader) resultado[1];
 
@@ -138,31 +151,31 @@ public class HistorialController extends BaseNota implements ILoading {
                     stage.setMaximized(false);
 
                     stage.show();
-                },(ex) ->{
+                }, (ex) -> {
 
-                    if (ex.getCause() instanceof Exception){
-                        mostrarError("Error al cargar vista","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                    if (ex.getCause() instanceof Exception) {
+                        mostrarError("Error al cargar vista", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
                     }
 
-                },null
+                }, null
         );
 
 
     }//zoomDetalles
 
-    private void cargarNota(){
+    private void cargarNota() {
         contenedorHistorial.setVgap(80);
-        contenedorHistorial.setPadding(new Insets(40,10,40,10));
+        contenedorHistorial.setPadding(new Insets(40, 10, 40, 10));
         configurarChoiceBox();
     }//cargarNota
 
-    private void configurarChoiceBox(){
-       final String limite ; //durante un lamba  no debe cambiar
+    private void configurarChoiceBox() {
+        final String limite; //durante un lamba  no debe cambiar
 
 
-        if (choiceLimite.getValue() == null || choiceLimite.getValue().equals("") || choiceLimite.getValue().equals("Sin Filtro")){
+        if (choiceLimite.getValue() == null || choiceLimite.getValue().equals("") || choiceLimite.getValue().equals("Sin Filtro")) {
             limite = "5";
-        }  else{
+        } else {
             limite = choiceLimite.getValue().toString();
         }
 
@@ -179,33 +192,33 @@ public class HistorialController extends BaseNota implements ILoading {
                 (resultado) -> {
                     List<NotaDTO> historial = (List<NotaDTO>) resultado;
                     mostrarNotas(historial);
-                }, (ex) ->{
-                    if (ex instanceof NotaException){
-                        mostrarError("Error al cargar historial","","" + ex);
-                    } else if (ex instanceof Exception ) {
-                        mostrarError("Error inesperado","","Ocurrio un problema al cargar los datos del historial. Vuelve a intentarlo mas tarde.");
+                }, (ex) -> {
+                    if (ex instanceof NotaException) {
+                        mostrarError("Error al cargar historial", "", "" + ex);
+                    } else if (ex instanceof Exception) {
+                        mostrarError("Error inesperado", "", "Ocurrio un problema al cargar los datos del historial. Vuelve a intentarlo mas tarde.");
 
                     }
 
                     ex.printStackTrace();
-                },null
+                }, null
         );
 
 
     }//configurarChoiceBox
 
-    private void mostrarNotas(List<NotaDTO> historial){
+    private void mostrarNotas(List<NotaDTO> historial) {
         contenedorHistorial.getChildren().clear();
         cardSeleccionada = null;
 
-        for (NotaDTO nota : historial){
+        for (NotaDTO nota : historial) {
             VBox card = crearCardNota(nota);
             contenedorHistorial.getChildren().add(card);
         }
 
     }//mostrarNotas
 
-    private VBox crearCardNota(NotaDTO cardHistorial){
+    private VBox crearCardNota(NotaDTO cardHistorial) {
 
         VBox card = new VBox();
         String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10";
@@ -229,7 +242,7 @@ public class HistorialController extends BaseNota implements ILoading {
 
         total.setStyle("-fx-text-fill: white;");
 
-        VBox textBox = new VBox(5, numeroNota,cliente, fechaYHora, total);
+        VBox textBox = new VBox(5, numeroNota, cliente, fechaYHora, total);
         HBox contenBox = new HBox(5, textBox);
 
         card.getChildren().add(contenBox);
@@ -260,32 +273,32 @@ public class HistorialController extends BaseNota implements ILoading {
 
         });
 
-        return  card;
+        return card;
     }//crearCardNota
 
-    private void llenarNota(String numNota){
+    private void llenarNota(String numNota) {
 
         taskService.runTask(
                 loadingOverlayController,
                 () -> {
-                    NotaDTO notaPreView =  notaService.buscarPorNumNota(StatusNota.ACTIVE.toString(),numNota);
+                    NotaDTO notaPreView = notaService.buscarPorNumNota(StatusNota.ACTIVE.toString(), numNota);
                     return notaPreView;
-                },(notaPreview)->{
+                }, (notaPreview) -> {
                     llenarNota((NotaDTO) notaPreview);
-                },(ex)->{
-                    if (ex instanceof NotaException){
-                        mostrarError("Error de carga","","" + ex);
+                }, (ex) -> {
+                    if (ex instanceof NotaException) {
+                        mostrarError("Error de carga", "", "" + ex);
                     } else if (ex instanceof Exception) {
-                        mostrarError("Error al cargar nota","",
+                        mostrarError("Error al cargar nota", "",
                                 "Ocurrio un error inesperado al cargar los detalles de la nota. Vuelve a intentarlo mas tarde.");
                     }
-                },null
+                }, null
         );
 
 
     }//llenarNota
 
-    private void llenarNota(NotaDTO notaPreView){
+    private void llenarNota(NotaDTO notaPreView) {
         //llenar campos
 
         //fecha
@@ -341,11 +354,9 @@ public class HistorialController extends BaseNota implements ILoading {
         lblNumFactura.setText("Número de factura: " + (notaPreView.getNumFactura() != null ? notaPreView.getNumFactura() : "N/D"));
 
 
-
-
     }//llenarNota
 
-    private void modoReset(){
+    private void modoReset() {
 
         choiceLimite.setValue("Sin Filtro");
         txtBuscar.setText("");

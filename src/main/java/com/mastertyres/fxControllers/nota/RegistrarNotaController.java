@@ -4,11 +4,12 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -39,7 +40,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class RegistrarNotaController implements ILoading {
+public class RegistrarNotaController implements IFxController, ILoading {
     @FXML
     private AnchorPane root;
     @FXML
@@ -92,11 +93,8 @@ public class RegistrarNotaController implements ILoading {
     @FXML
     private void initialize() {
 
-        grupoOpciones();
         configuraciones();
-
-
-        btnRegistrar.setOnAction(event -> registrar());
+        listeners();
 
     }//initialize
 
@@ -364,7 +362,10 @@ public class RegistrarNotaController implements ILoading {
     }//registrar
 
     //establece reglas habilitar boton o regex
-    private void configuraciones() {
+    @Override
+    public void configuraciones() {
+
+        grupoOpciones();
 
         dpFecha.setDayCellFactory(picker -> new DateCell() {
             @Override
@@ -399,6 +400,13 @@ public class RegistrarNotaController implements ILoading {
 
 
     }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        btnRegistrar.setOnAction(event -> registrar());
+
+    }//listeners
 
     //getters y setters
     public void setOnRegistroCompleto(Runnable onRegistroCompleto) {

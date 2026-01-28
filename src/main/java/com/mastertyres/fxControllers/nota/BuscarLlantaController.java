@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
@@ -26,7 +27,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Component
-public class BuscarLlantaController {
+public class BuscarLlantaController implements IFxController {
     @FXML
     private AnchorPane root;
     @FXML
@@ -67,18 +68,24 @@ public class BuscarLlantaController {
 
     @FXML
     private void initialize() {
+
         configuraciones();
-
+        listeners();
         cargarLlantasInicio();
-
-        btnBuscar.setOnAction(event -> cargarLlantas(txtBuscador.getText()));
-
 
     }//initialize
 
-    private void configuraciones(){
+    @Override
+    public void configuraciones(){
 
         MenuContextSetting.disableMenu(root);
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        btnBuscar.setOnAction(event -> cargarLlantas(txtBuscador.getText()));
 
         tablaLlantas.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -98,7 +105,7 @@ public class BuscarLlantaController {
 
         });
 
-    }//configuraciones
+    }//listeners
 
     @FXML
     private void cancelar(ActionEvent event) {

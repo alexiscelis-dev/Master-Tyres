@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.EditarControllers;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
@@ -32,14 +33,14 @@ import java.util.List;
 import static javafx.collections.FXCollections.observableList;
 
 @Component
-public class EditarPromocionController {
+public class EditarPromocionController implements IFxController {
 
     @FXML private TextField txtNombre;
     @FXML private TextField txtDescripcion;
     @FXML private TextField txtPrecio;
     @FXML private ChoiceBox<String> txtTipoDescuento;
     @FXML private Slider porcentajeDescuento;
-    @FXML private Label porcentaje; // 👈 el Label donde mostramos el valor
+    @FXML private Label porcentaje; //  el Label donde mostramos el valor
     @FXML private DatePicker dateInicio;
     @FXML private DatePicker dateFin;
     @FXML private TextField txtRutaImagen;
@@ -74,7 +75,15 @@ public class EditarPromocionController {
 
     // Inicializa el controlador
     public void initialize() {
-        configurarValidaciones();
+
+        configuraciones();
+        listeners();
+        vehiculosParticipantesInitialize();
+
+    }//initialize
+
+    @Override
+    public void configuraciones(){
 
         txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
 
@@ -82,6 +91,7 @@ public class EditarPromocionController {
         colMarca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMarca().getNombreMarca()));
         colModelo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getModelo().getNombreModelo()));
         colAnio.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getAnnio()).asObject());
+
         // Columna eliminar
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
@@ -122,18 +132,27 @@ public class EditarPromocionController {
 
         tableVehiculosParticipantes.setItems(vehiculosPromocionList);
 
-        // Acción de agregar vehículo
-        btnAgregarVehiculo.setOnAction(e -> agregarVehiculo());
 
         // Configuración del slider
         porcentajeDescuento.setMin(0);
         porcentajeDescuento.setMax(100);
         porcentajeDescuento.setBlockIncrement(1);
 
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        configurarValidaciones();
+
         // Mostrar el valor del slider en el Label en tiempo real
         porcentajeDescuento.valueProperty().addListener((obs, oldVal, newVal) -> {
             porcentaje.setText(String.format("%d%%", newVal.intValue()));
         });
+
+        // Acción de agregar vehículo
+        btnAgregarVehiculo.setOnAction(e -> agregarVehiculo());
 
         // Acción para abrir el FileChooser
         btnSeleccionarImagen.setOnAction(e -> seleccionarImagen());
@@ -142,8 +161,7 @@ public class EditarPromocionController {
         btnCambiar.setOnAction(event -> cambiarPromocion() );
 
 
-        vehiculosParticipantesInitialize();
-    }
+    }//listeners
 
     private void configurarValidaciones() {
 

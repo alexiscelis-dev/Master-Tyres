@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
@@ -30,7 +31,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
-public class BuscarClienteController {
+public class BuscarClienteController implements IFxController {
 
     @FXML
     private AnchorPane root;
@@ -93,18 +94,23 @@ public class BuscarClienteController {
     @FXML
     private void initialize() {
 
-        configuracones();
-
-        btnBuscar.setOnAction(event -> cargarDatosClientes(txtBuscador.getText()));
-
+        configuraciones();
+        listeners();
+        cargarClientesInicio();
 
     }//initialize
 
-    private void configuracones(){
-
-        cargarClientesInicio();
+    @Override
+    public void configuraciones(){
 
         MenuContextSetting.disableMenu(root);
+
+    }//configuracones
+
+    @Override
+    public void listeners() {
+
+        btnBuscar.setOnAction(event -> cargarDatosClientes(txtBuscador.getText()));
 
         txtBuscador.setOnKeyPressed(event -> {
             if (txtBuscador.getText() != null && !txtBuscador.getText().isEmpty()) {
@@ -162,7 +168,7 @@ public class BuscarClienteController {
 
         });
 
-    }//configuracones
+    }//listeners
 
 
     //seccion tabla clientes

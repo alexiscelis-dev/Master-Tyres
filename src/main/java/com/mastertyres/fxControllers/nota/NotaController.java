@@ -2,15 +2,17 @@ package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.historial.HistorialController;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -53,7 +55,9 @@ import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NotaController implements IVentanaPrincipal, ILoading {
+public class NotaController implements IVentanaPrincipal, IFxController, ILoading {
+    @FXML
+    private AnchorPane ventanaNotas;
     @FXML
     private TilePane contenedorNotas;
     @FXML
@@ -157,7 +161,42 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     private void initialize() {
 
         configuraciones();
+        listeners();
+        cargarNota();
 
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+
+        MenuContextSetting.disableMenu(ventanaNotas);
+
+        atributoBusquedaNota.setValue("Sin Filtro");
+
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        // Listener para detectar cambios en el ChoiceBox
+        atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            configurarBuscador(newVal);
+        });
+
+        // Listener para el CheckBox de rango
+        chkRangoNota.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            lblHasta.setVisible(isSelected);
+            lblHasta.setManaged(isSelected);
+            dpBuscarFin.setVisible(isSelected);
+            dpBuscarFin.setManaged(isSelected);
+        });
+
+        txtBuscar.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                accionBuscar(null);
+            }
+        });
 
         btnEditar.setOnAction(event ->
                 editarNota(notaSeleccionada.getNumNota()));
@@ -187,35 +226,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         });
 
 
-    }//initialize
-
-    private void configuraciones() {
-
-
-        cargarNota();
-
-        txtBuscar.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                accionBuscar(null);
-            }
-        });
-
-        // Listener para detectar cambios en el ChoiceBox
-        atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            configurarBuscador(newVal);
-        });
-
-        // Listener para el CheckBox de rango
-        chkRangoNota.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            lblHasta.setVisible(isSelected);
-            lblHasta.setManaged(isSelected);
-            dpBuscarFin.setVisible(isSelected);
-            dpBuscarFin.setManaged(isSelected);
-        });
-
-
-
-    }//configuraciones
+    }//listeners
 
     private void configurarBuscador(String criterio) {
         if (criterio == null) return;
@@ -748,8 +759,12 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     }
 
     public void accionBuscar(ActionEvent actionEvent) {
+
         String seleccion = atributoBusquedaNota.getValue();
-        if (seleccion == null) return;
+        if (seleccion == null) {
+            atributoBusquedaNota.setValue("Sin Filtro");
+            return;
+        }
 
         String busqueda = "";
         String busqueda2 = "";
@@ -790,5 +805,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
         // Si pasó las validaciones, configuramos el paginador
         ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
-    }
+    }//accionBuscar
+
 }//class

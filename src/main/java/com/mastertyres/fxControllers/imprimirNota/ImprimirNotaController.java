@@ -1,9 +1,10 @@
 package com.mastertyres.fxControllers.imprimirNota;
 
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
@@ -23,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 
 //el metododo agregarNota() recibe de parametro true si quiere la nota original
 @Component
-public class ImprimirNotaController extends BaseNota implements ILoading {
+public class ImprimirNotaController extends BaseNota implements IFxController, ILoading {
 
     @FXML
     private VBox contenedorTipoNota;
@@ -55,13 +56,15 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
 
     @FXML
     private void initialize() {
+
         configuraciones();
+        listeners();
         operacionesCampos();
 
     }//initialize
 
     public void agregarNota(String numNota, boolean tipoNota) {
-        llenarNota(numNota,tipoNota);
+        llenarNota(numNota, tipoNota);
     }
 
     private void llenarNota(String numNota, boolean tipoNota) {
@@ -200,10 +203,10 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
             setNotaImprimir(notaImprimir);
 
             //Convierte el mismp FXML a dos Notas Original y Copia
-            if (tipoNota){
+            if (tipoNota) {
                 lbltipoNota.setText("ORIGINAL");
                 lblNumFactura.setVisible(true);
-            }else {
+            } else {
                 lbltipoNota.setText("COPIA");
                 lblNumFactura.setVisible(false);
             }
@@ -214,7 +217,8 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
 
     }//llenarNota
 
-    private void configuraciones() {
+    @Override
+    public void configuraciones() {
 
         //validaciones Regex
         RegexTools.aplicarNumerosDecimalNota(txtTotal);
@@ -274,10 +278,14 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
 
     }//configuraciones
 
+    @Override
+    public void listeners() {
+
+    }
+
     public void setNotaImprimir(final NotaDTO notaImprimir) {
         this.notaImprimir = notaImprimir;
     }
-
 
 
 }//class

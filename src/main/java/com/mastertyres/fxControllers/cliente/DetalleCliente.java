@@ -51,8 +51,6 @@ public class DetalleCliente {
         txtFechaActualizacion.setText("Fecha de última actualización: " + formatearFechaHora(cliente.getUpdated_at()));
     }
 
-
-
     private String valorONull(String valor) {
         return (valor == null || valor.isBlank()) ? "No especificado" : valor;
     }
@@ -98,4 +96,4 @@ public class DetalleCliente {
         stage.close();
     }
 
-}
+}//class
