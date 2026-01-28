@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.EditarControllers;
+package com.mastertyres.fxControllers.vehiculo;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
