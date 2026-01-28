@@ -1,12 +1,14 @@
 package com.mastertyres.fxControllers.PromocionActiva;
 
 import com.mastertyres.MasterTyresApplication;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ClientesPromocionesController.ClientesPromocionesController;
 import com.mastertyres.fxControllers.EditarControllers.EditarPromocionController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
@@ -21,9 +23,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,8 +41,10 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class PromocionesActivasController implements IVentanaPrincipal {
+public class PromocionesActivasController implements IVentanaPrincipal, IFxController {
 
+    @FXML
+    private AnchorPane ventanaPromocionesActivas;
     @FXML private TilePane contenedorPromociones;
     @FXML private Label lblNombre;
     @FXML private Label lblDescripcion;
@@ -75,28 +83,11 @@ public class PromocionesActivasController implements IVentanaPrincipal {
     @FXML
     private void initialize() {
 
+        configuraciones();
+        listeners();
         cargarPromociones();
 
-        txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue == null || newValue.isEmpty()) {
-                cargarPromociones();
-            } else {
-                cargarPromocionesFiltradas(newValue);
-            }
-        });
-
-        btnAgregarPromocion.setOnAction(event -> agregarPromociones(event));
-
-        btnAgregarClientesPromocion.setOnAction(event -> agregarClientesPromociones(event));
-
-        btnEditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
-
-        btnEliminarPromocion.setOnAction(event -> eliminarPromocion());
-
-
     }//initialize
-
-
 
     @FXML
     private void agregarPromociones(ActionEvent event) {
@@ -146,7 +137,7 @@ public class PromocionesActivasController implements IVentanaPrincipal {
 
             controller.LlenarTabla(promocionSeleccionada);
 
-            Stage stage = new Stage();
+            Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Clientes aplicables a la promoción");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -259,7 +250,7 @@ public class PromocionesActivasController implements IVentanaPrincipal {
             EditarPromocionController controller = loader.getController();
             controller.setPromocion(promocionSeleccionada);
 
-            Stage stage = new Stage();
+            Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Editar Promoción");
             stage.setScene(new Scene(root));
 
@@ -359,4 +350,31 @@ public class PromocionesActivasController implements IVentanaPrincipal {
     }
 
 
-}
+    @Override
+    public void configuraciones() {
+
+        MenuContextSetting.disableMenu(ventanaPromocionesActivas);
+
+    }
+
+    @Override
+    public void listeners() {
+
+        txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                cargarPromociones();
+            } else {
+                cargarPromocionesFiltradas(newValue);
+            }
+        });
+
+        btnAgregarPromocion.setOnAction(event -> agregarPromociones(event));
+
+        btnAgregarClientesPromocion.setOnAction(event -> agregarClientesPromociones(event));
+
+        btnEditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
+
+        btnEliminarPromocion.setOnAction(event -> eliminarPromocion());
+
+    }
+}//class

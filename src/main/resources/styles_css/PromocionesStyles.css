@@ -158,7 +158,7 @@
 /* Menú desplegable más compacto */
 .choicebox-mini2 .context-menu {
     -fx-background-color: #1A1A1A;
-    -fx-pref-width: 130px;
+    -fx-pref-width: 180px;
     -fx-pref-height: 170px;
 }
 

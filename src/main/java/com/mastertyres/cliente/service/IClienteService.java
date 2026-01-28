@@ -17,6 +17,8 @@ public interface IClienteService {
 
     Cliente buscarClientePorId(Integer clienteId, String status);
 
+    List<Cliente> firs100Buscador(String active);
+
 
 
 }

@@ -2,6 +2,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
@@ -29,7 +30,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
-public class EditarVehiculoController {
+public class EditarVehiculoController implements IFxController {
     @FXML
     private AnchorPane rootPane;
     @FXML private ChoiceBox<Marca> choiceMarca;
@@ -74,29 +75,19 @@ public class EditarVehiculoController {
     public void initialize() {
 
         configuraciones();
+        listeners();
 
         // Cargar marcas, modelos y categorías
         cargarOpciones();
 
-        // Cargar Validaciones
-        configurarValidaciones();
-
-        // Acción de cambiar
-        btnCambiar.setOnAction(event -> actualizarVehiculo());
     }//initialize
 
-    private void configuraciones(){
+    @Override
+    public void configuraciones(){
+
         MenuContextSetting.disableMenuDatePicker(rootPane);
         MenuContextSetting.disableMenu(rootPane);
         RegexTools.aplicarNumeroEntero(spinnerAnio.getEditor());
-        dateUltimoServicio.getEditor().setOnKeyPressed(event ->{
-            switch (event.getCode()){
-                case BACK_SPACE, DELETE -> {
-                    dateUltimoServicio.setValue(null);
-                }
-            }
-        });
-
 
         // Configurar spinner para año
         int anioActual = LocalDate.now().getYear();
@@ -105,6 +96,24 @@ public class EditarVehiculoController {
         spinnerAnio.setValueFactory(valueFactory);
 
     }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        // Cargar Validaciones
+        configurarValidaciones();
+
+        dateUltimoServicio.getEditor().setOnKeyPressed(event ->{
+            switch (event.getCode()){
+                case BACK_SPACE, DELETE -> {
+                    dateUltimoServicio.setValue(null);
+                }
+            }
+        });
+
+        btnCambiar.setOnAction(event -> actualizarVehiculo());
+
+    }//listeners
 
     private void configurarValidaciones() {
 

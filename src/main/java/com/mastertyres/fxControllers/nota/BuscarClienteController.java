@@ -3,6 +3,8 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
@@ -17,6 +19,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,8 +31,10 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
-public class BuscarClienteController {
+public class BuscarClienteController implements IFxController {
 
+    @FXML
+    private AnchorPane root;
     @FXML
     private TableView<Cliente> tablaClientes;
     @FXML
@@ -88,7 +93,24 @@ public class BuscarClienteController {
 
     @FXML
     private void initialize() {
-        cargarClientes(txtBuscador.getText());
+
+        configuraciones();
+        listeners();
+        cargarClientesInicio();
+
+    }//initialize
+
+    @Override
+    public void configuraciones(){
+
+        MenuContextSetting.disableMenu(root);
+
+    }//configuracones
+
+    @Override
+    public void listeners() {
+
+        btnBuscar.setOnAction(event -> cargarDatosClientes(txtBuscador.getText()));
 
         txtBuscador.setOnKeyPressed(event -> {
             if (txtBuscador.getText() != null && !txtBuscador.getText().isEmpty()) {
@@ -98,8 +120,6 @@ public class BuscarClienteController {
 
 
         });
-
-        btnBuscar.setOnAction(event -> cargarDatosClientes(txtBuscador.getText()));
 
         tablaClientes.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -148,12 +168,17 @@ public class BuscarClienteController {
 
         });
 
-
-    }//initialize
+    }//listeners
 
 
     //seccion tabla clientes
     private void cargarClientes(String busqueda) {
+
+        cargarDatosClientes(busqueda);
+
+    }//cargarClientes
+
+    private void cargarClientesInicio(){
 
         colNombreCompleto.setCellValueFactory(data -> new SimpleStringProperty(
                 (data.getValue().getNombre() != null ? data.getValue().getNombre() : "") + "" + " " +
@@ -173,7 +198,8 @@ public class BuscarClienteController {
         colTelefono.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getNumTelefono() != null ? data.getValue().getNumTelefono() : ""
         ));
-        cargarDatosClientes(busqueda);
+
+        cargarDatosClientes();
 
     }//cargarClientes
 
@@ -188,6 +214,16 @@ public class BuscarClienteController {
             }
 
         } catch (Exception e) {
+            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+        }
+    }
+
+    private void cargarDatosClientes(){
+        try {
+            List<Cliente> clientes = clienteService.firs100Buscador(StatusCliente.ACTIVE.toString());
+            tablaClientes.getItems().setAll(FXCollections.observableList(clientes));
+
+        }catch (Exception e){
             mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
         }
     }

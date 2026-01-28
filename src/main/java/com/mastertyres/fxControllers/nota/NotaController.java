@@ -1,15 +1,18 @@
 package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
 import com.mastertyres.fxControllers.historial.HistorialController;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -41,7 +44,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -53,7 +55,9 @@ import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NotaController implements IVentanaPrincipal, ILoading {
+public class NotaController implements IVentanaPrincipal, IFxController, ILoading {
+    @FXML
+    private AnchorPane ventanaNotas;
     @FXML
     private TilePane contenedorNotas;
     @FXML
@@ -87,18 +91,25 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     @FXML
     private Button btnEliminar;
     @FXML
+    private Button btnRefrescar;
+    @FXML
     private Button btnHistorial;
     @FXML
     private TextField txtBuscar;
-    @FXML private DatePicker dpBuscar;
-    @FXML private CheckBox chkRangoNota;
-    @FXML private DatePicker dpBuscarFin;
-    @FXML private Label lblHasta;
+    @FXML
+    private DatePicker dpBuscar;
+    @FXML
+    private CheckBox chkRangoNota;
+    @FXML
+    private DatePicker dpBuscarFin;
+    @FXML
+    private Label lblHasta;
     private boolean esRangoActual = false; // Nueva variable de clase
     @FXML
     private Pagination PaginadorNotas;
 
-    @FXML private ChoiceBox<String> atributoBusquedaNota;
+    @FXML
+    private ChoiceBox<String> atributoBusquedaNota;
 
     @Autowired
     private NotaService notaService;
@@ -137,7 +148,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     }
 
     @Override
-    public void setInitializeLoading(LoadingComponentController loading){
+    public void setInitializeLoading(LoadingComponentController loading) {
         this.loadingOverlayController = loading;
     }
 
@@ -149,35 +160,23 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     @FXML
     private void initialize() {
 
-        atributoBusquedaNota.setValue("Sin Filtro");
-
+        configuraciones();
+        listeners();
         cargarNota();
 
-        txtBuscar.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                accionBuscar(null);
-            }
-        });
+    }//initialize
 
-//        txtBuscar.setOnKeyPressed(event -> {
-//            if (event.getCode() != KeyCode.ENTER) return;
-//
-//            String seleccion = atributoBusquedaNota.getValue();
-//            String busqueda = txtBuscar.getText();
-//
-//            // Si no hay texto, resetear búsqueda
-//            if (busqueda == null || busqueda.isBlank()) {
-//                resetBusqueda();
-//                return;
-//            }
-//
-//            // Ejecutar búsqueda (con o sin filtro)
-//            ConfigurarNuevoPaginadorBusqueda(
-//                    seleccion == null ? "sin filtro" : seleccion.toLowerCase(),
-//                    busqueda,
-//                    0
-//            );
-//        });
+    @Override
+    public void configuraciones() {
+
+        MenuContextSetting.disableMenu(ventanaNotas);
+
+        atributoBusquedaNota.setValue("Sin Filtro");
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
 
         // Listener para detectar cambios en el ChoiceBox
         atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -190,6 +189,12 @@ public class NotaController implements IVentanaPrincipal, ILoading {
             lblHasta.setManaged(isSelected);
             dpBuscarFin.setVisible(isSelected);
             dpBuscarFin.setManaged(isSelected);
+        });
+
+        txtBuscar.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                accionBuscar(null);
+            }
         });
 
         btnEditar.setOnAction(event ->
@@ -206,7 +211,22 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
         btnDarPlazo.setOnAction(event ->
                 darPlazo(notaSeleccionada.getNotaId()));
-    }
+
+        btnRefrescar.setOnAction(event -> {
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                    },
+                    () -> {
+                        resetBusqueda();
+                        cargarNota();
+                    }
+            );
+        });
+
+
+    }//listeners
+
     private void configurarBuscador(String criterio) {
         if (criterio == null) return;
 
@@ -227,232 +247,35 @@ public class NotaController implements IVentanaPrincipal, ILoading {
             dpBuscar.setValue(null);
             dpBuscarFin.setValue(null);
         }
-    }
-
-//    private void configurarBuscador(String criterio) {
-//        // Normalizamos para evitar errores con nulos
-//        if (criterio == null) return;
-//
-//        boolean esBusquedaPorFecha = criterio.equals("Fecha de emicion") ||
-//                criterio.equals("Fecha de vencimiento");
-//
-//        if (esBusquedaPorFecha) {
-//            // Ocultar TextField
-//            txtBuscar.setVisible(false);
-//            txtBuscar.setManaged(false); // managed false hace que el espacio se libere
-//
-//            // Mostrar DatePicker
-//            dpBuscar.setVisible(true);
-//            dpBuscar.setManaged(true);
-//
-//            // Opcional: Limpiar el campo anterior para evitar confusiones
-//            txtBuscar.setText("");
-//        } else {
-//            // Mostrar TextField
-//            txtBuscar.setVisible(true);
-//            txtBuscar.setManaged(true);
-//
-//            // Ocultar DatePicker
-//            dpBuscar.setVisible(false);
-//            dpBuscar.setManaged(false);
-//
-//            // Opcional: Limpiar fecha
-//            dpBuscar.setValue(null);
-//        }
-//    }
-
-//    private void initialize() {
-//        atributoBusquedaNota.setValue("Sin Filtro");
-//
-//        cargarNota();
-//
-//        txtBuscar.setOnKeyPressed(event -> {
-//            if (event.getCode() == KeyCode.ENTER) {
-//
-//                String seleccion = atributoBusquedaNota.getValue();
-//                String busqueda = txtBuscar.getText();
-//
-//                // SOLO funciona si hay un filtro seleccionado
-//                if (seleccion != null && !seleccion.isEmpty()) {
-//
-//                    // Si el texto está vacío, resetea y detén
-//                    if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
-//                        resetBusqueda();
-//                        return;
-//                    }
-//
-//                    // Ejecutar búsqueda específica
-//                    ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda,0);
-//                }else {
-//
-//                    ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda,0);
-//
-//                }
-//            }
-//        });
-//
-//
-//
-//        btnEditar.setOnAction(event -> editarNota(notaSeleccionada.getNumNota()));
-//
-//        btnImprimir.setOnAction(event -> imprimir(notaSeleccionada.getNumNota()));
-//
-//        btnEliminar.setOnAction(event -> eliminarNota(notaSeleccionada.getNotaId(), notaSeleccionada.getNumNota()));
-//
-//        btnDarPlazo.setOnAction(event -> darPlazo(notaSeleccionada.getNotaId()));
-//
-//    }//initialize
+    }//configurarBuscador
 
     private void cargarPagina(int indicePagina) {
         Page<NotaDTO> pagina;
 
-        if (modoBusqueda) {
-            // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
-            if (esRangoActual) {
-                pagina = notaService.buscadorRangos(filtroActual, textoBusquedaActual, textoBusquedaActual2, indicePagina, tamañoPagina);
+        try {
+
+            if (modoBusqueda) {
+                // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
+                if (esRangoActual) {
+                    pagina = notaService.buscadorRangos(filtroActual, textoBusquedaActual, textoBusquedaActual2, indicePagina, tamañoPagina);
+                } else {
+                    pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
+                }
             } else {
-                pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
+                pagina = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
             }
-        } else {
-            pagina = notaService.listarNotasPaginado("ACTIVE", indicePagina, tamañoPagina);
+
+            mostrarNotas(pagina.getContent());
+            PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
+
+        }catch (NotaException ne){
+            mostrarError("Error de busqueda","",""+ne);
+        }
+        catch (Exception e) {
+            mostrarError("Error inesperado", "","Ocurrio un problema al mostrar las notas");
         }
 
-        mostrarNotas(pagina.getContent());
-        PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
-    }
-
-//    private void cargarPagina(int indicePagina) {
-//
-//        Page<NotaDTO> pagina;
-//
-//        if (modoBusqueda) {
-//
-//            if (chkRangoNota.isSelected()){
-//                pagina =notaService.buscadorRangos(
-//                        filtroActual,
-//                        textoBusquedaActual,
-//                        textoBusquedaActual2,
-//                        indicePagina,
-//                        tamañoPagina
-//                );
-//            }else {
-//
-//                pagina = notaService.buscador(
-//                        filtroActual,
-//                        textoBusquedaActual,
-//                        indicePagina,
-//                        tamañoPagina
-//                );
-//            }
-//
-//        } else {
-//            pagina = notaService.listarNotasPaginado(
-//                    "ACTIVE",
-//                    indicePagina,
-//                    tamañoPagina
-//            );
-//        }
-//
-//        mostrarNotas(pagina.getContent());
-//        PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
-//    }
-
-//    private void configurarPaginadorFiltradas(String filtro) {
-//        Page<NotaDTO> paginaFiltrada = notaService.buscarNotas(filtro, 0, tamañoPagina);
-//        mostrarNotas(paginaFiltrada.getContent());
-//        PaginadorNotas.setPageCount(paginaFiltrada.getTotalPages());
-//        PaginadorNotas.setCurrentPageIndex(0);
-//        PaginadorNotas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
-//            Page<NotaDTO> nuevaPagina = notaService.buscarNotas(filtro, newIndex.intValue(), tamañoPagina);
-//            mostrarNotas(nuevaPagina.getContent());
-//        });
-//    }
-//
-//    private void configurarPaginadorFiltradasConFiltro(String filtro, String busqueda, int IndicePagina){
-//        Page<NotaDTO> paginaFiltrada = Page.empty();
-//
-//        try {
-//            String caso = filtro.toLowerCase();
-//            if (modoBusqueda){
-//                switch (caso){
-//                    case "numero de nota" ->  paginaFiltrada = notaService.BucarPorNumNota(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "fecha" -> paginaFiltrada = notaService.buscarPorFechaNota(LocalDate.parse(busqueda), "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "nombre del cliente" -> paginaFiltrada = notaService.buscarPorNombreCliente(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "vehiculo" -> paginaFiltrada = notaService.buscarPorVehiculo(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "status de nota" -> paginaFiltrada = notaService.buscarPorStatusNota(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "fecha de vencimiento" -> paginaFiltrada = notaService.buscarPorFechaVencimiento(LocalDate.parse(busqueda), "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "direccion" -> paginaFiltrada = notaService.buscarPorDireccion(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "placas de vehiculo" -> paginaFiltrada = notaService.buscarPorPlacas(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "numero de factura" -> paginaFiltrada = notaService.buscarPorNumeroFactura(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "rfc" -> paginaFiltrada = notaService.buscarPorRfc(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
-//
-//                    case "adeudo" -> {
-//                        try {
-//                            BigDecimal adeudo = new BigDecimal(busqueda.trim());
-//                            paginaFiltrada = notaService.buscarPorAdeudo(
-//                                    adeudo, "ACTIVE", IndicePagina, tamañoPagina
-//                            );
-//                        } catch (NumberFormatException ex) {
-//                            mostrarWarning(
-//                                    "Valor inválido",
-//                                    "Adeudo incorrecto",
-//                                    "Ingrese un valor numérico válido para el adeudo."
-//                            );
-//                            return;
-//                        }
-//                    }
-//
-//                    default -> mostrarWarning("Búsqueda no válida", "", "Seleccione un campo de búsqueda correcto.");
-//                }
-//                int totalPaginas = paginaFiltrada.getTotalPages();
-//                PaginadorNotas.setPageCount(Math.max(totalPaginas, 1));
-//            } else {
-//                paginaFiltrada = notaService.listarNotasPaginado(
-//                        StatusNota.ACTIVE.toString(), IndicePagina, NOTAS_POR_PAGINA);
-//            }
-//
-//            mostrarNotas(paginaFiltrada.getContent());
-//            PaginadorNotas.setPageCount(Math.max(paginaFiltrada.getTotalPages(), 1));
-//
-//        } catch (Exception e) {
-//            mostrarError("Error en búsqueda", "Ocurrió un error al buscar los vehículos.", e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-//    }
-
-//    private void ConfigurarNuevoPaginadorBusqueda (String filtro, String busqueda, int IndicePagina){
-//        Page<NotaDTO> paginaFiltrada = notaService.buscador(filtro, busqueda, IndicePagina, tamañoPagina);
-//        int totalPaginas = paginaFiltrada.getTotalPages();
-//        PaginadorNotas.setPageCount(Math.max(totalPaginas, 1));
-//        mostrarNotas(paginaFiltrada.getContent());
-//    }
-
-//    private void configurarPaginador() {
-//        Page<NotaDTO> paginaInicial = notaService.listarNotasPaginado("ACTIVE", 0, tamañoPagina);
-//
-//        mostrarNotas(paginaInicial.getContent());
-//
-//        PaginadorNotas.setPageCount(paginaInicial.getTotalPages());
-//        PaginadorNotas.setCurrentPageIndex(0);
-//
-//        PaginadorNotas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
-//            Page<NotaDTO> nuevaPagina =
-//                    notaService.listarNotasPaginado("ACTIVE", newIndex.intValue(), tamañoPagina);
-//
-//            mostrarNotas(nuevaPagina.getContent());
-//        });
-//    }
-
+    }//cargarPagina
 
     private void ConfigurarNuevoPaginadorBusqueda(String filtro, String busqueda, String busqueda2) {
         modoBusqueda = true;
@@ -466,21 +289,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         PaginadorNotas.setCurrentPageIndex(0);
         cargarPagina(0);
     }
-
-//    private void ConfigurarNuevoPaginadorBusqueda(String filtro, String busqueda, int indicePagina) {
-//
-//        modoBusqueda = true;
-//        filtroActual = filtro;
-//        textoBusquedaActual = busqueda;
-//
-//        if (chkRangoNota.isSelected()){
-//            textoBusquedaActual2 = dpBuscarFin.getValue().toString();
-//        }
-//
-//
-//        PaginadorNotas.setCurrentPageIndex(0);
-//        cargarPagina(0);
-//    }
 
     private void configurarPaginador() {
 
@@ -658,8 +466,8 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         String fechaStr = nota.getCreatedAt();
         String fechaStr2 = nota.getFechaVencimiento();
 
-        String fechaFormateada = "N/A";
-        String fechaFormateada2 = "N/A";
+        String fechaFormateada = "N/D";
+        String fechaFormateada2 = "N/D";
 
 
         if (fechaStr != null && !fechaStr.trim().isEmpty()) {
@@ -745,7 +553,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                 "Editar Nota");
         EditarNotaController controller = (EditarNotaController) controllerObj;
         controller.agregarNota(numNota);
-     //   controller.setInitializeLoading(ventanaPrincipalController.loadingOverlayController);
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("EDITAR NOTA");
 
 
@@ -765,13 +572,13 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                         notaService.eliminarNota(StatusNota.INACTIVE.toString(), notaId);
                         notaService.actualizarUpdatedAtNota(notaId, LocalDateTime.now().toString());
                         return null;
-                    },(resultado) ->{
+                    }, (resultado) -> {
                         cargarNota();
                         mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
-                    },(excepcion) ->{
+                    }, (excepcion) -> {
                         excepcion.printStackTrace();
-                        mostrarError("Error al eliminar","","No fue posible eliminar la nota. Intente de nuevo mas tarde.");
-                    },null
+                        mostrarError("Error al eliminar", "", "No fue posible eliminar la nota. Intente de nuevo mas tarde.");
+                    }, null
             );
 
         }//eliminar
@@ -817,7 +624,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                     (int) alto
             );
 
-            if(this.ventanaPrincipalController != null){
+            if (this.ventanaPrincipalController != null) {
                 this.ventanaPrincipalController.configurarControlador(controller);
             }
 
@@ -857,7 +664,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
                         if (excepcion instanceof IOException) {
                             mostrarError("Error al generar archivo",
                                     "El archivo no pudo crearse o está siendo usado por otro programa.",
-                                            "Cierra otros programas e inténtalo de nuevo.");
+                                    "Cierra otros programas e inténtalo de nuevo.");
                         } else if (excepcion instanceof InterruptedException || excepcion instanceof java.util.concurrent.CancellationException) {
                             mostrarWarning("Operación cancelada",
                                     "",
@@ -919,39 +726,23 @@ public class NotaController implements IVentanaPrincipal, ILoading {
     }//darPlazo
 
     @FXML
-    private void historial(ActionEvent even){
+    private void historial(ActionEvent even) {
         try {
-           Object controllerObj = ventanaPrincipalController.viewContent(
-                   null,
-                   "/fxmlViews/historial/Historial.fxml",
-                   "Historial Notas"
-           );
+            Object controllerObj = ventanaPrincipalController.viewContent(
+                    null,
+                    "/fxmlViews/historial/Historial.fxml",
+                    "Historial Notas"
+            );
             HistorialController controller = (HistorialController) controllerObj;
-           ventanaPrincipalController.cambiarPaginaEtiqueta.setText("HISTORIAL DE NOTAS");
+            ventanaPrincipalController.cambiarPaginaEtiqueta.setText("HISTORIAL DE NOTAS");
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error al cargar la vista","","Ocurrio un problema al cargar la vista. Vuelve a intentarlo mas tarde.");
+            mostrarError("Error al cargar la vista", "", "Ocurrio un problema al cargar la vista. Vuelve a intentarlo mas tarde.");
         }
 
     }
-
-//    private void resetBusqueda() {
-//
-//        modoBusqueda = false;
-//        //modoBusquedaConFiltro = false;
-//
-////        filtroActual = null;
-////        textoBusquedaActual = null;
-//
-//        txtBuscar.clear();
-//        atributoBusquedaNota.setValue("Sin Filto");
-//
-//        PaginadorNotas.setCurrentPageIndex(0);
-//
-//        cargarNota();
-//    }
 
     private void resetBusqueda() {
 
@@ -966,80 +757,53 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         cargarPagina(0);
     }
 
-//    public void accionBuscar(ActionEvent actionEvent) {
-//        String seleccion = atributoBusquedaNota.getValue();
-//
-//        String busqueda;
-//        String busqueda2 = "";
-//        if (atributoBusquedaNota.getValue().equals("Fecha de emicion") || atributoBusquedaNota.getValue().equals("Fecha de vencimiento")){
-//            busqueda = dpBuscar.getValue().toString();
-//            if (chkRangoNota.isSelected()){
-//                busqueda2 = dpBuscarFin.getValue().toString();
-//                if (busqueda2 == null || busqueda2.isBlank()) {
-//                    resetBusqueda();
-//                    return;
-//                }
-//            }
-//        }else {
-//            busqueda = txtBuscar.getText();
-//        }
-//
-//        // Si no hay texto, resetear búsqueda
-//        if (busqueda == null || busqueda.isBlank()) {
-//            resetBusqueda();
-//            return;
-//        }
-//
-//        // Ejecutar búsqueda (con o sin filtro)
-//        ConfigurarNuevoPaginadorBusqueda(
-//                seleccion == null ? "sin filtro" : seleccion.toLowerCase(),
-//                busqueda,
-//                0
-//        );
-//
-//    }
-public void accionBuscar(ActionEvent actionEvent) {
-    String seleccion = atributoBusquedaNota.getValue();
-    if (seleccion == null) return;
+    public void accionBuscar(ActionEvent actionEvent) {
 
-    String busqueda = "";
-    String busqueda2 = "";
-    boolean esFecha = seleccion.equals("Fecha de emicion") || seleccion.equals("Fecha de vencimiento");
-
-    if (esFecha) {
-        // VALIDACIÓN 1: Fecha de inicio nula
-        if (dpBuscar.getValue() == null) {
-            mostrarWarning("Fecha requerida", null, "Por favor seleccione la fecha inicial.");
+        String seleccion = atributoBusquedaNota.getValue();
+        if (seleccion == null) {
+            atributoBusquedaNota.setValue("Sin Filtro");
             return;
         }
 
-        busqueda = dpBuscar.getValue().toString();
+        String busqueda = "";
+        String busqueda2 = "";
+        boolean esFecha = seleccion.equals("Fecha de emicion") || seleccion.equals("Fecha de vencimiento");
 
-        if (chkRangoNota.isSelected()) {
-            // VALIDACIÓN 2: Fecha final nula en rango
-            if (dpBuscarFin.getValue() == null) {
-                mostrarWarning("Rango incompleto", null, "Ha activado búsqueda por rango, seleccione la fecha final.");
+        if (esFecha) {
+            // VALIDACIÓN 1: Fecha de inicio nula
+            if (dpBuscar.getValue() == null) {
+                mostrarWarning("Fecha requerida", null, "Por favor seleccione la fecha inicial.");
                 return;
             }
 
-            // VALIDACIÓN 3: Orden de fechas (Inicio no puede ser mayor a Fin)
-            if (dpBuscar.getValue().isAfter(dpBuscarFin.getValue())) {
-                // Invertimos o avisamos. Aquí avisaremos:
-                mostrarWarning("Rango inválido", "Fecha incoherente", "La fecha de inicio no puede ser posterior a la fecha final.");
+            busqueda = dpBuscar.getValue().toString();
+
+            if (chkRangoNota.isSelected()) {
+                // VALIDACIÓN 2: Fecha final nula en rango
+                if (dpBuscarFin.getValue() == null) {
+                    mostrarWarning("Rango incompleto", null, "Ha activado búsqueda por rango, seleccione la fecha final.");
+                    return;
+                }
+
+                // VALIDACIÓN 3: Orden de fechas (Inicio no puede ser mayor a Fin)
+                if (dpBuscar.getValue().isAfter(dpBuscarFin.getValue())) {
+                    // Invertimos o avisamos. Aquí avisaremos:
+                    mostrarWarning("Rango inválido", "Fecha incoherente", "La fecha de inicio no puede ser posterior a la fecha final.");
+                    return;
+                }
+
+                busqueda2 = dpBuscarFin.getValue().toString();
+            }
+        } else {
+            busqueda = txtBuscar.getText();
+            if (busqueda == null || busqueda.isBlank()) {
+                resetBusqueda();
                 return;
             }
-
-            busqueda2 = dpBuscarFin.getValue().toString();
         }
-    } else {
-        busqueda = txtBuscar.getText();
-        if (busqueda == null || busqueda.isBlank()) {
-            resetBusqueda();
-            return;
-        }
-    }
 
-    // Si pasó las validaciones, configuramos el paginador
-    ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
-}
+        // Si pasó las validaciones, configuramos el paginador
+        ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
+    }//accionBuscar
+
 }//class
