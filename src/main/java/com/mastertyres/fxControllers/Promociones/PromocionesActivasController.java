@@ -1,12 +1,10 @@
-package com.mastertyres.fxControllers.PromocionActiva;
+package com.mastertyres.fxControllers.Promociones;
 
 import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.fxControllers.ClientesPromocionesController.ClientesPromocionesController;
-import com.mastertyres.fxControllers.EditarControllers.EditarPromocionController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.promociones.model.Promocion;

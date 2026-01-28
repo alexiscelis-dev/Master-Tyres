@@ -7,7 +7,7 @@
 <AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
             stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarClienteController">
+            fx:controller="com.mastertyres.fxControllers.cliente.EditarClienteController">
 
 
     <ScrollPane>

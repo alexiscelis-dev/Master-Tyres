@@ -11,7 +11,6 @@ import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoading;
-import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.vehiculo.model.Vehiculo;
@@ -65,6 +64,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
     @FXML private AnchorPane rootPane;
     @FXML private TableView<Cliente> tablaClientes;
     @FXML private TableColumn<Cliente, String> colTipoCliente;
+    @FXML private TableColumn<Cliente, String> colNombreEmpresa;
     @FXML private TableColumn<Cliente, String> colGenero;
     @FXML private TableColumn<Cliente, String> colCumpleanos;
     @FXML private TableColumn<Cliente, String> colRegistro;
@@ -532,6 +532,8 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "nombre" -> paginaClientes = clienteService.buscarClientePorNombrePaginado(
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "nombre de empresa" -> paginaClientes = clienteService.buscarClientePornombreEmpresaPaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "telefono" -> paginaClientes = clienteService.buscarClientePorNumTelefonoPaginado(
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "estado" -> paginaClientes = clienteService.buscarClientePorEstadoPaginado(
@@ -643,6 +645,10 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
         colTipoCliente.setCellValueFactory(data ->
                 new SimpleStringProperty(valorONull(data.getValue().getTipoCliente()))
+        );
+
+        colNombreEmpresa.setCellValueFactory(data->
+                new SimpleStringProperty(valorONull(data.getValue().getNombreEmpresa()))
         );
 
         colNombre.setCellValueFactory(data ->
@@ -772,6 +778,10 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                             StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
             case "nombre" -> paginaFiltrada =
                     clienteService.buscarClientePorNombrePaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+
+            case "nombre de empresa" -> paginaFiltrada =
+                    clienteService.buscarClientePornombreEmpresaPaginado(
                             StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "telefono" -> paginaFiltrada =

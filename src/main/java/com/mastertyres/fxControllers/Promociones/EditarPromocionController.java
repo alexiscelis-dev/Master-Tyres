@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.EditarControllers;
+package com.mastertyres.fxControllers.Promociones;
 
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
