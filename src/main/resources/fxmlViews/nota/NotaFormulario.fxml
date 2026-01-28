@@ -634,6 +634,12 @@
                                                 </image>
                                             </ImageView>
 
+                                            <Label text="Because so much is riding on your tires" translateX="8" translateY="-465">
+                                                <font>
+                                                    <Font name="Book Antiqua" size="15.0"/>
+                                                </font>
+                                            </Label>
+
 
                                         </StackPane>
 

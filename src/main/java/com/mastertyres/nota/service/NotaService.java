@@ -328,5 +328,18 @@ public class NotaService implements INotaService {
         notaRepository.actualizarFechaVencimiento(fechaVencimiento, notaId, active);
     }
 
+    @Override
+    public List<NotaDTO> historialNota(Integer notaId,  String active) {
+       return notaRepository.historialNota(notaId, active);
+    }
+
+    @Override
+    public List<NotaDTO> buscarHistorial(int cantidadResultados) {
+        Sort orderBy = Sort.by("createdAt").ascending();
+
+        Pageable configuracion = PageRequest.of(0, cantidadResultados,orderBy);
+        return  notaRepository.buscarHistorial(StatusNota.ACTIVE.toString(),configuracion);
+    }
+
 
 }//clase

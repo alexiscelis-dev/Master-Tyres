@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
-            stylesheets="/styles_css/ActualizarAdeudo.css"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController">
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ActualizarAdeudo.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController">
 
 
     <VBox alignment="TOP_CENTER" layoutY="1.0" prefHeight="500.0" prefWidth="600.0">
         <Label styleClass="titulo" text="Actualizar adeudo ">
             <VBox.margin>
-                <Insets bottom="60.0" top="20.0"/>
+                <Insets bottom="60.0" top="20.0" />
             </VBox.margin>
 
 
@@ -25,10 +23,10 @@
             <VBox>
                 <Label fx:id="lblAdeudo" text="Adeudo" textFill="#8eb83d">
                     <VBox.margin>
-                        <Insets bottom="20"/>
+                        <Insets bottom="20" />
                     </VBox.margin>
                     <font>
-                        <Font name="Arial Bold" size="14.0"/>
+                        <Font name="Arial Bold" size="14.0" />
                     </font>
 
                 </Label>
@@ -36,20 +34,18 @@
                 <HBox fx:id="hbAdeudo" alignment="CENTER_LEFT" spacing="20" visible="true">
 
 
-                    <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="250.0"
-                               promptText="Ingrese el nuevo monto del adeudo" styleClass="buscador">
+                    <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="250.0" promptText="Ingrese el nuevo monto del adeudo" styleClass="buscador">
 
                     </TextField>
 
 
-                    <DatePicker fx:id="dpFecha" editable="false" prefHeight="26.0" prefWidth="165.0"
-                                promptText="Fecha de vencimiento" styleClass="date-picker">
+                    <DatePicker fx:id="dpFecha" editable="false" prefHeight="26.0" prefWidth="165.0" promptText="Fecha de vencimiento" styleClass="date-picker">
 
                     </DatePicker>
 
                 </HBox>
-                <StackPane prefHeight="50" prefWidth="200" alignment="CENTER">
-                    <CheckBox fx:id="cbLiquidar" text="Liquidar adeudo"></CheckBox>
+                <StackPane alignment="CENTER" prefHeight="50" prefWidth="200">
+                    <CheckBox fx:id="cbLiquidar" text="Liquidar adeudo" />
                 </StackPane>
 
 
@@ -57,15 +53,15 @@
 
 
             <VBox.margin>
-                <Insets top="10.0"/>
+                <Insets top="10.0" />
             </VBox.margin>
 
         </VBox>
 
 
         <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
-            <Button onAction="#cancelar" fx:id="btnCancelar" styleClass="boton-accion" text="Cancelar"/>
-            <Button disable="true" fx:id="btnActualizar" styleClass="boton-accion" text="Actualizar"/>
+            <Button fx:id="btnActualizar" disable="true" styleClass="boton-accion" text="Actualizar" />
+            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar" />
         </HBox>
 
     </VBox>

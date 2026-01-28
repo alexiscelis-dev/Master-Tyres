@@ -8,10 +8,10 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -62,6 +62,7 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
 
     @FXML private TableView<Cliente> tablaClientes;
     @FXML private TableColumn<Cliente, String> colTipoCliente;
+    @FXML private TableColumn<Cliente, String> colNombreEmpresa;
     @FXML private TableColumn<Cliente, String> colGenero;
     @FXML private TableColumn<Cliente, String> colCumpleanos;
     @FXML private TableColumn<Cliente, String> colRegistro;
@@ -179,7 +180,6 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
         buscarClienteBuscador.clear();
         dpBuscarCliente.setValue(null);
     }
-
 
     private void configuraciones(){
         //Enter buscar
@@ -474,8 +474,6 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
 
     }//configuraciones
 
-
-
     @FXML
     private void agregarCliente(ActionEvent event) {
         ventanaPrincipalController.viewContent(
@@ -523,6 +521,8 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
                 case "sin filtro" -> paginaClientes = clienteService.buscadorClientesPaginado(
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "nombre" -> paginaClientes = clienteService.buscarClientePorNombrePaginado(
+                        StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
+                case "nombre de empresa" -> paginaClientes = clienteService.buscarClientePornombreEmpresaPaginado(
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
                 case "telefono" -> paginaClientes = clienteService.buscarClientePorNumTelefonoPaginado(
                         StatusCliente.ACTIVE.toString(), terminoBusquedaActual, indicePagina, CLIENTES_POR_PAGINA);
@@ -635,6 +635,10 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
 
         colTipoCliente.setCellValueFactory(data ->
                 new SimpleStringProperty(valorONull(data.getValue().getTipoCliente()))
+        );
+
+        colNombreEmpresa.setCellValueFactory(data->
+                new SimpleStringProperty(valorONull(data.getValue().getNombreEmpresa()))
         );
 
         colNombre.setCellValueFactory(data ->
@@ -764,6 +768,10 @@ public class ClienteController implements IVentanaPrincipal, ILoading {
                             StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
             case "nombre" -> paginaFiltrada =
                     clienteService.buscarClientePorNombrePaginado(
+                            StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
+
+            case "nombre de empresa" -> paginaFiltrada =
+                    clienteService.buscarClientePornombreEmpresaPaginado(
                             StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
             case "telefono" -> paginaFiltrada =

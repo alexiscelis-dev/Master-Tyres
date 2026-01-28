@@ -5,11 +5,11 @@ import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.fxControllers.historial.HistorialController;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -41,7 +41,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -453,6 +452,7 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 //        });
 //    }
 
+
     private void ConfigurarNuevoPaginadorBusqueda(String filtro, String busqueda, String busqueda2) {
         modoBusqueda = true;
         filtroActual = filtro;
@@ -509,9 +509,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
 
     private VBox crearCardNota(NotaDTO nota) {
 
-        //Nota notaBuscar = notaService.buscarPorId(nota.getNotaId());
-        //NotaClienteDetalle notaClienteDetalle = notaClienteDetService.buscarclienteDetalle(notaBuscar);
-
 
         VBox card = new VBox();
         String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
@@ -567,10 +564,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label numeroNota = new Label(nota.getNumNota());
         numeroNota.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
 
-        /*Label lblCliente = new Label(
-                notaUtils.eliminarPuntos(notaClienteDetalle.getNombreClienteNota())
-
-        );*/
 
         String nombreCliente = nota.getNombreClienteNota() != null
                 ? notaUtils.eliminarPuntos(nota.getNombreClienteNota())
@@ -579,12 +572,6 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label lblCliente = new Label(nombreCliente);
 
         lblCliente.setStyle("-fx-text-fill: white;");
-        /*Label lblVehiculo = new Label(
-                notaUtils.eliminarPuntos(notaClienteDetalle.getMarcaNota()) + " " +
-                        notaUtils.eliminarPuntos(notaClienteDetalle.getModeloNota()) + " " +
-                        notaClienteDetalle.getAnioNota()
-
-        );*/
 
         String marca = nota.getMarcaNota() != null
                 ? notaUtils.eliminarPuntos(nota.getMarcaNota())
@@ -601,13 +588,14 @@ public class NotaController implements IVentanaPrincipal, ILoading {
         Label lblVehiculo = new Label((marca + " " + modelo + " " + anio).trim());
 
         lblVehiculo.setStyle("-fx-text-fill: white;");
-        //Label total = new Label("Total: $" + notaBuscar.getTotal());
+
         Label total = new Label("Total: $" + nota.getTotal());
 
         total.setStyle("-fx-text-fill: white;");
 
         VBox textBox = new VBox(5, numeroNota, lblCliente, lblVehiculo, total);
         HBox contenBox = new HBox(10, textBox);
+
         card.getChildren().add(contenBox);
 
         card.setOnMouseEntered(e -> {

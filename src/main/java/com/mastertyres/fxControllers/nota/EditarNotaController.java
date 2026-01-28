@@ -9,7 +9,7 @@ import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.fxControllers.EditarControllers.EditarAdeudoController;
 import com.mastertyres.fxControllers.EditarControllers.EditarSaldoController;
 import com.mastertyres.inventario.model.Inventario;
@@ -33,6 +33,7 @@ import javafx.scene.control.PopupControl;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,6 +71,11 @@ public class EditarNotaController extends BaseNota implements ILoading {
     private String numNota;
     private LoadingComponentController loadingOverlayController;
 
+    private final Duration TIEMPO = Duration.millis(500);
+    private final int FROM = -50;
+    private final int TO = 0;
+    private final double[] SLIDE_FROM_TO = {FROM, TO};
+
     @Autowired
     private NotaService notaService;
     @Autowired
@@ -99,7 +105,7 @@ public class EditarNotaController extends BaseNota implements ILoading {
 
         notaUtils.mostrarPopupHora(txtHoraEntrega);
 
-        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons));
+        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons,SLIDE_FROM_TO,TIEMPO));
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
@@ -178,7 +184,7 @@ public class EditarNotaController extends BaseNota implements ILoading {
 
             //checkBox
             //este metodo revisa cuales estan seleccionados  y
-            revisarCheckBoxes();
+            revisarCheckBoxes(notaEditar);
 
             txtObservaciones.setText(notaEditar.getObservaciones() != null ? notaEditar.getObservaciones() : "");
             txtObservaciones2.setText(notaEditar.getObservaciones2() != null ? notaEditar.getObservaciones2() : "");
@@ -761,7 +767,7 @@ public class EditarNotaController extends BaseNota implements ILoading {
     public void setNotaEditar(final NotaDTO notaEditar) {
         this.notaEditar = notaEditar;
     }
-
+/*
     private void revisarCheckBoxes() {
         String status[] = new String[8];
 
@@ -785,6 +791,8 @@ public class EditarNotaController extends BaseNota implements ILoading {
 
 
     }//revisarCheckBoxes
+
+ */
 
 
 }//class

@@ -199,6 +199,35 @@ public class ClienteService implements IClienteService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Cliente> buscarClientePornombreEmpresaPaginado(String active, String nombreEmpresa, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Cliente> clientes = clienteRepository.buscarClientePorNombreEmpresaPaginado(active, nombreEmpresa, pageable);
+
+        if (clientes.isEmpty()) return clientes;
+
+        // Inicializamos la lista de vehículos
+        for (Cliente cliente : clientes.getContent()) {
+            cliente.setVehiculos(new ArrayList<>());
+        }
+
+        List<Integer> clienteIds = clientes.getContent().stream()
+                .map(Cliente::getClienteId)
+                .toList();
+
+        List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorClientes(clienteIds);
+
+        Map<Integer, Cliente> mapaCliente = clientes.getContent().stream()
+                .collect(Collectors.toMap(Cliente::getClienteId, c -> c));
+
+        for (Vehiculo v : vehiculos) {
+            Cliente cliente = mapaCliente.get(v.getCliente().getClienteId());
+            cliente.getVehiculos().add(v);
+        }
+
+        return clientes;
+    }
+
+    @Transactional(readOnly = true)
     public List<Cliente> buscarClientePorNumTelefono(String active, String numTelefono) {
         List<Cliente> clientes = clienteRepository.buscarClientePorNumTelefono(active,numTelefono);
 
@@ -695,7 +724,6 @@ public class ClienteService implements IClienteService {
         return clientes;
 
     }//buscarClientePorCumpleanos
-
 
     @Transactional(readOnly = true)
     public Page<Cliente> buscadorClientesPaginado(String status, String busqueda, int pagina, int limite) {

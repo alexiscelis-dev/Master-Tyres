@@ -3,7 +3,7 @@ package com.mastertyres.fxControllers.imprimirNota;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
@@ -121,7 +121,7 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
             dibujarGasolina(notaImprimir.getPorcentajeGas());
 
             //checkBox
-            revisarCheckBoxes();
+            revisarCheckBoxes(notaImprimir);
 
             txtObservaciones.setText(notaImprimir.getObservaciones() != null ? notaImprimir.getObservaciones() : "");
             txtObservaciones2.setText(notaImprimir.getObservaciones2() != null ? notaImprimir.getObservaciones2() : "");
@@ -278,6 +278,7 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
         this.notaImprimir = notaImprimir;
     }
 
+    /*
     private void revisarCheckBoxes() {
         String status[] = new String[8];
 
@@ -301,6 +302,8 @@ public class ImprimirNotaController extends BaseNota implements ILoading {
 
 
     }//revisarCheckBoxes
+
+     */
 
 
 

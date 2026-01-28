@@ -54,7 +54,8 @@
                             <TextField fx:id="txtApellido" promptText="*Primer Apellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             <TextField fx:id="txtSegundoApellido" promptText="Segundo Apellido" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
-                            <TextField fx:id="txtDomicilio" promptText="Domicilio" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                            <TextField fx:id="txtNombreEmpresa" promptText="Nombre de Empresa:" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.rowIndex="3" />
+                            <TextField fx:id="txtDomicilio" promptText="Domicilio" styleClass="buscador" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
 
                             <TextField fx:id="txtCiudad" promptText="Ciudad" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                             <TextField fx:id="txtEstado" promptText="Estado" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="4" />

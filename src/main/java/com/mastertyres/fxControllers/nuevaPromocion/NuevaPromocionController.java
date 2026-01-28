@@ -2,7 +2,7 @@ package com.mastertyres.fxControllers.nuevaPromocion;
 
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;

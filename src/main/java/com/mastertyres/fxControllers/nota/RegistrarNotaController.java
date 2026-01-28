@@ -8,7 +8,7 @@ import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -86,11 +86,9 @@ public class RegistrarNotaController implements ILoading {
         this.loadingOverlayController = loading;
     }
 
-
     public void agregarNota(NotaDTO nota) {
         this.nota = nota;
     }
-
 
     @FXML
     private void initialize() {
@@ -159,7 +157,6 @@ public class RegistrarNotaController implements ILoading {
         stage.close();
 
     }
-
 
     private void registrar() {
 
@@ -404,12 +401,10 @@ public class RegistrarNotaController implements ILoading {
 
     }//configuraciones
 
-
     //getters y setters
     public void setOnRegistroCompleto(Runnable onRegistroCompleto) {
         this.onRegistroCompleto = onRegistroCompleto;
     }
-
 
     public RadioButton getRbPagado() {
         return this.rbPagado;
@@ -418,7 +413,6 @@ public class RegistrarNotaController implements ILoading {
     public void setRbPagado(final RadioButton rbPagado) {
         this.rbPagado = rbPagado;
     }
-
 
     private String estadoNota() {
         String estado = "";

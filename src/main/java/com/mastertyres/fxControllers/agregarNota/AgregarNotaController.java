@@ -5,7 +5,7 @@ import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.fxControllers.nota.BuscarClienteController;
 import com.mastertyres.fxControllers.nota.BuscarLlantaController;
 import com.mastertyres.fxControllers.nota.RegistrarNotaController;
@@ -24,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.springframework.stereotype.Component;
 
 import static com.mastertyres.common.utils.FechaUtils.mostrarFechayHora;
@@ -33,6 +34,10 @@ public class AgregarNotaController extends BaseNota implements ILoading {
 
     private BooleanProperty boolTotal = new SimpleBooleanProperty(true);
     private LoadingComponentController loadingOverlayController;
+    private final Duration TIEMPO = Duration.millis(500);
+    private final int FROM = -50;
+    private final int TO = 0;
+    private final double[] SLIDE_FROM_TO = {FROM, TO};
 
     @Override
     public void setInitializeLoading(LoadingComponentController loading) {
@@ -47,7 +52,7 @@ public class AgregarNotaController extends BaseNota implements ILoading {
         configuraciones();
         operacionesCampos();
 
-        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons));
+        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons,SLIDE_FROM_TO,TIEMPO));
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
         dibujarGasolina(50);

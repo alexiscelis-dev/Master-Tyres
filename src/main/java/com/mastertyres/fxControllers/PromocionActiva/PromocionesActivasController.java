@@ -6,7 +6,7 @@ import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxControllers.ClientesPromocionesController.ClientesPromocionesController;
 import com.mastertyres.fxControllers.EditarControllers.EditarPromocionController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
