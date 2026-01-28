@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.EditarControllers;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class EditarClienteController {
+public class EditarClienteController implements IFxController {
 
     @FXML
     private TextField txtNombre;
@@ -61,12 +62,22 @@ public class EditarClienteController {
     private BooleanProperty CorreoValido = new SimpleBooleanProperty(true);
 
     public void initialize() {
-        configuraciones();
 
-        configurarValidaciones();
+        configuraciones();
+        listeners();
+
     }//initialize
 
-    private void configuraciones() {
+    @Override
+    public void configuraciones() {
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        configurarValidaciones();
+
         dateCumpleanos.getEditor().setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case BACK_SPACE, DELETE -> {
@@ -74,7 +85,8 @@ public class EditarClienteController {
                 }
             }
         });
-    }
+
+    }//listeners
 
     private void configurarValidaciones() {
 

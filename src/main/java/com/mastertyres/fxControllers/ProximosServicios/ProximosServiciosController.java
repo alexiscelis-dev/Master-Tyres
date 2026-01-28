@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.ProximosServicios;
 
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
@@ -26,9 +27,9 @@ import java.util.List;
 
 
 @Component
-public class ProximosServiciosController {
+public class ProximosServiciosController implements IFxController {
 
-    @FXML private AnchorPane rootPane;
+    @FXML private AnchorPane ventanaProximosServicios;
 
     @FXML
     private TilePane contenedorServicios;
@@ -69,8 +70,21 @@ public class ProximosServiciosController {
 
     @FXML
     private void initialize(){
-        MenuContextSetting.disableMenu(rootPane);
+
+        configuraciones();
+        listeners();
         cargarServicios();
+
+
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+        MenuContextSetting.disableMenu(ventanaProximosServicios);
+    }//configuraciones
+
+    @Override
+    public void listeners() {
 
         txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) {
@@ -80,7 +94,7 @@ public class ProximosServiciosController {
             }
         });
 
-    }//initialize
+    }//listeners
 
     private void configurarPaginador() {
         //Page<String> paginaInicial = marcaService.listarNombresMarcas(PageRequest.of(0, tamañoPagina));
@@ -144,43 +158,7 @@ public class ProximosServiciosController {
             contenedorServicios.getChildren().add(card);
         }
     }
-    /*
-        private VBox crearCardVehiculo(VehiculoDTO p) {
-            VBox card = new VBox();
-            card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
-            card.setPrefSize(500, 100);
 
-            Label lblNombreCliente = new Label( p.getNombreCliente() + " " + p.getApellido() + " " + p.getSegundoApellido() );
-            lblNombreCliente.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
-
-            Label lblNombreMarca  = new Label( p.getNombreMarca());
-            lblNombreMarca .setStyle("-fx-text-fill: white;");
-
-            Label lblNombreModelo = new Label( p.getNombreModelo());
-            lblNombreModelo.setStyle("-fx-text-fill: white;");
-
-            Label lblAnnio = new Label("" + p.getAnio());
-            lblAnnio.setStyle("-fx-text-fill: white;");
-
-            HBox contentBox = new HBox(10, lblNombreMarca, lblNombreModelo, lblAnnio);
-
-            VBox textBox = new VBox(5, lblNombreCliente, contentBox);
-
-            card.getChildren().add(textBox);
-
-            // ========= ESTILOS INTERACTIVOS =========
-            card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
-            card.setOnMouseExited(e -> card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;"));
-
-            // Al hacer clic
-            card.setOnMouseClicked(event -> {
-                card.setStyle("-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
-                mostrarDetalleVehiculo(p);
-            });
-
-            return card;
-        }
-    */
     private VBox crearCardVehiculo(VehiculoDTO p) {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;");
@@ -307,4 +285,5 @@ public class ProximosServiciosController {
         cargarServicios();
     }
 
-}
+
+}//class

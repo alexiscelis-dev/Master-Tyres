@@ -1,8 +1,10 @@
 package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
@@ -18,11 +20,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -31,7 +35,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-public class AdministarMarcasController {
+public class AdministarMarcasController implements IFxController {
 
     @FXML
     private Label lblNombre;
@@ -44,7 +48,7 @@ public class AdministarMarcasController {
     @FXML private TableColumn<DetalleCategoria, String> colModelo;
     @FXML private TableColumn<DetalleCategoria, String> colCategoria;
 
-
+    @FXML private AnchorPane rootPane;
     @FXML private Button btnAgregarMarca;
     @FXML private Button BtnEliminarModelo;
     @FXML private Button BtnAgregarModelo;
@@ -85,6 +89,22 @@ public class AdministarMarcasController {
     @FXML
     private void initialize(){
 
+        // Cargar paginador inicial
+        configurarPaginador();
+        configuraciones();
+        listeners();
+
+    }//initialize
+
+
+
+ @Override
+    public void configuraciones(){
+
+     validacionesModeloBtn();
+
+        MenuContextSetting.disableMenu(rootPane);
+
         colMarca.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getMarca().getNombreMarca()));
 
@@ -94,12 +114,11 @@ public class AdministarMarcasController {
         colCategoria.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCategoria().getNombreCategoria()));
 
-        validacionesModeloBtn();
+    }//configuraciones
 
-        // Cargar paginador inicial
-        configurarPaginador();
+    @Override
+    public void listeners() {
 
-        // Listener para el buscador
         txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) {
                 filtroActual = null;
@@ -109,7 +128,8 @@ public class AdministarMarcasController {
                 cargarMarcasFiltradas(filtroActual);
             }
         });
-    }
+
+    }//listeners
 
     private void configurarPaginador() {
         //Page<String> paginaInicial = marcaService.listarNombresMarcas(PageRequest.of(0, tamañoPagina));
@@ -158,7 +178,6 @@ public class AdministarMarcasController {
         return card;
     }
 
-
     private void cargarMarcasFiltradas(String filtro) {
         Page<Marca> paginaFiltrada = marcaService.buscarMarcasPorNombre(filtro, PageRequest.of(0, tamañoPagina));
         mostrarMarcasPorNombre(paginaFiltrada.getContent());
@@ -181,7 +200,6 @@ public class AdministarMarcasController {
         );
     }
 
-
     @FXML
     private void agregarMarca (){
         try {
@@ -192,7 +210,7 @@ public class AdministarMarcasController {
             AgregarMarcaController controller = loader.getController();
 
 
-            Stage stage = new Stage();
+            Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Agregar Marca");
             stage.setScene(new Scene(root));
 
@@ -231,7 +249,7 @@ public class AdministarMarcasController {
             EditarMarcaController controller = loader.getController();
             controller.setMarcaModelos(marcaSeleccionada);
 
-            Stage stage = new Stage();
+            Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Editar Marca");
             stage.setScene(new Scene(root));
 
@@ -254,7 +272,7 @@ public class AdministarMarcasController {
             EditarModeloController controller = loader.getController();
             controller.setModelos(TablaVehiculoMarca.getSelectionModel().getSelectedItem());
 
-            Stage stage = new Stage();
+            Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Editar Modelo");
             stage.setScene(new Scene(root));
 
@@ -278,7 +296,7 @@ public class AdministarMarcasController {
             AgregarModeloController controller = loader.getController();
             controller.setMarcaModelos(marcaSeleccionada);
 
-            Stage stage = new Stage();
+            Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Agregar Modelo");
             stage.setScene(new Scene(root));
 
@@ -412,4 +430,4 @@ public class AdministarMarcasController {
         //cargarMarcas();
         configurarPaginador();
     }
-}
+}//class

@@ -4,6 +4,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
@@ -41,7 +42,7 @@ import java.util.Set;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarClienteController implements IVentanaPrincipal {
+public class AgregarClienteController implements IVentanaPrincipal, IFxController {
 
     @Autowired
     private MarcaService marcaService;
@@ -167,19 +168,18 @@ public class AgregarClienteController implements IVentanaPrincipal {
     private void initialize() {
 
         configuraciones();
-
-        configurarValidaciones();
-
+        listeners();
         cargarOpciones();
-
 
     }//initialize
 
-    private void configuraciones() {
+    @Override
+    public void configuraciones() {
 
         MenuContextSetting.disableMenu(ventanaAgregarCliente);
         MenuContextSetting.disableMenuDatePicker(ventanaAgregarCliente);
         RegexTools.aplicarNumeroEntero(spinnerAnio.getEditor());
+
         //Impetir que se escriba en el DatePicker
         DatePicker datePicker = new DatePicker();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -197,6 +197,7 @@ public class AgregarClienteController implements IVentanaPrincipal {
             Categoria categoria = data.getValue().getCategoria();
             return new SimpleStringProperty(categoria != null ? categoria.getNombreCategoria() : "");
         });
+
         colAnnio.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAnio())));
         colColor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getColor()));
         colPlacas.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPlacas()));
@@ -242,6 +243,36 @@ public class AgregarClienteController implements IVentanaPrincipal {
             }
         });
 
+        //inizializa con el año actual
+        int currentYear = Year.now().getValue();
+        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
+        spinnerAnio.setValueFactory(yearFactory);
+
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+    configurarValidaciones();
+
+//eliminar contenido de DatePickerUltimoServicio
+        pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case BACK_SPACE, DELETE -> {
+                    pickerUltimoServicio.setValue(null);
+                }
+            }
+        });
+
+        pickerCumpleanos.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case BACK_SPACE, DELETE -> {
+                    pickerCumpleanos.setValue(null);
+                }
+            }
+        });
+
         //Evitar que los choiceBox se baran debajo de la tabla
         choiceMarca.setOnMousePressed(event -> {
             if (!choiceMarca.isShowing()) {
@@ -262,29 +293,9 @@ public class AgregarClienteController implements IVentanaPrincipal {
             }
         });
 
-        //inizializa con el año actual
-        int currentYear = Year.now().getValue();
-        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
-        spinnerAnio.setValueFactory(yearFactory);
 
-        //eliminar contenido de DatePickerUltimoServicio
-        pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
-            switch (event.getCode()){
-                case BACK_SPACE, DELETE ->{
-                    pickerUltimoServicio.setValue(null);
-                }
-            }
-        });
+    }//listeners
 
-        pickerCumpleanos.getEditor().setOnKeyPressed(event -> {
-            switch (event.getCode()){
-                case BACK_SPACE, DELETE -> {
-                    pickerCumpleanos.setValue(null);
-                }
-            }
-        });
-
-    }//configuraciones
 
     @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {

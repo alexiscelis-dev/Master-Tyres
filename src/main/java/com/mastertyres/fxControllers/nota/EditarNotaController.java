@@ -4,6 +4,7 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -44,7 +45,7 @@ import java.time.format.DateTimeFormatter;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class EditarNotaController extends BaseNota implements ILoading {
+public class EditarNotaController extends BaseNota implements IFxController, ILoading {
 
     @FXML
     private Button btnGuardar;
@@ -100,12 +101,84 @@ public class EditarNotaController extends BaseNota implements ILoading {
 
     @FXML
     private void initialize() {
+
         configuraciones();
+        listeners();
+
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+
         operacionesCampos();
+
+        //deshabilita los menu del clic derecho en los campos de texto
+        MenuContextSetting.disableMenu(rootPane);
+
+        //validaciones Regex
+        RegexTools.aplicarNumerosDecimalNota(txtTotal);
+        RegexTools.aplicar24Horas(txtHoraEntrega);
+        RegexTools.aplicar6Enteros(txtNumNota);
+        RegexTools.aplicar2Enteros(txtDia);
+        RegexTools.aplicar2Enteros(txtMes);
+        RegexTools.aplicar4Enteros(txtAnio);
+        RegexTools.aplicar4Enteros(txtAnioVehiculo);
+        RegexTools.aplicarNumeroEntero(txtKms);
+
+        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
+        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
+        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
+        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
+        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
+        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
+        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
+        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
+        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
+        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
+        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
+        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
+        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
+
+        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
+        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
+        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
+        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
 
         notaUtils.mostrarPopupHora(txtHoraEntrega);
 
-        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons,SLIDE_FROM_TO,TIEMPO));
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons, SLIDE_FROM_TO, TIEMPO));
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
@@ -122,7 +195,91 @@ public class EditarNotaController extends BaseNota implements ILoading {
         btnAgregarNumFactura.setOnAction(event -> agregarNumFactura(notaEditar));
 
 
-    }//initialize
+        //configuracion checkBox
+
+        cbRayonesSi.setOnAction(event -> {
+            if (cbRayonesSi.isSelected()) {
+                cbRayonesNo.setSelected(false);
+            }
+        });
+        cbRayonesNo.setOnAction(event -> {
+            if (cbRayonesNo.isSelected()) {
+                cbRayonesSi.setSelected(false);
+            }
+        });
+        cbGolpesSi.setOnAction(event -> {
+            if (cbGolpesSi.isSelected()) {
+                cbGolpesNo.setSelected(false);
+            }
+        });
+        cbGolpesNo.setOnAction(event -> {
+            if (cbGolpesNo.isSelected()) {
+                cbGolpesSi.setSelected(false);
+            }
+        });
+        cbTaponesSi.setOnAction(event -> {
+            if (cbTaponesSi.isSelected()) {
+                cbTaponesNo.setSelected(false);
+            }
+        });
+        cbTaponesNo.setOnAction(event -> {
+            if (cbTaponesNo.isSelected()) {
+                cbTaponesSi.setSelected(false);
+            }
+        });
+        cbTapetesSi.setOnAction(event -> {
+            if (cbTapetesSi.isSelected()) {
+                cbTapetesNo.setSelected(false);
+            }
+        });
+        cbTapetesNo.setOnAction(event -> {
+            if (cbTapetesNo.isSelected()) {
+                cbTapetesSi.setSelected(false);
+            }
+        });
+        cbRadioSi.setOnAction(event -> {
+            if (cbRadioSi.isSelected()) {
+                cbRadioNo.setSelected(false);
+            }
+        });
+        cbRadioNo.setOnAction(event -> {
+            if (cbRadioNo.isSelected()) {
+                cbRadioSi.setSelected(false);
+            }
+        });
+        cbGatoSi.setOnAction(event -> {
+            if (cbGatoSi.isSelected()) {
+                cbGatoNo.setSelected(false);
+            }
+        });
+        cbGatoNo.setOnAction(event -> {
+            if (cbGatoNo.isSelected()) {
+                cbGatoSi.setSelected(false);
+            }
+        });
+        cbLlaveSi.setOnAction(event -> {
+            if (cbLlaveSi.isSelected()) {
+                cbLlaveNo.setSelected(false);
+            }
+        });
+        cbLlaveNo.setOnAction(event -> {
+            if (cbLlaveNo.isSelected()) {
+                cbLlaveSi.setSelected(false);
+            }
+        });
+        cbLlantaSi.setOnAction(event -> {
+            if (cbLlantaSi.isSelected()) {
+                cbLlantaNo.setSelected(false);
+            }
+        });
+        cbLlantaNo.setOnAction(event -> {
+            if (cbLlantaNo.isSelected()) {
+                cbLlantaSi.setSelected(false);
+            }
+        });
+
+
+    }//listeners
 
     public void agregarNota(String numNota) {
         llenarNota(numNota);
@@ -277,154 +434,6 @@ public class EditarNotaController extends BaseNota implements ILoading {
 
     }//llenarNota
 
-    private void configuraciones() {
-
-        //configuracion checkBox
-
-        cbRayonesSi.setOnAction(event -> {
-            if (cbRayonesSi.isSelected()) {
-                cbRayonesNo.setSelected(false);
-            }
-        });
-        cbRayonesNo.setOnAction(event -> {
-            if (cbRayonesNo.isSelected()) {
-                cbRayonesSi.setSelected(false);
-            }
-        });
-        cbGolpesSi.setOnAction(event -> {
-            if (cbGolpesSi.isSelected()) {
-                cbGolpesNo.setSelected(false);
-            }
-        });
-        cbGolpesNo.setOnAction(event -> {
-            if (cbGolpesNo.isSelected()) {
-                cbGolpesSi.setSelected(false);
-            }
-        });
-        cbTaponesSi.setOnAction(event -> {
-            if (cbTaponesSi.isSelected()) {
-                cbTaponesNo.setSelected(false);
-            }
-        });
-        cbTaponesNo.setOnAction(event -> {
-            if (cbTaponesNo.isSelected()) {
-                cbTaponesSi.setSelected(false);
-            }
-        });
-        cbTapetesSi.setOnAction(event -> {
-            if (cbTapetesSi.isSelected()) {
-                cbTapetesNo.setSelected(false);
-            }
-        });
-        cbTapetesNo.setOnAction(event -> {
-            if (cbTapetesNo.isSelected()) {
-                cbTapetesSi.setSelected(false);
-            }
-        });
-        cbRadioSi.setOnAction(event -> {
-            if (cbRadioSi.isSelected()) {
-                cbRadioNo.setSelected(false);
-            }
-        });
-        cbRadioNo.setOnAction(event -> {
-            if (cbRadioNo.isSelected()) {
-                cbRadioSi.setSelected(false);
-            }
-        });
-        cbGatoSi.setOnAction(event -> {
-            if (cbGatoSi.isSelected()) {
-                cbGatoNo.setSelected(false);
-            }
-        });
-        cbGatoNo.setOnAction(event -> {
-            if (cbGatoNo.isSelected()) {
-                cbGatoSi.setSelected(false);
-            }
-        });
-        cbLlaveSi.setOnAction(event -> {
-            if (cbLlaveSi.isSelected()) {
-                cbLlaveNo.setSelected(false);
-            }
-        });
-        cbLlaveNo.setOnAction(event -> {
-            if (cbLlaveNo.isSelected()) {
-                cbLlaveSi.setSelected(false);
-            }
-        });
-        cbLlantaSi.setOnAction(event -> {
-            if (cbLlantaSi.isSelected()) {
-                cbLlantaNo.setSelected(false);
-            }
-        });
-        cbLlantaNo.setOnAction(event -> {
-            if (cbLlantaNo.isSelected()) {
-                cbLlantaSi.setSelected(false);
-            }
-        });
-
-
-        //deshabilita los menu del clic derecho en los campos de texto
-        MenuContextSetting.disableMenu(rootPane);
-
-        //validaciones Regex
-        RegexTools.aplicarNumerosDecimalNota(txtTotal);
-        RegexTools.aplicar24Horas(txtHoraEntrega);
-        RegexTools.aplicar6Enteros(txtNumNota);
-        RegexTools.aplicar2Enteros(txtDia);
-        RegexTools.aplicar2Enteros(txtMes);
-        RegexTools.aplicar4Enteros(txtAnio);
-        RegexTools.aplicar4Enteros(txtAnioVehiculo);
-        RegexTools.aplicarNumeroEntero(txtKms);
-
-        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
-        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
-        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
-        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
-        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
-        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
-        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
-        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
-        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
-        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
-        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
-        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
-        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
-
-        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
-
-        //deshabilitar botones de actualizar saldo a favor y adeudo si estos son 0
-
-
-    }//configuraciones
 
     @FXML
     private void actualizarAdeudo(NotaDTO notaAdeudo) {
@@ -592,7 +601,7 @@ public class EditarNotaController extends BaseNota implements ILoading {
 
         boolean guardar = mostrarConfirmacion("Guardar cambios", "", "¿Desea guardar los cambios realizados?", "Guardar", "Cancelar");
 
-          checkCheckBoxes();
+        checkCheckBoxes();
 
         if (guardar) {
             Nota notaRegistrar = notaService.buscarPorId(notaActualizar.getNotaId());

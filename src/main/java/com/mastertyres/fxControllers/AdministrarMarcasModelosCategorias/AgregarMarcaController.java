@@ -3,7 +3,9 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -25,6 +27,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,28 +39,46 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class AgregarMarcaController implements IVentanaPrincipal {
-
-    @Autowired private MarcaService marcaService;
-    @Autowired private ModeloService modeloService;
-    @Autowired private CategoriaService categoriaService;
-    @Autowired private VehiculoService vehiculoService;
-    @Autowired private DetalleCategoriaService detalleCategoriaService;
-    @Autowired private VehiculoRepository vehiculoRepository;
+public class AgregarMarcaController implements IVentanaPrincipal, IFxController {
 
 
-    @FXML private TableView<ModeloCategoriaTemp> tablaVehiculos;
-    @FXML private TableColumn<ModeloCategoriaTemp, String> colCategoria;
-    @FXML private TableColumn<ModeloCategoriaTemp, String> colModelo;
-    @FXML private TableColumn<ModeloCategoriaTemp, Void> colEliminar;
+    @Autowired
+    private MarcaService marcaService;
+    @Autowired
+    private ModeloService modeloService;
+    @Autowired
+    private CategoriaService categoriaService;
+    @Autowired
+    private VehiculoService vehiculoService;
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
+    @Autowired
+    private VehiculoRepository vehiculoRepository;
 
 
-    @FXML private ChoiceBox<Categoria> choiceCategoria;
-    @FXML private TextField txtModelo;
-    @FXML private TextField txtMarca;
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private TableView<ModeloCategoriaTemp> tablaVehiculos;
+    @FXML
+    private TableColumn<ModeloCategoriaTemp, String> colCategoria;
+    @FXML
+    private TableColumn<ModeloCategoriaTemp, String> colModelo;
+    @FXML
+    private TableColumn<ModeloCategoriaTemp, Void> colEliminar;
 
-    @FXML private Button btnAgregarVehiculo;
-    @FXML private Button btnAgregar;
+
+    @FXML
+    private ChoiceBox<Categoria> choiceCategoria;
+    @FXML
+    private TextField txtModelo;
+    @FXML
+    private TextField txtMarca;
+
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private Button btnAgregar;
 
     private BooleanProperty ModeloValido = new SimpleBooleanProperty(true);
     private BooleanProperty MarcaValido = new SimpleBooleanProperty(true);
@@ -72,9 +93,20 @@ public class AgregarMarcaController implements IVentanaPrincipal {
     }
 
 
-
     @FXML
-    private void initialize(){
+    private void initialize() {
+
+        cargarOpciones();
+        configuraciones();
+        listeners();
+
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+
+        MenuContextSetting.disableMenu(rootPane);
+
         tablaVehiculos.setItems(listaVehiculos);
 
         colModelo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getModelo()));
@@ -83,6 +115,7 @@ public class AgregarMarcaController implements IVentanaPrincipal {
         ));
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
+
             {
                 Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
                 ImageView iv = new ImageView(img);
@@ -95,6 +128,7 @@ public class AgregarMarcaController implements IVentanaPrincipal {
                     listaVehiculos.remove(item);
                 });
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -102,8 +136,13 @@ public class AgregarMarcaController implements IVentanaPrincipal {
             }
         });
 
-        cargarOpciones();
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
         configurarValidaciones();
+
     }
 
     @FXML
@@ -146,7 +185,7 @@ public class AgregarMarcaController implements IVentanaPrincipal {
     }
 
     public void cerrarVentana(ActionEvent actionEvent) {
-       limpiarCamposVehiculo();
+        limpiarCamposVehiculo();
 
         Stage stage = (Stage) tablaVehiculos.getScene().getWindow();
         stage.close();
@@ -187,7 +226,7 @@ public class AgregarMarcaController implements IVentanaPrincipal {
                     detalleCategoriaService.guardarDetalleCategoria(detalle);
                 }
 
-                mostrarInformacion("Exito","Exito en guardar","Marca y modelos guardados correctamente.");
+                mostrarInformacion("Exito", "Exito en guardar", "Marca y modelos guardados correctamente.");
                 limpiarCamposVehiculo();
                 cerrarVentana(null);
 
@@ -208,6 +247,7 @@ public class AgregarMarcaController implements IVentanaPrincipal {
             public String toString(Categoria categoria) {
                 return categoria != null ? categoria.getNombreCategoria() : "";
             }
+
             @Override
             public Categoria fromString(String string) {
                 return null;
@@ -297,5 +337,4 @@ public class AgregarMarcaController implements IVentanaPrincipal {
     }
 
 
-
-}
+}//class

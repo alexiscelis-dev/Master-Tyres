@@ -5,6 +5,7 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -45,7 +46,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Component
-public class AgregarVehiculoController implements IVentanaPrincipal {
+public class AgregarVehiculoController implements IVentanaPrincipal, IFxController {
 
     @Autowired
     private MarcaService marcaService;
@@ -165,12 +166,13 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
     private void initialize() {
 
         cargarOpciones();
-        configurarValidaciones();
         configuraciones();
+        listeners();
 
     }//initialize
 
-    private void configuraciones(){
+    @Override
+    public void configuraciones(){
 
         MenuContextSetting.disableMenu(rootPane);
 
@@ -239,6 +241,28 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
         });
 
 
+        colObservaciones.setPrefWidth(400);
+        colObservaciones.setMinWidth(100);
+
+
+
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+        configurarValidaciones();
+
+        //Hacer que se pueda borrar en los DatePicker
+        pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()){
+                case BACK_SPACE, DELETE -> {
+                    pickerUltimoServicio.setValue(null);
+                }
+            }
+        });
+
         //Cliente Seleccionado
         tablaClientes.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -253,21 +277,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal {
                 txtClienteTipo.clear();
             }
         });
-
-        colObservaciones.setPrefWidth(400);
-        colObservaciones.setMinWidth(100);
-
-        //Hacer que se pueda borrar en los DatePicker
-        pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
-            switch (event.getCode()){
-                case BACK_SPACE, DELETE -> {
-                    pickerUltimoServicio.setValue(null);
-                }
-            }
-        });
-
-
-    }//configuraciones
+    }//listeners
 
     private void configurarValidaciones() {
 

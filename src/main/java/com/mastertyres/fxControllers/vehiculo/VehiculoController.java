@@ -3,10 +3,12 @@ package com.mastertyres.fxControllers.vehiculo;
 
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.exeptions.VehiculoException;
+import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.fxControllers.EditarControllers.EditarVehiculoController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
@@ -29,6 +31,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -50,31 +53,54 @@ import java.util.List;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
 import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class VehiculoController implements IVentanaPrincipal, ILoading {
+public class VehiculoController implements IVentanaPrincipal, IFxController, ILoading {
 
-    @FXML private TableView<VehiculoDTO> tablaVehiculos;
-    @FXML private TableColumn<VehiculoDTO, String> colCliente; //Columna Cliente es Columna Propietario
-    @FXML private TableColumn<VehiculoDTO, String> colMarca;
-    @FXML private TableColumn<VehiculoDTO, String> colModelo;
-    @FXML private TableColumn<VehiculoDTO, String> colCategoria;
-    @FXML private TableColumn<VehiculoDTO, String> colColor;
-    @FXML private TableColumn<VehiculoDTO, Integer> colAnio;
-    @FXML private TableColumn<VehiculoDTO, String> colPlacas;
-    @FXML private TableColumn<VehiculoDTO, String> colNumeroSerie;
-    @FXML private TableColumn<VehiculoDTO, String> colObservaciones;
-    @FXML private TableColumn<VehiculoDTO, Integer> colKilometraje;
-    @FXML private TableColumn<VehiculoDTO, String> colUltimoServicio;
-    @FXML private TableColumn<VehiculoDTO, String> colFechaRegistro;
-    @FXML private TextField buscarVehiculoBuscador;
-    @FXML private ChoiceBox<String> atributoBusquedaVehiculos;
-    @FXML private Label statusLabel;
-    @FXML private HBox limpiarChoiceBox;
-    @FXML private DatePicker dpVehiculoInicio, dpVehiculoFin;
-    @FXML private CheckBox chkRangoFechas;
-    @FXML private Label lblHasta;
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private TableView<VehiculoDTO> tablaVehiculos;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colCliente; //Columna Cliente es Columna Propietario
+    @FXML
+    private TableColumn<VehiculoDTO, String> colMarca;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colModelo;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colCategoria;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colColor;
+    @FXML
+    private TableColumn<VehiculoDTO, Integer> colAnio;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colPlacas;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colNumeroSerie;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colObservaciones;
+    @FXML
+    private TableColumn<VehiculoDTO, Integer> colKilometraje;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colUltimoServicio;
+    @FXML
+    private TableColumn<VehiculoDTO, String> colFechaRegistro;
+    @FXML
+    private TextField buscarVehiculoBuscador;
+    @FXML
+    private ChoiceBox<String> atributoBusquedaVehiculos;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private HBox limpiarChoiceBox;
+    @FXML
+    private DatePicker dpVehiculoInicio, dpVehiculoFin;
+    @FXML
+    private CheckBox chkRangoFechas;
+    @FXML
+    private Label lblHasta;
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
@@ -108,18 +134,44 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
 
     @FXML
     public void initialize() {
-        cargarVehiculos();
-
-        atributoBusquedaVehiculos.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            ConfigurarMostarDatePicker1(newVal);
-        });
-
-        // 2. Listener para el CheckBox (Mostrar/Ocultar segunda fecha)
-        chkRangoFechas.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            ConfigurarMostrarDatepicker2(isSelected);
-        });
 
         configuraciones();
+        listeners();
+        cargarVehiculos();
+
+
+    }//initialize
+
+    private void ConfigurarMostarDatePicker1(String criterio) {
+        boolean esFecha = "Ultimo Servicio".equals(criterio) || "Fecha Registro".equals(criterio);
+
+        // Alternar TextField vs Controles de Fecha
+        buscarVehiculoBuscador.setVisible(!esFecha);
+        buscarVehiculoBuscador.setManaged(!esFecha);
+
+        dpVehiculoInicio.setVisible(esFecha);
+        dpVehiculoInicio.setManaged(esFecha);
+        chkRangoFechas.setVisible(esFecha);
+        chkRangoFechas.setManaged(esFecha);
+
+        // Si cambiamos a texto, ocultamos el resto del rango forzosamente
+        if (!esFecha) {
+            ocultarRangoSegundoNivel();
+            chkRangoFechas.setSelected(false);
+        }
+    }
+
+    private void ConfigurarMostrarDatepicker2(Boolean criterio) {
+        lblHasta.setVisible(criterio);
+        lblHasta.setManaged(criterio);
+        dpVehiculoFin.setVisible(criterio);
+        dpVehiculoFin.setManaged(criterio);
+    }
+
+    @Override
+    public void configuraciones() {
+
+        MenuContextSetting.disableMenu(rootPane);
 
         //Click derecho borrar
         tablaVehiculos.setRowFactory(tabla -> {
@@ -162,39 +214,39 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                                             " " + vehiculoSeleccionado.getNombreModelo() + " " + vehiculoSeleccionado.getAnio();
 
 
-                                 boolean eliminar = mostrarConfirmacion("Eliminar vehiculo",
-                                            "¿Estas seguro que quieres eliminar el siguiente vehiculo? \n\n"+vehiculoEliminar,
+                                    boolean eliminar = mostrarConfirmacion("Eliminar vehiculo",
+                                            "¿Estas seguro que quieres eliminar el siguiente vehiculo? \n\n" + vehiculoEliminar,
                                             "Esta accion no se podra deshacer",
                                             "Eliminar",
                                             "Cancelar");
 
-                                 if (eliminar){
-                                     taskService.runTask(
-                                             loadingOverlayController,
-                                             () ->{
-                                                 vehiculoService.eliminarVehiculo(StatusVehiculo.INACTIVE.toString(),vehiculoSeleccionado.getId());
-                                                 return null;
-                                             },
-                                             (resultado) ->{
-                                                 cargarVehiculos(); //metodo que cargar los datos en la tabla
-                                                mostrarInformacion("Vehiculo eliminado","","El vehiculo se elimino exitosamente.");
-                                             },
-                                             (ex) ->{
-                                                 if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException){
-                                                     mostrarWarning("Operación cancelada",
-                                                             "",
-                                                             "La accion fue cancelada por el usuario.");
-                                                 } else if (ex.getCause() instanceof VehiculoException) {
-                                                     mostrarError("Error al eliminar vehiculo","","" + ex);
+                                    if (eliminar) {
+                                        taskService.runTask(
+                                                loadingOverlayController,
+                                                () -> {
+                                                    vehiculoService.eliminarVehiculo(StatusVehiculo.INACTIVE.toString(), vehiculoSeleccionado.getId());
+                                                    return null;
+                                                },
+                                                (resultado) -> {
+                                                    cargarVehiculos(); //metodo que cargar los datos en la tabla
+                                                    mostrarInformacion("Vehiculo eliminado", "", "El vehiculo se elimino exitosamente.");
+                                                },
+                                                (ex) -> {
+                                                    if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
+                                                        mostrarWarning("Operación cancelada",
+                                                                "",
+                                                                "La accion fue cancelada por el usuario.");
+                                                    } else if (ex.getCause() instanceof VehiculoException) {
+                                                        mostrarError("Error al eliminar vehiculo", "", "" + ex);
 
-                                                 }else {
-                                                     mostrarError("Error al eliminar vehiculo","","No se pudo eliminar el vehiculo seleccionado");
-                                                 }
-                                             },null
-                                     );
-                                 }else {
-                                     mostrarInformacion("Accion cancelada", "", "Accion cancelada");
-                                 }
+                                                    } else {
+                                                        mostrarError("Error al eliminar vehiculo", "", "No se pudo eliminar el vehiculo seleccionado");
+                                                    }
+                                                }, null
+                                        );
+                                    } else {
+                                        mostrarInformacion("Accion cancelada", "", "Accion cancelada");
+                                    }
 
                                 }//case eliminar
 
@@ -283,7 +335,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
 
                                     if (item != null) {
 
-                                        String ultimoServicio = "",fechaRegistro = "";
+                                        String ultimoServicio = "", fechaRegistro = "";
 
 
                                         if (item.getUltimoServicio() != null && !item.getUltimoServicio().isEmpty()) {
@@ -351,42 +403,11 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
             return fila;
         });
 
-    }//initialize
 
-    private void ConfigurarMostarDatePicker1(String criterio){
-        boolean esFecha = "Ultimo Servicio".equals(criterio) || "Fecha Registro".equals(criterio);
+    }//configuraciones
 
-        // Alternar TextField vs Controles de Fecha
-        buscarVehiculoBuscador.setVisible(!esFecha);
-        buscarVehiculoBuscador.setManaged(!esFecha);
-
-        dpVehiculoInicio.setVisible(esFecha);
-        dpVehiculoInicio.setManaged(esFecha);
-        chkRangoFechas.setVisible(esFecha);
-        chkRangoFechas.setManaged(esFecha);
-
-        // Si cambiamos a texto, ocultamos el resto del rango forzosamente
-        if (!esFecha) {
-            ocultarRangoSegundoNivel();
-            chkRangoFechas.setSelected(false);
-        }
-    }
-
-    private void ConfigurarMostrarDatepicker2(Boolean criterio){
-        lblHasta.setVisible(criterio);
-        lblHasta.setManaged(criterio);
-        dpVehiculoFin.setVisible(criterio);
-        dpVehiculoFin.setManaged(criterio);
-    }
-
-    private void ocultarRangoSegundoNivel() {
-        lblHasta.setVisible(false);
-        lblHasta.setManaged(false);
-        dpVehiculoFin.setVisible(false);
-        dpVehiculoFin.setManaged(false);
-    }
-
-    private void configuraciones(){
+    @Override
+    public void listeners() {
 
         //pone en null la lista de ChoiceBox
         limpiarChoiceBox.setOnMouseClicked(event -> {
@@ -424,6 +445,15 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
             }
         });
 
+        atributoBusquedaVehiculos.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            ConfigurarMostarDatePicker1(newVal);
+        });
+
+        // 2. Listener para el CheckBox (Mostrar/Ocultar segunda fecha)
+        chkRangoFechas.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            ConfigurarMostrarDatepicker2(isSelected);
+        });
+
         //Buscar mientras escribes
 
         buscarVehiculoBuscador.setOnKeyReleased(event -> {
@@ -452,8 +482,14 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
             delayQuery.playFromStart();
         });
 
+    }//listeners
 
-    }//configuraciones
+    private void ocultarRangoSegundoNivel() {
+        lblHasta.setVisible(false);
+        lblHasta.setManaged(false);
+        dpVehiculoFin.setVisible(false);
+        dpVehiculoFin.setManaged(false);
+    }
 
     @FXML
     public void actualizarTabla(ActionEvent actionEvent) {
@@ -502,9 +538,9 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
 
         try {
             if (modoBusqueda) {
-            String busqueda = terminoBusquedaActual.trim();
-            String activo = StatusVehiculo.ACTIVE.toString();
-            String key = atributoBusquedaVehiculos.getValue();
+                String busqueda = terminoBusquedaActual.trim();
+                String activo = StatusVehiculo.ACTIVE.toString();
+                String key = atributoBusquedaVehiculos.getValue();
                 switch (key.toLowerCase()) {
                     case "propietario" -> paginaVehiculo =
                             vehiculoService.buscarPorPropietario(activo, busqueda, indicePagina, VEHICULO_POR_PAGINA);
@@ -726,7 +762,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
 
                             if (fechaInicio == null || fechaFin == null) {
                                 mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para realizar la búsqueda por rango.");
-                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(),indicePagina,VEHICULO_POR_PAGINA);
+                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
 
 
                                 tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
@@ -758,7 +794,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                             // LÓGICA DE FECHA ÚNICA
                             if (fechaInicio == null) {
                                 mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
-                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(),indicePagina,VEHICULO_POR_PAGINA);
+                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
 
 
                                 tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
@@ -786,7 +822,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                             LocalDate fechaFin = dpVehiculoFin.getValue();
                             if (fechaInicio == null || fechaFin == null) {
                                 mostrarWarning("Fechas incompletas", "Rango no válido", "Seleccione ambas fechas para el último servicio.");
-                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(),indicePagina,VEHICULO_POR_PAGINA);
+                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
 
 
                                 tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
@@ -810,7 +846,7 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                         } else {
                             if (fechaInicio == null) {
                                 mostrarWarning("Fecha no seleccionada", "", "Seleccione una fecha de último servicio.");
-                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(),indicePagina,VEHICULO_POR_PAGINA);
+                                paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
 
 
                                 tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
@@ -832,8 +868,8 @@ public class VehiculoController implements IVentanaPrincipal, ILoading {
                 int totalPaginas = paginaVehiculo.getTotalPages();
                 paginadorVehiculos.setPageCount(Math.max(totalPaginas, 1));
             } else {
-            paginaVehiculo = vehiculoService.listarVehiculosPaginado(
-                    StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
+                paginaVehiculo = vehiculoService.listarVehiculosPaginado(
+                        StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
             }
 
         } catch (Exception e) {

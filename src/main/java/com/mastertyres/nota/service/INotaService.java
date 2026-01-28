@@ -38,9 +38,9 @@ public interface INotaService {
 
     //consultas de historial
 
-    List<NotaDTO> historialNota(Integer notaId,  String active);
 
-    List<NotaDTO> buscarHistorial(int cantidadResultados);
+
+    List<NotaDTO> buscarHistorial(int cantidadResultados,String nombreCliente);
 
 
 

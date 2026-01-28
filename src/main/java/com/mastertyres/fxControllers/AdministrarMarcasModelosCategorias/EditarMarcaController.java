@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EditarMarcaController {
+public class EditarMarcaController implements IFxController {
 
     @FXML private  Button btnAgregar;
 
@@ -28,8 +29,20 @@ public class EditarMarcaController {
     @FXML
     private void initialize(){
 
+        configuraciones();
+        listeners();
+
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
         configurarValidaciones();
-    }
+    }//listeners
 
     private void configurarValidaciones() {
 
@@ -102,5 +115,7 @@ public class EditarMarcaController {
         Stage stage = (Stage) txtMarca.getScene().getWindow();
         stage.close();
     }
-}
+
+
+}//class
 

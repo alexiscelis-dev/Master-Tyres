@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.EditarControllers;
 
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
@@ -33,7 +34,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarInventarioController implements ILoading {
+public class EditarInventarioController implements IFxController, ILoading {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -93,15 +94,8 @@ public class EditarInventarioController implements ILoading {
     @FXML
     private void initialize() {
 
-        btnImagen.setOnAction(event -> seleccionarImg());
-
         configuraciones();
-
-        btnActualizar.setOnAction(event -> {
-
-          actualizarInventario();
-        });
-
+        listeners();
 
     }//initialize
 
@@ -111,7 +105,8 @@ public class EditarInventarioController implements ILoading {
 
     }
 
-    private void configuraciones() {
+    @Override
+    public void configuraciones() {
 
 
         txtStock.setTextFormatter(new TextFormatter<>(change -> {
@@ -138,6 +133,14 @@ public class EditarInventarioController implements ILoading {
 
         MenuContextSetting.disableMenu(rootPane); //Desabilita el menu en los componentes
         indicesChoiceBox(cbIndiceVelocidad, cbIndiceCarga, choiceAncho, choicePerfil, choiceRin); //Agrega la lista de indices de carga y velocidad
+
+
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
         configurarValidaciones(); //Verifica validaciones de sintaxis
 
         //Evitan que la lista del choiceBox se muestre en otro lado que no se abajo del mismo ChoiceBox
@@ -154,7 +157,15 @@ public class EditarInventarioController implements ILoading {
                 cbIndiceCarga.hide();
             }
         });
-    }//configuraciones
+
+        btnActualizar.setOnAction(event -> {
+
+            actualizarInventario();
+        });
+
+        btnImagen.setOnAction(event -> seleccionarImg());
+
+    }//liisteners
 
 
     public void editarInventario(Inventario inventario) {
