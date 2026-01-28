@@ -8,7 +8,7 @@ import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -93,6 +93,8 @@ public class AgregarClienteController implements IVentanaPrincipal {
     private AnchorPane ventanaAgregarCliente;
     @FXML
     private TextField txtNombre;
+    @FXML
+    private TextField txtNombreEmpresa;
     @FXML
     private TextField txtApellido;
     @FXML
@@ -203,7 +205,6 @@ public class AgregarClienteController implements IVentanaPrincipal {
         colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
         colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
 
-
         // Botón eliminar con icono
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
@@ -254,7 +255,6 @@ public class AgregarClienteController implements IVentanaPrincipal {
                 choiceModelo.hide();
             }
         });
-
         choiceCategoria.setOnMousePressed(event -> {
             if (!choiceCategoria.isShowing()) {
                 choiceCategoria.show();
@@ -675,6 +675,7 @@ public class AgregarClienteController implements IVentanaPrincipal {
         txtNombre.clear();
         txtApellido.clear();
         txtSegundoApellido.clear();
+        txtNombreEmpresa.clear();
         txtDomicilio.clear();
         txtEstado.clear();
         txtCiudad.clear();
@@ -757,6 +758,7 @@ public class AgregarClienteController implements IVentanaPrincipal {
         cliente.setUpdated_at(LocalDate.now().toString());  // <<< AGREGADO
         cliente.setNombre(txtNombre.getText());
         cliente.setApellido(txtApellido.getText());
+        cliente.setNombreEmpresa(txtNombreEmpresa.getText());
         cliente.setSegundoApellido(txtSegundoApellido.getText());
         cliente.setHobbie(txtHobbie.getText());
         cliente.setRfc(txtRFC.getText());

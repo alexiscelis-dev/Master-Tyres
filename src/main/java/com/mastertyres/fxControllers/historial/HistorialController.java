@@ -1,7 +1,7 @@
 package com.mastertyres.fxControllers.historial;
 
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.service.NotaService;

@@ -5,9 +5,9 @@ import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -237,8 +237,8 @@ public class VentanaPrincipalController implements ILoading {
     public void configurarControlador(Object controller) {
 
         // 1. Inyección automática de Loading con Interfaz
-        if (controller instanceof com.mastertyres.fxComponents.interfaces.ILoading) {
-            ((com.mastertyres.fxComponents.interfaces.ILoading) controller).setInitializeLoading(this.loadingOverlayController);
+        if (controller instanceof ILoading) {
+            ((ILoading) controller).setInitializeLoading(this.loadingOverlayController);
         }
 
         if (controller instanceof IVentanaPrincipal){
