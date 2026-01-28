@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nuevaPromocion.NuevaPromocionClienteController">
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.Promociones.NuevaPromocionClienteController">
     <children>
         <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
             <children>

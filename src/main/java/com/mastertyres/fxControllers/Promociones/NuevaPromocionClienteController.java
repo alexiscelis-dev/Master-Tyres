@@ -1,13 +1,10 @@
-package com.mastertyres.fxControllers.nuevaPromocion;
+package com.mastertyres.fxControllers.Promociones;
 
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.utils.FechaUtils;
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.modelo.model.Modelo;
-import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

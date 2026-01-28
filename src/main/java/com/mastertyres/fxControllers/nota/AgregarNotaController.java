@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.agregarNota;
+package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.interfaces.IFxController;
@@ -7,9 +7,6 @@ import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoading;
-import com.mastertyres.fxControllers.nota.BuscarClienteController;
-import com.mastertyres.fxControllers.nota.BuscarLlantaController;
-import com.mastertyres.fxControllers.nota.RegistrarNotaController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.CampoNota;

@@ -11,7 +11,6 @@ import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoading;
-import com.mastertyres.fxControllers.EditarControllers.EditarClienteController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.vehiculo.model.Vehiculo;

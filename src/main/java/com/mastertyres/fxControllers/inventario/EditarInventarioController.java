@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.EditarControllers;
+package com.mastertyres.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.interfaces.IFxController;

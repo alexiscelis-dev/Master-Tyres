@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.EditarControllers;
+package com.mastertyres.fxControllers.cliente;
 
 
 import com.mastertyres.cliente.model.Cliente;
