@@ -75,7 +75,6 @@ public class EditarAdeudoController implements IFxController {
             }
         });
 
-
         MenuContextSetting.disableMenu(root);
         MenuContextSetting.disableMenuDatePicker(dpFecha);
         RegexTools.aplicarNumerosDecimal(txtAdeudo);
@@ -89,7 +88,6 @@ public class EditarAdeudoController implements IFxController {
                         .or(fechaInvalida)
 
         );
-
 
     }//configuraciones
 
@@ -107,10 +105,12 @@ public class EditarAdeudoController implements IFxController {
     private void revisarCheckBox(float conAdeudo) {
         if (cbLiquidar.isSelected()) {
             txtAdeudo.setText("0");
+            txtAdeudo.setEditable(false);
             dpFecha.setValue(null);
             dpFecha.setDisable(true);
         } else {
             txtAdeudo.setText("");
+            txtAdeudo.setEditable(true);
             dpFecha.setDisable(false);
         }
 

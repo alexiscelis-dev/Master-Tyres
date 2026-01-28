@@ -272,6 +272,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
             mostrarError("Error de busqueda","",""+ne);
         }
         catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
             mostrarError("Error inesperado", "","Ocurrio un problema al mostrar las notas");
         }
 
@@ -332,12 +334,11 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
         switch (nota.getStatusNota()) {
 
             case "VENCIDO", "POR_PAGAR" -> {
+
                 LocalDate fechaVencimiento = LocalDate.parse(nota.getFechaVencimiento());
                 LocalDate hoy = LocalDate.now();
 
-
                 long diasRestantes = ChronoUnit.DAYS.between(hoy, fechaVencimiento);
-
 
                 if (diasRestantes < 0) {
                     // Si no estaba marcado como vencido, lo actualizamos
@@ -523,15 +524,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
 
     }//mostrarDetalleNota
 
-//    private void cargarNotasFiltradas(String filtro) {
-//        modoBusqueda = !filtro.trim().isEmpty();
-//        configurarPaginadorFiltradas(filtro);
-//    }//cargarNotasFiltradas
-//
-//    private void cargarNotasFiltradasConFiltro(String filtro, String busqueda){
-//        modoBusqueda = !filtro.trim().isEmpty();
-//        configurarPaginadorFiltradasConFiltro(filtro, busqueda, 0);
-//    }
 
     @FXML
     private void agregarNotas(ActionEvent actionEvent) {

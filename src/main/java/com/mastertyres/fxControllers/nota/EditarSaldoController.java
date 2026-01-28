@@ -74,12 +74,15 @@ public class EditarSaldoController implements IFxController {
     }//listeners
 
     private void revisarCheckBox() {
-        if (cbLiquidar.isSelected())
+        if (cbLiquidar.isSelected()){
             txtSaldo.setText( "0");
-
-        else
+            txtSaldo.setEditable(false);
+        }
+        else{
             txtSaldo.setText("");
-    }
+            txtSaldo.setEditable(true);
+        }
+    }//revisarCheckBox
 
     public void setSaldoFavor(NotaDTO notaSaldo){
         this.notaSaldo = notaSaldo;
