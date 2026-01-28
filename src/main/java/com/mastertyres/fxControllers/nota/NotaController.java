@@ -173,7 +173,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
 
         atributoBusquedaNota.setValue("Sin Filtro");
 
-
     }//configuraciones
 
     @Override

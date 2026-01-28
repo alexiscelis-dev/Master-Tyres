@@ -84,6 +84,8 @@ public class NotaService implements INotaService {
                             "Adeudo incorrecto",
                             "Ingrese un valor numérico válido para el adeudo."
                     );
+
+
                     return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
                 }
             }
