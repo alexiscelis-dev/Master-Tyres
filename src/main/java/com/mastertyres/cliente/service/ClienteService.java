@@ -769,9 +769,16 @@ public class ClienteService implements IClienteService {
         return clienteRepository.buscarClientePorId(clienteId,status);
     }
 
+
     public long contarClientesPorBusquedaGeneral(String status, String termino){
         return clienteRepository.contarClientesPorBusquedaGeneral(status, termino);
     };
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Cliente> firs100Buscador(String active) {
+        return clienteRepository.first100Buscador(active);
+    }
 
 
 }//clase

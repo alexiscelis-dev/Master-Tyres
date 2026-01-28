@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.ventanaPrincipal.interfaces;
+package com.mastertyres.common.interfaces;
 
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 

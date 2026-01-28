@@ -1,12 +1,13 @@
 package com.mastertyres.fxControllers.AgregarInventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.fxComponents.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.fxControllers.ventanaPrincipal.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import javafx.beans.property.BooleanProperty;
@@ -30,7 +31,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class AgregarInventarioController implements IVentanaPrincipal, ILoading {
+public class AgregarInventarioController implements IVentanaPrincipal, IFxController, ILoading {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -104,15 +105,12 @@ public class AgregarInventarioController implements IVentanaPrincipal, ILoading 
     private void initialize() {
 
         configuraciones();
-
-        btnRegistrar.setOnAction(event -> registrar());
-
-        btnImagen.setOnAction(event -> seleccionarImg());
-
+        listeners();
 
     }//ininitialize
+    @Override
+    public void configuraciones(){
 
-    private void configuraciones(){
         txtStock.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
                 return change;
@@ -145,6 +143,13 @@ public class AgregarInventarioController implements IVentanaPrincipal, ILoading 
         MenuContextSetting.disableMenu(rootPane); //Quita el menu contextual del clic derecho
 
         indicesChoiceBox(cbIndiceVelocidad,cbIndiceCarga,choiceAncho,choicePerfil,choiceRin);
+
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
         btnLimpiar.setOnAction(event -> clean());
 
         //Abre y cierra el popup del choiceBox para que aparezca en la posicion correcta y no debajo de la tabla
@@ -177,7 +182,13 @@ public class AgregarInventarioController implements IVentanaPrincipal, ILoading 
                 choiceRin.hide();
             }
         });
-    }
+
+        btnRegistrar.setOnAction(event -> registrar());
+
+        btnImagen.setOnAction(event -> seleccionarImg());
+
+
+    }//listeners
 
     private void clean() {
         txtCodBarras.setText("");
@@ -221,8 +232,6 @@ public class AgregarInventarioController implements IVentanaPrincipal, ILoading 
                     : null;
 
 
-
-
             Inventario inventario = Inventario.builder()
                     .identificadorLlanta(identificadorLlanta)
                     .codigoBarras(codigoBarras)
@@ -244,7 +253,6 @@ public class AgregarInventarioController implements IVentanaPrincipal, ILoading 
 
                         loadingOverlayController,
                         () -> {
-                            Thread.sleep(5000);
                             inventarioService.guardarInventario(inventario);
                             return null;
                         },

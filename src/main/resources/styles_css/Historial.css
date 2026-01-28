@@ -180,12 +180,12 @@
 }
 
 .textfield-fecha{
--fx-pref-width: 20px;
+
 -fx-background-color:transparent;
 -fx-background-insets:0;
 -fx-background-color:transparent;
 -fx-text-fill: black;
--fx-font-size: 14px;
+-fx-font-size: 10px;
 -fx-font-weight: bold;
 }
 
@@ -208,7 +208,7 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
     -fx-border-width: 0 0 2 0;
-    -fx-font-size: 14px;
+    -fx-font-size: 10px;
     -fx-padding: 5 0 5 0;
     -fx-text-fill: black;
     -fx-font-weight: bold;
@@ -220,7 +220,7 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
     -fx-border-width: 0 0 2 0;
-    -fx-font-size: 14px;
+    -fx-font-size: 10px;
     -fx-padding: 5 0 5 0;
     -fx-text-fill: black;
     -fx-alignment: center;
@@ -231,8 +231,42 @@
 .label-fecha{
 -fx-background-color: #63605E;
 -fx-font-weight: bold;
- -fx-font-size: 14px;
+ -fx-font-size: 10px;
 
+}
+
+/* Estilo para un ChoiceBox más pequeño y oscuro */
+
+.choice-box .menu-item {
+    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
+    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
+    -fx-pref-height: 30px; /* altura preferida para la celda */
+}
+
+.choice-box,
+.compact-choicebox {
+    -fx-background-color: #1A1A1A;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-padding: 2px;
+    -fx-background-radius: 5px;
+    -fx-pref-width: 150px;
+    -fx-font-size: 13px;
+}
+
+
+/* Estilo para el menú desplegable del ChoiceBox */
+.choice-box .context-menu {
+    -fx-background-color: #1A1A1A;
+    -fx-pref-width: 150px;
+    -fx-pref-height: 190px;
+}
+
+/* Estilo para los ítems dentro del menú */
+.choice-box .menu-item > .label {
+    -fx-font-size: 13px;
+    -fx-padding: 4 10 4 10;
+    -fx-text-fill: #F2F2F2;
 }
 
 /* Opcional: hover de los ítems */
@@ -241,43 +275,7 @@
 }
 
 
-/* Estilo para un ChoiceBox más pequeño y oscuro */
-.choicebox {
-    -fx-background-color: #080808;
-    -fx-mark-color: #F2F2F2;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 5px;
-    -fx-padding: 2px;
-    -fx-pref-height: 26px;
-    -fx-pref-width: 120px;
-    -fx-font-size: 12px;
-}
 
-/* Menú desplegable más compacto */
-.choicebox .context-menu {
-    -fx-background-color: #080808;
-    -fx-pref-width: 130px;
-    -fx-pref-height: 130px;
-}
-
-/* Ítems del menú */
-.choicebox .menu-item > .label {
-    -fx-font-size: 12px;
-    -fx-padding: 2 8 2 8;
-    -fx-text-fill: #FFFFFF;
-}
-
-.choicebox .menu-item {
-    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
-    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
-    -fx-pref-height: 30px; /* altura preferida para la celda */
-}
-
-
-/* Hover en ítems */
-.choicebox-mini .menu-item:focused {
-    -fx-background-color: #8EB83D;
-}
 
 .scroll-pane {
     -fx-background-color: transparent;
@@ -314,6 +312,14 @@
     -fx-background-color: #AEE83A;
 }
 
+.zoom{
+-fx-cursor: hand;
+}
+
+.zoom:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
 
 
 
