@@ -330,7 +330,7 @@
     -fx-font-size: 14px;
     -fx-text-fill: White; /* color del texto */
     -fx-mark-color: #8EB83D; /* color del círculo de selección */
-    -fx-cursor: hand; /* cambia el cursor al pasar por encima */
+    -fx-cursor: hand; /* cambia el cursor al pasar por encimfa */
 }
 
 
@@ -507,7 +507,7 @@ DatePicker
 /* Menú desplegable más compacto */
 .choicebox-mini2 .context-menu {
     -fx-background-color: #080808;
-    -fx-pref-width: 130px;
+    -fx-pref-width: 180px;
     -fx-pref-height: 170px;
 }
 
@@ -528,5 +528,21 @@ DatePicker
 /* Hover en ítems */
 .choicebox-mini2 .menu-item:focused {
     -fx-background-color: #8EB83D;
+}
+
+.seccion {
+    -fx-background-color: rgba(26, 26, 26, 0.85); /* semitransparente */
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+}
+
+/* Scroll */
+.scrollNota-pane {
+    -fx-background-color: #080808;
+}
+
+.scrollNota .viewport {
+    -fx-background-color: #080808; /* rellena el fondo aunque no haya contenido */
 }
 

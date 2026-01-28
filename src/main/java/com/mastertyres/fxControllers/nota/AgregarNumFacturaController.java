@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.nota.service.NotaService;
@@ -18,7 +19,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class AgregarNumFacturaController {
+public class AgregarNumFacturaController implements IFxController {
     @FXML
     private AnchorPane root;
     private Integer notaId;
@@ -36,10 +37,12 @@ public class AgregarNumFacturaController {
     @FXML
     private void initialize(){
         configuraciones();
+        listeners();
 
     }//initialize
 
-    private void configuraciones(){
+    @Override
+    public void configuraciones(){
 
         MenuContextSetting.disableMenu(root);
 
@@ -50,7 +53,12 @@ public class AgregarNumFacturaController {
                         .or(txtNumFactura.textProperty().length().lessThan(3))
         );
 
-    }
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+    }//listeners
 
     public void setNumFactura(Integer notaId, String numFactura){
         this.notaId = notaId;

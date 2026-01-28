@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -19,7 +20,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class DarPlazoController {
+public class DarPlazoController implements IFxController {
     @FXML
     private AnchorPane root;
     @FXML
@@ -38,27 +39,14 @@ public class DarPlazoController {
 
     @FXML
     private void initialize(){
-        configuraciones();
 
+        configuraciones();
+        listeners();
 
     }//initialize
 
-    public void setNota(Integer notaId){
-        btnActualizar.disableProperty().bind(dpFecha.valueProperty().isNull());
-
-        btnActualizar.setOnAction(event -> actualizar(notaId));
-
-    }
-
-    @FXML
-    private void cancelar(ActionEvent event){
-        Stage stage = (Stage) btnCancelar.getScene().getWindow();
-        stage.close();
-
-    }
-
-
-    private void configuraciones() {
+    @Override
+    public void configuraciones() {
         MenuContextSetting.disableMenuDatePicker(root);
 
         dpFecha.setDayCellFactory(picker -> new DateCell() {
@@ -75,7 +63,29 @@ public class DarPlazoController {
             }
         });
 
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+    }//listeners
+
+
+    public void setNota(Integer notaId){
+        btnActualizar.disableProperty().bind(dpFecha.valueProperty().isNull());
+
+        btnActualizar.setOnAction(event -> actualizar(notaId));
+
     }
+
+    @FXML
+    private void cancelar(ActionEvent event){
+        Stage stage = (Stage) btnCancelar.getScene().getWindow();
+        stage.close();
+
+    }
+
+
 
     private void actualizar(Integer notaId){
 

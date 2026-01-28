@@ -658,7 +658,6 @@ public abstract class BaseNota {
                 startAngle, length, ArcType.OPEN);
     }
 
-
     protected CheckBox fillCheckBox(CheckBox checkBoxSi, CheckBox checkBoxNo, String status) {
 
         if (status == null) {

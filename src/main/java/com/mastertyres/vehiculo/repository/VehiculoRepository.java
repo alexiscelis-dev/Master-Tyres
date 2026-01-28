@@ -177,7 +177,7 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             "JOIN v.modelo mo " +
             "JOIN v.cliente c " +
             "JOIN v.categoria ca " +
-            " WHERE v.active = :active ")
+            " WHERE v.active = :active ORDER BY c.nombre ASC, c.apellido ASC, c.segundoApellido ASC ")
     Page<VehiculoDTO> listarVehiculosPaginado(@Param("active") String activo,  Pageable pageable);
 
     @Query("SELECT v FROM Vehiculo v " +

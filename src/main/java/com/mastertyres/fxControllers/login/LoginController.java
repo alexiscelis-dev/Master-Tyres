@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.login;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import javafx.event.ActionEvent;
@@ -18,20 +19,29 @@ import java.io.IOException;
 
 
 @Component
-public class LoginController {
+public class LoginController implements IFxController {
     private AnchorPane rootPane;
 
 
 
     @FXML
     private void initialize(){
-        configuraciones();
-    }
 
-    private void configuraciones(){
+        configuraciones();
+        listeners();
+
+    }//initialize
+
+    @Override
+    public void configuraciones(){
 
         MenuContextSetting.disableMenu(rootPane);
-    }
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+    }//listeners
 
     @FXML
     private void logIn(ActionEvent event){
