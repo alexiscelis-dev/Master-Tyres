@@ -54,11 +54,8 @@ public class MarcaValidator {
         Optional<Marca> marca = marcaRepository.findByNombreMarca(nombreMarca);
 
         if(marca.isPresent()){
-            System.out.println("Si encontro la marca");
             return true;
-
         }
-
         else{
             return false;
         }

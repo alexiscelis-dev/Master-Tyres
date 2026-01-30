@@ -256,6 +256,8 @@ public class AdministarMarcasController implements IFxController, ILoading {
 
             configurarPaginador();
         } catch (IOException ex) {
+            mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+
             ex.printStackTrace();
         }
     }
@@ -284,6 +286,8 @@ public class AdministarMarcasController implements IFxController, ILoading {
 
             EditarMarcaController controller = loader.getController();
             controller.setMarcaModelos(marcaSeleccionada);
+            controller.setInitializeLoading(loadingOverlayController);
+
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Editar Marca");
@@ -294,9 +298,11 @@ public class AdministarMarcasController implements IFxController, ILoading {
             stage.setMaximized(false);
 
             stage.showAndWait();
-            //cargarMarcas();
+
             configurarPaginador();
         } catch (IOException ex) {
+            mostrarError("Error de carga", "", "Error al cargar la vista");
+
             ex.printStackTrace();
         }
     }
@@ -309,6 +315,7 @@ public class AdministarMarcasController implements IFxController, ILoading {
 
             EditarModeloController controller = loader.getController();
             controller.setModelos(TablaVehiculoMarca.getSelectionModel().getSelectedItem());
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Editar Modelo");
@@ -321,10 +328,9 @@ public class AdministarMarcasController implements IFxController, ILoading {
             stage.showAndWait();
 
 
-
             configurarPaginador();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
         }
     }
 
@@ -336,6 +342,7 @@ public class AdministarMarcasController implements IFxController, ILoading {
 
             AgregarModeloController controller = loader.getController();
             controller.setMarcaModelos(marcaSeleccionada);
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Agregar Modelo");
@@ -350,6 +357,7 @@ public class AdministarMarcasController implements IFxController, ILoading {
             configurarPaginador();
         } catch (IOException ex) {
             ex.printStackTrace();
+            mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
         }
     }
 
@@ -388,7 +396,7 @@ public class AdministarMarcasController implements IFxController, ILoading {
 
                         // Eliminar el modelo
                         modeloService.eliminarModeloPorId(modeloSeleccionada.getModeloId());
-                        return  null;
+                        return null;
                     }, (resultado) -> {
 
                         MensajesAlert.mostrarInformacion("Éxito", "Modelo eliminado", "El modelo se elimino correctamente.");
@@ -489,7 +497,6 @@ public class AdministarMarcasController implements IFxController, ILoading {
         EliminarMarca.setDisable(true);
         lblNombre.setText("");
         TablaVehiculoMarca.getItems().clear();
-        //cargarMarcas();
         configurarPaginador();
     }
 

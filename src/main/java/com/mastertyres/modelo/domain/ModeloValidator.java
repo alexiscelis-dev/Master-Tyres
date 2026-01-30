@@ -2,11 +2,15 @@ package com.mastertyres.modelo.domain;
 
 import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.repository.ModeloRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ModeloValidator {
     private static final Integer MODELO_GENERICO = 1;
+    @Autowired
+    private ModeloRepository modeloRepository;
 
     public void validarEliminar(Integer modeloId){
 
@@ -32,7 +36,11 @@ public class ModeloValidator {
             throw new ModeloException("El nombre del modelo no puede tener más de 30 caracteres.");
         }
 
+
+
     }
+
+
 
 
 }//class

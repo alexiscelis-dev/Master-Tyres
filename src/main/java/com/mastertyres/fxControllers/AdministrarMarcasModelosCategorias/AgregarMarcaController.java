@@ -218,7 +218,6 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
 
         if (confirmar) {
 
-
             taskService.runTask(
                     loadngOverlayController,
                     () -> {
@@ -254,24 +253,15 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
                         cerrarVentana(null);
 
                     }, (ex) -> {
-                        Throwable causaActual = ex;
-                        Throwable excepcionEncontrada = null;
-
-                        while (causaActual != null) {
-                            if (causaActual instanceof MarcaException || causaActual instanceof ModeloException) {
-                                excepcionEncontrada = causaActual;
-                                break; // ¡La encontramos!
-                            }
-                            causaActual = causaActual.getCause(); // Bajar un nivel
-                        }
 
 
-                        if (excepcionEncontrada instanceof MarcaException) {
 
-                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar la marca", "" + excepcionEncontrada.getMessage());
+                        if (ex instanceof MarcaException) {
 
-                        } else if (excepcionEncontrada instanceof ModeloException) {
-                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar alguno(s) de los modelos", "" + excepcionEncontrada.getMessage());
+                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar la marca", "" + ex.getMessage());
+
+                        } else if (ex instanceof ModeloException) {
+                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar alguno(s) de los modelos", "" + ex.getMessage());
 
                         } else {
                             cerrarVentana(null);
@@ -280,20 +270,11 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
                                     "Ocurrio un error al intentar guardar la marca y modelo(s) proporsonados");
                         }
 
+
+
                     }, null
             );
-            //        try {
-            // Guardar Marca
 
-
-
-/*
-            } catch (Exception e) {
-                mostrarError("Error ", "Error al guardar: ", e.getMessage());
-                e.printStackTrace();
-            }
-
- */
         }
 
     }//GuardarMarca
@@ -376,7 +357,6 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
         }
         return resultado.toString().trim();
     }
-
 
     public static class ModeloCategoriaTemp {
         private final String modelo;

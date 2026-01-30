@@ -2,11 +2,15 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -34,15 +38,22 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class AgregarModeloController implements IFxController {
+public class AgregarModeloController implements IFxController, ILoading {
 
     @Autowired
     private MarcaService marcaService;
-    @Autowired private ModeloService modeloService;
-    @Autowired private CategoriaService categoriaService;
-    @Autowired private VehiculoService vehiculoService;
-    @Autowired private DetalleCategoriaService detalleCategoriaService;
-    @Autowired private VehiculoRepository vehiculoRepository;
+    @Autowired
+    private ModeloService modeloService;
+    @Autowired
+    private CategoriaService categoriaService;
+    @Autowired
+    private VehiculoService vehiculoService;
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
+    @Autowired
+    private VehiculoRepository vehiculoRepository;
+    @Autowired
+    private TaskService taskService;
 
     @FXML
     private AnchorPane rootPane;
@@ -55,11 +66,15 @@ public class AgregarModeloController implements IFxController {
     @FXML
     private TableColumn<DetalleCategoria, Void> colEliminar;
 
-    @FXML private ChoiceBox<Categoria> choiceCategoria;
-    @FXML private TextField txtModelo;
+    @FXML
+    private ChoiceBox<Categoria> choiceCategoria;
+    @FXML
+    private TextField txtModelo;
 
-    @FXML private Button btnAgregarVehiculo;
-    @FXML private Button btnGuardar;
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private Button btnGuardar;
 
     private ObservableList<DetalleCategoria> listaVehiculos = FXCollections.observableArrayList();
     private List<DetalleCategoria> listaExistentes = FXCollections.observableArrayList();
@@ -69,8 +84,10 @@ public class AgregarModeloController implements IFxController {
     //private DetalleCategoria detalleCategoriaSeleccionada;
     private BooleanProperty ModeloValido = new SimpleBooleanProperty(true);
 
+    private LoadingComponentController loadingOverlayController;
+
     @FXML
-    private void initialize(){
+    private void initialize() {
 
         cargarOpciones();
         configuraciones();
@@ -95,6 +112,11 @@ public class AgregarModeloController implements IFxController {
         cargarVehiculos();
     }
 
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
 
     private void cargarVehiculos() {
         listaVehiculos.clear();
@@ -113,6 +135,7 @@ public class AgregarModeloController implements IFxController {
         //  Botón eliminar solo para nuevos
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
+
             {
                 Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
                 ImageView iv = new ImageView(img);
@@ -153,6 +176,7 @@ public class AgregarModeloController implements IFxController {
             public String toString(Categoria categoria) {
                 return categoria != null ? categoria.getNombreCategoria() : "";
             }
+
             @Override
             public Categoria fromString(String string) {
                 return null;
@@ -202,7 +226,7 @@ public class AgregarModeloController implements IFxController {
             return;
         }
 
-        // 🔹 Verificar duplicado entre existentes y nuevos
+        //  Verificar duplicado entre existentes y nuevos
         boolean existe = listaVehiculos.stream().anyMatch(
                 v -> v.getModelo().getNombreModelo().equalsIgnoreCase(modeloNombre) &&
                         v.getCategoria().getCategoriaId().equals(categoria.getCategoriaId())
@@ -242,30 +266,56 @@ public class AgregarModeloController implements IFxController {
         );
 
         if (confirmar) {
-            try {
-                if (listaNuevos.isEmpty()) {
-                    cerrarVentana();
-                    return;
-                }
 
-                for (DetalleCategoria detalle : listaNuevos) {
-                    //  Guardar modelo
-                    Modelo nuevoModelo = modeloService.guardarModelo(detalle.getModelo());
-
-                    //  Crear relación detalle_categoria
-                    DetalleCategoria nuevoDetalle = new DetalleCategoria();
-                    nuevoDetalle.setMarca(marcaSeleccionada);
-                    nuevoDetalle.setModelo(nuevoModelo);
-                    nuevoDetalle.setCategoria(detalle.getCategoria());
-                    detalleCategoriaService.guardarDetalleCategoria(nuevoDetalle);
-                }
-
-
-                MensajesAlert.mostrarInformacion("Éxito", "Modelo agregado", "El modelo se agrego correctamente.");
-
+            if (listaNuevos.isEmpty()) {
                 cerrarVentana();
+                return;
+            }
+
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+
+                        for (DetalleCategoria detalle : listaNuevos) {
+                            //  Guardar modelo
+                            Modelo nuevoModelo = modeloService.guardarModelo(detalle.getModelo());
+
+                            //  Crear relación detalle_categoria
+                            DetalleCategoria nuevoDetalle = new DetalleCategoria();
+                            nuevoDetalle.setMarca(marcaSeleccionada);
+                            nuevoDetalle.setModelo(nuevoModelo);
+                            nuevoDetalle.setCategoria(detalle.getCategoria());
+                            detalleCategoriaService.guardarDetalleCategoria(nuevoDetalle);
+                        }
 
 
+
+                        return null;
+                    }, (resultado) -> {
+
+                        MensajesAlert.mostrarInformacion("Éxito", "Modelo agregado", "El modelo se agrego correctamente.");
+                        cerrarVentana();
+
+
+                    }, (ex) -> {
+
+                        if(ex instanceof ModeloException){
+                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar alguno(s) de los modelos", "" + ex.getMessage());
+
+                        } else {
+                            mostrarError("Error interno",
+                                    "Error inesperado",
+                                    "Ocurrio un error al intentar guardar la marca y modelo(s) proporsonados");
+                            cerrarVentana();
+                        }
+
+                    }, null
+            );
+
+            //      try {
+
+
+/*
             } catch (Exception e) {
                 MensajesAlert.mostrarError(
                         "Error al agregar",
@@ -274,10 +324,12 @@ public class AgregarModeloController implements IFxController {
                 );
                 e.printStackTrace();
             }
+
+ */
         }
 
 
-    }
+    }//guardarCambios
 
     private void limpiarCamposVehiculo() {
 

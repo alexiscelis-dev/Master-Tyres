@@ -3,11 +3,15 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.service.ModeloService;
 import javafx.beans.property.BooleanProperty;
@@ -26,8 +30,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+
 @Component
-public class EditarModeloController implements IFxController {
+public class EditarModeloController implements IFxController, ILoading {
 
     @FXML
     private AnchorPane rootPane;
@@ -42,6 +49,8 @@ public class EditarModeloController implements IFxController {
 
     private Modelo modeloSeleccionada;
     private DetalleCategoria detalleCategoriaSeleccionado;
+    private LoadingComponentController loadingOverlayController;
+
 
     @Autowired
     private ModeloService modeloService;
@@ -49,6 +58,8 @@ public class EditarModeloController implements IFxController {
     private CategoriaService categoriaService;
     @Autowired
     private DetalleCategoriaService detalleCategoriaService;
+    @Autowired
+    private TaskService taskService;
 
     @FXML
     private void initialize() {
@@ -58,6 +69,11 @@ public class EditarModeloController implements IFxController {
         cargarCategorias();
 
     }//initialize
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
 
     @Override
     public void configuraciones() {
@@ -143,26 +159,43 @@ public class EditarModeloController implements IFxController {
         );
 
         if (confirmar) {
-            try {
-                modeloSeleccionada.setNombreModelo(txtModelo.getText());
-                detalleCategoriaSeleccionado.setCategoria(choiceCategoria.getValue());
 
-                modeloService.guardarModelo(modeloSeleccionada);
-                detalleCategoriaService.guardarDetalleCategoria(detalleCategoriaSeleccionado);
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
 
-                MensajesAlert.mostrarInformacion("Éxito", "Modelo actualizada", "El modelo se actualizó correctamente.");
-                cerrarVentana();
-            } catch (Exception e) {
-                MensajesAlert.mostrarError(
-                        "Error al actualizar",
-                        "No se pudo actualizar el modelo",
-                        "Detalles: " + e.getMessage()
-                );
-                e.printStackTrace();
-            }
+                        modeloSeleccionada.setNombreModelo(txtModelo.getText());
+                        detalleCategoriaSeleccionado.setCategoria(choiceCategoria.getValue());
+
+                        modeloService.guardarModelo(modeloSeleccionada);
+                        detalleCategoriaService.guardarDetalleCategoria(detalleCategoriaSeleccionado);
+                        return null;
+
+                    }, (resultado) -> {
+
+                        mostrarInformacion("Modelo actualizada", "", "El modelo se actualizó correctamente.");
+                        cerrarVentana();
+                    }, (ex) -> {
+
+                        if (ex instanceof ModeloException) {
+                            mostrarError("Error al actualizar",
+                                    "Ocurrio un problema al guardar los cambios",
+                                    ""+ex.getMessage());
+
+                        } else {
+                            cerrarVentana();
+                            mostrarError("Error interno",
+                                    "Error inesperado",
+                                    "Ocurrio un error al intentar guardar la marca y modelo(s) proporsonados");
+
+                        }
+
+                    }, null
+            );
+
         }
 
-    }
+    }//GuardarCambios
 
 
 }//class

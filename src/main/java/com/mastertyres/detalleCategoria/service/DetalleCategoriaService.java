@@ -1,6 +1,7 @@
 package com.mastertyres.detalleCategoria.service;
 
 import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.detalleCategoria.domain.CategoriaValidator;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.repository.DetalleCategoriaRepository;
 import com.mastertyres.marca.model.Marca;
@@ -15,12 +16,10 @@ import java.util.Optional;
 
 @Service
 public class DetalleCategoriaService implements IDetalleCategoriaService {
-/*
+
     @Autowired
     private CategoriaValidator categoriaValidator;
 
-
- */
 
     @Autowired
     private DetalleCategoriaRepository detalleCategoriaRepository;
@@ -67,7 +66,7 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
 
     public DetalleCategoria guardarDetalleCategoria(DetalleCategoria detalle) {
 
-       // categoriaValidator.guardarValidator(detalle);
+        categoriaValidator.guardarValidator(detalle);
 
         return detalleCategoriaRepository.save(detalle);
     }
@@ -76,6 +75,7 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
     public List<DetalleCategoria> findByCategoria(Categoria categoria) {
         return detalleCategoriaRepository.findByCategoria(categoria);
     }
+
 
     @Transactional
     public void reasignarOEliminarPorModelo(Integer modeloId) {
@@ -108,6 +108,7 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
             throw new RuntimeException("Error al eliminar los registros de detalleCategoria para la marca con ID: " + marcaId, e);
         }
     }
+
 
 
 
