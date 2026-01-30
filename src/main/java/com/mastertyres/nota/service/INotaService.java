@@ -39,7 +39,6 @@ public interface INotaService {
     //consultas de historial
 
 
-
     List<NotaDTO> buscarHistorial(int cantidadResultados,String nombreCliente);
 
 

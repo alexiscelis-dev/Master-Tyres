@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 
 public interface ModeloRepository extends JpaRepository<Modelo, Integer> {
     // 🔹 Listar nombres sin incluir el modelo genérico
-    @Query("SELECT mo.nombreModelo FROM Modelo mo WHERE mo.modeloId <> 1")
+    @Query("SELECT mo.nombreModelo FROM Modelo mo WHERE mo.modeloId <> 1 ORDER BY mo.nombreModelo ASC")
     List<String> listarNombresModelos();
 
     // 🔹 Buscar modelos por nombre (excluyendo el genérico)
@@ -38,5 +37,5 @@ public interface ModeloRepository extends JpaRepository<Modelo, Integer> {
     @Query("DELETE FROM Modelo m WHERE m.modeloId = :modeloId AND m.modeloId <> 1")
     int eliminarModeloPorId(Integer modeloId);
 
-}
+}//class
 

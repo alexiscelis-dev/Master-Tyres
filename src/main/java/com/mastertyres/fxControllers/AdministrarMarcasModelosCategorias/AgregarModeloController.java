@@ -10,7 +10,7 @@ import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
-import com.mastertyres.modelo.services.ModeloService;
+import com.mastertyres.modelo.service.ModeloService;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;

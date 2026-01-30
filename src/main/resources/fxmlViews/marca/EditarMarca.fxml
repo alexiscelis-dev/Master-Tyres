@@ -44,8 +44,8 @@
 
                 <!-- Botones -->
                 <HBox alignment="CENTER" spacing="20">
+                    <Button fx:id="btnAgregar" onAction="#GuardarCambios" styleClass="boton-accion" text="Actualizar" />
                     <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar" />
-                    <Button fx:id="btnAgregar" onAction="#GuardarCambios" styleClass="boton-accion" text="Editar Marca" />
                 </HBox>
             </VBox>
 
