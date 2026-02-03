@@ -3,8 +3,10 @@ package com.mastertyres.promociones.service;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.promociones.domain.PromocionValidator;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.repository.PromocionesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,8 @@ import java.util.List;
 public class PromocionService implements IPromocionService {
     private String hoy = LocalDate.now().toString();
     private final PromocionesRepository promocionRepository;
+    @Autowired
+    private PromocionValidator promocionValidator;
 
 
     public PromocionService(PromocionesRepository promocionRepository) {
@@ -31,7 +35,10 @@ public class PromocionService implements IPromocionService {
 
     @Transactional
     public void desactivarPromocion(Integer id) {
-        promocionRepository.desactivarPromocion(id);
+      int filasAfectadas =  promocionRepository.desactivarPromocion(id);
+      if (filasAfectadas == 0){
+          throw new RuntimeException("La promocion no existe o ya fue eliminada previamente");
+      }
     }
 
     @Transactional(readOnly = true)
@@ -56,9 +63,11 @@ public class PromocionService implements IPromocionService {
     @Transactional
     @Override
     public void guardarPromocion(Promocion promocion) {
-        promocionRepository.save(promocion);
-    }
+        promocionValidator.validarGuardar(promocion);
 
+        promocionRepository.save(promocion);
+
+    }
 
     @Transactional(readOnly = true)
     @Override

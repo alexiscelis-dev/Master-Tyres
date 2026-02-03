@@ -1,8 +1,12 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -25,7 +29,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class EditarAdeudoController implements IFxController {
+public class EditarAdeudoController implements IFxController, ILoading {
 
     @FXML
     private AnchorPane root;
@@ -40,8 +44,12 @@ public class EditarAdeudoController implements IFxController {
     @FXML
     private Button btnActualizar;
 
+    private LoadingComponentController loadingOverlayController;
+
     @Autowired
-    NotaService notaService;
+    private NotaService notaService;
+    @Autowired
+    private TaskService taskService;
 
 
     private NotaDTO notaAdeudo;
@@ -55,6 +63,11 @@ public class EditarAdeudoController implements IFxController {
         listeners();
 
     }//initialize
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
 
     @Override
     public void configuraciones() {
@@ -143,40 +156,58 @@ public class EditarAdeudoController implements IFxController {
 
     private void actualizar(NotaDTO notaAdeudo) {
 
-        if (Float.parseFloat(txtAdeudo.getText()) == 0) {
-            notaService.actualizarStatus(StatusNota.PAGADO.toString(), notaAdeudo.getNotaId());
-            dpFecha.setValue(null);
-        } else {
-            notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), notaAdeudo.getNotaId());
-        }
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
+                    if (Float.parseFloat(txtAdeudo.getText()) == 0) {
+                        notaService.actualizarStatus(StatusNota.PAGADO.toString(), notaAdeudo.getNotaId());
+                        dpFecha.setValue(null);
+                    } else {
+                        notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), notaAdeudo.getNotaId());
+                    }
 
-        String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        String fechaStr = null;
+                    String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    String fechaStr = null;
 
-        //if asiga null si el datePicker no tiene nada seleccionado
-        if (dpFecha.getValue() != null)
-            fechaStr = dpFecha.getValue().toString();
+                    //if asiga null si el datePicker no tiene nada seleccionado
+                    if (dpFecha.getValue() != null)
+                        fechaStr = dpFecha.getValue().toString();
 
-
-        try {
-            notaService.actualizarAdeudo(Float.parseFloat(txtAdeudo.getText()), fechaStr, notaAdeudo.getNotaId());
-            notaService.actualizarUpdatedAtNota(notaAdeudo.getNotaId(), fecha);
-
-
-            Stage stage = (Stage) txtAdeudo.getScene().getWindow();
-            stage.close();
-            mostrarInformacion("Adeudo actualizado", "", "El adeudo se actualizo correctamente. Puede consultar mas detalles en  nota '+' Detalles cliente.");
+                    notaService.actualizarAdeudo(Float.parseFloat(txtAdeudo.getText()), fechaStr, notaAdeudo.getNotaId());
+                    notaService.actualizarUpdatedAtNota(notaAdeudo.getNotaId(), fecha);
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            Stage stage = (Stage) txtAdeudo.getScene().getWindow();
-            stage.close();
-            mostrarError("Error inesperado", "", "No se pudo actualizar el lemento seleccionado, vuelva a intentarlo más tarde.");
-        }
+                    return null;
+                }, (resultado) -> {
+
+
+                    mostrarInformacion("Adeudo actualizado", "", "El adeudo se actualizo correctamente. Puede consultar mas detalles en  nota '(+)' Detalles cliente.");
+                    close();
+
+
+                }, (ex) -> {
+
+                    if (ex instanceof NotaException) {
+
+                        mostrarError("Error al actualizar", "Ocurrio un problema al guardar los cambios", "" + ex.getMessage());
+                        ex.getMessage();
+                        close();
+                    } else {
+                        mostrarError("Error interno", "", "Ocurrio un error inesperado al guardar los cambios. Vuelva a intentarlo mas tarde.");
+                    }
+
+
+                }, null
+        );
 
 
     }//actualizar
+
+
+    private void close() {
+        Stage stage = (Stage) txtAdeudo.getScene().getWindow();
+        stage.close();
+    }//close
 
 
 }//class

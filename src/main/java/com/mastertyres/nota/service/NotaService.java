@@ -1,6 +1,7 @@
 package com.mastertyres.nota.service;
 
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.nota.domain.NotaValidator;
 import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
@@ -32,6 +33,8 @@ public class NotaService implements INotaService {
     private NotaRepository notaRepository;
     private NotaDetalleRepository notaDetalleRepository;
     private NotaClienteDetRepository notaClienteDetRepository;
+    @Autowired
+    private NotaValidator notaValidator;
 
     @Autowired
     public NotaService(NotaRepository notaRepository, NotaDetalleRepository notaDetalleRepository, NotaClienteDetRepository notaClienteDetRepository) {
@@ -273,6 +276,9 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void actualizarAdeudo(float adeudo, String fechaVencimiento, Integer notaId) {
+
+        notaValidator.validarAdeudo(adeudo, fechaVencimiento, notaId);
+
         notaRepository.actualizarAdeudo(adeudo, fechaVencimiento, notaId);
 
     }
@@ -281,6 +287,7 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void actualizarUpdatedAtNota(Integer notaId, String updatedAt) {
+        notaValidator.validadUpdatedAt(notaId);
         notaRepository.actualizarUpdatedAtNota(notaId, updatedAt);
     }
 
@@ -315,6 +322,7 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void actualizarStatus(String status, Integer notaId) {
+        notaValidator.validarStatusPagos(notaId);
         notaRepository.actualizarStatus(status,notaId);
     }
 

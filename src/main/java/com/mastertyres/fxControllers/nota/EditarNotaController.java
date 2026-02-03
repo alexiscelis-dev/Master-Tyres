@@ -441,6 +441,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             Parent root = loader.load();
             EditarAdeudoController controller = loader.getController();
             controller.setAdeudo(notaAdeudo);
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Actualizar Adeudo");
