@@ -79,6 +79,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
     private BooleanProperty codBarrasValido = new SimpleBooleanProperty(true);
     private BooleanProperty dotValido = new SimpleBooleanProperty(true);
     private BooleanProperty marcaValido = new SimpleBooleanProperty(true);
+    private BooleanProperty modeloValido = new SimpleBooleanProperty(true);
     private BooleanProperty medida1Valido = new SimpleBooleanProperty(true);
     private BooleanProperty medida2Valido = new SimpleBooleanProperty(true);
     private BooleanProperty indiceCargaValido = new SimpleBooleanProperty(true);
@@ -110,6 +111,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
     }//ininitialize
     @Override
     public void configuraciones(){
+
+     
 
         txtStock.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
@@ -218,7 +221,6 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
     private void registrar() {
 
 
-
         if (!empty()) {
             String medida = choiceAncho.getValue() + "/" + choicePerfil.getValue() + "R" + choiceRin.getValue();
             String identificadorLlanta = generarIdentificador(txtMarca,txtModelo,choiceAncho,choicePerfil,choiceRin,cbIndiceCarga,cbIndiceVelocidad);
@@ -298,6 +300,11 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
             empty = true;
         }
 
+        if (txtModelo.getText().isEmpty()) {
+            txtModelo.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            empty = true;
+        }
+
 
         if (txtPrecioC.getText().isEmpty()) {
             txtPrecioC.setStyle("-fx-border-color:red; -fx-border-width:2px;");
@@ -307,6 +314,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
             txtPrecioV.setStyle("-fx-border-color:red; -fx-border-width:2px;");
             empty = true;
         }
+
+
 
         return empty;
     }// empty
@@ -343,6 +352,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
             }
         });
 
+
         txtDot.textProperty().addListener(((observable, oldtext, newText) -> {
             txtDot.setText(txtDot.getText().toUpperCase());
             if (!txtDot.getText().matches("^$|[A-Za-z0-9]{6,9}[0-9]{4}")) {
@@ -360,11 +370,24 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                 marcaValido.set(false);
             } else {
                 marcaValido.set(true);
-                txtMarca.setStyle("");
+                txtMarca.setStyle("-fx-border-color: red;");
+
             }
 
 
         }));
+
+        txtModelo.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtModelo.getText().isBlank()){
+                txtModelo.setStyle("-fx-border-color: red;");
+                modeloValido.set(false);
+            }else {
+                modeloValido.set(true);
+                txtModelo.setStyle("");
+            }
+        });
+
+
 
         txtStock.textProperty().addListener(((observable, oldtext, newText) -> {
             if (txtStock.getText().isBlank() || !txtStock.getText().matches("\\d*")) {
@@ -459,6 +482,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         );
 
     }//configurarValidaciones
+
 
 
 }//class

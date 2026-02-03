@@ -659,7 +659,7 @@
                                                 </image>
                                             </ImageView>
                                             <Canvas fx:id="canvasGas" width="150" height="150"/>
-                                            <Label fx:id="lblGas" text="" translateY="140" translateX="-55">
+                                            <Label fx:id="lblGas" text="" translateY="140" translateX="-45">
                                                 <font>
                                                     <Font name="Arial Black" size="14.0"/>
 
@@ -703,7 +703,7 @@
                                                     <!-- Parte superior SI NO-->
                                                     <Label text="SI" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                                         <font>
-                                                            <Font name="Arial" size="14.0"/>
+                                                            <Font name="Arial" size="15.0"/>
                                                         </font>
 
 
@@ -711,7 +711,7 @@
 
                                                     <Label text="NO" GridPane.columnIndex="2" GridPane.rowIndex="0">
                                                         <font>
-                                                            <Font name="Arial" size="14.0"/>
+                                                            <Font name="Arial" size="15.0"/>
                                                         </font>
 
                                                     </Label>
@@ -719,7 +719,7 @@
 
                                                     <Label text="SI" GridPane.columnIndex="6" GridPane.rowIndex="0">
                                                         <font>
-                                                            <Font name="Arial" size="14.0"/>
+                                                            <Font name="Arial" size="15.0"/>
                                                         </font>
 
 
@@ -727,7 +727,7 @@
 
                                                     <Label text="NO" GridPane.columnIndex="7" GridPane.rowIndex="0">
                                                         <font>
-                                                            <Font name="Arial" size="14.0"/>
+                                                            <Font name="Arial" size="15.0"/>
                                                         </font>
 
                                                     </Label>

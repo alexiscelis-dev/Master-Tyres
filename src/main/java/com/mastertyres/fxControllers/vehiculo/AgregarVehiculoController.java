@@ -176,6 +176,12 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
         MenuContextSetting.disableMenu(rootPane);
 
+        //Deshabilitar mediante el nodo interno (textField Interno)
+        MenuContextSetting.disableMenu(spinnerAnio.getEditor());
+        MenuContextSetting.disableMenu(pickerUltimoServicio.getEditor());
+
+
+
         int currentYear = Year.now().getValue();
         SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
         spinnerAnio.setValueFactory(yearFactory);

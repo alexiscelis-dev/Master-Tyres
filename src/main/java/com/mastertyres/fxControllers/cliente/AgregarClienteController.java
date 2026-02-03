@@ -5,11 +5,11 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -23,10 +23,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,8 +178,13 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     @Override
     public void configuraciones() {
 
+
         MenuContextSetting.disableMenu(ventanaAgregarCliente);
-        MenuContextSetting.disableMenuDatePicker(ventanaAgregarCliente);
+
+        //Deshabilitar los menus de los demas campos mendiante el nodo interno que es un texfield
+        MenuContextSetting.disableMenu(pickerCumpleanos.getEditor());
+        MenuContextSetting.disableMenu(pickerUltimoServicio.getEditor());
+        MenuContextSetting.disableMenu(spinnerAnio.getEditor());
         RegexTools.aplicarNumeroEntero(spinnerAnio.getEditor());
 
         //Impetir que se escriba en el DatePicker
@@ -254,7 +261,9 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     @Override
     public void listeners() {
 
-    configurarValidaciones();
+      pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
+        configurarValidaciones();
 
 //eliminar contenido de DatePickerUltimoServicio
         pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {

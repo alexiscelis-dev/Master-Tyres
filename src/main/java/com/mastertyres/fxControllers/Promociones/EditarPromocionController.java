@@ -116,6 +116,8 @@ public class EditarPromocionController implements IFxController, ILoading {
 
     @Override
     public void configuraciones() {
+        //elimina scroll horizontal de tabla vehculos paricipantes
+        tableVehiculosParticipantes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
 
@@ -175,6 +177,27 @@ public class EditarPromocionController implements IFxController, ILoading {
 
     @Override
     public void listeners() {
+
+        choiceMarca.setOnMousePressed(event -> {
+            if (!choiceMarca.isShowing()) {
+                choiceMarca.show();
+                choiceMarca.hide();
+            }
+        });
+
+        choiceModelo.setOnMousePressed(event -> {
+            if (!choiceModelo.isShowing()) {
+                choiceModelo.show();
+                choiceModelo.hide();
+            }
+        });
+
+        choiceAnio.setOnMousePressed(event -> {
+            if (!choiceAnio.isShowing()) {
+                choiceAnio.show();
+                choiceAnio.hide();
+            }
+        });
 
         configurarValidaciones();
 
@@ -487,13 +510,13 @@ public class EditarPromocionController implements IFxController, ILoading {
 
                 }, (ex) -> {
 
-                    if (ex instanceof PromocionExcepcion){
+                    if (ex instanceof PromocionExcepcion) {
                         MensajesAlert.mostrarError(
                                 "Error al actualizar",
                                 "Ocurrio un problema al guardar los cambios",
-                                ""+ ex.getMessage()
+                                "" + ex.getMessage()
                         );
-                    }else {
+                    } else {
                         MensajesAlert.mostrarError(
                                 "Error interno",
                                 "",
@@ -503,8 +526,6 @@ public class EditarPromocionController implements IFxController, ILoading {
                 }, null
 
         );
-
-
 
 
     }//actualizarPromocion

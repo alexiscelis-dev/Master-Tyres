@@ -296,6 +296,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Editar Promoción");
             stage.setScene(new Scene(root));
+            stage.setMaximized(false);
+            stage.setResizable(false);
 
             stage.initModality(Modality.APPLICATION_MODAL);
 
