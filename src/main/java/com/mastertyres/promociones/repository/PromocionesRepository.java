@@ -49,13 +49,13 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
             @Param("hoy") String hoy,
             @Param("texto") String texto);
 
-    @Query("SELECT DISTINCT m FROM Marca m")
+    @Query("SELECT DISTINCT m FROM Marca m WHERE m.marcaId <> 1")
     List<Marca> listarMarcas();
 
-    @Query("SELECT DISTINCT m FROM Modelo m")
+    @Query("SELECT DISTINCT m FROM Modelo m WHERE m.modeloId <> 1 ")
     List<Modelo> listarModelos();
 
-    @Query("SELECT DISTINCT c FROM Categoria c")
+    @Query("SELECT DISTINCT c FROM Categoria c WHERE c.categoriaId <> 1")
     List<Categoria> listarCategorias();
 
 

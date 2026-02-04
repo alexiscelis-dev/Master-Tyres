@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.Promociones;
 
+import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
@@ -18,13 +19,16 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ClientesPromocionesController implements IFxController {
+public class ClientesAplicablesController implements IFxController {
 
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private ClientePromocionService clientePromocionService;
 
     @FXML private TableView<ClienteSeleccion> tablaClientes;
     @FXML private TableColumn<ClienteSeleccion, String> colNombre;
@@ -79,9 +83,29 @@ public class ClientesPromocionesController implements IFxController {
 
     }
 
+//    public void LlenarTabla(Promocion promocionSeleccionada) {
+//        this.p = promocionSeleccionada;
+//        List<Cliente> clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
+//        data.clear();
+//        for (Cliente c : clientes) {
+//            data.add(new ClienteSeleccion(c));
+//        }
+//        tablaClientes.setItems(data);
+//    }
+
     public void LlenarTabla(Promocion promocionSeleccionada) {
         this.p = promocionSeleccionada;
-        List<Cliente> clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
+
+        List<Cliente> clientes;
+
+        if ("VEHICULO".equals(promocionSeleccionada.getTipoPromocion())) {
+            clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
+        } else if ("CLIENTE".equals(promocionSeleccionada.getTipoPromocion())) {
+            clientes = clientePromocionService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
+        } else {
+            clientes = new ArrayList<>();
+        }
+
         data.clear();
         for (Cliente c : clientes) {
             data.add(new ClienteSeleccion(c));
@@ -120,8 +144,6 @@ public class ClientesPromocionesController implements IFxController {
             }
         }
     }
-
-
 
     @FXML
     public void SeleccionarTodos() {

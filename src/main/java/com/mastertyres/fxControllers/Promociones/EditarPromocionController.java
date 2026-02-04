@@ -60,7 +60,6 @@ public class EditarPromocionController implements IFxController {
 
     private ObservableList<VehiculoPromocion> vehiculosPromocionList = FXCollections.observableArrayList();
 
-
     @Autowired
     private PromocionService promocionService;
     @Autowired
@@ -70,8 +69,6 @@ public class EditarPromocionController implements IFxController {
     private BooleanProperty precioValido = new SimpleBooleanProperty(true);
     private BooleanProperty nombreValido = new SimpleBooleanProperty(true);
     private BooleanProperty descripcionValido = new SimpleBooleanProperty(true);
-
-
 
     // Inicializa el controlador
     public void initialize() {
@@ -311,7 +308,6 @@ public class EditarPromocionController implements IFxController {
 
     }//vehiculosParticipantesInitialize
 
-
     public void setPromocion(Promocion promocion) {
         this.promocionSeleccionada = promocion;
 
@@ -455,7 +451,5 @@ public class EditarPromocionController implements IFxController {
             e.printStackTrace();
         }
     }
-
-
 
 }

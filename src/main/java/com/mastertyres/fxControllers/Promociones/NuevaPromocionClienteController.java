@@ -1,21 +1,45 @@
 package com.mastertyres.fxControllers.Promociones;
 
 
+import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
+import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.utils.FechaUtils;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.marca.model.Marca;
+import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.model.StatusPromocion;
+import com.mastertyres.promociones.model.TipoDescuento;
+import com.mastertyres.promociones.service.PromocionService;
+import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import java.io.File;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class NuevaPromocionClienteController {
@@ -34,10 +58,11 @@ public class NuevaPromocionClienteController {
     @FXML private Button btnImagen;
     @FXML private TextField textFieldImg;
 
+
+    @FXML private TableView<Cliente> Tabla_Clientes;
+    @FXML private ListView<Cliente> ClientesAgregados;
+    @FXML private TableColumn<Cliente, Boolean> colSeleccionCliente;
     @FXML private TextField txtBuscador;
-    @FXML private TableView Tabla_Clientes;
-    @FXML private ListView ClientesAgregados;
-    @FXML private TableColumn<Cliente, String> colSeleccionCliente;
     @FXML private TableColumn<Cliente, String> colNombre;
     @FXML private TableColumn<Cliente, String> colRFC;
     @FXML private TableColumn<Cliente, String> colCumpleanos;
@@ -50,32 +75,98 @@ public class NuevaPromocionClienteController {
     private static final int CLIENTES_POR_PAGINA = 20;
     @FXML private Pagination PaginadorClientes;
     private String terminoBusquedaActual = "";
+    private String terminoBusqueda = "";
     private boolean modoBusqueda = false;
 
+    private final ObservableSet<Cliente> clientesSeleccionados =
+            FXCollections.observableSet();
+
+    @Autowired
+    private ClientePromocionService clientePromocionService;
+
+    @Autowired
+    private PromocionService promocionService;
 
     @Autowired
     private ClienteService clienteService;
 
-    @FXML
-    private void initialize (){
-        ConfigurarTabla();
+    private VentanaPrincipalController ventanaPrincipalController;
+
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = controller;
     }
 
-    private void ConfigurarTabla(){
-        colTipoCliente.setCellValueFactory(data ->
-                new SimpleStringProperty(valorONull(data.getValue().getTipoCliente()))
-        );
+    @FXML
+    private void initialize() {
+        configuraciones();
+        listeners();
+        configurarColumnas();
+        configurarPaginador();
+    }
 
-        colNombreEmpresa.setCellValueFactory(data->
-                new SimpleStringProperty(valorONull(data.getValue().getNombreEmpresa()))
-        );
+    /* ======= LISTENERS Y CONFIGURACIONES ======= */
+
+    public void configuraciones(){
+
+        cargarPorcentaje();
+
+        precioSinDescuento.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+
+        MenuContextSetting.disableMenu(rootPane);
+        MenuContextSetting.disableMenuDatePicker(rootPane);
+
+    }//configuraciones
+
+    public void listeners() {
+
+        btnBuscar.setOnAction(event -> buscarClientes());
+
+        btnRegistrar.setOnAction(event -> registrarPromocion());
+
+        btnImagen.setOnAction(event -> seleccionarImg());
+
+        porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
+
+            obtenerPorcentaje(valNuevo.doubleValue());
+
+        });
+
+        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
+
+
+            if (nuevoValor != null && !nuevoValor.isEmpty())
+                tipoDescuento(nuevoValor.toLowerCase());
+
+        });
+
+        txtBuscador.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                buscarClientes();
+            }
+        });
+    }//listeners
+
+    /* ================= TABLA ================= */
+
+    private void configurarColumnas() {
+
+        configurarColumnaSeleccion();
 
         colNombre.setCellValueFactory(data ->
                 new SimpleStringProperty(nombreCompleto(data.getValue()))
         );
 
-        colHobbie.setCellValueFactory(data ->
-                new SimpleStringProperty(valorONull(data.getValue().getHobbie()))
+        colNombreEmpresa.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getNombreEmpresa()))
+        );
+
+        colTipoCliente.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getTipoCliente()))
         );
 
         colRFC.setCellValueFactory(data ->
@@ -83,82 +174,358 @@ public class NuevaPromocionClienteController {
         );
 
         colCumpleanos.setCellValueFactory(data ->
-                new SimpleStringProperty(FechaUtils.formatearFecha(data.getValue().getFechaCumple()))
+                new SimpleStringProperty(
+                        FechaUtils.formatearFecha(data.getValue().getFechaCumple())
+                )
         );
 
         colFechaRegistro.setCellValueFactory(data ->
-                new SimpleStringProperty(FechaUtils.formatearFechaHora(data.getValue().getCreated_at()))
+                new SimpleStringProperty(
+                        FechaUtils.formatearFechaHora(data.getValue().getCreated_at())
+                )
         );
 
-        cargarCliente();
-    }
-
-    private VBox ConfigurarPaginador (int indicePagina){
-
-        Page<Cliente> paginaClientes;
-
-
-        paginaClientes = clienteService.listarClientesConVehiculosPaginado(
-                StatusCliente.ACTIVE.toString(),
-                indicePagina,
-                CLIENTES_POR_PAGINA
+        colHobbie.setCellValueFactory(data ->
+                new SimpleStringProperty(valorONull(data.getValue().getHobbie()))
         );
 
-
-        Tabla_Clientes.setItems(FXCollections.observableArrayList(paginaClientes.getContent()));
-
-        VBox contenedor = new VBox(Tabla_Clientes);
-        contenedor.setMinHeight(500);
-        contenedor.setPrefHeight(500);
-        contenedor.setStyle("-fx-background-color: transparent;");
-        return contenedor;
-
+        configurarListaClientesAgregados();
     }
 
-    private void Buscador (String busqueda){
-        terminoBusquedaActual = busqueda;
-        modoBusqueda = !busqueda.trim().isEmpty();
+    /* ============= COLUMNA SELECCION ============== */
+
+    private void configurarColumnaSeleccion() {
+
+        colSeleccionCliente.setCellFactory(col -> new TableCell<>() {
+
+            private final CheckBox checkBox = new CheckBox();
+
+            {
+                checkBox.setOnAction(e -> {
+                    Cliente cliente = getTableView()
+                            .getItems()
+                            .get(getIndex());
+
+                    if (checkBox.isSelected()) {
+                        clientesSeleccionados.add(cliente);
+                    } else {
+                        clientesSeleccionados.remove(cliente);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || getIndex() < 0 || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null);
+                    return;
+                }
+
+                Cliente cliente = getTableView().getItems().get(getIndex());
+
+                checkBox.setSelected(clientesSeleccionados.contains(cliente));
+
+                setGraphic(checkBox);
+            }
+        });
+    }
+
+    private void configurarListaClientesAgregados() {
+
+        ClientesAgregados.setItems(
+                FXCollections.observableArrayList(clientesSeleccionados)
+        );
+
+        clientesSeleccionados.addListener((SetChangeListener<Cliente>) change -> {
+            ClientesAgregados.getItems().setAll(clientesSeleccionados);
+        });
+
+        ClientesAgregados.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(Cliente c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null ? null : nombreCompleto(c));
+            }
+        });
+    }
+
+    /* ================= PAGINACIÓN ================= */
+
+    private void configurarPaginador() {
+        long total = clienteService.contarClientesActivos(StatusCliente.ACTIVE.toString());
+        int paginas = (int) Math.ceil((double) total / CLIENTES_POR_PAGINA);
+
+        PaginadorClientes.setPageCount(Math.max(paginas, 1));
+
+        PaginadorClientes.currentPageIndexProperty().addListener(
+                (obs, oldVal, newVal) -> cargarPagina(newVal.intValue())
+        );
+
+        cargarPagina(0);
+    }
+
+    private void cargarPagina(int pagina) {
+        Page<Cliente> resultado;
 
         if (modoBusqueda) {
-            //  total de resultados para el buscador general
-            long totalResultados = clienteService.contarClientesPorBusquedaGeneral(
+            resultado = clienteService.buscadorClientesPaginado(
                     StatusCliente.ACTIVE.toString(),
-                    terminoBusquedaActual
+                    terminoBusqueda,
+                    pagina,
+                    CLIENTES_POR_PAGINA
             );
-
-            int totalPaginas = (int) Math.ceil((double) totalResultados / CLIENTES_POR_PAGINA);
-
-            PaginadorClientes.setPageCount(Math.max(totalPaginas, 1));
         } else {
-            // Si no hay búsqueda, restaurar paginación normal
-            long totalClientes = clienteService.contarClientesActivos(StatusCliente.ACTIVE.toString());
-            int totalPaginas = (int) Math.ceil((double) totalClientes / CLIENTES_POR_PAGINA);
-            PaginadorClientes.setPageCount(Math.max(totalPaginas, 1));
+            resultado = clienteService.listarClientesConVehiculosPaginado(
+                    StatusCliente.ACTIVE.toString(),
+                    pagina,
+                    CLIENTES_POR_PAGINA
+            );
         }
 
-        //  Asignar PageFactory
-        PaginadorClientes.setPageFactory(this::ConfigurarPaginador);
-
-        //  Reiniciar a la primera página
-        PaginadorClientes.setCurrentPageIndex(0);
+        Tabla_Clientes.setItems(
+                FXCollections.observableArrayList(resultado.getContent())
+        );
+        Tabla_Clientes.refresh();
     }
 
-    private void cargarCliente (){
+    /* ================= BUSCADOR ================= */
+
+    @FXML
+    private void buscarClientes() {
+
+        String texto = txtBuscador.getText().trim();
+
+        if (texto.isEmpty()) {
+            // Salir de modo búsqueda
+            modoBusqueda = false;
+            terminoBusqueda = "";
+
+            configurarPaginador();
+            return;
+        }
+
+        // Activar búsqueda
+        modoBusqueda = true;
+        terminoBusqueda = texto;
+
+        long total = clienteService.contarClientesPorBusquedaGeneral(
+                StatusCliente.ACTIVE.toString(),
+                terminoBusqueda
+        );
+
+        int paginas = (int) Math.ceil((double) total / CLIENTES_POR_PAGINA);
+
+        PaginadorClientes.setPageCount(Math.max(paginas, 1));
+        PaginadorClientes.setCurrentPageIndex(0);
+
+        cargarPagina(0);
+    }
+
+
+    /* =========== REGISTRO PROMOCION =========== */
+
+    private boolean registrarPromocion() {
+
+        btnRegistrar.setDisable(true);
 
         try {
-            long totalClientes = clienteService.contarClientesActivos(StatusCliente.ACTIVE.toString());
-            int totalPaginas = (int) Math.ceil((double) totalClientes / CLIENTES_POR_PAGINA);
-            PaginadorClientes.setPageCount(Math.max(totalPaginas, 1));
-            PaginadorClientes.setPageFactory(this::ConfigurarPaginador);
-
-            // Muestra la primera página
-            PaginadorClientes.setCurrentPageIndex(0);
-
-        } catch (Exception e) {
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+            if (!empty() && validarFecha(fechaInicio.getValue(), fechaFin.getValue())) {
+                insertarPromocion();
+                if (ventanaPrincipalController != null) {
+                    ventanaPrincipalController.irAtras();
+                }
+            } else if (empty()) {
+                mostrarWarning("Campos vacíos", "", "Favor de completar todos los campos.");
+            }
+        } finally {
+            btnRegistrar.setDisable(false);
         }
 
+        return true;
     }
+
+    private void insertarPromocion() {
+
+        Promocion promocion = Promocion.builder()
+                .nombre(nombrePromocion.getText())
+                .descripcion(descripcion.getText())
+                .tipoDescuento(tipoDescuento.getValue())
+                .precio(Float.parseFloat(precioSinDescuento.getText()))
+                .porcentaje((int) porcentajeDescuento.getValue())
+                .fechaInicio(String.valueOf(fechaInicio.getValue()))
+                .fechaFin(String.valueOf(fechaFin.getValue()))
+                .active(StatusPromocion.ACTIVE.toString())
+                .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
+                .TipoPromocion("CLIENTE")
+                .build();
+
+        try {
+            // 1. Guardar promoción
+            promocionService.guardarPromocion(promocion);
+
+            if (promocion.getPromocionId() == null) {
+                mostrarError("Error", "", "Error al insertar promoción");
+                return;
+            }
+
+            // 2. Validar clientes
+            if (ClientesAgregados.getItems().isEmpty()) {
+                mostrarError("Error", "", "Debe agregar al menos un cliente a la promoción");
+                return;
+            }
+
+            // 3. Extraer IDs de clientes del ListView
+            List<Integer> clientesIds = ClientesAgregados.getItems()
+                    .stream()
+                    .map(Cliente::getClienteId)
+                    .toList();
+
+            // 4. Guardar relaciones usando el service
+            clientePromocionService.guardarClientesPromocion(
+                    promocion.getPromocionId(),
+                    clientesIds
+            );
+
+            mostrarInformacion(
+                    "Promoción registrada",
+                    "",
+                    "La promoción se registró exitosamente"
+            );
+
+            clean();
+
+        } catch (Exception e) {
+            mostrarError(
+                    "Error al crear promoción",
+                    "",
+                    "Ha ocurrido un error al crear la promoción. Vuelva a intentarlo más tarde"
+            );
+            clean();
+            e.printStackTrace();
+        }
+    }
+
+    private void cargarPorcentaje() {
+        List<String> tiposDescuentos = new ArrayList<>();
+        tiposDescuentos.add(TipoDescuento.PORCENTAJE.toString());
+        tiposDescuentos.add(TipoDescuento.OTRO.toString());
+        tipoDescuento.setItems(FXCollections.observableList(tiposDescuentos));
+    }
+
+    private void obtenerPorcentaje(Double valNuevo) {
+
+        double porcentaje = (valNuevo.doubleValue() - porcentajeDescuento.getMin()) /
+                (porcentajeDescuento.getMax() - porcentajeDescuento.getMin());
+
+
+        String styleTrack = String.format(
+                "-fx-background-color: linear-gradient(to right, #8EB83D %.0f%%, #cccccc %.0f%%);",
+                porcentaje * 100, porcentaje * 100
+
+        );
+        int porcentajeInt = (int) (porcentaje * 100);
+
+
+
+        if (porcentajeDescuento.lookup(".track") != null) {
+            porcentajeDescuento.lookup(".track").setStyle(styleTrack);
+            descuentoLabel.setText("Descuento " + porcentajeInt + "%");
+
+        }
+    }//obtenerPorcentaje
+
+    private void tipoDescuento(String tipo) {
+
+        switch (tipo) {
+
+            case "porcentaje" -> {
+                precioSinDescuento.setDisable(false);
+                porcentajeDescuento.setDisable(false);
+                LocalDate fecha = LocalDate.now();
+                fechaInicio.setValue(fecha);
+                fechaFin.setValue(fecha);
+                fechaFin.setDisable(false);
+                fechaInicio.setDisable(false);
+                btnImagen.setDisable(false);
+                textFieldImg.setDisable(false);
+
+
+            }
+            case "otro" -> {
+                precioSinDescuento.setDisable(false);
+                porcentajeDescuento.setDisable(false);
+                LocalDate fecha = LocalDate.now();
+                fechaInicio.setValue(fecha);
+                fechaFin.setValue(fecha);
+                fechaFin.setDisable(false);
+                fechaInicio.setDisable(false);
+                btnImagen.setDisable(false);
+                textFieldImg.setDisable(false);
+
+            }
+        }//switch
+
+    }
+
+    private boolean empty() {
+        boolean empty = false;
+        if (nombrePromocion.getText() == null || descripcion.getText() == null || tipoDescuento.getValue() == null || precioSinDescuento.getText() == null ||
+                fechaInicio.getValue() == null || fechaFin.getValue() == null  || nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() ||
+                precioSinDescuento.getText().isEmpty() )
+
+            empty = true;
+
+        else {
+            empty = false;
+        }
+
+        return empty;
+    }
+
+    private  void  seleccionarImg(){
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Archivos de imagen","*.png","*.jpg","*.jpeg")
+        );
+
+        Stage stage = (Stage) btnImagen.getScene().getWindow();
+        File archivo = fileChooser.showOpenDialog(stage);
+
+        if (archivo != null){
+            String url = archivo.getAbsolutePath();
+            textFieldImg.setText(url);
+        }
+
+    }//seleccionarImg
+
+    private boolean validarFecha(LocalDate fechaInicioLD, LocalDate fechaFinLD) {
+        boolean fechaValida = false;
+
+        if (fechaFinLD.isAfter(fechaInicioLD)) {
+            fechaValida = true;
+
+        } else if (fechaFinLD.isBefore(fechaInicioLD)) {
+            mostrarWarning("Fecha incorrecta", "", "Le fecha de fin no puede ser antes que la fecha de inicio, vuelva a intentarlo");
+
+            fechaValida = false;
+
+        } else if (fechaFinLD.equals(fechaInicioLD)) {
+
+            fechaValida =  mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
+
+            if (fechaValida)
+                fechaValida = true;
+            else
+                fechaValida = false;
+
+        }
+        return fechaValida;
+    }//validarFecha
+
+    /* ================= HELPERS ================= */
 
     private String valorONull(String valor) {
         return (valor == null || valor.isBlank()) ? "N/A" : valor;
@@ -173,5 +540,21 @@ public class NuevaPromocionClienteController {
 
         return full.isBlank() ? "N/A" : full;
     }
+
+    private void clean() {
+        nombrePromocion.setText("");
+        descripcion.setText("");
+        precioSinDescuento.setText("");
+        porcentajeDescuento.setValue(0);
+        descuentoLabel.setText("Descuento 0%");
+        fechaInicio.setValue(null);
+        fechaFin.setValue(null);
+        tipoDescuento.setValue(null);
+
+        txtBuscador.setText("");
+        ClientesAgregados.getItems().clear();
+        textFieldImg.setText("");
+    }
+
 
 }
