@@ -1,5 +1,6 @@
 package com.mastertyres.fxControllers.Promociones;
 
+import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
@@ -28,10 +29,12 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class ClientesPromocionesController implements IFxController, ILoading {
+public class ClientesAplicablesController implements IFxController, ILoading {
 
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private ClientePromocionService clientePromocionService;
     @Autowired
     private TaskService taskService;
 
@@ -99,9 +102,29 @@ public class ClientesPromocionesController implements IFxController, ILoading {
         this.loadingOverlayController = loading;
     }
 
+//    public void LlenarTabla(Promocion promocionSeleccionada) {
+//        this.p = promocionSeleccionada;
+//        List<Cliente> clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
+//        data.clear();
+//        for (Cliente c : clientes) {
+//            data.add(new ClienteSeleccion(c));
+//        }
+//        tablaClientes.setItems(data);
+//    }
+
     public void LlenarTabla(Promocion promocionSeleccionada) {
         this.promocion = promocionSeleccionada;
-        List<Cliente> clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
+
+        List<Cliente> clientes;
+
+        if ("VEHICULO".equals(promocionSeleccionada.getTipoPromocion())) {
+            clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
+        } else if ("CLIENTE".equals(promocionSeleccionada.getTipoPromocion())) {
+            clientes = clientePromocionService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
+        } else {
+            clientes = new ArrayList<>();
+        }
+
         data.clear();
         for (Cliente c : clientes) {
             data.add(new ClienteSeleccion(c));
