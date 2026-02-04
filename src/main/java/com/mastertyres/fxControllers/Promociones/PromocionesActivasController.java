@@ -1,6 +1,9 @@
 package com.mastertyres.fxControllers.Promociones;
 
+import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
+import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.MasterTyresApplication;
+import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
@@ -56,6 +59,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     @FXML private Label lblPrecio;
     @FXML private Label lblFechaInicio;
     @FXML private Label lblFechaFin;
+    @FXML private Label lblTituloVehiculos;
+    @FXML private Label lblTituloClientes;
     @FXML private Button btnAgregarPromocion;
     @FXML private Button btnAgregarClientesPromocion;
     @FXML private Button btnEliminarPromocion;
@@ -64,6 +69,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     @FXML private TextField txtBuscar;
     @FXML private ListView<Promocion> listaPromociones;
     @FXML private ListView<String> ListaVehiculosPromocion;
+    @FXML private ListView<String> ListaClientesPromocion;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -71,6 +77,9 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     private VehiculoPromocionService vehiculoPromocionService;
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private ClientePromocionService clientePromocionService;
 
     private final PromocionService promocionService;
 
@@ -171,7 +180,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
-            ClientesPromocionesController controller = loader.getController();
+            ClientesAplicablesController controller = loader.getController();
 
             //  Aquí pasas el HostServices desde tu Application
             controller.setHostServices(MasterTyresApplication.getAppHostServices());
@@ -281,31 +290,100 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         }
     }
 
+    private void cargarClientesPromocion(Integer promocionId) {
+
+        ListaClientesPromocion.getItems().clear();
+
+        var relaciones = clientePromocionService
+                .listarClientesPorPromocion(promocionId);
+
+        for (ClientesPromocion cp : relaciones) {
+            Cliente c = cp.getCliente();
+
+            String descripcion = String.join(" ",
+                    c.getNombre() != null ? c.getNombre() : "",
+                    c.getApellido() != null ? c.getApellido() : "",
+                    c.getSegundoApellido() != null ? c.getSegundoApellido() : ""
+            ).trim();
+
+            ListaClientesPromocion.getItems().add(
+                    descripcion.isBlank() ? "N/A" : descripcion
+            );
+        }
+    }
+
     @FXML
     private void abrirVentanaEditarPromocion() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/promocion/EditarPromocion.fxml"));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent root = loader.load();
 
-            EditarPromocionController controller = loader.getController();
-            controller.setPromocion(promocionSeleccionada);
-            controller.setInitializeLoading(loadingOverlayController);
+        if (promocionSeleccionada.getTipoPromocion().equals("VEHICULO")){
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/promocion/EditarPromocion.fxml"));
+                loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                Parent root = loader.load();
 
+                EditarPromocionController controller = loader.getController();
+                controller.setPromocion(promocionSeleccionada);
+                controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
-            stage.setTitle("Editar Promoción");
-            stage.setScene(new Scene(root));
-            stage.setMaximized(false);
-            stage.setResizable(false);
+                Stage stage = new Stage(StageStyle.UTILITY);
+                stage.setTitle("Editar Promoción");
+                stage.setScene(new Scene(root));
+                stage.setMaximized(false);
+                stage.setResizable(false);
 
-            stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initModality(Modality.APPLICATION_MODAL);
 
-            stage.showAndWait();
-            cargarPromociones();
-        } catch (IOException ex) {
-            mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                stage.showAndWait();
+                cargarPromociones();
+            } catch (IOException ex) {
+                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            }
+        } else if (promocionSeleccionada.getTipoPromocion().equals("CLIENTE")){
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/promocion/EditarPromocionCliente.fxml"));
+                loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                Parent root = loader.load();
+
+                EditarPromocionControllerCliente controller = loader.getController();
+                controller.setPromocion(promocionSeleccionada);
+
+                Stage stage = new Stage(StageStyle.UTILITY);
+                stage.setTitle("Editar Promoción");
+                stage.setScene(new Scene(root));
+                stage.setMaximized(false);
+                stage.setResizable(false);
+
+                stage.initModality(Modality.APPLICATION_MODAL);
+
+                stage.showAndWait();
+                cargarPromociones();
+            } catch (IOException ex) {
+                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            }
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/promocion/EditarPromocion.fxml"));
+                loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                Parent root = loader.load();
+
+                EditarPromocionController controller = loader.getController();
+                controller.setPromocion(promocionSeleccionada);
+                controller.setInitializeLoading(loadingOverlayController);
+
+                Stage stage = new Stage(StageStyle.UTILITY);
+                stage.setTitle("Editar Promoción");
+                stage.setScene(new Scene(root));
+
+                stage.initModality(Modality.APPLICATION_MODAL);
+
+                stage.showAndWait();
+                cargarPromociones();
+            } catch (IOException ex) {
+                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            }
         }
+
+
     }
 
     private void mostrarDetallePromocion(Promocion p) {
@@ -325,7 +403,37 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         lblFechaInicio.setText(formatearFecha(p.getFechaInicio()));
         lblFechaFin.setText(formatearFecha(p.getFechaFin()));
 
-        cargarVehiculosPromocion(p.getPromocionId());
+        if (p.getTipoPromocion().equals("VEHICULO")){
+            lblTituloClientes.setManaged(false);
+            lblTituloClientes.setVisible(false);
+            lblTituloVehiculos.setVisible(true);
+            lblTituloVehiculos.setManaged(true);
+            ListaClientesPromocion.setVisible(false);
+            ListaClientesPromocion.setManaged(false);
+            ListaVehiculosPromocion.setVisible(true);
+            ListaVehiculosPromocion.setManaged(true);
+            cargarVehiculosPromocion(p.getPromocionId());
+        }else if (p.getTipoPromocion().equals("CLIENTE")){
+            lblTituloVehiculos.setVisible(false);
+            lblTituloVehiculos.setManaged(false);
+            lblTituloClientes.setVisible(true);
+            lblTituloClientes.setManaged(true);
+            ListaVehiculosPromocion.setVisible(false);
+            ListaVehiculosPromocion.setManaged(false);
+            ListaClientesPromocion.setVisible(true);
+            ListaClientesPromocion.setManaged(true);
+            cargarClientesPromocion(p.getPromocionId());
+        }else {
+            lblTituloClientes.setManaged(false);
+            lblTituloClientes.setVisible(false);
+            lblTituloVehiculos.setVisible(true);
+            lblTituloVehiculos.setManaged(true);
+            ListaClientesPromocion.setVisible(false);
+            ListaClientesPromocion.setManaged(false);
+            ListaVehiculosPromocion.setVisible(true);
+            ListaVehiculosPromocion.setManaged(true);
+            cargarVehiculosPromocion(p.getPromocionId());
+        }
     }
 
     private String formatearFecha(String fecha) {
