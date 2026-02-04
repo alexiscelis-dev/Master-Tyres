@@ -1,9 +1,13 @@
 package com.mastertyres.fxControllers.ProximosServicios;
 
 
+import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.application.HostServices;
@@ -17,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -25,25 +30,42 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+
 
 @Component
-public class ProximosServiciosController implements IFxController {
+public class ProximosServiciosController implements IFxController, ILoading {
 
-    @FXML private AnchorPane ventanaProximosServicios;
+    @FXML
+    private AnchorPane ventanaProximosServicios;
 
     @FXML
     private TilePane contenedorServicios;
 
-    @FXML private Label lblNombre;
-    @FXML private Label lblNumeroTelefono;
-    @FXML private Label lblMarca;
-    @FXML private Label lblModelo;
-    @FXML private Label lblAnio;
-    @FXML private Label lblFechaUltimoServicio;
-    @FXML private Label lblMensajesEnviados;
-    @FXML private Button btnEnviarAviso;
-    @FXML private Button MarcaServicioRealizado;
-    @FXML private TextField txtBuscar;
+    @FXML
+    private Label lblNombre;
+    @FXML
+    private Label lblNumeroTelefono;
+    @FXML
+    private Label lblMarca;
+    @FXML
+    private Label lblModelo;
+    @FXML
+    private Label lblAnio;
+    @FXML
+    private Label lblFechaUltimoServicio;
+    @FXML
+    private Label lblMensajesEnviados;
+    @FXML
+    private Button btnEnviarAviso;
+    @FXML
+    private Button MarcaServicioRealizado;
+    @FXML
+    private TextField txtBuscar;
+
+    @Autowired
+    private TaskService taskService;
 
     private VehiculoService vehiculoService;
 
@@ -55,6 +77,8 @@ public class ProximosServiciosController implements IFxController {
 
     private HostServices hostServices;
 
+    private LoadingComponentController loadingOverlayController;
+
 
     private static final int SERVICIOS_POR_PAGINA = 20;
 
@@ -62,14 +86,15 @@ public class ProximosServiciosController implements IFxController {
 
     private String filtroActual = null;
 
-    @FXML private Pagination PaginadorServicios;
+    @FXML
+    private Pagination PaginadorServicios;
 
     public void setHostServices(HostServices hostServices) {
         this.hostServices = hostServices;
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() {
 
         configuraciones();
         listeners();
@@ -77,6 +102,11 @@ public class ProximosServiciosController implements IFxController {
 
 
     }//initialize
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
 
     @Override
     public void configuraciones() {
@@ -127,27 +157,60 @@ public class ProximosServiciosController implements IFxController {
     }
 
     @FXML
-    private void EnviarAviso(ActionEvent actionEvent){
+    private void EnviarAviso(ActionEvent actionEvent) {
 
-            String telefono = vehiculoSeleccion.getNumTelefono();
-            String mensaje = "Master tires. \n\n" + "¡Hola " + vehiculoSeleccion.getNombreCliente() + "! Recuerda hacer el servicio de tu vehiculo "+ vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio() + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
+        if (vehiculoSeleccion == null) return;
 
-        String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
-                java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
+                    vehiculoService.actualizarContador(vehiculoSeleccion.getId(), vehiculoSeleccion.getContador_mensaje() + 1);
 
-        if (hostServices != null) {
-            hostServices.showDocument(url);
-        }
+                    String telefono = vehiculoSeleccion.getNumTelefono();
+                    String mensaje = "Master tires. \n\n" + "¡Hola "
+                            + vehiculoSeleccion.getNombreCliente() +
+                            "! Recuerda hacer el servicio de tu vehiculo "
+                            + vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio()
+                            + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
 
-        vehiculoService.actualizarContador(vehiculoSeleccion.getId(), vehiculoSeleccion.getContador_mensaje()+1);
-        txtBuscar.setText("");
-        limpiarDetalleVehiculo();
-        cargarServicios();
-    }
+                    String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
+                            java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
+
+
+                    return url;
+                }, (url) -> {
+
+                    if (hostServices != null) {
+                        hostServices.showDocument(url);
+
+                    }
+
+                    txtBuscar.setText("");
+                    limpiarDetalleVehiculo();
+                    cargarServicios();
+
+                    mostrarInformacion("Aviso enviado",
+                            "Aviso enviado con exito",
+                            "Presione enviar en cada una de las ventanas de su navegador para completar la operacion.");
+
+                }, (ex) -> {
+
+                    if (ex instanceof VehiculoException){
+                        mostrarError("Error al enviar aviso", "No se pudo enviar el aviso ", "" + ex.getMessage());
+
+                    }else {
+                        mostrarError("Error interno",
+                                "",
+                                "Ocurrio un error inesperaro al mandar aviso. Vuelve a intentarlo mas tarde.");
+                    }
+
+                }, null
+        );
+
+
+    }//EnviarAviso
 
     private void cargarServicios() {
-//        List<VehiculoDTO> vehiculos = vehiculoService.obtenerVehiculosConServicioVencido();
-//        mostrarServicios(vehiculos);
         configurarPaginador();
     }
 
@@ -218,7 +281,7 @@ public class ProximosServiciosController implements IFxController {
 
 
     @FXML
-    private void ActualizarServicio(ActionEvent actionEvent){
+    private void ActualizarServicio(ActionEvent actionEvent) {
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualizacion.",
@@ -228,16 +291,33 @@ public class ProximosServiciosController implements IFxController {
                 "Cancelar"
         );
 
-        if (!confirmar) {
+        if (!confirmar)
             return; // Usuario canceló
-        }
 
-        vehiculoService.actualizarUltimoServicio(vehiculoSeleccion.getId());
-        vehiculoService.actualizarContador(vehiculoSeleccion.getId(), 0);
-        txtBuscar.setText("");
-        limpiarDetalleVehiculo();
-        cargarServicios();
-    }
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
+                    vehiculoService.actualizarUltimoServicio(vehiculoSeleccion.getId());
+                    vehiculoService.actualizarContador(vehiculoSeleccion.getId(), 0);
+                    return null;
+                }, (resultado) -> {
+                    txtBuscar.setText("");
+                    limpiarDetalleVehiculo();
+                    cargarServicios();
+                }, (ex) -> {
+                    if (ex instanceof VehiculoException) {
+                        mostrarError("Ocurrio un error", "No se pudo marcar como 'servicio realizado' ", "" + ex.getMessage());
+                    } else {
+                        mostrarError("Error interno",
+                                "No se pudo marcar como 'servicio realizado' ",
+                                "Ocurrio un error inesperado. Vuelve a intentarlo mas tarde.");
+                    }
+
+                }, null
+        );
+
+
+    }//actualizarServicio
 
     private void mostrarDetalleVehiculo(VehiculoDTO p) {
 
@@ -250,9 +330,9 @@ public class ProximosServiciosController implements IFxController {
         lblNumeroTelefono.setText(p.getNumTelefono());
         lblMarca.setText(p.getNombreMarca());
         lblModelo.setText(p.getNombreModelo());
-        lblAnio.setText(p.getAnio()+"");
+        lblAnio.setText(p.getAnio() + "");
         lblFechaUltimoServicio.setText(formatearFecha(p.getUltimoServicio()));
-        lblMensajesEnviados.setText(p.getContador_mensaje()+"");
+        lblMensajesEnviados.setText(p.getContador_mensaje() + "");
     }
 
     private void limpiarDetalleVehiculo() {
@@ -269,13 +349,13 @@ public class ProximosServiciosController implements IFxController {
     }
 
     private String formatearFecha(String fecha) {
-        if (fecha == null || fecha.isBlank()) return "N/A";
+        if (fecha == null || fecha.isBlank()) return "N/D";
 
         try {
             LocalDate f = LocalDate.parse(fecha);  // yyyy-MM-dd
             return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         } catch (Exception e) {
-            return "N/A";
+            return "N/D";
         }
     }
 

@@ -3,17 +3,22 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.exeptions.MarcaException;
+import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
-import com.mastertyres.modelo.services.ModeloService;
+import com.mastertyres.modelo.service.ModeloService;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;
@@ -39,7 +44,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class AgregarMarcaController implements IVentanaPrincipal, IFxController {
+public class AgregarMarcaController implements IVentanaPrincipal, IFxController, ILoading {
 
 
     @Autowired
@@ -54,6 +59,8 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController 
     private DetalleCategoriaService detalleCategoriaService;
     @Autowired
     private VehiculoRepository vehiculoRepository;
+    @Autowired
+    private TaskService taskService;
 
 
     @FXML
@@ -87,9 +94,16 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController 
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+    private LoadingComponentController loadngOverlayController;
+
     @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
+    }
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadngOverlayController = loading;
     }
 
 
@@ -155,7 +169,7 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController 
             return;
         }
 
-        // 🔹 Validación de duplicados
+        //  Validación de duplicados
         boolean existe = listaVehiculos.stream().anyMatch(
                 v -> v.getModelo().equalsIgnoreCase(modelo) &&
                         v.getCategoria().getCategoriaId().equals(categoria.getCategoriaId())
@@ -203,40 +217,67 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController 
         );
 
         if (confirmar) {
-            try {
-                // Guardar Marca
-                Marca m = new Marca();
-                m.setNombreMarca(txtMarca.getText().trim());
-                m = marcaService.guardarMarca(m);
 
-                // Guardar Modelos y DetalleCategoria
-                for (ModeloCategoriaTemp temp : listaVehiculos) {
-                    // Guardar Modelo
-                    Modelo modelo = new Modelo();
-                    modelo.setNombreModelo(temp.getModelo());
-                    modelo.setMarca_id(m);
-                    modelo = modeloService.guardarModelo(modelo);
+            taskService.runTask(
+                    loadngOverlayController,
+                    () -> {
 
-                    // Guardar DetalleCategoria
-                    DetalleCategoria detalle = new DetalleCategoria();
-                    detalle.setMarca(m);
-                    detalle.setModelo(modelo);
-                    detalle.setCategoria(temp.getCategoria());
+                        Marca m = new Marca();
+                        m.setNombreMarca(txtMarca.getText().trim());
+                        m = marcaService.guardarMarca(m);
 
-                    detalleCategoriaService.guardarDetalleCategoria(detalle);
-                }
+                        // Guardar Modelos y DetalleCategoria
+                        for (ModeloCategoriaTemp temp : listaVehiculos) {
+                            // Guardar Modelo
+                            Modelo modelo = new Modelo();
+                            modelo.setNombreModelo(temp.getModelo());
+                            modelo.setMarca_id(m);
+                            modelo = modeloService.guardarModelo(modelo);
 
-                mostrarInformacion("Exito", "Exito en guardar", "Marca y modelos guardados correctamente.");
-                limpiarCamposVehiculo();
-                cerrarVentana(null);
+                            // Guardar DetalleCategoria
+                            DetalleCategoria detalle = new DetalleCategoria();
+                            detalle.setMarca(m);
+                            detalle.setModelo(modelo);
+                            detalle.setCategoria(temp.getCategoria());
+
+                            detalleCategoriaService.guardarDetalleCategoria(detalle);
+                        }
+                        return null;
+
+                    },
+                    (resultado) -> {
+
+                        limpiarCamposVehiculo();
+
+                        mostrarInformacion("Guardado exitoso", "", "Marca y modelo(s) guardados correctamente.");
+                        cerrarVentana(null);
+
+                    }, (ex) -> {
 
 
-            } catch (Exception e) {
-                mostrarError("Error ", "Error al guardar: ", e.getMessage());
-                e.printStackTrace();
-            }
+
+                        if (ex instanceof MarcaException) {
+
+                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar la marca", "" + ex.getMessage());
+
+                        } else if (ex instanceof ModeloException) {
+                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar alguno(s) de los modelos", "" + ex.getMessage());
+
+                        } else {
+                            cerrarVentana(null);
+                            mostrarError("Error interno",
+                                    "Error inesperado",
+                                    "Ocurrio un error al intentar guardar la marca y modelo(s) proporsonados");
+                        }
+
+
+
+                    }, null
+            );
+
         }
-    }
+
+    }//GuardarMarca
 
     private void cargarOpciones() {
 
@@ -316,7 +357,6 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController 
         }
         return resultado.toString().trim();
     }
-
 
     public static class ModeloCategoriaTemp {
         private final String modelo;

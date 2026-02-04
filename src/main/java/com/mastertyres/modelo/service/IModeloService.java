@@ -1,8 +1,8 @@
-package com.mastertyres.modelo.services;
+package com.mastertyres.modelo.service;
 
 import com.mastertyres.modelo.model.Modelo;
 import java.util.List;
 
-public interface IModeloServices {
+public interface IModeloService {
     List<Modelo> listarModelos();
 }

@@ -11,4 +11,5 @@ public interface IDetalleCategoriaService {
     List<DetalleCategoria> findByCategoria(Categoria categoria);
 
 
+
 }

@@ -1,16 +1,21 @@
 package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.exeptions.MarcaException;
+import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
-import com.mastertyres.modelo.services.ModeloService;
+import com.mastertyres.modelo.service.ModeloService;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,6 +32,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -34,8 +40,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+
 @Component
-public class AdministarMarcasController implements IFxController {
+public class AdministarMarcasController implements IFxController, ILoading {
 
     @FXML
     private Label lblNombre;
@@ -43,24 +51,42 @@ public class AdministarMarcasController implements IFxController {
     @FXML
     private TextField txtBuscar;
 
-    @FXML private TableView<DetalleCategoria> TablaVehiculoMarca;
-    @FXML private TableColumn<DetalleCategoria, String> colMarca;
-    @FXML private TableColumn<DetalleCategoria, String> colModelo;
-    @FXML private TableColumn<DetalleCategoria, String> colCategoria;
+    @FXML
+    private TableView<DetalleCategoria> TablaVehiculoMarca;
+    @FXML
+    private TableColumn<DetalleCategoria, String> colMarca;
+    @FXML
+    private TableColumn<DetalleCategoria, String> colModelo;
+    @FXML
+    private TableColumn<DetalleCategoria, String> colCategoria;
 
-    @FXML private AnchorPane rootPane;
-    @FXML private Button btnAgregarMarca;
-    @FXML private Button BtnEliminarModelo;
-    @FXML private Button BtnAgregarModelo;
-    @FXML private Button btnEditarMarca;
-    @FXML private Button EliminarMarca;
-    @FXML private Button BtnEditarModelo;
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private Button btnAgregarMarca;
+    @FXML
+    private Button BtnEliminarModelo;
+    @FXML
+    private Button BtnAgregarModelo;
+    @FXML
+    private Button btnEditarMarca;
+    @FXML
+    private Button EliminarMarca;
+    @FXML
+    private Button BtnEditarModelo;
 
-    @FXML private Pagination PaginadorMarcas;
-    @FXML private TilePane contenedorMarcas;
+    @FXML
+    private Pagination PaginadorMarcas;
+    @FXML
+    private TilePane contenedorMarcas;
 
-    @FXML private ListView<Marca> listaMarca;
+    @FXML
+    private ListView<Marca> listaMarca;
 
+    @Autowired
+    private TaskService taskService;
+
+    private LoadingComponentController loadingOverlayController;
     private final MarcaService marcaService;
     private final ModeloService modeloService;
     private final CategoriaService categoriaService;
@@ -77,7 +103,7 @@ public class AdministarMarcasController implements IFxController {
     private String filtroActual = null;
 
     public AdministarMarcasController(MarcaService marcaService,
-                                      DetalleCategoriaService detalleCategoriaService, ModeloService modeloService, CategoriaService categoriaService,  VehiculoService vehiculoService, VehiculoPromocionService vehiculoPromocionService ) {
+                                      DetalleCategoriaService detalleCategoriaService, ModeloService modeloService, CategoriaService categoriaService, VehiculoService vehiculoService, VehiculoPromocionService vehiculoPromocionService) {
         this.marcaService = marcaService;
         this.detalleCategoriaService = detalleCategoriaService;
         this.modeloService = modeloService;
@@ -86,8 +112,14 @@ public class AdministarMarcasController implements IFxController {
         this.vehiculoPromocionService = vehiculoPromocionService;
     }
 
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+
+    }
+
     @FXML
-    private void initialize(){
+    private void initialize() {
 
         // Cargar paginador inicial
         configurarPaginador();
@@ -97,11 +129,10 @@ public class AdministarMarcasController implements IFxController {
     }//initialize
 
 
+    @Override
+    public void configuraciones() {
 
- @Override
-    public void configuraciones(){
-
-     validacionesModeloBtn();
+        validacionesModeloBtn();
 
         MenuContextSetting.disableMenu(rootPane);
 
@@ -141,8 +172,10 @@ public class AdministarMarcasController implements IFxController {
 
         // Evento para cuando el usuario cambia de página
         PaginadorMarcas.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+
             Page<Marca> nuevaPagina = marcaService.listarMarcasPaginado(PageRequest.of(newIndex.intValue(), tamañoPagina));
             mostrarMarcasPorNombre(nuevaPagina.getContent());
+
         });
     }
 
@@ -189,7 +222,7 @@ public class AdministarMarcasController implements IFxController {
         });
     }
 
-    private void validacionesModeloBtn(){
+    private void validacionesModeloBtn() {
         BtnEditarModelo.disableProperty().bind(
                 javafx.beans.binding.Bindings.isEmpty(TablaVehiculoMarca.getSelectionModel().getSelectedItems())
         );
@@ -201,13 +234,14 @@ public class AdministarMarcasController implements IFxController {
     }
 
     @FXML
-    private void agregarMarca (){
+    private void agregarMarca() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/marca/AgregarMarca.fxml"));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
             AgregarMarcaController controller = loader.getController();
+            controller.setInitializeLoading(loadingOverlayController);
 
 
             Stage stage = new Stage(StageStyle.UTILITY);
@@ -215,16 +249,20 @@ public class AdministarMarcasController implements IFxController {
             stage.setScene(new Scene(root));
 
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setMaximized(false);
 
             stage.showAndWait();
-            //cargarMarcas();
+
             configurarPaginador();
         } catch (IOException ex) {
+            mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+
             ex.printStackTrace();
         }
     }
 
-    private void mostrarModelos(Marca m){
+    private void mostrarModelos(Marca m) {
         marcaSeleccionada = m;
         btnEditarMarca.setDisable(false);
         EliminarMarca.setDisable(false);
@@ -234,7 +272,7 @@ public class AdministarMarcasController implements IFxController {
         llenarTabla(m);
     }
 
-    private void llenarTabla(Marca m){
+    private void llenarTabla(Marca m) {
         int id = m.getMarcaId();
         TablaVehiculoMarca.getItems().clear();
         TablaVehiculoMarca.getItems().addAll(detalleCategoriaService.listarPorMarca(m));
@@ -248,17 +286,23 @@ public class AdministarMarcasController implements IFxController {
 
             EditarMarcaController controller = loader.getController();
             controller.setMarcaModelos(marcaSeleccionada);
+            controller.setInitializeLoading(loadingOverlayController);
+
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Editar Marca");
             stage.setScene(new Scene(root));
 
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setMaximized(false);
 
             stage.showAndWait();
-            //cargarMarcas();
+
             configurarPaginador();
         } catch (IOException ex) {
+            mostrarError("Error de carga", "", "Error al cargar la vista");
+
             ex.printStackTrace();
         }
     }
@@ -271,19 +315,22 @@ public class AdministarMarcasController implements IFxController {
 
             EditarModeloController controller = loader.getController();
             controller.setModelos(TablaVehiculoMarca.getSelectionModel().getSelectedItem());
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Editar Modelo");
             stage.setScene(new Scene(root));
 
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setMaximized(false);
 
             stage.showAndWait();
-            //cargarMarcas();
+
 
             configurarPaginador();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
         }
     }
 
@@ -295,18 +342,22 @@ public class AdministarMarcasController implements IFxController {
 
             AgregarModeloController controller = loader.getController();
             controller.setMarcaModelos(marcaSeleccionada);
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Agregar Modelo");
             stage.setScene(new Scene(root));
 
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.setMaximized(false);
 
             stage.showAndWait();
-            //cargarMarcas();
+
             configurarPaginador();
         } catch (IOException ex) {
             ex.printStackTrace();
+            mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
         }
     }
 
@@ -315,13 +366,13 @@ public class AdministarMarcasController implements IFxController {
         Modelo modeloSeleccionada = TablaVehiculoMarca.getSelectionModel().getSelectedItem().getModelo();
 
         if (modeloSeleccionada == null) {
-            MensajesAlert.mostrarWarning("Advertencia", "Sin seleccion","Debe seleccionar un modelo para eliminar.");
+            MensajesAlert.mostrarWarning("Advertencia", "Sin seleccion", "Debe seleccionar un modelo para eliminar.");
             return;
         }
 
         // Evitar eliminar el modelo genérico
         if (modeloSeleccionada.getModeloId() == 1) {
-            MensajesAlert.mostrarWarning("Advertencia","Operación no permitida", "No se puede eliminar el modelo genérico (SIN MODELO).");
+            MensajesAlert.mostrarWarning("Advertencia", "Operación no permitida", "No se puede eliminar el modelo genérico");
             return;
         }
 
@@ -334,47 +385,56 @@ public class AdministarMarcasController implements IFxController {
         );
 
         if (confirmar) {
-            try {
-                vehiculoService.reasignarModeloPorId(modeloSeleccionada.getModeloId());
-                detalleCategoriaService.reasignarOEliminarPorModelo(modeloSeleccionada.getModeloId());
-                vehiculoPromocionService.reasignarModeloPorId(modeloSeleccionada.getModeloId());
-
-                // Eliminar el modelo
-                modeloService.eliminarModeloPorId(modeloSeleccionada.getModeloId());
 
 
-                MensajesAlert.mostrarInformacion("Éxito", "Modelo eliminado", "El modelo se elimino correctamente.");
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
+                        vehiculoService.reasignarModeloPorId(modeloSeleccionada.getModeloId());
+                        detalleCategoriaService.reasignarOEliminarPorModelo(modeloSeleccionada.getModeloId());
+                        vehiculoPromocionService.reasignarModeloPorId(modeloSeleccionada.getModeloId());
 
-                txtBuscar.setText("");
-                marcaSeleccionada = null;
-                btnEditarMarca.setDisable(true);
-                EliminarMarca.setDisable(true);
-                lblNombre.setText("");
-                TablaVehiculoMarca.getItems().clear();
-                configurarPaginador();
+                        // Eliminar el modelo
+                        modeloService.eliminarModeloPorId(modeloSeleccionada.getModeloId());
+                        return null;
+                    }, (resultado) -> {
 
-            } catch (Exception e) {
-                MensajesAlert.mostrarError(
-                        "Error al eliminar",
-                        "No se pudo eliminar el modelo",
-                        "Detalles: " + e.getMessage()
-                );
-                e.printStackTrace();
-            }
+                        MensajesAlert.mostrarInformacion("Éxito", "Modelo eliminado", "El modelo se elimino correctamente.");
+
+                        txtBuscar.setText("");
+                        marcaSeleccionada = null;
+                        btnEditarMarca.setDisable(true);
+                        EliminarMarca.setDisable(true);
+                        lblNombre.setText("");
+                        TablaVehiculoMarca.getItems().clear();
+                        configurarPaginador();
+
+                    }, (ex) -> {
+
+                        if (ex.getCause() instanceof ModeloException) {
+                            mostrarError("Error al eliminar marca", "", "" + ex.getMessage());
+                        } else if (ex.getCause() instanceof Exception) {
+                            mostrarError("Error inesperado", "", "No se pudo eliminar el modelo selecconada");
+                        }
+
+                    }, null
+            );
+
+
         }
     }
 
-    public void EliminarMarca(ActionEvent actionEvent){
+    public void EliminarMarca(ActionEvent actionEvent) {
 
 
         if (marcaSeleccionada == null) {
-            MensajesAlert.mostrarWarning("Advertencia", "Sin seleccion","Debe seleccionar una marca para eliminar.");
+            MensajesAlert.mostrarWarning("Advertencia", "Sin seleccion", "Debe seleccionar una marca para eliminar.");
             return;
         }
 
         // Evitar eliminar el modelo genérico
         if (marcaSeleccionada.getMarcaId() == 1) {
-            MensajesAlert.mostrarWarning("Advertencia","Operación no permitida", "No se puede eliminar la marca genérica (SIN MARCA).");
+            MensajesAlert.mostrarWarning("Operacion no permitida", "Operación no permitida", "o se puede eliminar la marca genérica");
             return;
         }
 
@@ -387,35 +447,45 @@ public class AdministarMarcasController implements IFxController {
         );
 
         if (confirmar) {
-            try {
-                vehiculoService.reasignarModeloYCategoriaPorMarca(marcaSeleccionada.getMarcaId());
-                vehiculoPromocionService.reasignarModeloYCategoriaPorMarca(marcaSeleccionada.getMarcaId());
-                vehiculoService.reasignarMarcaPorId(marcaSeleccionada.getMarcaId());
-                vehiculoPromocionService.reasignarMarcaPorId(marcaSeleccionada.getMarcaId());
-                modeloService.reasignarMarcaPorId(marcaSeleccionada.getMarcaId());
-                detalleCategoriaService.eliminarPorMarca(marcaSeleccionada.getMarcaId());
 
-                // Eliminar marca
-                marcaService.eliminarMarcaPorId(marcaSeleccionada.getMarcaId());
+            taskService.runTask(
+                    loadingOverlayController,
+                    () -> {
 
-                MensajesAlert.mostrarInformacion("Éxito", "Marca eliminada", "La marca se elimino correctamente.");
+                        vehiculoService.reasignarModeloYCategoriaPorMarca(marcaSeleccionada.getMarcaId());
+                        vehiculoPromocionService.reasignarModeloYCategoriaPorMarca(marcaSeleccionada.getMarcaId());
+                        vehiculoService.reasignarMarcaPorId(marcaSeleccionada.getMarcaId());
+                        vehiculoPromocionService.reasignarMarcaPorId(marcaSeleccionada.getMarcaId());
+                        modeloService.reasignarMarcaPorId(marcaSeleccionada.getMarcaId());
+                        detalleCategoriaService.eliminarPorMarca(marcaSeleccionada.getMarcaId());
 
-                txtBuscar.setText("");
-                marcaSeleccionada = null;
-                btnEditarMarca.setDisable(true);
-                EliminarMarca.setDisable(true);
-                lblNombre.setText("");
-                TablaVehiculoMarca.getItems().clear();
-                configurarPaginador();
+                        // Eliminar marca
+                        marcaService.eliminarMarcaPorId(marcaSeleccionada.getMarcaId());
+                        return null;
 
-            } catch (Exception e) {
-                MensajesAlert.mostrarError(
-                        "Error al eliminar",
-                        "No se pudo eliminar la marca",
-                        "Detalles: " + e.getMessage()
-                );
-                e.printStackTrace();
-            }
+                    }, (resultado) -> {
+                        MensajesAlert.mostrarInformacion("Éxito", "Marca eliminada", "La marca se elimino correctamente.");
+
+                        txtBuscar.setText("");
+                        marcaSeleccionada = null;
+                        btnEditarMarca.setDisable(true);
+                        EliminarMarca.setDisable(true);
+                        lblNombre.setText("");
+                        TablaVehiculoMarca.getItems().clear();
+                        configurarPaginador();
+
+                    }, (ex) -> {
+
+                        if (ex.getCause() instanceof MarcaException) {
+                            mostrarError("Error al eliminar marca", "", "" + ex.getMessage());
+                        } else if (ex.getCause() instanceof Exception) {
+                            mostrarError("Error inesperado", "", "No se pudo eliminar la marca selecconada");
+                        }
+
+                    }, null
+
+            );
+
         }
 
     }
@@ -427,7 +497,7 @@ public class AdministarMarcasController implements IFxController {
         EliminarMarca.setDisable(true);
         lblNombre.setText("");
         TablaVehiculoMarca.getItems().clear();
-        //cargarMarcas();
         configurarPaginador();
     }
+
 }//class
