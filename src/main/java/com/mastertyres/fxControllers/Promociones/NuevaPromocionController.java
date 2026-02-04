@@ -1,7 +1,11 @@
 package com.mastertyres.fxControllers.Promociones;
 
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
@@ -34,29 +38,51 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionController implements IVentanaPrincipal, IFxController {
-    @FXML private AnchorPane rootPane;
-    @FXML private Slider porcentajeDescuento;
-    @FXML private Label descuentoLabel;
-    @FXML private TextField precioSinDescuento;
-    @FXML private DatePicker fechaInicio;
-    @FXML private DatePicker fechaFin;
-    @FXML private Button btnRegistrar;
-    @FXML private Button btnLimpiar;
-    @FXML private ChoiceBox<String> tipoDescuento;
-    @FXML private TextField nombrePromocion;
-    @FXML private TextField descripcion;
-    @FXML private ChoiceBox<Marca> choiceMarca;
-    @FXML private ChoiceBox<Modelo> choiceModelo;
-    @FXML private ChoiceBox<Integer> choiceAnio;
-    @FXML private TableView tableVehiculosParticipantes;
-    @FXML private TableColumn<VehiculoPromocion, String> colMarca;
-    @FXML private TableColumn<VehiculoPromocion, String> colModelo;
-    @FXML private TableColumn<VehiculoPromocion, Integer> colAnio;
-    @FXML private Button btnAgregarVehiculo;
-    @FXML private Button btnImagen;
-    @FXML private TextField textFieldImg;
-    @FXML private TableColumn<VehiculoPromocion, Void> colEliminar;
+public class NuevaPromocionController implements IVentanaPrincipal, IFxController, ILoading {
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private Slider porcentajeDescuento;
+    @FXML
+    private Label descuentoLabel;
+    @FXML
+    private TextField precioSinDescuento;
+    @FXML
+    private DatePicker fechaInicio;
+    @FXML
+    private DatePicker fechaFin;
+    @FXML
+    private Button btnRegistrar;
+    @FXML
+    private Button btnLimpiar;
+    @FXML
+    private ChoiceBox<String> tipoDescuento;
+    @FXML
+    private TextField nombrePromocion;
+    @FXML
+    private TextField descripcion;
+    @FXML
+    private ChoiceBox<Marca> choiceMarca;
+    @FXML
+    private ChoiceBox<Modelo> choiceModelo;
+    @FXML
+    private ChoiceBox<Integer> choiceAnio;
+    @FXML
+    private TableView tableVehiculosParticipantes;
+    @FXML
+    private TableColumn<VehiculoPromocion, String> colMarca;
+    @FXML
+    private TableColumn<VehiculoPromocion, String> colModelo;
+    @FXML
+    private TableColumn<VehiculoPromocion, Integer> colAnio;
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private Button btnImagen;
+    @FXML
+    private TextField textFieldImg;
+    @FXML
+    private TableColumn<VehiculoPromocion, Void> colEliminar;
 
     private ObservableList<VehiculoPromocion> vehiculos = FXCollections.observableList(FXCollections.observableArrayList());
 
@@ -64,8 +90,12 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
     private PromocionService promocionService;
     @Autowired
     private VehiculoPromocionService vehiculoPromocionService;
+    @Autowired
+    private TaskService taskService;
 
     private VentanaPrincipalController ventanaPrincipalController;
+
+    private LoadingComponentController loadingOverlayController;
 
     @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
@@ -86,7 +116,12 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
     }//initialize
 
     @Override
-    public void configuraciones(){
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
+    @Override
+    public void configuraciones() {
 
         cargarPorcentaje();
 
@@ -161,14 +196,14 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         });
 
         choiceModelo.setOnMousePressed(event -> {
-            if (!choiceModelo.isShowing()){
+            if (!choiceModelo.isShowing()) {
                 choiceModelo.show();
                 choiceModelo.hide();
             }
         });
 
         choiceMarca.setOnMousePressed(event -> {
-            if (!choiceMarca.isShowing()){
+            if (!choiceMarca.isShowing()) {
                 choiceMarca.show();
                 choiceMarca.hide();
             }
@@ -226,7 +261,6 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
 
         );
         int porcentajeInt = (int) (porcentaje * 100);
-
 
 
         if (porcentajeDescuento.lookup(".track") != null) {
@@ -310,14 +344,14 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         });
 
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((observable, oldMarca, newMarca) -> {
-            if (newMarca != null){
+            if (newMarca != null) {
                 List<Modelo> modelosFiltrados = modelos.stream()
                         .filter(mod -> mod.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
                         .toList();
 
-                    choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
 
-            }else {
+            } else {
                 choiceModelo.getItems().clear();
             }
         });
@@ -330,7 +364,7 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         if (nombrePromocion.getText() == null || descripcion.getText() == null || tipoDescuento.getValue() == null || precioSinDescuento.getText() == null ||
                 fechaInicio.getValue() == null || fechaFin.getValue() == null || choiceMarca.getValue() == null || choiceModelo.getValue() == null ||
                 nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() || precioSinDescuento.getText().isEmpty()
-                || tableVehiculosParticipantes.getItems() == null )
+                || tableVehiculosParticipantes.getItems() == null)
 
             empty = true;
 
@@ -368,12 +402,12 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
 
         } else if (fechaFinLD.equals(fechaInicioLD)) {
 
-          fechaValida =  mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
+            fechaValida = mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
 
-          if (fechaValida)
-              fechaValida = true;
-          else
-              fechaValida = false;
+            if (fechaValida)
+                fechaValida = true;
+            else
+                fechaValida = false;
 
         }
         return fechaValida;
@@ -414,75 +448,102 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
 
     private void insertarPromocion() {
 
-        Promocion promocion = Promocion.builder()
-                .nombre(nombrePromocion.getText())
-                .descripcion(descripcion.getText())
-                .tipoDescuento(tipoDescuento.getValue())
-                .precio(Float.parseFloat(precioSinDescuento.getText()))
-                .porcentaje((int) porcentajeDescuento.getValue())
-                .fechaInicio(String.valueOf(fechaInicio.getValue()))
-                .fechaFin(String.valueOf(fechaFin.getValue()))
-                .active(StatusPromocion.ACTIVE.toString())
-                .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
-                .TipoPromocion("VEHICULO")
-                .build();
+        taskService.runTask(loadingOverlayController,
+                () -> {
+                    Promocion promocion = Promocion.builder()
+                            .nombre(nombrePromocion.getText())
+                            .descripcion(descripcion.getText())
+                            .tipoDescuento(tipoDescuento.getValue())
+                            .precio(Float.parseFloat(precioSinDescuento.getText()))
+                            .porcentaje((int) porcentajeDescuento.getValue())
+                            .fechaInicio(String.valueOf(fechaInicio.getValue()))
+                            .fechaFin(String.valueOf(fechaFin.getValue()))
+                            .active(StatusPromocion.ACTIVE.toString())
+                            .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
+                            .TipoPromocion("VEHICULO")
+                            .build();
+
+                    promocionService.guardarPromocion(promocion);
+
+                    if (promocion.getPromocionId() == null) {
+                        //     mostrarError("Error", "", "Error al insertar promocion");
+                        throw new PromocionException("Error interno: No se pudo recuperar la promocion creada");
+                    }
 
 
-        try {
-            promocionService.guardarPromocion(promocion);
+                    ObservableList<VehiculoPromocion> vehiculos = tableVehiculosParticipantes.getItems();
 
-            if (promocion.getPromocionId() == null) {
-                mostrarError("Error", "", "Error al insertar promocion");
-                return;
-            }
-            ObservableList<VehiculoPromocion> vehiculos = tableVehiculosParticipantes.getItems();
+                    for (VehiculoPromocion vehiculoPromocionSeleccionado : vehiculos) {
 
-            for (VehiculoPromocion vehiculoPromocionSeleccionado : vehiculos) {
+                        Integer marcaId = vehiculoPromocionSeleccionado.getMarca().getMarcaId();
+                        Integer modeloId = vehiculoPromocionSeleccionado.getModelo().getModeloId();
+                        Integer anio = vehiculoPromocionSeleccionado.getAnnio();
 
-                Integer marcaId = vehiculoPromocionSeleccionado.getMarca().getMarcaId();
-                Integer modeloId = vehiculoPromocionSeleccionado.getModelo().getModeloId();
-                Integer anio = vehiculoPromocionSeleccionado.getAnnio();
+                        Marca marca = new Marca();
+                        marca.setMarcaId(marcaId);
 
-                Marca marca = new Marca();
-                marca.setMarcaId(marcaId);
+                        Modelo modelo = new Modelo();
+                        modelo.setModeloId(modeloId);
 
-                Modelo modelo = new Modelo();
-                modelo.setModeloId(modeloId);
+                        VehiculoPromocion vehiculosCompatibles = VehiculoPromocion.builder()
+                                .marca(marca)
+                                .modelo(modelo)
+                                .promocion(promocion)
+                                .annio(anio)
+                                .build();
+                        vehiculoPromocionService.guardarVehiculosAplicables(vehiculosCompatibles);
 
-                VehiculoPromocion vehiculosCompatibles = VehiculoPromocion.builder()
-                        .marca(marca)
-                        .modelo(modelo)
-                        .promocion(promocion)
-                        .annio(anio)
-                        .build();
-                vehiculoPromocionService.guardarVehiculosAplicables(vehiculosCompatibles);
+                    }//for
 
-            }//for
+                    return null;
 
-            mostrarInformacion("Promocion registrada", "", "La promocion se registro exitosamente");
-            clean();
+                }, (resultado) -> {
+
+                    mostrarInformacion("Guardado exitoso", "", "La promocion se registro exitosamente.");
+                    clean();
+
+                }, (ex) -> {
+                    if (ex instanceof PromocionException){
+                        mostrarError("No se pudo guardar","Ocurrio un problema al intentar guardar la promocion",""+ex.getMessage());
+                    }else {
+                        mostrarError("Error interno",
+                                "Error inesperado",
+                                "Ocurrio un error al intentar registrar la promocion.");
+                    }
+
+                }, null
+
+        );
 
 
+        //     try {
+
+
+
+
+/*
         } catch (Exception e) {
             mostrarError("Error al crear promocion", "","Ha ocurrido un error al crear la promocion vuelva a iintentarlo mas tarde");
             clean();
-            System.out.println(e.getMessage());
+
         }
+
+ */
 
 
     }//insertarPromocion
 
-    private  void  seleccionarImg(){
+    private void seleccionarImg() {
         FileChooser fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Archivos de imagen","*.png","*.jpg","*.jpeg")
+                new FileChooser.ExtensionFilter("Archivos de imagen", "*.png", "*.jpg", "*.jpeg")
         );
 
         Stage stage = (Stage) btnImagen.getScene().getWindow();
         File archivo = fileChooser.showOpenDialog(stage);
 
-        if (archivo != null){
+        if (archivo != null) {
             String url = archivo.getAbsolutePath();
             textFieldImg.setText(url);
         }

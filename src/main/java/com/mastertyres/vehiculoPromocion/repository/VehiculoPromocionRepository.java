@@ -1,9 +1,11 @@
 package com.mastertyres.vehiculoPromocion.repository;
 
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +16,13 @@ public interface VehiculoPromocionRepository extends JpaRepository<VehiculoPromo
     List<VehiculoPromocion> findByPromocion_PromocionId(Integer promocionId);
 
     // Opción con fetch join (recomendada para poder leer marca/modelo fuera de la transacción):
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query("""
            select vp
            from VehiculoPromocion vp
            join fetch vp.marca m
            join fetch vp.modelo mo
-           where vp.promocion.promocionId = :promocionId 
+           where vp.promocion.promocionId = :promocionId ORDER BY m.nombreMarca, mo.nombreModelo 
            """)
     List<VehiculoPromocion> findAllByPromocionIdWithMarcaModelo(@Param("promocionId") Integer promocionId);
 

@@ -1,7 +1,11 @@
 package com.mastertyres.fxControllers.Promociones;
 
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
@@ -33,42 +37,68 @@ import java.util.List;
 import static javafx.collections.FXCollections.observableList;
 
 @Component
-public class EditarPromocionController implements IFxController {
+public class EditarPromocionController implements IFxController, ILoading {
 
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtDescripcion;
-    @FXML private TextField txtPrecio;
-    @FXML private ChoiceBox<String> txtTipoDescuento;
-    @FXML private Slider porcentajeDescuento;
-    @FXML private Label porcentaje; //  el Label donde mostramos el valor
-    @FXML private DatePicker dateInicio;
-    @FXML private DatePicker dateFin;
-    @FXML private TextField txtRutaImagen;
-    @FXML private Button btnSeleccionarImagen;
-    @FXML private Button btnCambiar;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtDescripcion;
+    @FXML
+    private TextField txtPrecio;
+    @FXML
+    private ChoiceBox<String> txtTipoDescuento;
+    @FXML
+    private Slider porcentajeDescuento;
+    @FXML
+    private Label porcentaje; //  el Label donde mostramos el valor
+    @FXML
+    private DatePicker dateInicio;
+    @FXML
+    private DatePicker dateFin;
+    @FXML
+    private TextField txtRutaImagen;
+    @FXML
+    private Button btnSeleccionarImagen;
+    @FXML
+    private Button btnActualizar;
     private Promocion promocionSeleccionada;
 
-    @FXML private ChoiceBox<Marca> choiceMarca;
-    @FXML private ChoiceBox<Modelo> choiceModelo;
-    @FXML private ChoiceBox<Integer> choiceAnio;
-    @FXML private Button btnAgregarVehiculo;
-    @FXML private TableView<VehiculoPromocion> tableVehiculosParticipantes;
-    @FXML private TableColumn<VehiculoPromocion, String> colMarca;
-    @FXML private TableColumn<VehiculoPromocion, String> colModelo;
-    @FXML private TableColumn<VehiculoPromocion, Integer> colAnio;
-    @FXML private TableColumn<VehiculoPromocion, Void> colEliminar;
+    @FXML
+    private ChoiceBox<Marca> choiceMarca;
+    @FXML
+    private ChoiceBox<Modelo> choiceModelo;
+    @FXML
+    private ChoiceBox<Integer> choiceAnio;
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private TableView<VehiculoPromocion> tableVehiculosParticipantes;
+    @FXML
+    private TableColumn<VehiculoPromocion, String> colMarca;
+    @FXML
+    private TableColumn<VehiculoPromocion, String> colModelo;
+    @FXML
+    private TableColumn<VehiculoPromocion, Integer> colAnio;
+    @FXML
+    private TableColumn<VehiculoPromocion, Void> colEliminar;
 
     private ObservableList<VehiculoPromocion> vehiculosPromocionList = FXCollections.observableArrayList();
+
+    private LoadingComponentController loadingOverlayController;
+
 
     @Autowired
     private PromocionService promocionService;
     @Autowired
     private VehiculoPromocionService vehiculoPromocionService;
+    @Autowired
+    private TaskService taskService;
 
     //Validaciones:
     private BooleanProperty precioValido = new SimpleBooleanProperty(true);
     private BooleanProperty nombreValido = new SimpleBooleanProperty(true);
     private BooleanProperty descripcionValido = new SimpleBooleanProperty(true);
+
 
     // Inicializa el controlador
     public void initialize() {
@@ -80,7 +110,14 @@ public class EditarPromocionController implements IFxController {
     }//initialize
 
     @Override
-    public void configuraciones(){
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
+    @Override
+    public void configuraciones() {
+        //elimina scroll horizontal de tabla vehculos paricipantes
+        tableVehiculosParticipantes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
 
@@ -141,6 +178,27 @@ public class EditarPromocionController implements IFxController {
     @Override
     public void listeners() {
 
+        choiceMarca.setOnMousePressed(event -> {
+            if (!choiceMarca.isShowing()) {
+                choiceMarca.show();
+                choiceMarca.hide();
+            }
+        });
+
+        choiceModelo.setOnMousePressed(event -> {
+            if (!choiceModelo.isShowing()) {
+                choiceModelo.show();
+                choiceModelo.hide();
+            }
+        });
+
+        choiceAnio.setOnMousePressed(event -> {
+            if (!choiceAnio.isShowing()) {
+                choiceAnio.show();
+                choiceAnio.hide();
+            }
+        });
+
         configurarValidaciones();
 
         // Mostrar el valor del slider en el Label en tiempo real
@@ -155,7 +213,7 @@ public class EditarPromocionController implements IFxController {
         btnSeleccionarImagen.setOnAction(e -> seleccionarImagen());
 
         //Actualizar valores
-        btnCambiar.setOnAction(event -> cambiarPromocion() );
+        btnActualizar.setOnAction(event -> actualizarPromocion());
 
 
     }//listeners
@@ -226,7 +284,7 @@ public class EditarPromocionController implements IFxController {
         );
 
         //Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
-        btnCambiar.disableProperty().bind(
+        btnActualizar.disableProperty().bind(
                 Bindings.isEmpty(vehiculosPromocionList)
                         .or(txtTipoDescuento.valueProperty().isNull())
                         .or(txtNombre.textProperty().isEmpty())
@@ -352,7 +410,7 @@ public class EditarPromocionController implements IFxController {
 
     // Acción para guardar cambios
     @FXML
-    private void cambiarPromocion() {
+    private void actualizarPromocion() {
         if (promocionSeleccionada == null) {
             MensajesAlert.mostrarError(
                     "Error",
@@ -413,43 +471,62 @@ public class EditarPromocionController implements IFxController {
             return; // Usuario canceló
         }
 
-        try {
-            //  Actualizar datos generales
-            promocionSeleccionada.setNombre(txtNombre.getText().trim());
-            promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
-            promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
-            promocionSeleccionada.setTipoDescuento(txtTipoDescuento.getValue());
-            promocionSeleccionada.setPorcentaje((int) porcentajeDescuento.getValue());
-            promocionSeleccionada.setFechaInicio(dateInicio.getValue().toString());
-            promocionSeleccionada.setFechaFin(dateFin.getValue().toString());
-            promocionSeleccionada.setImg(txtRutaImagen.getText());
-            promocionSeleccionada.setUpdated_at(LocalDateTime.now());
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
 
-            //  Guardar cambios en la promoción
-            promocionService.guardarPromocion(promocionSeleccionada);
+                    //  Actualizar datos generales
+                    promocionSeleccionada.setNombre(txtNombre.getText().trim());
+                    promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
+                    promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
+                    promocionSeleccionada.setTipoDescuento(txtTipoDescuento.getValue());
+                    promocionSeleccionada.setPorcentaje((int) porcentajeDescuento.getValue());
+                    promocionSeleccionada.setFechaInicio(dateInicio.getValue().toString());
+                    promocionSeleccionada.setFechaFin(dateFin.getValue().toString());
+                    promocionSeleccionada.setImg(txtRutaImagen.getText());
+                    promocionSeleccionada.setUpdated_at(LocalDateTime.now());
 
-            //  1. Eliminar todos los vehículos de esa promo en BD
-            vehiculoPromocionService.eliminarPorPromocionId(promocionSeleccionada.getPromocionId());
+                    //  Guardar cambios en la promoción
+                    promocionService.guardarPromocion(promocionSeleccionada);
 
-            //  2. Guardar de nuevo los que están en la tabla
-            for (VehiculoPromocion vp : vehiculosPromocionList) {
-                vp.setVehiculoPromocionID(null); // 🔹 Forzar INSERT
-                vp.setPromocion(promocionSeleccionada);
-                vehiculoPromocionService.guardarVehiculosAplicables(vp);
-            }
 
-            MensajesAlert.mostrarInformacion("Éxito", "Promoción actualizada", "La promoción se actualizó correctamente.");
-            cerrarVentana();
+                    //  1. Eliminar todos los vehículos de esa promo en BD
+                    vehiculoPromocionService.eliminarPorPromocionId(promocionSeleccionada.getPromocionId());
 
-        } catch (Exception e) {
-            // Cualquier error en la BD o lógica cae aquí
-            MensajesAlert.mostrarError(
-                    "Error al actualizar",
-                    "No se pudo actualizar la promoción",
-                    "Detalles: " + e.getMessage()
-            );
-            e.printStackTrace();
-        }
-    }
+                    //  2. Guardar de nuevo los que están en la tabla
+                    for (VehiculoPromocion vp : vehiculosPromocionList) {
+                        vp.setVehiculoPromocionID(null); //  Forzar INSERT
+                        vp.setPromocion(promocionSeleccionada);
+                        vehiculoPromocionService.guardarVehiculosAplicables(vp);
+                    }
 
-}
+                    return null;
+                }, (resultado) -> {
+
+
+                    MensajesAlert.mostrarInformacion("Promoción actualizada", "", "La promoción se actualizó correctamente.");
+                    cerrarVentana();
+
+                }, (ex) -> {
+
+                    if (ex instanceof PromocionException) {
+                        MensajesAlert.mostrarError(
+                                "Error al actualizar",
+                                "Ocurrio un problema al guardar los cambios",
+                                "" + ex.getMessage()
+                        );
+                    } else {
+                        MensajesAlert.mostrarError(
+                                "Error interno",
+                                "",
+                                "Ocurrio un error inesperado al actualizar los cambios. Vuelve a intentarlo mas tarde");
+                    }
+
+                }, null
+
+        );
+
+
+    }//actualizarPromocion
+
+}//class

@@ -4,6 +4,9 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.promociones.model.Promocion;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
@@ -22,34 +25,45 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+
 @Component
-public class ClientesAplicablesController implements IFxController {
+public class ClientesAplicablesController implements IFxController, ILoading {
 
     @Autowired
     private ClienteService clienteService;
     @Autowired
     private ClientePromocionService clientePromocionService;
+    @Autowired
+    private TaskService taskService;
 
-    @FXML private TableView<ClienteSeleccion> tablaClientes;
-    @FXML private TableColumn<ClienteSeleccion, String> colNombre;
-    @FXML private TableColumn<ClienteSeleccion, Boolean> colCheckBox;
-    @FXML private TableColumn<ClienteSeleccion, String> colFechaCumpleanios;
-    @FXML private TableColumn<ClienteSeleccion, String> colTelefono;
+    @FXML
+    private TableView<ClienteSeleccion> tablaClientes;
+    @FXML
+    private TableColumn<ClienteSeleccion, String> colNombre;
+    @FXML
+    private TableColumn<ClienteSeleccion, Boolean> colCheckBox;
+    @FXML
+    private TableColumn<ClienteSeleccion, String> colFechaCumpleanios;
+    @FXML
+    private TableColumn<ClienteSeleccion, String> colTelefono;
 
     private ObservableList<ClienteSeleccion> data = FXCollections.observableArrayList();
-    private  Promocion p ;
+    private Promocion promocion;
+    private LoadingComponentController loadingOverlayController;
 
     @FXML
     public void initialize() {
 
-      configuraciones();
-      listeners();
+        configuraciones();
+        listeners();
 
     }//initialize
 
 
     @Override
-    public void configuraciones(){
+    public void configuraciones() {
 
         tablaClientes.setEditable(true);
 
@@ -83,6 +97,11 @@ public class ClientesAplicablesController implements IFxController {
 
     }
 
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
 //    public void LlenarTabla(Promocion promocionSeleccionada) {
 //        this.p = promocionSeleccionada;
 //        List<Cliente> clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
@@ -94,7 +113,7 @@ public class ClientesAplicablesController implements IFxController {
 //    }
 
     public void LlenarTabla(Promocion promocionSeleccionada) {
-        this.p = promocionSeleccionada;
+        this.promocion = promocionSeleccionada;
 
         List<Cliente> clientes;
 
@@ -127,23 +146,64 @@ public class ClientesAplicablesController implements IFxController {
 
     @FXML
     public void Enviar() {
-        List<Cliente> seleccionados = data.stream()
-                .filter(ClienteSeleccion::isSeleccionado)
-                .map(ClienteSeleccion::getCliente)
-                .toList();
 
-        for (Cliente cliente : seleccionados) {
-            String telefono = cliente.getNumTelefono(); // debe incluir lada internacional
-            String mensaje = "Master tyres. \n\n" + "¡Hola " + cliente.getNombre() + "! Tenemos una promoción especial para ti 🚗🔥\n\n" + p.getNombre() + "\n\n" + p.getDescripcion() + "\n\n" + "Tienes hasta el: " + p.getFechaFin() + " para reclamar tu promocion";
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
 
-            String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
-                    java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
+                    List<Cliente> seleccionados = data.stream()
+                            .filter(ClienteSeleccion::isSeleccionado)
+                            .map(ClienteSeleccion::getCliente)
+                            .toList();
 
-            if (hostServices != null) {
-                hostServices.showDocument(url); // 👉 abre el navegador por defecto
-            }
-        }
-    }
+                    ArrayList<String> whatsAppUrls = new ArrayList<>();
+                    String telefono = "", mensaje = "", url = "";
+
+
+                    for (Cliente cliente : seleccionados) {
+                        telefono = cliente.getNumTelefono(); // debe incluir lada internacional
+
+                        mensaje = "Master tires. \n\n" + "¡Hola " + cliente.getNombre() + "! Tenemos una promoción especial para ti 🚗🔥\n\n" +
+                                promocion.getNombre() + "\n\n" + promocion.getDescripcion() + "\n\n" + "Tienes hasta el: " +
+                                promocion.getFechaFin() + " para reclamar tu promocion";
+
+                        url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
+                                java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);
+
+                        whatsAppUrls.add(url);
+                    }
+                    return whatsAppUrls;
+
+                }, (whatsAppUrls) -> {
+
+
+                    if ( whatsAppUrls == null || whatsAppUrls.isEmpty()){
+                        return;
+                    }
+
+                    for(String urlNavegador: whatsAppUrls){
+                        if(hostServices != null){
+                            hostServices.showDocument(urlNavegador);
+                        }
+                    }
+
+                    mostrarInformacion(
+                            "¡Chats listos!",
+                            "Se han abierto las ventanas de WhatsApp en su navegador.",
+                            "Por favor, revise las pestañas abiertas y presione el botón de enviar en cada chat para finalizar."
+                    );
+
+                }, (ex) ->{
+                    ex.printStackTrace();
+                    mostrarError("Error al enviar","","No se pudieron generar los enlaces de WhatsApp.");
+
+                },null
+
+
+        );
+
+    }//envar
+
 
     @FXML
     public void SeleccionarTodos() {
@@ -156,6 +216,7 @@ public class ClientesAplicablesController implements IFxController {
         data.forEach(cs -> cs.setSeleccionado(false));
 
     }
+
 
     public static class ClienteSeleccion {
         private final Cliente cliente;
@@ -181,4 +242,4 @@ public class ClientesAplicablesController implements IFxController {
             this.seleccionado.set(seleccionado);
         }
     }
-}
+}//class

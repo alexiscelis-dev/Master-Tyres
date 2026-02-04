@@ -60,7 +60,6 @@ public class LoginController implements IFxController {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
 
-
             ventanaLogin.setX(screenBounds.getMinX());
             ventanaLogin.setY(screenBounds.getMinY());
             ventanaLogin.setWidth(screenBounds.getWidth());
