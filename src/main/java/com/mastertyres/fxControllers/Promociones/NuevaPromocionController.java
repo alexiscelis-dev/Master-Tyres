@@ -460,6 +460,7 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
                             .fechaFin(String.valueOf(fechaFin.getValue()))
                             .active(StatusPromocion.ACTIVE.toString())
                             .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
+                            .TipoPromocion("VEHICULO")
                             .build();
 
                     promocionService.guardarPromocion(promocion);

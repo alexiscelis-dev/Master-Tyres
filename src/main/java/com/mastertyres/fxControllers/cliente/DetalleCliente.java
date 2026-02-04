@@ -14,6 +14,7 @@ import static com.mastertyres.common.utils.FechaUtils.formatearFechaHora;
 @Component
 public class DetalleCliente {
 
+    @FXML private Label txtNombreEmpresa;
     @FXML private Label txtNombre;
     @FXML private Label txtApellido;
     @FXML private Label txtSegundoApellido;
@@ -44,6 +45,7 @@ public class DetalleCliente {
         txtCiudad.setText("Ciudad: " + valorONull(cliente.getCiudad()));
         txtGenero.setText("Género: " + formatearGenero(cliente.getGenero()));
         txtTipoCliente.setText("Tipo de cliente: " + valorONull(cliente.getTipoCliente()));
+        txtNombreEmpresa.setText("Nombre de empresa: " + valorONull(cliente.getNombreEmpresa()));
 
         // FECHAS formateadas
         txtFechaCumple.setText("Fecha de cumpleaños: " + formatearFecha(cliente.getFechaCumple()));
@@ -91,6 +93,7 @@ public class DetalleCliente {
         txtFechaRegistro.setText("Fecha de registro:");
         txtFechaActualizacion.setText("Fecha de ultima actualizacion:");
         txtCorreo.setText("Correo:");
+        txtNombreEmpresa.setText("Nombre empresa:");
 
         Stage stage = (Stage) txtNombre.getScene().getWindow();
         stage.close();
