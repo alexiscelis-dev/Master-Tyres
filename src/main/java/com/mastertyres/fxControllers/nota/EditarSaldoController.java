@@ -1,8 +1,12 @@
 package com.mastertyres.fxControllers.nota;
 
+import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -18,13 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class EditarSaldoController implements IFxController {
+public class EditarSaldoController implements IFxController, ILoading {
     @FXML
     private AnchorPane root;
     @FXML
@@ -38,8 +41,12 @@ public class EditarSaldoController implements IFxController {
 
     @Autowired
     private NotaService notaService;
+    @Autowired
+    private TaskService taskService;
 
     private NotaDTO notaSaldo;
+
+    private LoadingComponentController loadingOverlayController;
 
 
 
@@ -50,6 +57,11 @@ public class EditarSaldoController implements IFxController {
        listeners();
 
     }//initialize
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
 
     @Override
     public void configuraciones(){
@@ -74,12 +86,15 @@ public class EditarSaldoController implements IFxController {
     }//listeners
 
     private void revisarCheckBox() {
-        if (cbLiquidar.isSelected())
+        if (cbLiquidar.isSelected()){
             txtSaldo.setText( "0");
-
-        else
+            txtSaldo.setEditable(false);
+        }
+        else{
             txtSaldo.setText("");
-    }
+            txtSaldo.setEditable(true);
+        }
+    }//revisarCheckBox
 
     public void setSaldoFavor(NotaDTO notaSaldo){
         this.notaSaldo = notaSaldo;
@@ -89,28 +104,41 @@ public class EditarSaldoController implements IFxController {
 
     @FXML
     private void actualizar(ActionEvent event){
-        String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        try {
 
-            if (Float.parseFloat(txtSaldo.getText()) == 0){
-                notaService.actualizarStatus(StatusNota.PAGADO.toString(),notaSaldo.getNotaId());
-            }else {
-                notaService.actualizarStatus(StatusNota.A_FAVOR.toString(),notaSaldo.getNotaId());
-            }
+        taskService.runTask(
+                loadingOverlayController,
+                () ->{
 
-            notaService.actualizarSaldo(Float.parseFloat(txtSaldo.getText()),notaSaldo.getNotaId());
-            notaService.actualizarUpdatedAtNota(notaSaldo.getNotaId(),fecha);
+                    if (Float.parseFloat(txtSaldo.getText()) == 0){
+                        notaService.actualizarStatus(StatusNota.PAGADO.toString(),notaSaldo.getNotaId());
+                    }else {
+                        notaService.actualizarStatus(StatusNota.A_FAVOR.toString(),notaSaldo.getNotaId());
+                    }
 
-            Stage stage = (Stage) txtSaldo.getScene().getWindow();
-            stage.close();
-            mostrarInformacion("Saldo Actualizado", "", "El saldo se actualizo correctamente. Puede consultar mas detalles en  nota '+' Detalles cliente.");
+                    notaService.actualizarSaldo(Float.parseFloat(txtSaldo.getText()),notaSaldo.getNotaId());
+                    notaService.actualizarUpdatedAtNota(notaSaldo.getNotaId(),LocalDateTime.now().toString());
+                    return null;
 
-        }catch (Exception e){
-            e.printStackTrace();
-            Stage stage = (Stage) txtSaldo.getScene().getWindow();
-            stage.close();
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
-        }
+                },(resultado) ->{
+
+                    mostrarInformacion("Saldo Actualizado",
+                            "",
+                            "El saldo se actualizo correctamente. Puede consultar mas detalles en  nota '+' Detalles cliente.");
+                    cancelar(null);
+
+                },(ex) ->{
+
+                    if (ex instanceof NotaException){
+                        mostrarError("Error al actualizar","Ocurrio un problema al guardar los cambios",""+ex.getMessage());
+                    }else {
+                        mostrarError("Error interno", "","Ocurrio un error inesperado al intentar guardar los cambios. Vuelva a intentarlo mas tarde.");
+                        cancelar(null);
+                    }
+
+                }, null
+
+        );
+
 
     }//actualizar
 
@@ -128,4 +156,5 @@ public class EditarSaldoController implements IFxController {
     public void setNotaSaldo(final NotaDTO notaSaldo) {
         this.notaSaldo = notaSaldo;
     }
+
 }//class

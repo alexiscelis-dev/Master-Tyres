@@ -251,7 +251,6 @@ public class VentanaPrincipalController implements ILoading {
         }
     }
 
-
     public Pane getPanelMenu() {
         return panelMenu;
     }

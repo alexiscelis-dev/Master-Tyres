@@ -290,8 +290,8 @@ SpinnerAnnio
 /* Menú desplegable más compacto */
 .vehiculosParticipantes .context-menu {
     -fx-background-color: #080808;
-    -fx-pref-width: 130px;
-    -fx-pref-height: 180px;
+    -fx-pref-width: 180px;
+    -fx-pref-height: 280px;
 }
 
 /* Ítems del menú */

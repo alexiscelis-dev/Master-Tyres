@@ -13,7 +13,7 @@ import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
-import com.mastertyres.modelo.services.ModeloService;
+import com.mastertyres.modelo.service.ModeloService;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
@@ -175,6 +175,12 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     public void configuraciones(){
 
         MenuContextSetting.disableMenu(rootPane);
+
+        //Deshabilitar mediante el nodo interno (textField Interno)
+        MenuContextSetting.disableMenu(spinnerAnio.getEditor());
+        MenuContextSetting.disableMenu(pickerUltimoServicio.getEditor());
+
+
 
         int currentYear = Year.now().getValue();
         SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);

@@ -72,8 +72,7 @@ public class MasterTyresApplication extends Application {
 
 		Scene scene = new Scene(root);
 
-        setPantallaSize(ventanaPrincipal,scene,"Master Tyres",true,true,1000,800);
-
+        setPantallaSize(ventanaPrincipal,scene,"Master Tires",true,true,1000,800);
 
 		ventanaPrincipal.setOnCloseRequest(event -> {
 			Platform.exit();     // Cierra JavaFX

@@ -2,15 +2,18 @@ package com.mastertyres.marca.repository;
 
 
 import com.mastertyres.marca.model.Marca;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface MarcaRepository extends JpaRepository<Marca, Integer> {
@@ -33,11 +36,11 @@ public interface MarcaRepository extends JpaRepository<Marca, Integer> {
     @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1")
     List<Marca> listarMarcasSinGenerica();
 
-    @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1")
+    @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1 ORDER BY m.nombreMarca ASC")
     Page<Marca> listarMarcasPaginadoSinGenerica(Pageable pageable);
 
 
-    // 🔹 Buscar por nombre ignorando mayúsculas/minúsculas (sin incluir la genérica)
+    //  Buscar por nombre ignorando mayúsculas/minúsculas (sin incluir la genérica)
     @Query("""
         SELECT m FROM Marca m
         WHERE LOWER(m.nombreMarca) LIKE LOWER(CONCAT('%', :nombre, '%'))
@@ -57,9 +60,14 @@ public interface MarcaRepository extends JpaRepository<Marca, Integer> {
     @Query("DELETE FROM Marca m WHERE m.marcaId = :marcaId AND m.marcaId <> 1")
     int eliminarMarcaPorId(Integer marcaId);
 
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query("SELECT m FROM Marca m WHERE m.nombreMarca = :nombreMarca")
+    Optional<Marca> findByNombreMarca(@Param("nombreMarca") String nombreMarca);
 
 
 
 
-}
+
+
+}//class
 

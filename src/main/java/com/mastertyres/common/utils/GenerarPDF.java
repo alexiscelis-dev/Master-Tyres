@@ -2,6 +2,7 @@ package com.mastertyres.common.utils;
 
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -15,11 +16,12 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 
 import javax.imageio.ImageIO;
-import java.io.ByteArrayOutputStream;
 
-public class GenerarPDF {
 
-    public static void generarPDF(WritableImage img1, WritableImage img2, String ruta) throws Exception {
+
+    public class GenerarPDF {
+
+        public static void generarPDF(WritableImage img1, WritableImage img2, String ruta) throws Exception {
 
             // Convertir WritableImage a PNG bytes
             ByteArrayOutputStream imageByte1 = new ByteArrayOutputStream();
@@ -65,12 +67,13 @@ public class GenerarPDF {
                     .setPadding(0)
                     .setBorder(Border.NO_BORDER);
 
-                 table.addCell(cell1);
-                 table.addCell(cell2);
-                 document.add(table);
-                 document.close();
+            table.addCell(cell1);
+            table.addCell(cell2);
+            document.add(table);
+            document.close();
 
 
-    }// generarPDF
+        }// generarPDF
+
 
 }//class

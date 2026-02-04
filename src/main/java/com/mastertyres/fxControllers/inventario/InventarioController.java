@@ -186,7 +186,7 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
 
 
                                     } catch (IOException ex) {
-                                        mostrarError("Error", "", "Ocurrio un error");
+                                        mostrarError("Error de carga", "", "Ocurrio un error al ");
                                     }
 
                                 }
@@ -246,10 +246,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                         stage.setResizable(false);
                                         stage.setScene(new Scene(root));
                                         stage.showAndWait();
-                                        cargarInventario();
+                                        cargarDatosInventario();
+
 
                                     } catch (IOException ex) {
-                                        mostrarError("Ocurrio un error", "", "Ocurrio un error al mostrar la ventana");
+                                        mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Intente de nuevo mas tarde.");
                                         ex.printStackTrace();
                                     }
                                 }
@@ -433,6 +434,8 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
             if ((event.getButton() == MouseButton.MIDDLE || event.getButton() == MouseButton.PRIMARY) && event.getClickCount() == 2)
                 atributoBusquedaInventario.setValue(null);
         });
+
+        btnRefrescar.setOnAction(event -> resetBusqueda());
 
     }//listeners
 
@@ -827,7 +830,6 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
 
         //cargarInventario();
     }
-
 
     public void accionBuscarInventario(ActionEvent actionEvent) {
         String seleccion = atributoBusquedaInventario.getValue();
