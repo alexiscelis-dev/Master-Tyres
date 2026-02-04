@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class VehiculoPromocionService implements   IVehiculoPromocionService{
+public class VehiculoPromocionService implements  IVehiculoPromocionService{
     @Autowired
     private VehiculoPromocionValidator vehiculoPromocionValidator;
     @Autowired

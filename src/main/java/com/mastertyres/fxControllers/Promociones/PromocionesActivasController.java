@@ -1,7 +1,7 @@
 package com.mastertyres.fxControllers.Promociones;
 
 import com.mastertyres.MasterTyresApplication;
-import com.mastertyres.common.exeptions.PromocionExcepcion;
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
@@ -366,7 +366,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                             mostrarInformacion("Eliminado", "Promocion Eliminada", "Promocion Eliminada con exito.");
                         }, (ex) ->{
 
-                            if( ex instanceof PromocionExcepcion){
+                            if( ex instanceof PromocionException){
                                 mostrarError("Error al Eliminar","Ocurrio un error al eliminar la promocion",""+ex.getMessage());
                             }else {
                                 mostrarError("Error inesperado","","Ocurrio un error inesperado al eliminar la promocon. Vuelve a intentarlo mas tarde.");

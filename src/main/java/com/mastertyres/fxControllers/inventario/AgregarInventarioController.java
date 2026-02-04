@@ -87,6 +87,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
     private BooleanProperty stockValido = new SimpleBooleanProperty(true);
     private BooleanProperty precioCompraValido = new SimpleBooleanProperty(true);
     private BooleanProperty precioventaValido = new SimpleBooleanProperty(true);
+    private static String COLOR_RED = "-fx-border-color: red;";
+    private static String DEFAULT_STYLE = "";
 
     private VentanaPrincipalController ventanaPrincipalController;
     private LoadingComponentController loadingOverlayController;
@@ -109,43 +111,106 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         listeners();
 
     }//ininitialize
-    @Override
-    public void configuraciones(){
 
-     
+    @Override
+    public void configuraciones() {
+
+        btnRegistrar.disableProperty().bind(
+                (txtMarca.textProperty().isEmpty())
+                        .or(txtMarca.textProperty().isNull())
+                        .or(txtModelo.textProperty().isEmpty())
+                        .or(txtModelo.textProperty().isNull())
+                        .or(choiceAncho.valueProperty().isNull())
+                        .or(choicePerfil.valueProperty().isNull())
+                        .or(choiceRin.valueProperty().isNull())
+                        .or(cbIndiceCarga.valueProperty().isNull())
+                        .or(cbIndiceVelocidad.valueProperty().isNull())
+                        .or(txtStock.textProperty().isEmpty())
+                        .or(dotValido)
+                        .or(codBarrasValido)
+        );
+
 
         txtStock.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                txtStock.setStyle(DEFAULT_STYLE);
                 return change;
             }
+            txtStock.setStyle(COLOR_RED);
             return null;
         }));
 
         txtPrecioC.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                txtPrecioC.setStyle(DEFAULT_STYLE);
                 return change;
             }
+            txtPrecioC.setStyle(COLOR_RED);
             return null;
         }));
 
         txtPrecioV.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                txtPrecioV.setStyle(DEFAULT_STYLE);
                 return change;
             }
+            txtPrecioV.setStyle(COLOR_RED);
             return null;
         }));
 
+        txtCodBarras.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            if (newText.isEmpty()) {
+                codBarrasValido.set(true);
+                txtCodBarras.setStyle("");
+                return change; // permitir vacío
+            }
+
+            if (newText.matches("\\d{0,13}")) {
+                codBarrasValido.set(true);
+                txtCodBarras.setStyle(DEFAULT_STYLE);
+                return change;
+            }
+
+            codBarrasValido.set(false);
+            txtCodBarras.setStyle(COLOR_RED);
+            return null;
+        }));
+
+        txtDot.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            if (newText.isEmpty()) {
+                dotValido.set(true);
+                txtDot.setStyle(DEFAULT_STYLE);
+                return change;
+            }
+
+            if (newText.matches("[A-Za-z0-9]{0,13}")) {
+                dotValido.set(true);
+                return change;
+            }
+
+            dotValido.set(false);
+            txtDot.setStyle(COLOR_RED);
+
+            return null;
+        }));
+
+
         choicePerfil.setOnMousePressed(event -> {
-            if (!choicePerfil.isShowing()){
+            if (!choicePerfil.isShowing()) {
                 choicePerfil.show();
                 choicePerfil.hide();
 
             }
         });
 
+
         MenuContextSetting.disableMenu(rootPane); //Quita el menu contextual del clic derecho
 
-        indicesChoiceBox(cbIndiceVelocidad,cbIndiceCarga,choiceAncho,choicePerfil,choiceRin);
+        indicesChoiceBox(cbIndiceVelocidad, cbIndiceCarga, choiceAncho, choicePerfil, choiceRin);
 
 
     }//configuraciones
@@ -171,7 +236,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         });
 
         choiceAncho.setOnMousePressed(event -> {
-            if (!choiceAncho.isShowing()){
+            if (!choiceAncho.isShowing()) {
                 choiceAncho.show();
                 choiceAncho.hide();
 
@@ -180,7 +245,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         });
 
         choiceRin.setOnMousePressed(event -> {
-            if (!choiceRin.isShowing()){
+            if (!choiceRin.isShowing()) {
                 choiceRin.show();
                 choiceRin.hide();
             }
@@ -221,66 +286,68 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
     private void registrar() {
 
 
-        if (!empty()) {
-            String medida = choiceAncho.getValue() + "/" + choicePerfil.getValue() + "R" + choiceRin.getValue();
-            String identificadorLlanta = generarIdentificador(txtMarca,txtModelo,choiceAncho,choicePerfil,choiceRin,cbIndiceCarga,cbIndiceVelocidad);
+        //   if (!empty()) {
+        String medida = choiceAncho.getValue() + "/" + choicePerfil.getValue() + "R" + choiceRin.getValue();
+        String identificadorLlanta = generarIdentificador(txtMarca, txtModelo, choiceAncho, choicePerfil, choiceRin, cbIndiceCarga, cbIndiceVelocidad);
 
-            String codigoBarras = (txtCodBarras.getText() != null && !txtCodBarras.getText().isBlank())
-                    ? txtCodBarras.getText()
-                    : null;
+        String codigoBarras = (txtCodBarras.getText() != null && !txtCodBarras.getText().isBlank())
+                ? txtCodBarras.getText()
+                : null;
 
-            String dot = (txtDot.getText() != null && !txtDot.getText().isBlank())
-                    ? txtDot.getText()
-                    : null;
-
-
-            Inventario inventario = Inventario.builder()
-                    .identificadorLlanta(identificadorLlanta)
-                    .codigoBarras(codigoBarras)
-                    .dot(dot)
-                    .marca(txtMarca.getText())
-                    .modelo(txtModelo.getText())
-                    .medida(medida)
-                    .indiceCarga(cbIndiceCarga.getValue() != null ? cbIndiceCarga.getValue() : "")
-                    .indiceVelocidad(cbIndiceVelocidad.getValue() != null ? cbIndiceVelocidad.getValue() : "")
-                    .stock(Integer.parseInt(txtStock.getText()))
-                    .precioCompra(Float.parseFloat(txtPrecioC.getText()))
-                    .precioVenta(Float.parseFloat(txtPrecioV.getText()))
-                    .observaciones(txtObservaciones.getText())
-                    .imagen(txtImg.getText() != null ? txtImg.getText() : "")
-                    .build();
+        String dot = (txtDot.getText() != null && !txtDot.getText().isBlank())
+                ? txtDot.getText()
+                : null;
 
 
-                taskService.runTask(
-
-                        loadingOverlayController,
-                        () -> {
-                            inventarioService.guardarInventario(inventario);
-                            return null;
-                        },
-                        (resultado) ->{
-                            mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
-                            clean();
-
-                        },(ex) ->{
-                            if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException){
-                                ex.printStackTrace();
-                                mostrarError("Operacion cancelada", "", "La acción fue cancelada por el usuario. ");
-                            } else if (ex.getCause() instanceof InventarioException) {
-                                ex.printStackTrace();
-                                mostrarError("Error al agregar al inventario","","" + ex.getCause().getMessage());
-                            }else {
-                                ex.printStackTrace();
-                                mostrarError("Error inesperado", "", "No se pudo guardar el inventario, vuelva a intentarlo más tarde.");
-                            }
-                        },null
-                );
+        Inventario inventario = Inventario.builder()
+                .identificadorLlanta(identificadorLlanta)
+                .codigoBarras(codigoBarras)
+                .dot(dot)
+                .marca(txtMarca.getText())
+                .modelo(txtModelo.getText())
+                .medida(medida)
+                .indiceCarga(cbIndiceCarga.getValue() != null ? cbIndiceCarga.getValue() : "")
+                .indiceVelocidad(cbIndiceVelocidad.getValue() != null ? cbIndiceVelocidad.getValue() : "")
+                .stock(Integer.parseInt(txtStock.getText()))
+                .precioCompra(Float.parseFloat(txtPrecioC.getText()))
+                .precioVenta(Float.parseFloat(txtPrecioV.getText()))
+                .observaciones(txtObservaciones.getText())
+                .imagen(txtImg.getText() != null ? txtImg.getText() : "")
+                .build();
 
 
+        taskService.runTask(
 
-        } else {
+                loadingOverlayController,
+                () -> {
+                    inventarioService.guardarInventario(inventario);
+                    return null;
+                },
+                (resultado) -> {
+                    mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
+                    clean();
+
+                }, (ex) -> {
+                    if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
+                        ex.printStackTrace();
+                        mostrarError("Operacion cancelada", "", "La acción fue cancelada por el usuario. ");
+                    } else if (ex.getCause() instanceof InventarioException) {
+                        ex.printStackTrace();
+                        mostrarError("Error al agregar al inventario", "", "" + ex.getCause().getMessage());
+                    } else {
+                        ex.printStackTrace();
+                        mostrarError("Error inesperado", "", "No se pudo guardar el inventario, vuelva a intentarlo más tarde.");
+                    }
+                }, null
+        );
+
+
+
+      /*  } else {
             mostrarWarning("Campos oblicatorios", "", "los campos marcados con '*' son obligatorios");
-        }
+       }
+
+       */
 
     }//registrar
 
@@ -314,7 +381,6 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
             txtPrecioV.setStyle("-fx-border-color:red; -fx-border-width:2px;");
             empty = true;
         }
-
 
 
         return empty;
@@ -378,15 +444,14 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         }));
 
         txtModelo.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (txtModelo.getText().isBlank()){
+            if (txtModelo.getText().isBlank()) {
                 txtModelo.setStyle("-fx-border-color: red;");
                 modeloValido.set(false);
-            }else {
+            } else {
                 modeloValido.set(true);
                 txtModelo.setStyle("");
             }
         });
-
 
 
         txtStock.textProperty().addListener(((observable, oldtext, newText) -> {
@@ -412,7 +477,6 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
             }
 
         }));
-
 
 
         txtPrecioC.textProperty().addListener(((observable, oldtext, newText) -> {
@@ -482,7 +546,6 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         );
 
     }//configurarValidaciones
-
 
 
 }//class

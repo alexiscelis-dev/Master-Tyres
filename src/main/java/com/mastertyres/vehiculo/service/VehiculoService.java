@@ -62,7 +62,7 @@ public class VehiculoService implements IVehiculoService {
                     vehiculoRepository.save(vehiculo); // persiste el cambio
                     return true;
                 })
-                .orElse(false); // si no se encuentra el vehículo
+                .orElseThrow(() -> new VehiculoException("No se encontro el vehiculo con el identificador " + idVehiculo)); // si no se encuentra el vehículo
     }
 
     public void guardarVehiculos(Cliente cliente, List<Vehiculo> vehiculos) {
@@ -115,7 +115,7 @@ public class VehiculoService implements IVehiculoService {
                     vehiculoRepository.save(vehiculo);
                     return true;
                 })
-                .orElse(false);
+                .orElseThrow(() -> new VehiculoException("No se encontro el vehiculo con el identificador " + idVehiculo));
     }
 
     public boolean existeVehiculoPorPlacas(String placas) {

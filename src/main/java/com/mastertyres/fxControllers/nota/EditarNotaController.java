@@ -552,6 +552,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             Parent root = loader.load();
             EditarSaldoController controller = loader.getController();
             controller.setSaldoFavor(notaClienteDet);
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Actualizar Saldo");
@@ -565,7 +566,9 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista.");
+            mostrarError("Error de carga",
+                    "",
+                    "Ocurrió un problema al cargar la vista. Vuelva a intentarlo mas tarde");
         }
 
 

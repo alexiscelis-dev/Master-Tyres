@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.Promociones;
 
-import com.mastertyres.common.exeptions.PromocionExcepcion;
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.service.TaskService;
@@ -466,7 +466,7 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
 
                     if (promocion.getPromocionId() == null) {
                         //     mostrarError("Error", "", "Error al insertar promocion");
-                        throw new PromocionExcepcion("Error interno: No se pudo recuperar la promocion creada");
+                        throw new PromocionException("Error interno: No se pudo recuperar la promocion creada");
                     }
 
 
@@ -502,7 +502,7 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
                     clean();
 
                 }, (ex) -> {
-                    if (ex instanceof PromocionExcepcion){
+                    if (ex instanceof PromocionException){
                         mostrarError("No se pudo guardar","Ocurrio un problema al intentar guardar la promocion",""+ex.getMessage());
                     }else {
                         mostrarError("Error interno",

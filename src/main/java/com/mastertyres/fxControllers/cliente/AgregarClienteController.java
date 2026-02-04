@@ -5,10 +5,12 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
@@ -44,7 +46,7 @@ import java.util.Set;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarClienteController implements IVentanaPrincipal, IFxController {
+public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoading {
 
     @Autowired
     private MarcaService marcaService;
@@ -164,6 +166,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     private BooleanProperty CorreoValido = new SimpleBooleanProperty(true);
 
     private VentanaPrincipalController ventanaPrincipalController;
+    private LoadingComponentController loadingOverlayController;
 
 
     @FXML
@@ -307,9 +310,13 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
 
     @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = ventanaPrincipalController;
-
     }
 
     private void configurarValidaciones() {
@@ -324,6 +331,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                 txtNombre.setStyle("");
             }
         });
+
         txtNombre.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) { // pierde foco
                 txtNombre.setText(formatoOracion(txtNombre.getText()));
@@ -340,6 +348,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                 txtApellido.setStyle("");
             }
         });
+
         txtApellido.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
                 txtApellido.setText(formatoOracion(txtApellido.getText()));
@@ -385,6 +394,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                 txtTelefono.setStyle("-fx-border-color: red;");
             }
         });
+
         txtTelefono.setTextFormatter(new TextFormatter<>(c -> {
             if (c.getControlNewText().matches("[\\d\\s\\-()+]*")) {
                 return c;
@@ -842,4 +852,5 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         ventanaPrincipalController.irAtras();
     }
 
-}
+
+}//class

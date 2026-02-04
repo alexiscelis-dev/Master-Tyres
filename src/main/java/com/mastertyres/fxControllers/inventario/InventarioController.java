@@ -246,7 +246,7 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                         stage.setResizable(false);
                                         stage.setScene(new Scene(root));
                                         stage.showAndWait();
-                                        resetBusqueda();
+                                        cargarDatosInventario();
 
 
                                     } catch (IOException ex) {

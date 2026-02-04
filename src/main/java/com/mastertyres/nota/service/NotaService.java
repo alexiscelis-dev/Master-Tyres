@@ -295,6 +295,7 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void actualizarSaldo(float saldo, Integer notaId) {
+        notaValidator.validarSaldoFavor(notaId);
         notaRepository.actualizarSaldo(saldo, notaId);
     }
 

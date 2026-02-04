@@ -1,6 +1,6 @@
 package com.mastertyres.fxControllers.Promociones;
 
-import com.mastertyres.common.exeptions.PromocionExcepcion;
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.service.TaskService;
@@ -510,7 +510,7 @@ public class EditarPromocionController implements IFxController, ILoading {
 
                 }, (ex) -> {
 
-                    if (ex instanceof PromocionExcepcion) {
+                    if (ex instanceof PromocionException) {
                         MensajesAlert.mostrarError(
                                 "Error al actualizar",
                                 "Ocurrio un problema al guardar los cambios",
