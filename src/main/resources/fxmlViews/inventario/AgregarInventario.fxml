@@ -25,7 +25,7 @@
                 <GridPane alignment="CENTER" hgap="15" vgap="10">
                     <columnConstraints>
                         <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="ALWAYS" prefWidth="110.0" />
-                        <ColumnConstraints fillWidth="true" hgrow="ALWAYS" />
+                        <ColumnConstraints hgrow="ALWAYS" />
                         <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" prefWidth="80" />
 
 
@@ -36,7 +36,7 @@
                         <RowConstraints prefHeight="35.0" />
                         <RowConstraints fillHeight="false" prefHeight="50.0" valignment="CENTER" vgrow="NEVER" />
                         <RowConstraints prefHeight="35.0" />
-                        <RowConstraints prefHeight="35.0" valignment="CENTER" />
+                        <RowConstraints fillHeight="false" prefHeight="35.0" valignment="CENTER" />
                         <RowConstraints />
 
                     </rowConstraints>
@@ -70,9 +70,10 @@
 
                             </ChoiceBox>
                             <Label text="/">
-                        <font>
-                           <Font size="18.0" />
-                        </font></Label>
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Label>
 
                             <ChoiceBox fx:id="choicePerfil" prefWidth="150.0" styleClass="choicebox-mini3">
 
@@ -137,9 +138,10 @@
                             </TextField>
 
                             <Label styleClass="label-formulario" text="Precio de venta *">
-                        <HBox.margin>
-                           <Insets right="15.0" />
-                        </HBox.margin></Label>
+                                <HBox.margin>
+                                    <Insets right="15.0" />
+                                </HBox.margin>
+                            </Label>
                             <TextField fx:id="txtPrecioV" styleClass="buscador-medida" />
 
                         </HBox>
@@ -153,7 +155,7 @@
                                 <Insets left="20.0" right="15.0" />
                             </HBox.margin>
                         </Label>
-                        <TextField fx:id="txtStock" styleClass="buscador-medida" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="txtStock" prefWidth="400" styleClass="buscador-medida" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
 
 
                         <Label style="-fx-pref-width: 60;" styleClass="label-codigo" text="Dot" GridPane.columnIndex="0" GridPane.rowIndex="6">
@@ -228,9 +230,10 @@
                 <HBox alignment="CENTER" prefHeight="91.0" prefWidth="560.0">
                     <children>
                         <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar">
-                     <HBox.margin>
-                        <Insets right="15.0" />
-                     </HBox.margin></Button>
+                            <HBox.margin>
+                                <Insets right="15.0" />
+                            </HBox.margin>
+                        </Button>
                         <Button fx:id="btnLimpiar" mnemonicParsing="false" styleClass="boton-accion" text="Limpiar">
                             <HBox.margin>
                                 <Insets />

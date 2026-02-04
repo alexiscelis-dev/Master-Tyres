@@ -4,9 +4,11 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,7 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
     @Modifying
     @Transactional
     @Query("UPDATE Promocion p SET p.active = 'INACTIVE' WHERE p.promocionId = :id")
-    void desactivarPromocion(@Param("id") Integer id);
+    int desactivarPromocion(@Param("id") Integer id);
 
     @Query("SELECT p FROM Promocion p " +
             "WHERE p.active = 'ACTIVE' " +
@@ -49,13 +51,16 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
             @Param("hoy") String hoy,
             @Param("texto") String texto);
 
-    @Query("SELECT DISTINCT m FROM Marca m")
+    @QueryHints(@QueryHint(name = "org.hibernate.annotations.QueryHints.READ_ONLY", value = "true"))
+    @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1 ORDER BY m.nombreMarca ASC")
     List<Marca> listarMarcas();
 
-    @Query("SELECT DISTINCT m FROM Modelo m")
+    @QueryHints(@QueryHint(name = "org.hibernate.annotations.QueryHints.READ_ONLY", value = "true"))
+    @Query("SELECT m FROM Modelo m WHERE m.modeloId <> 1 ORDER BY m.nombreModelo ASC")
     List<Modelo> listarModelos();
 
-    @Query("SELECT DISTINCT c FROM Categoria c")
+    @QueryHints(@QueryHint(name = "org.hibernate.annotations.QueryHints.READ_ONLY", value = "true"))
+    @Query("SELECT c FROM Categoria c")
     List<Categoria> listarCategorias();
 
 

@@ -441,6 +441,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             Parent root = loader.load();
             EditarAdeudoController controller = loader.getController();
             controller.setAdeudo(notaAdeudo);
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Actualizar Adeudo");
@@ -452,7 +453,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             actualizarDatosCliente(notaAdeudo);
 
         } catch (Exception e) {
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista.");
             e.printStackTrace();
 
         }
@@ -551,6 +552,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             Parent root = loader.load();
             EditarSaldoController controller = loader.getController();
             controller.setSaldoFavor(notaClienteDet);
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Actualizar Saldo");
@@ -564,7 +566,9 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            mostrarError("Error de carga",
+                    "",
+                    "Ocurrió un problema al cargar la vista. Vuelva a intentarlo mas tarde");
         }
 
 
@@ -590,7 +594,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista..");
         }
 
     }//notaDetalles
@@ -759,7 +763,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             actualizarDatosCliente(notaEditar);
 
         } catch (Exception e) {
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista..");
             e.printStackTrace();
 
         }
@@ -774,32 +778,6 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
     public void setNotaEditar(final NotaDTO notaEditar) {
         this.notaEditar = notaEditar;
     }
-/*
-    private void revisarCheckBoxes() {
-        String status[] = new String[8];
-
-        status[0] = notaEditar.getRayones();
-        status[1] = notaEditar.getGolpes();
-        status[2] = notaEditar.getTapones();
-        status[3] = notaEditar.getTapetes();
-        status[4] = notaEditar.getRadio();
-        status[5] = notaEditar.getGato();
-        status[6] = notaEditar.getLlave();
-        status[7] = notaEditar.getLlanta();
-
-        fillCheckBox(cbRayonesSi, cbRayonesNo, status[0]);
-        fillCheckBox(cbGolpesSi, cbGolpesNo, status[1]);
-        fillCheckBox(cbTaponesSi, cbTaponesNo, status[2]);
-        fillCheckBox(cbTapetesSi, cbTapetesNo, status[3]);
-        fillCheckBox(cbRadioSi, cbRadioNo, status[4]);
-        fillCheckBox(cbGatoSi, cbGatoNo, status[5]);
-        fillCheckBox(cbLlaveSi, cbLlaveNo, status[6]);
-        fillCheckBox(cbLlantaSi, cbLlantaNo, status[7]);
-
-
-    }//revisarCheckBoxes
-
- */
 
 
 }//class

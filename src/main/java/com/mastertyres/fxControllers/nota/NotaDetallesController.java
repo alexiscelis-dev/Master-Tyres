@@ -30,6 +30,8 @@ public class NotaDetallesController {
     @FXML
     private Label lblFechaVencimiento;
     @FXML
+    private Label lblTotal;
+    @FXML
     private Label lblAdeudo;
     @FXML
     private Label lblSaldo;
@@ -82,11 +84,13 @@ public class NotaDetallesController {
 
         lblFechaVencimiento.setText("Fecha de vencimiento:  " + fechaFormateadaVencimiento);
 
+        lblTotal.setText("Total:  $" + notaDetalles.getTotal());
+
 
         if (notaDetalles.getAdeudo() != 0)
             strAdeudo = "Adeudo: $" + notaDetalles.getAdeudo();
 
-        lblAdeudo.setText("Adeudo:  " + strAdeudo);
+        lblAdeudo.setText("" + strAdeudo);
 
         if (notaDetalles.getSaldoFavor() != 0)
             strSaldo = "$" + notaDetalles.getSaldoFavor();

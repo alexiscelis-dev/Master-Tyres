@@ -6,8 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="ventanaPrincipal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1344.0"
+<AnchorPane id="ventanaPrincipal" maxHeight="600" maxWidth="1344"
+            minHeight="600" minWidth="1344" prefHeight="600.0" prefWidth="1344.0"
             style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController">

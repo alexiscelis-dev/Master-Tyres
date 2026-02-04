@@ -144,6 +144,29 @@ public class EditarInventarioController implements IFxController, ILoading {
         configurarValidaciones(); //Verifica validaciones de sintaxis
 
         //Evitan que la lista del choiceBox se muestre en otro lado que no se abajo del mismo ChoiceBox
+
+        choiceAncho.setOnMousePressed(event -> {
+            if (!choiceAncho.isShowing()) {
+                choiceAncho.show();
+                choiceAncho.hide();
+            }
+        });
+
+        choicePerfil.setOnMousePressed(event -> {
+            if (!choicePerfil.isShowing()) {
+                choicePerfil.show();
+                choicePerfil.hide();
+            }
+        });
+
+        choiceRin.setOnMousePressed(event -> {
+            if (!choiceRin.isShowing()){
+                choiceRin.show();
+                choiceRin.hide();
+            }
+        });
+
+
         cbIndiceVelocidad.setOnMousePressed(event -> {
             if (!cbIndiceVelocidad.isShowing()) {
                 cbIndiceVelocidad.show();
