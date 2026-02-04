@@ -3,11 +3,13 @@ package com.mastertyres.detalleCategoria.repository;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.marca.model.Marca;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +22,7 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
 
 
     // Obtener todos los modelos + categorías por marca, excluyendo los genéricos
+    @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("""
         SELECT d FROM DetalleCategoria d
         JOIN FETCH d.modelo
@@ -32,6 +35,7 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
     List<DetalleCategoria> findByMarcaId(@Param("marcaId") Integer marcaId);
 
     // Obtener detalle por objeto Marca, excluyendo los genéricos
+    @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("""
         SELECT d FROM DetalleCategoria d
         JOIN FETCH d.marca
@@ -44,6 +48,7 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
     """)
     List<DetalleCategoria> findByMarcaWithRelations(@Param("marca") Marca marca);
 
+    @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("""
         SELECT d FROM DetalleCategoria d
         JOIN FETCH d.marca m
@@ -56,6 +61,7 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
     """)
     List<DetalleCategoria> buscarPorMarcaModeloOCategoria(@Param("busqueda") String busqueda);
 
+    @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("""
     SELECT d FROM DetalleCategoria d
     WHERE LOWER(d.marca.nombreMarca) LIKE LOWER(CONCAT('%', :busqueda, '%'))
@@ -71,10 +77,12 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
     List<DetalleCategoria> findByCategoria(Categoria categoria);
 
     // Obtener todos los registros con el modelo específico
+    @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("SELECT dc FROM DetalleCategoria dc WHERE dc.modelo.modeloId = :modeloId")
     List<DetalleCategoria> findByModeloId(@Param("modeloId") Integer modeloId);
 
     // Buscar un registro con una combinación específica de marca, modelo y categoría
+    @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("""
         SELECT dc FROM DetalleCategoria dc
         WHERE dc.marca.marcaId = :marcaId
@@ -106,9 +114,21 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
     @Query("DELETE FROM DetalleCategoria dc WHERE dc.marca.marcaId = :marcaId")
     void eliminarPorMarcaId(@Param("marcaId") Integer marcaId);
 
+    @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("SELECT d.categoria FROM DetalleCategoria d " +
             "WHERE d.marca.marcaId = :marcaId AND d.modelo.modeloId = :modeloId")
     List<Categoria> findCategoriasByMarcaAndModelo(@Param("marcaId") Integer marcaId,
                                                    @Param("modeloId") Integer modeloId);
 
-}
+
+@QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
+@Query("""
+    SELECT d
+    FROM DetalleCategoria d
+    WHERE d.marca.marcaId = :#{#detalles.marca.marcaId}
+      AND d.modelo.modeloId = :#{#detalles.modelo.modeloId}
+      AND d.categoria.categoriaId = :#{#detalles.categoria.categoriaId}
+""")
+Optional<DetalleCategoria>existeModelo(@Param("detalles") DetalleCategoria detalles);
+
+}//class

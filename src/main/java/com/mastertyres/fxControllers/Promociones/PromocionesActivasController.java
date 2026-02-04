@@ -4,12 +4,16 @@ import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
 import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
@@ -39,10 +43,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class PromocionesActivasController implements IVentanaPrincipal, IFxController {
+public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoading {
 
     @FXML
     private AnchorPane ventanaPromocionesActivas;
@@ -70,6 +75,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
     @Autowired
     private VehiculoPromocionService vehiculoPromocionService;
+    @Autowired
+    private TaskService taskService;
 
     @Autowired
     private ClientePromocionService clientePromocionService;
@@ -77,6 +84,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     private final PromocionService promocionService;
 
     private Promocion promocionSeleccionada;
+
+    private LoadingComponentController loadingOverlayController;
 
     public PromocionesActivasController(PromocionService promocionService) {
         this.promocionService = promocionService;
@@ -87,6 +96,11 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         this.ventanaPrincipalController = controller;
     }
 
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
     @FXML
     private void initialize() {
 
@@ -95,6 +109,35 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         cargarPromociones();
 
     }//initialize
+
+
+    @Override
+    public void configuraciones() {
+
+        MenuContextSetting.disableMenu(ventanaPromocionesActivas);
+
+    }
+
+    @Override
+    public void listeners() {
+
+        txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                cargarPromociones();
+            } else {
+                cargarPromocionesFiltradas(newValue);
+            }
+        });
+
+        btnAgregarPromocion.setOnAction(event -> agregarPromociones(event));
+
+        btnAgregarClientesPromocion.setOnAction(event -> agregarClientesPromociones(event));
+
+        btnEditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
+
+        btnEliminarPromocion.setOnAction(event -> eliminarPromocion());
+
+    }
 
     @FXML
     private void agregarPromociones(ActionEvent event) {
@@ -141,8 +184,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
             //  Aquí pasas el HostServices desde tu Application
             controller.setHostServices(MasterTyresApplication.getAppHostServices());
-
             controller.LlenarTabla(promocionSeleccionada);
+            controller.setInitializeLoading(loadingOverlayController);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setTitle("Clientes aplicables a la promoción");
@@ -152,7 +195,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             stage.showAndWait();
             cargarPromociones();
         } catch (IOException ex) {
-            ex.printStackTrace();
+          mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
         }
     }
 
@@ -280,17 +323,20 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
                 EditarPromocionController controller = loader.getController();
                 controller.setPromocion(promocionSeleccionada);
+                controller.setInitializeLoading(loadingOverlayController);
 
                 Stage stage = new Stage(StageStyle.UTILITY);
                 stage.setTitle("Editar Promoción");
                 stage.setScene(new Scene(root));
+                stage.setMaximized(false);
+                stage.setResizable(false);
 
                 stage.initModality(Modality.APPLICATION_MODAL);
 
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             }
         } else if (promocionSeleccionada.getTipoPromocion().equals("CLIENTE")){
             try {
@@ -304,13 +350,15 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 Stage stage = new Stage(StageStyle.UTILITY);
                 stage.setTitle("Editar Promoción");
                 stage.setScene(new Scene(root));
+                stage.setMaximized(false);
+                stage.setResizable(false);
 
                 stage.initModality(Modality.APPLICATION_MODAL);
 
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             }
         } else {
             try {
@@ -320,6 +368,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
                 EditarPromocionController controller = loader.getController();
                 controller.setPromocion(promocionSeleccionada);
+                controller.setInitializeLoading(loadingOverlayController);
 
                 Stage stage = new Stage(StageStyle.UTILITY);
                 stage.setTitle("Editar Promoción");
@@ -330,7 +379,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                ex.printStackTrace();
+                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             }
         }
 
@@ -394,7 +443,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             LocalDate f = LocalDate.parse(fecha);  // yyyy-MM-dd
             return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         } catch (Exception e) {
-            return "N/A";
+            return "N/D";
         }
     }
 
@@ -403,9 +452,9 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
             //  Confirmación antes de actualizar
             boolean confirmar = MensajesAlert.mostrarConfirmacion(
-                    "Confirmar eliminacion.",
+                    "Confirmar eliminación.",
                     "¿Desea eliminar la promoción?",
-                    "Se eliminara la promoción seleccionada.",
+                    "Esta accion no podrá deshacerse.",
                     "Sí, eliminar",
                     "Cancelar"
             );
@@ -413,21 +462,29 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
             if (confirmar) {
 
-                try {
-                    promocionService.desactivarPromocion(promocionSeleccionada.getPromocionId());
-                    mostrarInformacion("Eliminado", "Promocion Eliminada", "Promocion Eliminada con exito.");
-                } catch (Exception e) {
-                    MensajesAlert.mostrarError(
-                            "Error al Eliminar",
-                            "No se pudo eliminar la promoción",
-                            "Detalles: " + e.getMessage()
-                    );
-                    e.printStackTrace();
-                }
+                taskService.runTask(
+                        loadingOverlayController,
+                        () ->{
+                            promocionService.desactivarPromocion(promocionSeleccionada.getPromocionId());
+                            return  null;
 
-                cargarPromociones(); // Recargamos la lista para reflejar cambios
-                limpiarDetallePromocion(); // Opcional: limpiar labels después
-            }
+                        }, (resultado) ->{
+                            cargarPromociones(); // Recargamos la lista para reflejar cambios
+                            limpiarDetallePromocion(); // Opcional: limpiar labels después
+                            mostrarInformacion("Eliminado", "Promocion Eliminada", "Promocion Eliminada con exito.");
+                        }, (ex) ->{
+
+                            if( ex instanceof PromocionException){
+                                mostrarError("Error al Eliminar","Ocurrio un error al eliminar la promocion",""+ex.getMessage());
+                            }else {
+                                mostrarError("Error inesperado","","Ocurrio un error inesperado al eliminar la promocon. Vuelve a intentarlo mas tarde.");
+                            }
+
+                        },null
+                );
+
+
+            }//if confirmar
         }
 
     }
@@ -453,31 +510,5 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         cargarPromociones();
     }
 
-    @Override
-    public void configuraciones() {
 
-        MenuContextSetting.disableMenu(ventanaPromocionesActivas);
-
-    }
-
-    @Override
-    public void listeners() {
-
-        txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue == null || newValue.isEmpty()) {
-                cargarPromociones();
-            } else {
-                cargarPromocionesFiltradas(newValue);
-            }
-        });
-
-        btnAgregarPromocion.setOnAction(event -> agregarPromociones(event));
-
-        btnAgregarClientesPromocion.setOnAction(event -> agregarClientesPromociones(event));
-
-        btnEditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
-
-        btnEliminarPromocion.setOnAction(event -> eliminarPromocion());
-
-    }
 }//class

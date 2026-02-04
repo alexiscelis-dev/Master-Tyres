@@ -1,5 +1,6 @@
 package com.mastertyres.marca.service;
 
+import com.mastertyres.marca.domain.MarcaValidator;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.repository.MarcaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,24 +11,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MarcaService implements IMarcaServices {
 
     private final MarcaRepository marcaRepository;
+    @Autowired
+    private MarcaValidator marcaValidator;
 
     @Autowired
     public MarcaService(MarcaRepository marcaRepository) {
         this.marcaRepository = marcaRepository;
     }
 
+
+
     public Marca guardarMarca(Marca marca) {
+        //validar exepciones al guardar
+        marcaValidator.validarGuardar(marca);
+
         return marcaRepository.save(marca);
     }
 
     @Override
     public List<Marca> listarMarcas() {
         return marcaRepository.listarMarcasSinGenerica();
+    }
+
+    @Override
+    public Optional<Marca> findByNombreMarca(String nombreMarca) {
+        return marcaRepository.findByNombreMarca(nombreMarca);
     }
 
 
@@ -68,10 +82,13 @@ public class MarcaService implements IMarcaServices {
 
     @Transactional
     public int eliminarMarcaPorId(Integer marcaId) {
+
+        marcaValidator.validarEliminacion(marcaId);
+
         return marcaRepository.eliminarMarcaPorId(marcaId);
+
     }
 
 
 
-
-}
+}//class

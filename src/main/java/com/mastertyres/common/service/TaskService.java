@@ -1,5 +1,6 @@
 package com.mastertyres.common.service;
 
+import com.mastertyres.common.exeptions.AppException;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import javafx.concurrent.Task;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,25 @@ public class TaskService {
 
         });
         task.setOnFailed(e -> {
+
+            if (loadingController != null){
+                loadingController.hide();
+            }
+
+            Throwable rawError = task.getException();
+            Throwable trueError = desempaquetarExcepcion(rawError);
+
+            if (onFailed != null){
+                onFailed.accept(trueError);
+            }else {
+                mostrarError("Error interno", "","Ocurrió un problema inesperado. Vuelva a intentarlo mas tarde.");
+
+            }
+
+
+            /*
             if (loadingController != null) {
+
                 loadingController.hide();
                 Throwable error = task.getException();
                 error.printStackTrace();
@@ -48,11 +67,12 @@ public class TaskService {
                 if (onFailed != null) {
                     onFailed.accept(error);
                 }else {
-                    mostrarError("Error en la operación", "","Ocurrió un problema inesperado");
+                    mostrarError("Error interno", "","Ocurrió un problema inesperado. Vuelva a intentarlo mas tarde.");
                 }
 
-
             }
+
+             */
 
         });
 
@@ -94,6 +114,23 @@ public class TaskService {
                               Runnable actionBackground,
                               Runnable toFinish) {
         return runTask(loadingController, actionBackground, toFinish, null);
+    }
+
+    private Throwable desempaquetarExcepcion(Throwable ex){
+        Throwable causa = ex;
+
+        while(causa != null){
+            if (causa instanceof AppException){
+                return causa;
+            }
+            if (causa.getCause() == null){
+                return  causa;
+            }
+            causa = causa.getCause();
+
+        }
+
+        return ex;
     }
 
 

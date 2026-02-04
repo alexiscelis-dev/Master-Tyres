@@ -5,66 +5,72 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.Promociones.NuevaPromocionController">
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.fxControllers.Promociones.NuevaPromocionController">
     <children>
-        <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
+        <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0"
+              style="-fx-background-color: #1A1A1A;" styleClass="formulario"
+              stylesheets="@../../styles_css/NuevaPromocion.css">
             <children>
                 <HBox alignment="CENTER" prefHeight="33.0" prefWidth="460.0">
                     <children>
-                        <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="272.0" styleClass="seccion-titulo" text="Nueva Promocion" textFill="WHITE" />
+                        <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="272.0" styleClass="seccion-titulo"
+                               text="Nueva Promocion" textFill="WHITE"/>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="20.0" />
+                        <Insets bottom="20.0"/>
                     </VBox.margin>
                 </HBox>
                 <HBox prefHeight="28.0" prefWidth="333.0">
                     <children>
                         <Label text="Nombre de la promocion" textFill="WHITE">
                             <HBox.margin>
-                                <Insets left="40.0" right="88.0" />
+                                <Insets left="40.0" right="88.0"/>
                             </HBox.margin>
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="12.0"/>
                             </font>
                         </Label>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="5.0" />
+                        <Insets bottom="5.0"/>
                     </VBox.margin>
                 </HBox>
                 <HBox prefHeight="34.0" prefWidth="376.0">
                     <children>
                         <TextField fx:id="nombrePromocion" prefHeight="26.0" prefWidth="348.0" styleClass="buscador">
                             <HBox.margin>
-                                <Insets left="40.0" right="50.0" />
+                                <Insets left="40.0" right="50.0"/>
                             </HBox.margin>
                         </TextField>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets bottom="10.0"/>
                     </VBox.margin>
                 </HBox>
                 <VBox prefHeight="115.0" prefWidth="432.0" spacing="6.0">
                     <children>
                         <Label text="Descripcion" textFill="WHITE">
                             <opaqueInsets>
-                                <Insets />
+                                <Insets/>
                             </opaqueInsets>
                             <padding>
-                                <Insets left="40.0" />
+                                <Insets left="40.0"/>
                             </padding>
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="12.0"/>
                             </font>
                         </Label>
                         <HBox alignment="CENTER" prefHeight="67.0" prefWidth="432.0">
                             <children>
-                                <TextField fx:id="descripcion" prefHeight="45.0" prefWidth="348.0" styleClass="buscador" />
+                                <TextField fx:id="descripcion" prefHeight="45.0" prefWidth="348.0"
+                                           styleClass="buscador"/>
                             </children>
                         </HBox>
                     </children>
                     <padding>
-                        <Insets top="5.0" />
+                        <Insets top="5.0"/>
                     </padding>
                 </VBox>
 
@@ -72,33 +78,33 @@
                     <children>
                         <Label text="Tipo de descuento" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="12.0"/>
                             </font>
                             <padding>
-                                <Insets bottom="5.0" />
+                                <Insets bottom="5.0"/>
                             </padding>
                             <HBox.margin>
-                                <Insets left="40.0" right="56.0" />
+                                <Insets left="40.0" right="56.0"/>
                             </HBox.margin>
                         </Label>
                         <Label text="Precio sin descuento" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="12.0"/>
                             </font>
                             <HBox.margin>
-                                <Insets left="40.0" />
+                                <Insets left="40.0"/>
                             </HBox.margin>
                         </Label>
                     </children>
                     <VBox.margin>
-                        <Insets />
+                        <Insets/>
                     </VBox.margin>
                 </HBox>
                 <HBox prefHeight="40.0" prefWidth="432.0">
                     <children>
                         <ChoiceBox fx:id="tipoDescuento" prefWidth="150.0" styleClass="choicebox-mini2">
                             <HBox.margin>
-                                <Insets left="40.0" right="38.0" />
+                                <Insets left="40.0" right="38.0"/>
                             </HBox.margin>
                             <items>
 
@@ -106,17 +112,18 @@
 
 
                         </ChoiceBox>
-                        <TextField fx:id="precioSinDescuento" disable="true" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
+                        <TextField fx:id="precioSinDescuento" disable="true" prefHeight="26.0" prefWidth="156.0"
+                                   styleClass="buscador">
                             <opaqueInsets>
-                                <Insets />
+                                <Insets/>
                             </opaqueInsets>
                             <HBox.margin>
-                                <Insets />
+                                <Insets/>
                             </HBox.margin>
                         </TextField>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="15.0" />
+                        <Insets bottom="15.0"/>
                     </VBox.margin>
                 </HBox>
                 <HBox prefHeight="44.0" prefWidth="393.0">
@@ -125,25 +132,25 @@
                             <children>
                                 <Slider fx:id="porcentajeDescuento" disable="true" prefHeight="14.0" prefWidth="340.0">
                                     <VBox.margin>
-                                        <Insets bottom="5.0" />
+                                        <Insets bottom="5.0"/>
                                     </VBox.margin>
                                     <padding>
-                                        <Insets left="40.0" />
+                                        <Insets left="40.0"/>
                                     </padding>
                                 </Slider>
                                 <Label fx:id="descuentoLabel" text="Descuento 0% " textFill="WHITE">
                                     <font>
-                                        <Font name="System Bold" size="12.0" />
+                                        <Font name="System Bold" size="12.0"/>
                                     </font>
                                     <VBox.margin>
-                                        <Insets left="30.0" />
+                                        <Insets left="30.0"/>
                                     </VBox.margin>
                                 </Label>
                             </children>
                         </VBox>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="20.0" />
+                        <Insets bottom="20.0"/>
                     </VBox.margin>
                 </HBox>
 
@@ -152,26 +159,26 @@
                     <children>
                         <Label prefHeight="18.0" prefWidth="212.0" text="Fecha de inicio" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="12.0"/>
                             </font>
                             <padding>
-                                <Insets left="40.0" />
+                                <Insets left="40.0"/>
                             </padding>
                             <HBox.margin>
-                                <Insets right="25.0" />
+                                <Insets right="25.0"/>
                             </HBox.margin>
                         </Label>
 
                         <Label prefHeight="18.0" prefWidth="120.0" text="Fecha de fin" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="12.0" />
+                                <Font name="System Bold" size="12.0"/>
                             </font>
                         </Label>
 
 
                     </children>
                     <VBox.margin>
-                        <Insets bottom="5.0" />
+                        <Insets bottom="5.0"/>
 
 
                     </VBox.margin>
@@ -180,72 +187,83 @@
 
                 <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../../styles_css/ClientesStyles.css">
                     <children>
-                        <DatePicker fx:id="fechaInicio" disable="true" editable="false" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
+                        <DatePicker fx:id="fechaInicio" disable="true" editable="false" prefHeight="26.0"
+                                    prefWidth="159.0" styleClass="date-picker">
                             <HBox.margin>
-                                <Insets right="35.0" />
+                                <Insets right="35.0"/>
                             </HBox.margin>
                         </DatePicker>
-                        <DatePicker fx:id="fechaFin" disable="true" editable="false" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
+                        <DatePicker fx:id="fechaFin" disable="true" editable="false" prefHeight="26.0" prefWidth="158.0"
+                                    styleClass="date-picker"/>
                     </children>
                     <VBox.margin>
-                        <Insets left="40.0" />
+                        <Insets left="40.0"/>
                     </VBox.margin>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="98.0" prefWidth="432.0">
                     <children>
-                        <TextField fx:id="textFieldImg" editable="false" prefHeight="26.0" prefWidth="204.0" promptText="Seleccionar imagen (Opcional)" styleClass="buscador-img" />
+                        <TextField fx:id="textFieldImg" editable="false" prefHeight="26.0" prefWidth="204.0"
+                                   promptText="Seleccionar imagen (Opcional)" styleClass="buscador-img"/>
 
-                        <Button fx:id="btnImagen" disable="true" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0" styleClass="boton-img" text="..." />
+                        <Button fx:id="btnImagen" disable="true" mnemonicParsing="false" prefHeight="17.0"
+                                prefWidth="28.0" styleClass="boton-img" text="..."/>
                     </children>
                 </HBox>
 
             </children>
         </VBox>
-        <VBox layoutX="600.0" layoutY="150.0" prefHeight="600.0" prefWidth="552.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
+        <VBox layoutX="600.0" layoutY="150.0" prefHeight="600.0" prefWidth="552.0"
+              style="-fx-background-color: #1A1A1A;" styleClass="formulario"
+              stylesheets="@../../styles_css/NuevaPromocion.css">
             <children>
 
-                <VBox alignment="TOP_CENTER" minWidth="500.0" prefHeight="339.0" prefWidth="500.0" spacing="15.0" styleClass="secciones">
+                <VBox alignment="TOP_CENTER" minWidth="500.0" prefHeight="339.0" prefWidth="500.0" spacing="15.0"
+                      styleClass="secciones">
 
                     <Label styleClass="seccion-titulo" text="Vehiculos participantes">
                         <VBox.margin>
-                            <Insets bottom="35.0" />
+                            <Insets bottom="35.0"/>
                         </VBox.margin>
                     </Label>
                     <HBox prefHeight="80.0" prefWidth="512.0">
                         <children>
                             <ChoiceBox fx:id="choiceMarca" prefWidth="150.0" styleClass="vehiculosParticipantes">
                                 <opaqueInsets>
-                                    <Insets />
+                                    <Insets/>
                                 </opaqueInsets>
                                 <HBox.margin>
-                                    <Insets right="2.0" />
+                                    <Insets right="2.0"/>
                                 </HBox.margin>
                             </ChoiceBox>
                             <ChoiceBox fx:id="choiceModelo" prefWidth="150.0" styleClass="vehiculosParticipantes">
                                 <HBox.margin>
-                                    <Insets right="2.0" />
+                                    <Insets right="2.0"/>
                                 </HBox.margin>
                             </ChoiceBox>
                             <ChoiceBox fx:id="choiceAnio" prefWidth="150.0" styleClass="vehiculosParticipantes">
                                 <HBox.margin>
-                                    <Insets left="2.0" />
+                                    <Insets left="2.0"/>
                                 </HBox.margin>
                             </ChoiceBox>
                         </children>
                     </HBox>
-                    <Button fx:id="btnAgregarVehiculo" mnemonicParsing="false" prefHeight="34.0" prefWidth="165.0" styleClass="boton-accion" text="Agregar" />
+                    <Button fx:id="btnAgregarVehiculo" mnemonicParsing="false" prefHeight="34.0" prefWidth="165.0"
+                            styleClass="boton-accion" text="Agregar"/>
                     <VBox id="panel para tabla" prefHeight="200.0" prefWidth="100.0">
                         <children>
 
 
-                            <TableView fx:id="tableVehiculosParticipantes" minWidth="500.0" prefHeight="261.0" prefWidth="500.0">
+                            <TableView fx:id="tableVehiculosParticipantes" minWidth="500.0" prefHeight="261.0"
+                                       prefWidth="500.0">
 
 
                                 <columns>
-                                    <TableColumn fx:id="colMarca" prefWidth="166.20001220703125" text="Marca" />
-                                    <TableColumn fx:id="colModelo" minWidth="50" prefWidth="174.60003662109375" text="Modelo" />
-                                    <TableColumn fx:id="colAnio" minWidth="0.0" prefWidth="160.20001220703125" text="Año" />
-                                    <TableColumn fx:id="colEliminar" style="-fx-alignment: CENTER;" text="Acción" />
+                                    <TableColumn fx:id="colMarca" prefWidth="166.20001220703125" text="Marca"/>
+                                    <TableColumn fx:id="colModelo" minWidth="50" prefWidth="174.60003662109375"
+                                                 text="Modelo"/>
+                                    <TableColumn fx:id="colAnio" minWidth="0.0" prefWidth="160.20001220703125"
+                                                 text="Año"/>
+                                    <TableColumn fx:id="colEliminar" style="-fx-alignment: CENTER;" text="Acción"/>
 
                                 </columns>
                             </TableView>
@@ -255,13 +273,15 @@
                 </VBox>
                 <HBox alignment="BOTTOM_CENTER" prefHeight="140.0" prefWidth="500.0">
                     <children>
-                        <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar">
-                     <HBox.margin>
-                        <Insets right="15.0" />
-                     </HBox.margin></Button>
+                        <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false"
+                                styleClass="boton-accion" text="Registrar">
+                            <HBox.margin>
+                                <Insets right="15.0"/>
+                            </HBox.margin>
+                        </Button>
                         <Button fx:id="btnLimpiar" mnemonicParsing="false" styleClass="boton-accion" text="Limpiar">
                             <HBox.margin>
-                                <Insets />
+                                <Insets/>
                             </HBox.margin>
                         </Button>
                     </children>

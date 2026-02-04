@@ -174,7 +174,7 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @Query("""
              SELECT DISTINCT n FROM Nota n
              LEFT JOIN FETCH n.detalles nd
-            LEFT JOIN FETCH n.notaClienteDetalles ndc
+             LEFT JOIN FETCH n.notaClienteDetalles ndc
              LEFT JOIN FETCH n.cliente c
              LEFT JOIN FETCH n.vehiculo v
              LEFT JOIN FETCH v.marca m

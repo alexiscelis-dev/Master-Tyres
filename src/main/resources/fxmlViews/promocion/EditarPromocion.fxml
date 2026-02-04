@@ -77,7 +77,7 @@
 
                 <!-- Botones -->
                 <HBox alignment="CENTER" spacing="20">
-                    <Button fx:id="btnCambiar" styleClass="boton-accion" text="Cambiar" />
+                    <Button fx:id="btnActualizar" styleClass="boton-accion" text="Actualizar" />
                     <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar" />
                 </HBox>
             </VBox>
@@ -101,12 +101,12 @@
                 <Button fx:id="btnAgregarVehiculo" styleClass="boton-accion" text="Agregar Vehículo" />
 
                 <!-- Tabla -->
-                <TableView fx:id="tableVehiculosParticipantes" maxWidth="385.0" prefHeight="222.0" prefWidth="385.0">
+                <TableView fx:id="tableVehiculosParticipantes" maxWidth="398.0" prefHeight="222.0" prefWidth="398.0">
                     <columns>
                         <TableColumn fx:id="colMarca" prefWidth="120.0" text="Marca" />
                         <TableColumn fx:id="colModelo" prefWidth="120.0" text="Modelo" />
                         <TableColumn fx:id="colAnio" prefWidth="88.99998474121094" text="Año" />
-                        <TableColumn fx:id="colEliminar" prefWidth="51.0" style="-fx-alignment:CENTER;" text="Acción" />
+                        <TableColumn fx:id="colEliminar" prefWidth="51.0" style="-fx-alignment:CENTER;" text="Eliminar" />
                     </columns>
                 </TableView>
             </VBox>
