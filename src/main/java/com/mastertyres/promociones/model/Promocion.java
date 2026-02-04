@@ -37,6 +37,9 @@ public class Promocion {
 
     private float precio;
 
+    @Column(name = "tipo_promocion")
+    private String TipoPromocion;
+
     @Column(name = "fecha_inicio")
     private String fechaInicio;
 

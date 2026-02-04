@@ -3,6 +3,8 @@ package com.mastertyres.fxControllers.cliente;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -293,6 +295,10 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
             }
         });
 
+        if (choiceTipoCliente.equals(TipoCliente.INDIVIDUAL)){
+            txtNombreEmpresa.setText("");
+            txtNombreEmpresa.setEditable(false);
+        }
 
     }//listeners
 
