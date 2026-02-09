@@ -128,7 +128,6 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
     @Override
     public void setInitializeLoading(LoadingComponentController loading) {
         this.loadingOverlayController = loading;
-
     }
 
     @FXML
@@ -257,6 +256,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
 
                                         EditarVehiculoController controller = loader.getController();
                                         controller.setVehiculo(vehiculoSeleccionado);
+                                        controller.setInitializeLoading(loadingOverlayController);
 
                                         Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Editar Cliente");
@@ -480,6 +480,8 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
 
             delayQuery.playFromStart();
         });
+
+
 
     }//listeners
 
@@ -1443,28 +1445,5 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
         }
     }
 
-//    public void accionBuscarVehiculo(ActionEvent actionEvent) {
-//        String seleccion = atributoBusquedaVehiculos.getValue();
-//        String busqueda;
-//        //String busqueda2;
-//        if (atributoBusquedaVehiculos.getValue().equals("Fecha Registro") || atributoBusquedaVehiculos.getValue().equals("Ultimo Servicio")){
-//            //busqueda2 = dpVehiculoFin.getValue().toString();
-//            busqueda = dpVehiculoInicio.getValue().toString();
-//        }else {
-//            busqueda = buscarVehiculoBuscador.getText();
-//        }
-//
-//        // SOLO funciona si hay un filtro seleccionado
-//        if (seleccion != null && !seleccion.isEmpty()) {
-//
-//            // Si el texto está vacío, resetea y detén
-//            if (busqueda == null || busqueda.isEmpty() && seleccion == null) {
-//                resetBusqueda();
-//                return;
-//            }
-//
-//            // Ejecutar búsqueda específica
-//            buscarVehiculo(seleccion.toLowerCase(), busqueda);
-//        }
-//    }
+
 }//clase

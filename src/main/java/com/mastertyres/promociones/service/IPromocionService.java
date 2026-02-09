@@ -20,6 +20,12 @@ public interface IPromocionService{
 
     Promocion buscarPromocionId(Integer id);
 
+    List<Promocion> obtenerPromocionesActivas();
+
+    List<Promocion> buscarPromociones(String texto);
+
+    void desactivarPromocion(Integer id);
+
 
 
 

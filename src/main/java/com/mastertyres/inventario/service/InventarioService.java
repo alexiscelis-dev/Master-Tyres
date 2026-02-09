@@ -27,15 +27,16 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public long contarInventariosActivos(String active) {
         return inventarioRepository.contarInventarioActivos(active);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public long contarInventarioPorBusquedaGeneral(String status, String termino) {
         return inventarioRepository.contarInventarioPorBusquedaGeneral(status, termino);
     }
-
-
 
     @Transactional(readOnly = true)
     @Override
@@ -44,6 +45,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> listarInventarioPaginado(String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.listarInventarioPaginada(active, pageable);
@@ -56,6 +58,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> buscadorInventarioPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscadorInventarioPaginado(active, busqueda, pageable);
@@ -68,6 +71,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> buscarPorCodBarrasPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorCodBarrasPaginado(active, busqueda, pageable);
@@ -80,6 +84,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> buscarPorDotPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorDotPaginado(active, busqueda, pageable);
@@ -92,6 +97,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> buscarPorMarcaPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorMarcaPaginado(active, busqueda, pageable);
@@ -104,6 +110,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> buscarPorModeloPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorModeloPaginado(active, busqueda, pageable);
@@ -116,6 +123,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> buscarPorMedidaPaginado(String active, String busqueda, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorMedidaPaginado(active, busqueda, pageable);
@@ -128,6 +136,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> buscarPorFechaPaginado(String active, LocalDate fecha, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorFechaPaginado(active, fecha, pageable);
@@ -140,6 +149,7 @@ public class InventarioService implements IInventarioService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Inventario> buscarPorFechaPaginadoRangos(String active, LocalDate fechaInicio, LocalDate fechaFin, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("inventarioId").descending());
         return inventarioRepository.buscarPorFechaPaginado(active, fechaInicio, fechaFin, pageable);

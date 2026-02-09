@@ -50,29 +50,40 @@ public class NotaService implements INotaService {
         return notaRepository.listarNotas(active);
     }
 
-    public Page<NotaDTO> buscador (String filtro, String busqueda, int IndicePagina, int tamañoPagina){
+    @Transactional(readOnly = true)
+    @Override
+    public Page<NotaDTO> buscador(String filtro, String busqueda, int IndicePagina, int tamañoPagina) {
         Page<NotaDTO> paginaFiltrada;
 
-        switch (filtro.toLowerCase()){
-            case "sin filtro" ->  paginaFiltrada = buscarNotas(busqueda, IndicePagina, tamañoPagina);
+        switch (filtro.toLowerCase()) {
+            case "sin filtro" -> paginaFiltrada = buscarNotas(busqueda, IndicePagina, tamañoPagina);
 
-            case "numero de nota" ->  paginaFiltrada = BucarPorNumNota(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+            case "numero de nota" ->
+                    paginaFiltrada = BucarPorNumNota(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "fecha de emicion" -> paginaFiltrada = buscarPorFechaNota(LocalDate.parse(busqueda), StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+            case "fecha de emicion" ->
+                    paginaFiltrada = buscarPorFechaNota(LocalDate.parse(busqueda), StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "nombre del cliente" -> paginaFiltrada = buscarPorNombreCliente(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+            case "nombre del cliente" ->
+                    paginaFiltrada = buscarPorNombreCliente(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "vehiculo" -> paginaFiltrada = buscarPorVehiculo(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+            case "vehiculo" ->
+                    paginaFiltrada = buscarPorVehiculo(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "fecha de vencimiento" -> paginaFiltrada = buscarPorFechaVencimiento(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+            case "fecha de vencimiento" ->
+                    paginaFiltrada = buscarPorFechaVencimiento(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "direccion" -> paginaFiltrada = buscarPorDireccion(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+            case "direccion" ->
+                    paginaFiltrada = buscarPorDireccion(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "placas de vehiculo" -> paginaFiltrada = buscarPorPlacas(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
+            case "placas de vehiculo" ->
+                    paginaFiltrada = buscarPorPlacas(busqueda, "ACTIVE", IndicePagina, tamañoPagina);
 
-            case "numero de factura" -> paginaFiltrada = buscarPorNumeroFactura(busqueda,  StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+            case "numero de factura" ->
+                    paginaFiltrada = buscarPorNumeroFactura(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
-            case "rfc" -> paginaFiltrada = buscarPorRfc(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+            case "rfc" ->
+                    paginaFiltrada = buscarPorRfc(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
             case "adeudo" -> {
                 try {
@@ -130,14 +141,18 @@ public class NotaService implements INotaService {
         return paginaFiltrada;
     }
 
-    public Page<NotaDTO> buscadorRangos (String filtro, String busqueda, String busqueda2, int IndicePagina, int tamañoPagina){
+    @Transactional(readOnly = true)
+    @Override
+    public Page<NotaDTO> buscadorRangos(String filtro, String busqueda, String busqueda2, int IndicePagina, int tamañoPagina) {
         Page<NotaDTO> paginaFiltrada;
 
-        switch (filtro.toLowerCase()){
+        switch (filtro.toLowerCase()) {
 
-            case "fecha de emicion" -> paginaFiltrada = buscarPorFechaNotaRango(busqueda, busqueda2,"ACTIVE", IndicePagina, tamañoPagina);
+            case "fecha de emicion" ->
+                    paginaFiltrada = buscarPorFechaNotaRango(busqueda, busqueda2, "ACTIVE", IndicePagina, tamañoPagina);
 
-            case "fecha de vencimiento" -> paginaFiltrada = buscarPorFechaVencimientoRango(busqueda, busqueda2, "ACTIVE", IndicePagina, tamañoPagina);
+            case "fecha de vencimiento" ->
+                    paginaFiltrada = buscarPorFechaVencimientoRango(busqueda, busqueda2, "ACTIVE", IndicePagina, tamañoPagina);
 
             default -> paginaFiltrada = listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
         }
@@ -145,84 +160,113 @@ public class NotaService implements INotaService {
     }
 
 
-
-
     //  Listar vehículos activos con paginación
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> listarNotasPaginado(String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.listarNotasPaginado(active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarNotas(String filtro, int pagina, int tamanio) {
         return notaRepository.buscarNotas("ACTIVE", filtro, PageRequest.of(pagina, tamanio));
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorNumeroFactura(String numFactura, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorNumeroFactura(numFactura, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorNombreCliente(String nombreCliente, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorNombreCliente(nombreCliente, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorFechaNota(LocalDate fecha, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorFechaNota(fecha, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorFechaNotaRango(String fecha, String fecha2, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorFechaNotaRango(fecha, fecha2, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorVehiculo(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorVehiculo(filtro, active, pageable);
     }
 
-
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorFechaVencimiento(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorFechaVencimiento(filtro, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorFechaVencimientoRango(String filtro, String filtro2, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorFechaVencimientoRango(filtro, filtro2, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorDireccion(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorDireccion(filtro, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorPlacas(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorPlacas(filtro, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorRfc(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorRfc(filtro, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorAdeudo(BigDecimal filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorAdeudo(filtro, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorTotal(Double filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorTotal(filtro, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> buscarPorSaldoFavor(Double filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorSaldoFavor(filtro, active, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<NotaDTO> BucarPorNumNota(String filtro, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorNumeroNota(filtro, active, pageable);
@@ -324,7 +368,7 @@ public class NotaService implements INotaService {
     @Override
     public void actualizarStatus(String status, Integer notaId) {
         notaValidator.validarStatusPagos(notaId);
-        notaRepository.actualizarStatus(status,notaId);
+        notaRepository.actualizarStatus(status, notaId);
     }
 
     @Transactional
@@ -340,11 +384,12 @@ public class NotaService implements INotaService {
     }
 
 
+    @Transactional(readOnly = true)
     @Override
     public List<NotaDTO> buscarHistorial(int cantidadResultados, String nombreCliente) {
 
         Pageable configuracion = PageRequest.of(0, cantidadResultados);
-        return  notaRepository.buscarHistorial(StatusNota.ACTIVE.toString(),nombreCliente, configuracion);
+        return notaRepository.buscarHistorial(StatusNota.ACTIVE.toString(), nombreCliente, configuracion);
     }
 
 
