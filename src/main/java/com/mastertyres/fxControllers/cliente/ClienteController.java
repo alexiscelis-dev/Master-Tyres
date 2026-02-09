@@ -250,6 +250,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
                                         EditarClienteController controller = loader.getController();
                                         controller.editarCliente(clienteSeleccionado); // pasa el cliente actual
+                                        controller.setInitializeLoading(loadingOverlayController);
 
                                         Stage stage = new Stage(StageStyle.UTILITY);
 
@@ -425,7 +426,6 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
             delayQuery.playFromStart();
         });
-
 
         //Enter buscar
         buscarClienteBuscador.setOnKeyPressed(event -> {

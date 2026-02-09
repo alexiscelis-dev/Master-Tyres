@@ -5,10 +5,13 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.model.TipoCliente;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
@@ -18,6 +21,7 @@ import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.service.ModeloService;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;
@@ -67,6 +71,9 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
     @Autowired
     private DetalleCategoriaService detalleCategoriaService;
+
+    @Autowired
+    private TaskService taskService;
 
     // Columnas de tabla vehiculos
     @FXML
@@ -705,9 +712,23 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         txtKilometros.clear();
         pickerUltimoServicio.setValue(null);
         txtObservaciones.clear();
+
+        //Quitar estilo border
+        String STILE = "";
+
+        txtColor.setStyle(STILE);
+        txtPlacas.setStyle(STILE);
+        txtSerie.setStyle(STILE);
+        txtKilometros.setStyle(STILE);
+        txtObservaciones.setStyle(STILE);
+        pickerUltimoServicio.setStyle(STILE);
+        spinnerAnio.setStyle(STILE);
+
+
     }
 
     private void LimpiarCamposClientes() {
+
         txtNombre.clear();
         txtApellido.clear();
         txtSegundoApellido.clear();
@@ -720,6 +741,22 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         txtRFC.clear();
         pickerCumpleanos.setValue(null);
         choiceTipoCliente.setValue(null);
+
+        //quitar border estilo
+        String STILE = "";
+
+        txtNombre.setStyle(STILE);
+        txtApellido.setStyle(STILE);
+        txtSegundoApellido.setStyle(STILE);
+        txtNombreEmpresa.setStyle(STILE);
+        txtDomicilio.setStyle(STILE);
+        txtEstado.setStyle(STILE);
+        txtCiudad.setStyle(STILE);
+        txtTelefono.setStyle(STILE);
+        txtHobbie.setStyle(STILE);
+        txtRFC.setStyle(STILE);
+        pickerCumpleanos.setStyle(STILE);
+
     }
 
     @FXML
@@ -728,37 +765,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         if (!rfcValido.get() || !telefonoValido.get()) {
             mostrarError("Error en campos", "", "Por favor, corrige los campos marcados en rojo antes de guardar.");
             return;
-        }
-
-        // Validar RFC duplicado
-        String rfc = txtRFC.getText();
-        if (rfc != null && !rfc.isBlank()) {
-            if (clienteService.existeClientePorRFC(rfc)) {
-                mostrarWarning("RFC duplicado", "", "Ya existe un cliente activo con este RFC.");
-                return;
-            }
-        }
-
-        // Validar vehículos duplicados contra la base
-        for (Vehiculo v : listaVehiculos) {
-            String placas = v.getPlacas();
-            String numSerie = v.getNumSerie();
-
-            if (placas != null && !placas.isBlank()) {
-                if (vehiculoService.existeVehiculoPorPlacas(placas)) {
-                    mostrarWarning("Vehículo duplicado", "",
-                            "Ya existe un vehículo activo con las mismas placas.");
-                    return;
-                }
-            }
-
-            if (numSerie != null && !numSerie.isBlank()) {
-                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)) {
-                    mostrarWarning("Vehículo duplicado", "",
-                            "Ya existe un vehículo activo con el mismo numero de serie.");
-                    return;
-                }
-            }
         }
 
 // Validar que no haya duplicados en la lista antes de guardar
@@ -807,7 +813,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         if (pickerCumpleanos.getValue() != null) {
             cliente.setFechaCumple(pickerCumpleanos.getValue().toString());
         }
-        cliente.setActive("ACTIVE");
+        cliente.setActive(StatusCliente.ACTIVE.toString());
         cliente.setCreated_at(LocalDate.now().toString());
 
         if (choiceGenero.getValue() != null) {
@@ -823,7 +829,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
             v.setContador_mensaje(0);
             v.setCliente(cliente); // relación bidireccional
             if (v.getActive() == null) {
-                v.setActive("ACTIVE");
+                v.setActive(StatusVehiculo.ACTIVE.toString());
             }
             if (v.getCreated_at() == null) {
                 v.setCreated_at(LocalDate.now().toString());  // Asignar fecha creación aquí
@@ -837,22 +843,41 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         }
         cliente.setVehiculos(listaVehiculos);
 
-        try {
-            // Guardar usando el servicio
-            clienteService.guardarCliente(cliente);
 
-            // Limpiar formulario
-            limpiarCamposVehiculo();
-            LimpiarCamposClientes();
-            listaVehiculos.clear();
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
 
-            mostrarInformacion("Cliente guardado con éxito", "", "El cliente guardado con éxito");
-            ventanaPrincipalController.irAtras();
-        } catch (Exception e) {
-            mostrarError("Error", "Cliente NO guardado", "El cliente NO pudo ser guardado");
-        }
+                    // Guardar usando el servicio
+                    //true - > registra hace validaciones en vehiculo el metodo Validator
+                    clienteService.guardarCliente(cliente,true);
+                return null;
 
-    }
+                }, (resultado) ->{
+
+
+
+                    mostrarInformacion("Guardado exitoso", "", "El cliente guardado con éxito");
+                    // Limpiar formulario
+                    limpiarCamposVehiculo();
+                    LimpiarCamposClientes();
+                    listaVehiculos.clear();
+
+                },(ex) ->{
+
+                    if (ex instanceof ClienteException){
+                        mostrarError("No se pudo guardar","Ocurrio un problema al guardar el cliente","" + ex.getMessage());
+                    }else {
+                        mostrarError("Error interno",
+                                "Error inesperado",
+                                "Ocurrio un error al intentar registrar el cliente.");
+                    }
+
+                },null
+        );
+
+
+    }//GuardarCliente
 
     public void Cancelar(ActionEvent actionEvent) {
         ventanaPrincipalController.irAtras();
