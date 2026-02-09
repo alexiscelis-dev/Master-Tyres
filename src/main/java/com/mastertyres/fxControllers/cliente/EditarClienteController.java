@@ -210,7 +210,7 @@ public class EditarClienteController implements IFxController, ILoading {
 
         // correo: opcional, acepta minúsculas
         txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
-            // ✅ Verificar que newText no sea null
+            //  Verificar que newText no sea null
             if (newText == null || newText.isEmpty()) {
                 CorreoValido.set(true);
                 txtCorreo.setStyle("");
