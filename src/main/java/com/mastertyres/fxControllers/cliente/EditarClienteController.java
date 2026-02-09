@@ -2,6 +2,7 @@ package com.mastertyres.fxControllers.cliente;
 
 
 import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
@@ -26,6 +27,8 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 @Component
 public class EditarClienteController implements IFxController, ILoading {
 
+    @FXML
+    private TextField txtNombreEmpresa;
     @FXML
     private TextField txtNombre;
     @FXML
@@ -90,6 +93,11 @@ public class EditarClienteController implements IFxController, ILoading {
 
     @Override
     public void listeners() {
+
+        if (choiceTipoCliente.equals(TipoCliente.INDIVIDUAL)){
+            txtNombreEmpresa.setText("");
+            txtNombreEmpresa.setEditable(false);
+        }
 
         configurarValidaciones();
 
@@ -202,12 +210,16 @@ public class EditarClienteController implements IFxController, ILoading {
 
         // correo: opcional, acepta minúsculas
         txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
-            String texto = newText.toLowerCase(); // convertir a minusculas para la validación
-            txtCorreo.setText(texto); // actualiza el campo visualmente en minusculas
-            if (texto.isEmpty()) {
+            // ✅ Verificar que newText no sea null
+            if (newText == null || newText.isEmpty()) {
                 CorreoValido.set(true);
                 txtCorreo.setStyle("");
-            } else if (!texto.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,63}$")) {
+                return;
+            }
+
+            String texto = newText.toLowerCase();
+            // No necesitas setText aquí porque ya está en el listener
+            if (!texto.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,63}$")) {
                 CorreoValido.set(false);
                 txtCorreo.setStyle("-fx-border-color: red;");
             } else {
@@ -273,17 +285,17 @@ public class EditarClienteController implements IFxController, ILoading {
     public void editarCliente(Cliente cliente) {
         this.cliente = cliente;
 
-        // Prellenar campos con los valores del cliente
-        txtNombre.setText(cliente.getNombre());
-        txtApellido.setText(cliente.getApellido());
-        txtSegundoApellido.setText(cliente.getSegundoApellido());
-        txtTelefono.setText(cliente.getNumTelefono());
-        txtHobbie.setText(cliente.getHobbie());
-        txtRfc.setText(cliente.getRfc());
-        txtDomicilio.setText(cliente.getDomicilio());
-        txtEstado.setText(cliente.getEstado());
-        txtCiudad.setText(cliente.getCiudad());
-        txtCorreo.setText(cliente.getCorreo());
+        txtNombre.setText(cliente.getNombre() != null ? cliente.getNombre() : "");
+        txtApellido.setText(cliente.getApellido() != null ? cliente.getApellido() : "");
+        txtSegundoApellido.setText(cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : "");
+        txtTelefono.setText(cliente.getNumTelefono() != null ? cliente.getNumTelefono() : "");
+        txtHobbie.setText(cliente.getHobbie() != null ? cliente.getHobbie() : "");
+        txtRfc.setText(cliente.getRfc() != null ? cliente.getRfc() : "");
+        txtDomicilio.setText(cliente.getDomicilio() != null ? cliente.getDomicilio() : "");
+        txtEstado.setText(cliente.getEstado() != null ? cliente.getEstado() : "");
+        txtCiudad.setText(cliente.getCiudad() != null ? cliente.getCiudad() : "");
+        txtCorreo.setText(cliente.getCorreo() != null ? cliente.getCorreo() : "");
+        txtNombreEmpresa.setText(cliente.getNombreEmpresa() != null ? cliente.getNombreEmpresa() : "");
 
         choiceGenero.getItems().setAll("Masculino", "Femenino", "Otro");
         choiceGenero.setValue(cliente.getGenero());
@@ -298,9 +310,7 @@ public class EditarClienteController implements IFxController, ILoading {
             LocalDate fecha = LocalDate.parse(cliente.getFechaCumple(), formatter);
             dateCumpleanos.setValue(fecha);
         }
-
-
-    }//editarCliente
+    }
 
     @FXML
     private void actualizarCliente() {
@@ -363,8 +373,9 @@ public class EditarClienteController implements IFxController, ILoading {
                 String correo = txtCorreo.getText().trim() != null ? txtCorreo.getText().trim() : "";
                 String tipoCliente = choiceTipoCliente.getValue() != null ? choiceTipoCliente.getValue() : "";
                 String cumple = dateCumpleanos.getValue() != null ? dateCumpleanos.getValue().toString() : null;
+                String NombreEmpresa = txtNombreEmpresa.getText() != null ? txtNombreEmpresa.getText().trim() : "";
 
-
+                cliente.setNombreEmpresa(NombreEmpresa);
                 cliente.setNombre(txtNombre.getText().trim());
                 cliente.setApellido(txtApellido.getText().trim());
                 cliente.setSegundoApellido(segundoApellido);

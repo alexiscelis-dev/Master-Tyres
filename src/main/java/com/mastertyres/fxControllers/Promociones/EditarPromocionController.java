@@ -366,7 +366,6 @@ public class EditarPromocionController implements IFxController, ILoading {
 
     }//vehiculosParticipantesInitialize
 
-
     public void setPromocion(Promocion promocion) {
         this.promocionSeleccionada = promocion;
 
