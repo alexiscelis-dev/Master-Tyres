@@ -1,5 +1,6 @@
 package com.mastertyres.cliente.service;
 
+import com.mastertyres.cliente.domain.ClienteValidator;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.repository.ClienteRepository;
 import com.mastertyres.common.exeptions.ClienteException;
@@ -25,18 +26,23 @@ public class ClienteService implements IClienteService {
     private ClienteRepository clienteRepository;
     @Autowired
     private VehiculoRepository vehiculoRepository;
+    @Autowired
+    private ClienteValidator clienteValidator;
 
     @Autowired
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public List<Cliente> obtenerClientesAplicables(Integer promocionId) {
         List<Cliente> clientes = clienteRepository.findClientesAplicables(promocionId);
         return clientes;
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> listarClientesConVehiculosPaginado(String active, int pagina, int limite) {
         Pageable pageable = PageRequest.of(pagina, limite, Sort.by("clienteId").ascending());
 
@@ -75,11 +81,14 @@ public class ClienteService implements IClienteService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public long contarClientesActivos(String active) {
         return clienteRepository.contarClientesActivos(active);
     }
 
+
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> listarClientesConVehiculos(String active) {
         // Paso 1: obtener clientes activos
         List<Cliente> clientes = clienteRepository.listarClientesActivos(active);
@@ -123,25 +132,33 @@ public class ClienteService implements IClienteService {
     }//eliminarCliente
 
     @Transactional(readOnly = true)
-    public List<Cliente> buscarClientes( String filtro) {
+    @Override
+    public List<Cliente> buscarClientes(String filtro) {
         return clienteRepository.buscarClientes(filtro);
     }
 
-    public Cliente guardarCliente(Cliente cliente) {
-
+    @Transactional
+    @Override
+    public Cliente guardarCliente(Cliente cliente, boolean registrar) {
+        clienteValidator.validarGuardar(cliente, registrar);
         return clienteRepository.save(cliente);
 
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public boolean existeClientePorRFC(String rfc) {
         return clienteRepository.existeClientePorRFC(rfc);
     }
 
+    @Transactional
+    @Override
     public boolean existeClienteRFC_Editar(String rfc, Integer id) {
-        return clienteRepository.existeClienteRFC_Editar(rfc,id);
+        return clienteRepository.existeClienteRFC_Editar(rfc, id);
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> buscarClientePorNombre(String active, String nombre) {
         List<Cliente> clientes = clienteRepository.buscarClientePorNombre(active, nombre);
 
@@ -170,6 +187,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNombre
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorNombrePaginado(String active, String nombre, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorNombrePaginado(active, nombre, pageable);
@@ -199,6 +217,7 @@ public class ClienteService implements IClienteService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePornombreEmpresaPaginado(String active, String nombreEmpresa, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorNombreEmpresaPaginado(active, nombreEmpresa, pageable);
@@ -228,8 +247,9 @@ public class ClienteService implements IClienteService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> buscarClientePorNumTelefono(String active, String numTelefono) {
-        List<Cliente> clientes = clienteRepository.buscarClientePorNumTelefono(active,numTelefono);
+        List<Cliente> clientes = clienteRepository.buscarClientePorNumTelefono(active, numTelefono);
 
         if (clientes.isEmpty()) return clientes;
 
@@ -256,6 +276,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNumTelefono
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorNumTelefonoPaginado(String active, String numTelefono, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorNumTelefonoPaginado(active, numTelefono, pageable);
@@ -286,8 +307,9 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNumTelefono
 
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> buscarClientePorEstado(String active, String estado) {
-        List<Cliente> clientes = clienteRepository.buscarClientePorEstado(active,estado);
+        List<Cliente> clientes = clienteRepository.buscarClientePorEstado(active, estado);
 
         if (clientes.isEmpty()) return clientes;
 
@@ -314,6 +336,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorEstado
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorEstadoPaginado(String active, String estado, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorEstadoPaginado(active, estado, pageable);
@@ -344,8 +367,9 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNumTelefono
 
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> buscarClientePorCiudad(String active, String ciudad) {
-        List<Cliente> clientes = clienteRepository.buscarClientePorCiudad(active,ciudad);
+        List<Cliente> clientes = clienteRepository.buscarClientePorCiudad(active, ciudad);
 
         if (clientes.isEmpty()) return clientes;
 
@@ -372,6 +396,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorCiudad
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorCiudadPaginado(String active, String ciudad, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorCiudadPaginado(active, ciudad, pageable);
@@ -402,8 +427,9 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNumTelefono
 
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> buscarClientePorHobbie(String active, String hobbie) {
-        List<Cliente> clientes = clienteRepository.buscarClientePorHobbie(active,hobbie);
+        List<Cliente> clientes = clienteRepository.buscarClientePorHobbie(active, hobbie);
 
         if (clientes.isEmpty()) return clientes;
 
@@ -430,6 +456,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorHobbie
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorHobbiePaginado(String active, String hobbie, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorHobbiePaginado(active, hobbie, pageable);
@@ -460,8 +487,9 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNumTelefono
 
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> buscarClientePorDomicilio(String active, String domicilio) {
-        List<Cliente> clientes = clienteRepository.buscarClientePorDomicilio(active,domicilio);
+        List<Cliente> clientes = clienteRepository.buscarClientePorDomicilio(active, domicilio);
 
         if (clientes.isEmpty()) return clientes;
 
@@ -488,6 +516,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorDomicilio
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorDomicilioPaginado(String active, String domicilio, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorDomicilioPaginado(active, domicilio, pageable);
@@ -518,8 +547,9 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNumTelefono
 
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> buscarClientePorRfc(String active, String rfc) {
-        List<Cliente> clientes = clienteRepository.buscarClientePorRfc(active,rfc);
+        List<Cliente> clientes = clienteRepository.buscarClientePorRfc(active, rfc);
 
         if (clientes.isEmpty()) return clientes;
 
@@ -546,6 +576,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorRfc
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorRfcPaginado(String active, String rfc, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorRfcPaginado(active, rfc, pageable);
@@ -576,6 +607,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorNumTelefono
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorCumpleanosPaginado(String active, String cumpleanos, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorCumpleanosPaginado(active, cumpleanos, pageable);
@@ -606,6 +638,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorCumpleanos
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorCumpleanosRangoPaginado(String active, String cumpleanos, String cumpleanos2, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorCumpleanosRangoPaginado(active, cumpleanos, cumpleanos2, pageable);
@@ -636,6 +669,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorCumpleanos
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorRegistroPaginado(String active, String registro, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorRegistroPaginado(active, registro, pageable);
@@ -666,6 +700,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorCumpleanos
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorRegistroRangoPaginado(String active, LocalDate registro, LocalDate registro2, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorRegistroRangoPaginado(active, registro, registro2, pageable);
@@ -696,6 +731,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorCumpleanos
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscarClientePorCorreoPaginado(String active, String registro, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Cliente> clientes = clienteRepository.buscarClientePorCorreoPaginado(active, registro, pageable);
@@ -726,6 +762,7 @@ public class ClienteService implements IClienteService {
     }//buscarClientePorCumpleanos
 
     @Transactional(readOnly = true)
+    @Override
     public Page<Cliente> buscadorClientesPaginado(String status, String busqueda, int pagina, int limite) {
         Pageable pageable = PageRequest.of(pagina, limite, Sort.by("clienteId").ascending());
 
@@ -764,8 +801,9 @@ public class ClienteService implements IClienteService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<Cliente> buscadorClientes(String status, String busqueda) {
-        List<Cliente> clientes = clienteRepository.buscadorClientes(status,busqueda);
+        List<Cliente> clientes = clienteRepository.buscadorClientes(status, busqueda);
 
         if (clientes.isEmpty()) return clientes;
 
@@ -794,13 +832,14 @@ public class ClienteService implements IClienteService {
     @Transactional(readOnly = true)
     @Override
     public Cliente buscarClientePorId(Integer clienteId, String status) {
-        return clienteRepository.buscarClientePorId(clienteId,status);
+        return clienteRepository.buscarClientePorId(clienteId, status);
     }
 
-
-    public long contarClientesPorBusquedaGeneral(String status, String termino){
+    @Transactional(readOnly = true)
+    @Override
+    public long contarClientesPorBusquedaGeneral(String status, String termino) {
         return clienteRepository.contarClientesPorBusquedaGeneral(status, termino);
-    };
+    }
 
     @Transactional(readOnly = true)
     @Override

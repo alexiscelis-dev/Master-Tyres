@@ -5,11 +5,15 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -42,11 +46,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarVehiculoController implements IVentanaPrincipal, IFxController {
+public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoading {
 
     @Autowired
     private MarcaService marcaService;
@@ -68,6 +71,9 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
     @Autowired
     private DetalleCategoriaService detalleCategoriaService;
+
+    @Autowired
+    private TaskService taskService;
 
 
     // Columnas vehiculo
@@ -148,6 +154,10 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     @FXML
     private Button btnBuscarCliente;
 
+    private static final String STYLE_FIELD = "";
+
+    private LoadingComponentController loadingOverlayController;
+
     private BooleanProperty serieValido = new SimpleBooleanProperty(true);
     private BooleanProperty placasValido = new SimpleBooleanProperty(true);
     private BooleanProperty kilometrosValido = new SimpleBooleanProperty(true);
@@ -161,6 +171,11 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         this.ventanaPrincipalController = controller;
     }
 
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
 
     @FXML
     private void initialize() {
@@ -171,15 +186,15 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
     }//initialize
 
+
     @Override
-    public void configuraciones(){
+    public void configuraciones() {
 
         MenuContextSetting.disableMenu(rootPane);
 
         //Deshabilitar mediante el nodo interno (textField Interno)
         MenuContextSetting.disableMenu(spinnerAnio.getEditor());
         MenuContextSetting.disableMenu(pickerUltimoServicio.getEditor());
-
 
 
         int currentYear = Year.now().getValue();
@@ -251,8 +266,6 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         colObservaciones.setMinWidth(100);
 
 
-
-
     }//configuraciones
 
     @Override
@@ -262,7 +275,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
         //Hacer que se pueda borrar en los DatePicker
         pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
-            switch (event.getCode()){
+            switch (event.getCode()) {
                 case BACK_SPACE, DELETE -> {
                     pickerUltimoServicio.setValue(null);
                 }
@@ -283,6 +296,32 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
                 txtClienteTipo.clear();
             }
         });
+
+        //evitar que los choiceBox aparezcan en otros lados al momento de abrirlos
+
+        choiceMarca.setOnMousePressed(event -> {
+            if (!choiceMarca.isShowing()) {
+                choiceMarca.show();
+                choiceMarca.hide();
+            }
+        });
+
+        choiceModelo.setOnMousePressed(event -> {
+            if (!choiceModelo.isShowing()) {
+                if (!choiceModelo.isShowing()) {
+                    choiceModelo.show();
+                    choiceModelo.hide();
+                }
+            }
+        });
+
+        choiceCategoria.setOnMousePressed(event -> {
+            if (!choiceCategoria.isShowing()) {
+                choiceCategoria.show();
+                choiceCategoria.hide();
+            }
+        });
+
     }//listeners
 
     private void configurarValidaciones() {
@@ -506,7 +545,6 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         );
 
 
-
         txtBuscarCliente.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 buscarCliente();
@@ -566,6 +604,8 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     }
 
     private void limpiarCamposVehiculo() {
+
+
         choiceMarca.setValue(null);
         choiceModelo.setValue(null);
         choiceCategoria.setValue(null);
@@ -577,31 +617,23 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         txtKilometros.clear();
         pickerUltimoServicio.setValue(null);
         txtObservaciones.clear();
+
+        txtSerie.setStyle(STYLE_FIELD);
+        txtColor.setStyle(STYLE_FIELD);
+        txtPlacas.setStyle(STYLE_FIELD);
+        txtKilometros.setStyle(STYLE_FIELD);
+        spinnerAnio.setStyle(STYLE_FIELD);
+        pickerUltimoServicio.setStyle(STYLE_FIELD);
+        txtObservaciones.setStyle(STYLE_FIELD);
+        txtBuscarCliente.setStyle(STYLE_FIELD);
+
+
     }
 
     @FXML
     private void guardarVehiculos(ActionEvent event) {
-        for (Vehiculo v : listaVehiculos) {
-            String placas = v.getPlacas();
-            String numSerie = v.getNumSerie();
 
-            if (placas != null && !placas.isBlank()) {
-                if (vehiculoService.existeVehiculoPorPlacas(placas)) {
-                    mostrarWarning("Vehículo duplicado", "",
-                            "Ya existe un vehículo activo con las mismas placas.");
-                    return;
-                }
-            }
 
-            if (numSerie != null && !numSerie.isBlank()) {
-                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)) {
-                    mostrarWarning("Vehículo duplicado", "",
-                            "Ya existe un vehículo activo con el mismo numero de serie.");
-                    return;
-                }
-            }
-
-        }
 
         Cliente clienteSeleccionado = tablaClientes.getSelectionModel().getSelectedItem();
         if (clienteSeleccionado == null) {
@@ -640,21 +672,37 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
                 return;
             }
         }
+        taskService.runTask(
+                loadingOverlayController,
+                () ->{
+                    vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
 
 
-        try {
-            vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
+                    return null;
 
-            mostrarInformacion("Éxito", "", "Vehículos guardados correctamente.");
-            listaVehiculos.clear();
-            limpiarCamposVehiculo();
-            tablaClientes.getSelectionModel().clearSelection();
-            ventanaPrincipalController.irAtras();
-        } catch (Exception e) {
-            mostrarWarning("Error", "", "No se pudieron guardar los vehículos");
+                },(resultado) ->{
+                    mostrarInformacion("Éxito", "", "Vehículos guardados correctamente.");
+                    listaVehiculos.clear();
+                    limpiarCamposVehiculo();
+                    tablaClientes.getSelectionModel().clearSelection();
 
-        }
-    }
+                },(ex) ->{
+
+                    if (ex instanceof VehiculoException){
+                        mostrarWarning("No se pudo guardar", "Ocurrio un problema al guardar el/los vehiclos", ex.getMessage());
+
+                    }else{
+                        mostrarError("Error interno",
+                                "Error inesperado",
+                                "Ocurrio un error al intentar registrar el/los vehiculos");
+                    }
+
+                },null
+        );
+
+
+
+    }//guardarVehiculos
 
     public void Cancelar(ActionEvent actionEvent) {
 
@@ -662,4 +710,4 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
     }
 
-}
+}//class
