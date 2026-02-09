@@ -24,6 +24,7 @@ public class VehiculoPromocionService implements  IVehiculoPromocionService{
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<VehiculoPromocion> obtenerVehiculosPorPromocion(Integer promocionId) {
         return repo.findAllByPromocionIdWithMarcaModelo(promocionId);
         // Si prefieres la simple: return repo.findByPromocion_PromocionId(promocionId);
@@ -38,24 +39,28 @@ public class VehiculoPromocionService implements  IVehiculoPromocionService{
     }
 
     @Transactional
+    @Override
     public void eliminarPorPromocionId(Integer promocionId) {
         repo.eliminarPorPromocionId(promocionId);
     }
 
     // Reasignar marca
     @Transactional
+    @Override
     public int reasignarMarcaPorId(Integer marcaId) {
         return repo.reasignarMarcaPorId(marcaId);
     }
 
     // Reasignar modelo y categoría por marca
     @Transactional
+    @Override
     public int reasignarModeloYCategoriaPorMarca(Integer marcaId) {
         return repo.reasignarModeloYCategoriaPorMarca(marcaId);
     }
 
     // Reasignar modelo específico
     @Transactional
+    @Override
     public int reasignarModeloPorId(Integer modeloId) {
         return repo.reasignarModeloPorId(modeloId);
     }

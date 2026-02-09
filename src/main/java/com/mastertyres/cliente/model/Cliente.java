@@ -53,9 +53,6 @@ public class Cliente {
 
     //relaciones
 
-    //relacion vehiculo
-    //@OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
-    //private  List<Vehiculo> vehiculos = new ArrayList<>();
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Vehiculo> vehiculos = new ArrayList<>();
 

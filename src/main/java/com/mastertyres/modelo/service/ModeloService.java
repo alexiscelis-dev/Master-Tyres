@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -30,6 +31,8 @@ public class ModeloService implements IModeloService {
         this.modeloRepository = modeloRepository;
     }
 
+    @Transactional
+    @Override
     public Modelo guardarModelo(Modelo modelo) {
         //validar exepciones al guardar
         modeloValidator.validarGuardar(modelo);
@@ -38,36 +41,45 @@ public class ModeloService implements IModeloService {
     }
 
     //  Listar modelos excluyendo el genérico
+    @Transactional(readOnly = true)
     @Override
     public List<Modelo> listarModelos() {
         return modeloRepository.findAll()
                 .stream()
                 .filter(m -> m.getModeloId() != 1)
+                .sorted(Comparator.comparing(Modelo::getNombreModelo))
                 .toList();
     }
 
     //  Listar nombres sin incluir el genérico
+    @Transactional(readOnly = true)
+    @Override
     public List<String> listarNombresModelos() {
         return modeloRepository.listarNombresModelos();
     }
 
     //  Buscar modelos por nombre
+    @Transactional(readOnly = true)
+    @Override
     public Page<Modelo> buscarModelosPorNombre(String filtro, Pageable pageable) {
         return modeloRepository.buscarModelosPorNombre(filtro, pageable);
     }
 
     //  Reasignar marca
     @Transactional
+    @Override
     public int reasignarMarcaPorId(Integer marcaId) {
         return modeloRepository.reasignarMarcaPorId(marcaId);
     }
 
     //  Eliminar modelo (si no es el genérico)
     @Transactional
+    @Override
     public int eliminarModeloPorId(Integer modeloId) {
 
         modeloValidator.validarEliminar(modeloId);
 
         return modeloRepository.eliminarModeloPorId(modeloId);
     }
-}
+
+}//class

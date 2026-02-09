@@ -25,15 +25,20 @@ public class PromocionService implements IPromocionService {
         this.promocionRepository = promocionRepository;
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public List<Promocion> obtenerPromocionesActivas() {
         return promocionRepository.findPromocionesActivas(hoy);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public List<Promocion> buscarPromociones(String texto) {
         return promocionRepository.buscarPromocionesActivas(hoy, texto);
     }
 
     @Transactional
+    @Override
     public void desactivarPromocion(Integer id) {
       int filasAfectadas =  promocionRepository.desactivarPromocion(id);
       if (filasAfectadas == 0){
