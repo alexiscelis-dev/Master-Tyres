@@ -4,8 +4,12 @@ package com.mastertyres.fxControllers.cliente;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -18,8 +22,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+
 @Component
-public class EditarClienteController implements IFxController {
+public class EditarClienteController implements IFxController, ILoading {
 
     @FXML
     private TextField txtNombreEmpresa;
@@ -56,6 +62,10 @@ public class EditarClienteController implements IFxController {
 
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private TaskService taskService;
+
+    private LoadingComponentController loadingOverlayController;
 
     //Validaciones:
     private BooleanProperty rfcValido = new SimpleBooleanProperty(true);
@@ -70,6 +80,11 @@ public class EditarClienteController implements IFxController {
         listeners();
 
     }//initialize
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
 
     @Override
     public void configuraciones() {
@@ -301,13 +316,15 @@ public class EditarClienteController implements IFxController {
     private void actualizarCliente() {
 
         if (cliente == null) {
-            MensajesAlert.mostrarError(
+            mostrarError(
                     "Error",
                     "No hay cliente seleccionado",
                     "Debe seleccione un cliente antes de poder modificarlo."
             );
             return;
         }
+
+        /*
 
 
         if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
@@ -336,6 +353,8 @@ public class EditarClienteController implements IFxController {
             return;
         }
 
+         */
+
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
                 "¿Desea guardar los cambios en este cliente?",
@@ -346,7 +365,6 @@ public class EditarClienteController implements IFxController {
 
         if (confirmar) {
 
-            try {
                 //  Actualizar datos generales
                 String segundoApellido = txtSegundoApellido.getText().trim() != null ? txtSegundoApellido.getText().trim() : "";
                 String hobbie = txtHobbie.getText().trim() != null ? txtHobbie.getText().trim() : "";
@@ -354,6 +372,7 @@ public class EditarClienteController implements IFxController {
                 String domicilio = txtDomicilio.getText().trim() != null ? txtDomicilio.getText().trim() : "";
                 String correo = txtCorreo.getText().trim() != null ? txtCorreo.getText().trim() : "";
                 String tipoCliente = choiceTipoCliente.getValue() != null ? choiceTipoCliente.getValue() : "";
+                String cumple = dateCumpleanos.getValue() != null ? dateCumpleanos.getValue().toString() : null;
                 String NombreEmpresa = txtNombreEmpresa.getText() != null ? txtNombreEmpresa.getText().trim() : "";
 
                 cliente.setNombreEmpresa(NombreEmpresa);
@@ -365,7 +384,7 @@ public class EditarClienteController implements IFxController {
                 cliente.setEstado(txtEstado.getText().trim());
                 cliente.setCiudad(txtCiudad.getText().trim());
                 cliente.setDomicilio(domicilio);
-                cliente.setFechaCumple(dateCumpleanos.getValue().toString());
+                cliente.setFechaCumple(cumple);
                 cliente.setRfc(rfc);
                 cliente.setNumTelefono(txtTelefono.getText().trim());
                 cliente.setCorreo(correo);
@@ -381,22 +400,33 @@ public class EditarClienteController implements IFxController {
                 }
                 cliente.setUpdated_at(LocalDateTime.now().toString());
 
-                //  Guardar cambios en la promoción
-                clienteService.guardarCliente(cliente);
+                taskService.runTask(
+                        loadingOverlayController,
+                        () -> {
+                            //  Guardar cambios en la promoción
+                            //false -> actualiza no hace las comparaciones el metodo validator del vehiculo asociado
+                            clienteService.guardarCliente(cliente, false);
 
+                            return null;
 
-                MensajesAlert.mostrarInformacion("Éxito", "Cliente actualizado", "El cliente se actualizó correctamente.");
-                cerrarVentana();
+                        }, (resultado) -> {
 
-            } catch (Exception e) {
-                // Cualquier error en la BD o lógica cae aquí
-                MensajesAlert.mostrarError(
-                        "Error al actualizar",
-                        "No se pudo actualizar el cliente",
-                        "Detalles: " + e.getMessage()
+                            MensajesAlert.mostrarInformacion("Éxito", "Cliente actualizado", "El cliente se actualizó correctamente.");
+                            cerrarVentana();
+
+                        }, (ex) -> {
+
+                            if (ex instanceof ClienteException) {
+                                mostrarError("Error al actualizar", "Ocurrio un problema al guardar los cambios", "" + ex.getMessage());
+                            } else {
+                                mostrarError("Error interno",
+                                        "",
+                                        "Ocurrio un error inesperado al intentar guardar los cambios. Vuelva a intentarlo mas tarde.");
+                            }
+
+                        }, null
                 );
-                e.printStackTrace();
-            }//try-catch
+
 
         }//if
 
@@ -407,4 +437,5 @@ public class EditarClienteController implements IFxController {
         Stage stage = (Stage) txtNombre.getScene().getWindow();
         stage.close();
     }
-}
+
+}//class

@@ -1,6 +1,7 @@
 package com.mastertyres.inventario.service;
 
 import com.mastertyres.inventario.model.Inventario;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,6 +47,33 @@ public interface IInventarioService {
     void actualizarStock(Integer inventarioId, Integer stock, String active);
 
     List<Inventario>  first100Inventario(String active);
+
+    long contarInventariosActivos(String active);
+
+    long contarInventarioPorBusquedaGeneral(String status, String termino);
+
+    Page<Inventario> listarInventarioPaginado(String active, int pagina, int tamanoPagina);
+
+    Page<Inventario> buscadorInventarioPaginado(String active, String busqueda, int pagina, int tamanoPagina);
+
+    Page<Inventario> buscarPorCodBarrasPaginado(String active, String busqueda, int pagina, int tamanoPagina);
+
+    Page<Inventario> buscarPorDotPaginado(String active, String busqueda, int pagina, int tamanoPagina);
+
+    Page<Inventario> buscarPorMarcaPaginado(String active, String busqueda, int pagina, int tamanoPagina);
+
+    Page<Inventario> buscarPorModeloPaginado(String active, String busqueda, int pagina, int tamanoPagina);
+
+    Page<Inventario> buscarPorMedidaPaginado(String active, String busqueda, int pagina, int tamanoPagina);
+
+    Page<Inventario> buscarPorFechaPaginado(String active, LocalDate fecha, int pagina, int tamanoPagina);
+
+    Page<Inventario> buscarPorFechaPaginadoRangos(String active,
+                                                  LocalDate fechaInicio,
+                                                  LocalDate fechaFin,
+                                                  int pagina,
+                                                  int tamanoPagina);
+
 
 
 
