@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
@@ -91,6 +91,7 @@ public class EditarVehiculoController implements IFxController, ILoading {
     private BooleanProperty kilometrosValido = new SimpleBooleanProperty(true);
     private BooleanProperty ColorValido = new SimpleBooleanProperty(true);
 
+    private final Map<Integer, Modelo> modeloPorCategoriaId = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -129,8 +130,8 @@ public class EditarVehiculoController implements IFxController, ILoading {
         // Cargar Validaciones
         configurarValidaciones();
 
-        dateUltimoServicio.getEditor().setOnKeyPressed(event -> {
-            switch (event.getCode()) {
+        dateUltimoServicio.getEditor().setOnKeyPressed(event ->{
+            switch (event.getCode()){
                 case BACK_SPACE, DELETE -> {
                     dateUltimoServicio.setValue(null);
                 }
@@ -142,6 +143,10 @@ public class EditarVehiculoController implements IFxController, ILoading {
     }//listeners
 
     private void configurarValidaciones() {
+
+        //VALIDACIONES DE CHOICESBOXS
+        choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
+        choiceCategoria.disableProperty().bind(choiceModelo.valueProperty().isNull());
 
         txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d{0,6}")) {
@@ -241,6 +246,7 @@ public class EditarVehiculoController implements IFxController, ILoading {
         List<Marca> marcas = marcaService.listarMarcas();
         modelos = modeloService.listarModelos();
         List<Categoria> categorias = categoriaService.listarCategorias();
+        Map<String, List<Modelo>> modelosPorNombre = new HashMap<>();
 
         choiceMarca.setItems(FXCollections.observableArrayList(marcas));
         choiceModelo.setItems(FXCollections.observableArrayList(modelos)); // se filtrará después
@@ -286,10 +292,23 @@ public class EditarVehiculoController implements IFxController, ILoading {
         // Listener para filtrar modelos según la marca seleccionada
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
             if (newMarca != null) {
-                List<Modelo> modelosFiltrados = modelos.stream()
+//                List<Modelo> modelosFiltrados = modelos.stream()
+//                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+//                        .toList();
+//                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+                modelosPorNombre.clear();
+                modelos.stream()
                         .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+                        .forEach(modelo -> modelosPorNombre
+                                .computeIfAbsent(normalizarModelo(modelo.getNombreModelo()), key -> new ArrayList<>())
+                                .add(modelo));
+                List<Modelo> modelosFiltrados = modelosPorNombre.values().stream()
+                        .map(modelosConNombre -> modelosConNombre.get(0))
+                        .sorted(Comparator.comparing(Modelo::getNombreModelo))
                         .toList();
                 choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+                choiceModelo.getSelectionModel().clearSelection();
+                choiceCategoria.getItems().clear();
             } else {
                 choiceModelo.getItems().clear();
             }
@@ -300,18 +319,50 @@ public class EditarVehiculoController implements IFxController, ILoading {
 
             if (marcaSeleccionada != null && newModelo != null) {
 
-                List<Categoria> categoriasFiltradas =
-                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
-                                marcaSeleccionada.getMarcaId(),
-                                newModelo.getModeloId()
-                        );
+                Map<Integer, Categoria> categoriasPorId = new LinkedHashMap<>();
+                modeloPorCategoriaId.clear();
+                List<Modelo> modelosConNombre = modelosPorNombre
+                        .getOrDefault(normalizarModelo(newModelo.getNombreModelo()), List.of());
+                for (Modelo modelo : modelosConNombre) {
+                    List<Categoria> categoriasFiltradas = detalleCategoriaService.listarCategoriasPorMarcaYModelo(
+                            marcaSeleccionada.getMarcaId(),
+                            modelo.getModeloId()
+                    );
+                    for (Categoria categoria : categoriasFiltradas) {
+                        categoriasPorId.putIfAbsent(categoria.getCategoriaId(), categoria);
+                        modeloPorCategoriaId.putIfAbsent(categoria.getCategoriaId(), modelo);
+                    }
+                }
+                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasPorId.values()));
+                choiceCategoria.getSelectionModel().clearSelection();
 
-                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
+//                List<Categoria> categoriasFiltradas =
+//                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
+//                                marcaSeleccionada.getMarcaId(),
+//                                newModelo.getModeloId()
+//                        );
+//
+//                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
 
             } else {
                 choiceCategoria.getItems().clear();
             }
         });
+    }
+
+    private String normalizarModelo(String nombre) {
+        return nombre == null ? "" : nombre.trim().toLowerCase();
+    }
+
+    private Modelo obtenerModeloSeleccionado() {
+        Categoria categoria = choiceCategoria.getValue();
+        if (categoria != null) {
+            Modelo modelo = modeloPorCategoriaId.get(categoria.getCategoriaId());
+            if (modelo != null) {
+                return modelo;
+            }
+        }
+        return choiceModelo.getValue();
     }
 
     public void setVehiculo(VehiculoDTO vehiculo) {
@@ -415,7 +466,8 @@ public class EditarVehiculoController implements IFxController, ILoading {
                     Vehiculo vehiculo = new Vehiculo();
                     vehiculo.setVehiculoId(this.vehiculo.getId());
                     vehiculo.setMarca(choiceMarca.getValue());
-                    vehiculo.setModelo(choiceModelo.getValue());
+                    vehiculo.setModelo(obtenerModeloSeleccionado());
+                    //vehiculo.setModelo(choiceModelo.getValue());
                     vehiculo.setCategoria(choiceCategoria.getValue());
                     vehiculo.setAnio(spinnerAnio.getValue());
                     vehiculo.setKilometros(Integer.parseInt(txtKilometros.getText()));

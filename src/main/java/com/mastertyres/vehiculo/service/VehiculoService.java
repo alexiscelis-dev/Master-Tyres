@@ -196,7 +196,6 @@ public class VehiculoService implements IVehiculoService {
 
         int filasEliminadas = vehiculoRepository.eliminarVehiculo(eliminar, idVehiculo);
 
-
         if (filasEliminadas == 0)
          throw new VehiculoException("Error interno. No se pudo eliminar el vehiculo seleccionado.");
 

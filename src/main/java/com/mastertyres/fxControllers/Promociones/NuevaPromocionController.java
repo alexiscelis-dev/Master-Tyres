@@ -34,6 +34,10 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
@@ -92,6 +96,8 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
     private VehiculoPromocionService vehiculoPromocionService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -208,6 +214,11 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
                 choiceMarca.hide();
             }
         });
+
+        choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
+        choiceAnio.disableProperty().bind(
+                choiceMarca.valueProperty().isNull().or(choiceModelo.valueProperty().isNull())
+        );
 
         porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
 
@@ -334,7 +345,8 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         choiceModelo.setConverter(new StringConverter<Modelo>() {
             @Override
             public String toString(Modelo modelo) {
-                return modelo != null ? modelo.getNombreModelo() : "";
+                //return modelo != null ? modelo.getNombreModelo() : "";
+                return modelo != null ? obtenerNombreModeloConCategoria(choiceMarca.getValue(), modelo) : "";
             }
 
             @Override
@@ -358,6 +370,32 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
 
 
     }//vehiculosParticipantesInitialize
+
+    private String obtenerNombreModeloConCategoria(Marca marca, Modelo modelo) {
+        if (modelo == null) {
+            return "";
+        }
+
+        String nombreModelo = modelo.getNombreModelo() != null ? modelo.getNombreModelo() : "";
+        Marca marcaSeleccionada = marca != null ? marca : modelo.getMarca_id();
+        if (marcaSeleccionada == null || marcaSeleccionada.getMarcaId() == null) {
+            return nombreModelo;
+        }
+
+        List<Categoria> categorias = detalleCategoriaService
+                .listarCategoriasPorMarcaYModelo(marcaSeleccionada.getMarcaId(), modelo.getModeloId());
+        String categoriasTexto = categorias.stream()
+                .map(Categoria::getNombreCategoria)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.joining("/"));
+
+        if (categoriasTexto.isBlank()) {
+            return nombreModelo;
+        }
+
+        return nombreModelo + " (" + categoriasTexto + ")";
+    }
 
     private boolean empty() {
         boolean empty = false;
@@ -419,7 +457,10 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
             return new SimpleObjectProperty<>(data.getValue().getMarca().getNombreMarca());
         });
         colModelo.setCellValueFactory(data -> {
-            return new SimpleObjectProperty<>(data.getValue().getModelo().getNombreModelo());
+            //return new SimpleObjectProperty<>(data.getValue().getModelo().getNombreModelo());
+            return new SimpleObjectProperty<>(
+                    obtenerNombreModeloConCategoria(data.getValue().getMarca(), data.getValue().getModelo())
+            );
         });
 
         colAnio.setCellValueFactory(data -> {

@@ -42,9 +42,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Year;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
@@ -162,7 +160,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     private BooleanProperty placasValido = new SimpleBooleanProperty(true);
     private BooleanProperty kilometrosValido = new SimpleBooleanProperty(true);
     private BooleanProperty ColorValido = new SimpleBooleanProperty(true);
-
+    private final Map<Integer, Modelo> modeloPorCategoriaId = new HashMap<>();
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -328,6 +326,10 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
     private void configurarValidaciones() {
 
+        //VALIDACIONES DE CHOICESBOXS
+        choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
+        choiceCategoria.disableProperty().bind(choiceModelo.valueProperty().isNull());
+
         txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d{0,6}")) {
                 txtKilometros.setText(oldValue);
@@ -446,7 +448,8 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
 
         v.setMarca(choiceMarca.getValue());
-        v.setModelo(choiceModelo.getValue());
+        v.setModelo(obtenerModeloSeleccionado());
+        //v.setModelo(choiceModelo.getValue());
         v.setCategoria(choiceCategoria.getValue());
 
         listaVehiculos.add(v);
@@ -457,6 +460,8 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         List<Marca> marcas = marcaService.listarMarcas();
         List<Modelo> modelos = modeloService.listarModelos();
         List<Categoria> categorias = categoriaService.listarCategorias();
+
+        Map<String, List<Modelo>> modelosPorNombre = new HashMap<>();
 
 
         choiceMarca.setItems(FXCollections.observableArrayList(marcas));
@@ -503,10 +508,25 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         //  Listener para filtrar modelos según la marca seleccionada
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
             if (newMarca != null) {
-                List<Modelo> modelosFiltrados = modelos.stream()
+//                List<Modelo> modelosFiltrados = modelos.stream()
+//                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+//                        .toList();
+//                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+                modelosPorNombre.clear();
+                modelos.stream()
                         .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+                        .forEach(modelo -> modelosPorNombre
+                                .computeIfAbsent(normalizarModelo(modelo.getNombreModelo()), key -> new ArrayList<>())
+                                .add(modelo));
+                List<Modelo> modelosFiltrados = modelosPorNombre.values().stream()
+                        .map(modelosConNombre -> modelosConNombre.get(0))
+                        .sorted(Comparator.comparing(Modelo::getNombreModelo))
                         .toList();
+
+
                 choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+                choiceModelo.getSelectionModel().clearSelection();
+                choiceCategoria.getItems().clear();
             } else {
                 choiceModelo.getItems().clear();
             }
@@ -516,14 +536,30 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
             Marca marcaSeleccionada = choiceMarca.getValue();
 
             if (marcaSeleccionada != null && newModelo != null) {
+                Map<Integer, Categoria> categoriasPorId = new LinkedHashMap<>();
+                modeloPorCategoriaId.clear();
+                List<Modelo> modelosConNombre = modelosPorNombre
+                        .getOrDefault(normalizarModelo(newModelo.getNombreModelo()), List.of());
+                for (Modelo modelo : modelosConNombre) {
+                    List<Categoria> categoriasFiltradas = detalleCategoriaService.listarCategoriasPorMarcaYModelo(
+                            marcaSeleccionada.getMarcaId(),
+                            modelo.getModeloId()
+                    );
+                    for (Categoria categoria : categoriasFiltradas) {
+                        categoriasPorId.putIfAbsent(categoria.getCategoriaId(), categoria);
+                        modeloPorCategoriaId.putIfAbsent(categoria.getCategoriaId(), modelo);
+                    }
+                }
+                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasPorId.values()));
+                choiceCategoria.getSelectionModel().clearSelection();
 
-                List<Categoria> categoriasFiltradas =
-                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
-                                marcaSeleccionada.getMarcaId(),
-                                newModelo.getModeloId()
-                        );
-
-                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
+//                List<Categoria> categoriasFiltradas =
+//                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
+//                                marcaSeleccionada.getMarcaId(),
+//                                newModelo.getModeloId()
+//                        );
+//
+//                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
 
             } else {
                 choiceCategoria.getItems().clear();
@@ -570,6 +606,21 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         btnBuscarCliente.setOnAction(e -> {
             buscarCliente();
         });
+    }
+
+    private String normalizarModelo(String nombre) {
+        return nombre == null ? "" : nombre.trim().toLowerCase();
+    }
+
+    private Modelo obtenerModeloSeleccionado() {
+        Categoria categoria = choiceCategoria.getValue();
+        if (categoria != null) {
+            Modelo modelo = modeloPorCategoriaId.get(categoria.getCategoriaId());
+            if (modelo != null) {
+                return modelo;
+            }
+        }
+        return choiceModelo.getValue();
     }
 
     private void buscarCliente() {

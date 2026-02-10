@@ -1,7 +1,6 @@
 package com.mastertyres.fxControllers.Promociones;
 
 
-import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
 import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
@@ -9,25 +8,18 @@ import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.model.StatusPromocion;
 import com.mastertyres.promociones.model.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
-import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +43,7 @@ public class NuevaPromocionClienteController {
     @FXML private DatePicker fechaInicio;
     @FXML private DatePicker fechaFin;
     @FXML private Button btnRegistrar;
-    @FXML private Button btnRegresar;
+    @FXML private Button btnLimpiar;
     @FXML private ChoiceBox<String> tipoDescuento;
     @FXML private TextField nombrePromocion;
     @FXML private TextField descripcion;
@@ -557,4 +549,4 @@ public class NuevaPromocionClienteController {
     }
 
 
-}
+}//class

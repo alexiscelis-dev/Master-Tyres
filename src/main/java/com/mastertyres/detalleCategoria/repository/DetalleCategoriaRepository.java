@@ -19,7 +19,6 @@ import java.util.Optional;
 @Repository
 public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategoria, Integer> {
 
-  String SELECT_DETALLE_CATEGORIA_NO_GENERICOS = "";
 
     // Obtener todos los modelos + categorías por marca, excluyendo los genéricos
     @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
@@ -116,7 +115,7 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
 
     @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("SELECT d.categoria FROM DetalleCategoria d " +
-            "WHERE d.marca.marcaId = :marcaId AND d.modelo.modeloId = :modeloId")
+            "WHERE d.marca.marcaId = :marcaId AND d.modelo.modeloId = :modeloId ORDER BY d.categoria.nombreCategoria")
     List<Categoria> findCategoriasByMarcaAndModelo(@Param("marcaId") Integer marcaId,
                                                    @Param("modeloId") Integer modeloId);
 
