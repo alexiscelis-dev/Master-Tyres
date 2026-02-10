@@ -27,6 +27,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import javafx.util.StringConverter;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -93,6 +98,8 @@ public class EditarPromocionController implements IFxController, ILoading {
     private VehiculoPromocionService vehiculoPromocionService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
 
     //Validaciones:
     private BooleanProperty precioValido = new SimpleBooleanProperty(true);
@@ -123,7 +130,10 @@ public class EditarPromocionController implements IFxController, ILoading {
 
         // Inicializar columnas
         colMarca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMarca().getNombreMarca()));
-        colModelo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getModelo().getNombreModelo()));
+        //colModelo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getModelo().getNombreModelo()));
+        colModelo.setCellValueFactory(data -> new SimpleStringProperty(
+                obtenerNombreModeloConCategoria(data.getValue().getMarca(), data.getValue().getModelo())
+        ));
         colAnio.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getAnnio()).asObject());
 
         // Columna eliminar
@@ -219,6 +229,13 @@ public class EditarPromocionController implements IFxController, ILoading {
     }//listeners
 
     private void configurarValidaciones() {
+
+        //VALIDACIONES DE CHOICESBOXS
+        choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
+        choiceAnio.disableProperty().bind(
+                choiceMarca.valueProperty().isNull().or(choiceModelo.valueProperty().isNull())
+        );
+
 
         // NOMBRE
         txtNombre.textProperty().addListener((obs, oldText, newText) -> {
@@ -341,6 +358,17 @@ public class EditarPromocionController implements IFxController, ILoading {
         choiceMarca.setItems(observableList(promocionService.listarMarcas()));
         List<Modelo> modelos = promocionService.listarModelos();
         choiceModelo.setItems(observableList(modelos));
+        choiceModelo.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Modelo modelo) {
+                return modelo != null ? obtenerNombreModeloConCategoria(choiceMarca.getValue(), modelo) : "";
+            }
+
+            @Override
+            public Modelo fromString(String string) {
+                return null;
+            }
+        });
 
         // Listener para filtrar modelos según la marca seleccionada
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
@@ -365,6 +393,32 @@ public class EditarPromocionController implements IFxController, ILoading {
 
 
     }//vehiculosParticipantesInitialize
+
+    private String obtenerNombreModeloConCategoria(Marca marca, Modelo modelo) {
+        if (modelo == null) {
+            return "";
+        }
+
+        String nombreModelo = modelo.getNombreModelo() != null ? modelo.getNombreModelo() : "";
+        Marca marcaSeleccionada = marca != null ? marca : modelo.getMarca_id();
+        if (marcaSeleccionada == null || marcaSeleccionada.getMarcaId() == null) {
+            return nombreModelo;
+        }
+
+        List<Categoria> categorias = detalleCategoriaService
+                .listarCategoriasPorMarcaYModelo(marcaSeleccionada.getMarcaId(), modelo.getModeloId());
+        String categoriasTexto = categorias.stream()
+                .map(Categoria::getNombreCategoria)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.joining("/"));
+
+        if (categoriasTexto.isBlank()) {
+            return nombreModelo;
+        }
+
+        return nombreModelo + " (" + categoriasTexto + ")";
+    }
 
     public void setPromocion(Promocion promocion) {
         this.promocionSeleccionada = promocion;

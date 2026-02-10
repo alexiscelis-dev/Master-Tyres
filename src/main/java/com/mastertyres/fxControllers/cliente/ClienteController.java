@@ -192,55 +192,42 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                             switch (seleccion) {
 
                                 case "Eliminar" -> {
-
-
-                                    String cliente, informacionCliente;
-
-                                    //verificar que no contenga null  mostrar mensaje
-                                    cliente = (clienteSeleccionado.getNombre() != null ? clienteSeleccionado.getNombre() : "") + " " +
+                                    String cliente = (clienteSeleccionado.getNombre() != null ? clienteSeleccionado.getNombre() : "") + " " +
                                             (clienteSeleccionado.getApellido() != null ? clienteSeleccionado.getApellido() : "") + " " +
                                             (clienteSeleccionado.getSegundoApellido() != null ? clienteSeleccionado.getSegundoApellido() : "");
 
-
-                                    boolean eliminar =   mostrarConfirmacion("Eliminar cliente",
-                                            "¿Estas seguro que quieres eliminar el siguiente cliente? \n\n" +cliente,
+                                    boolean eliminar = mostrarConfirmacion("Eliminar cliente",
+                                            "¿Estas seguro que quieres eliminar el siguiente cliente? \n\n" + cliente,
                                             "Esta accion no se podra deshacer",
                                             "Eliminar",
                                             "Cancelar");
 
-                                    if (eliminar){
-
+                                    if (eliminar) {
                                         taskService.runTask(
                                                 loadingOverlayController,
-                                                () ->{
-                                                    clienteService.eliminarCliente(StatusCliente.INACTIVE.toString(),clienteSeleccionado.getClienteId());
+                                                () -> {
+                                                    clienteService.eliminarCliente(StatusCliente.INACTIVE.toString(), clienteSeleccionado.getClienteId());
                                                     return null;
                                                 },
-                                                (resultado) ->{
-                                                    cargarClientes(); //metodo que cargar los datos en la tabla
-                                                    resetBusqueda();
-                                                    mostrarInformacion("Cliente eliminado","","El cliente se elimino exitosamente.");
+                                                (resultado) -> {
 
+                                                    refrescarTabla();
+                                                    mostrarInformacion("Cliente eliminado", "", "El cliente se eliminó exitosamente.");
                                                 },
-                                                (ex) ->{
-                                                    if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException){
-                                                        mostrarWarning("Operación cancelada",
-                                                                "",
-                                                                "La accion fue cancelada por el usuario.");
+                                                (ex) -> {
+                                                    if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
+                                                        mostrarWarning("Operación cancelada", "", "La acción fue cancelada por el usuario.");
                                                     } else if (ex instanceof ClienteException) {
-                                                        mostrarError("Error al eliminar cliente","",""+ex);
-                                                    }else {
-                                                        mostrarError("Error al eliminar cliente","","No se pudo eliminar el cliente seleccionado");
+                                                        mostrarError("Error al eliminar cliente", "", "" + ex);
+                                                    } else {
+                                                        mostrarError("Error al eliminar cliente", "", "No se pudo eliminar el cliente seleccionado");
                                                     }
-                                                },null
+                                                }, null
                                         );
-
-                                    }else {
-                                        mostrarInformacion("Accion cancelada", "", "Accion cancelada");
+                                    } else {
+                                        mostrarInformacion("Acción cancelada", "", "Acción cancelada");
                                     }
-
-
-                                }//case eliminr
+                                }//Eliminar
 
                                 case "Editar" -> {
                                     try {
@@ -249,23 +236,18 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         Parent root = loader.load();
 
                                         EditarClienteController controller = loader.getController();
-                                        controller.editarCliente(clienteSeleccionado); // pasa el cliente actual
+                                        controller.editarCliente(clienteSeleccionado);
 
                                         Stage stage = new Stage(StageStyle.UTILITY);
-
-
-
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
                                         stage.setResizable(false);
-
                                         stage.initModality(Modality.APPLICATION_MODAL);
 
                                         stage.showAndWait();
 
 
-                                        cargarClientes();
-                                        resetBusqueda();
+                                        refrescarTabla();
 
                                     } catch (IOException ex) {
                                         ex.printStackTrace();
@@ -290,7 +272,6 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         ex.printStackTrace();
                                     }
                                 }
-
 
                                 case "Copiar" -> {
                                     var selectedCell = tablaClientes.getSelectionModel().getSelectedCells();
@@ -327,6 +308,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                     }
 
                                 }
+
                                 case "Copiar fila completa" -> {
                                     Cliente item = tablaClientes.getSelectionModel().getSelectedItem();
 
@@ -395,9 +377,40 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
     }//configuraciones
 
+    private void refrescarTabla() {
+        // Limpiar búsqueda
+        modoBusqueda = false;
+        terminoBusquedaActual = "";
+        buscarClienteBuscador.clear();
+        atributoBusquedaClientes.setValue(null);
+
+        // Recalcular paginación
+        long totalClientes = clienteService.contarClientesActivos(StatusCliente.ACTIVE.toString());
+        int totalPaginas = (int) Math.ceil((double) totalClientes / CLIENTES_POR_PAGINA);
+        paginadorClientes.setPageCount(Math.max(totalPaginas, 1));
+
+        // Cargar primera página
+        Page<Cliente> primerasPagina = clienteService.listarClientesConVehiculosPaginado(
+                StatusCliente.ACTIVE.toString(),
+                0,
+                CLIENTES_POR_PAGINA
+        );
+
+        // CRÍTICO: Actualizar items de la tabla
+        tablaClientes.setItems(FXCollections.observableArrayList(primerasPagina.getContent()));
+
+        // Resetear el PageFactory
+        paginadorClientes.setPageFactory(this::crearPaginaClientes);
+
+        // Ir a página 0
+        paginadorClientes.setCurrentPageIndex(0);
+
+        // Forzar refresh visual
+        tablaClientes.refresh();
+    }
+
     @Override
     public void listeners() {
-
 
         //buscar mientras escribes
         buscarClienteBuscador.setOnKeyReleased(event -> {
@@ -426,7 +439,6 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
             delayQuery.playFromStart();
         });
 
-
         //Enter buscar
         buscarClienteBuscador.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -448,7 +460,6 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                 }
             }
         });
-
 
         // Listener para detectar cambios en el ChoiceBox
 
@@ -482,7 +493,6 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
         });
 
     }//listeners
-
 
     @FXML
     private void agregarCliente(ActionEvent event) {
@@ -965,6 +975,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
         paginadorClientes.setCurrentPageIndex(0);
         cargarDatosClientes();
         resetBusqueda();
+        refrescarTabla();
     }
 
     public void accionBuscarCliente(ActionEvent actionEvent) {

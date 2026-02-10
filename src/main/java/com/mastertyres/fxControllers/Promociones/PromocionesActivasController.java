@@ -42,6 +42,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.marca.model.Marca;
+import com.mastertyres.modelo.model.Modelo;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
@@ -77,6 +83,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     private VehiculoPromocionService vehiculoPromocionService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
 
     @Autowired
     private ClientePromocionService clientePromocionService;
@@ -284,10 +292,36 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
         for (var vp : vehiculos) {
             String descripcion = vp.getMarca().getNombreMarca() + " " +
-                    vp.getModelo().getNombreModelo() + " " +
+                    //vp.getModelo().getNombreModelo() + " " +
+                    obtenerNombreModeloConCategoria(vp.getMarca(), vp.getModelo()) + " " +
                     vp.getAnnio();
             ListaVehiculosPromocion.getItems().add(descripcion);
         }
+    }
+
+    private String obtenerNombreModeloConCategoria(Marca marca, Modelo modelo) {
+        if (modelo == null) {
+            return "";
+        }
+
+        String nombreModelo = modelo.getNombreModelo() != null ? modelo.getNombreModelo() : "";
+        if (marca == null || marca.getMarcaId() == null) {
+            return nombreModelo;
+        }
+
+        List<Categoria> categorias = detalleCategoriaService
+                .listarCategoriasPorMarcaYModelo(marca.getMarcaId(), modelo.getModeloId());
+        String categoriasTexto = categorias.stream()
+                .map(Categoria::getNombreCategoria)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.joining("/"));
+
+        if (categoriasTexto.isBlank()) {
+            return nombreModelo;
+        }
+
+        return nombreModelo + " (" + categoriasTexto + ")";
     }
 
     private void cargarClientesPromocion(Integer promocionId) {

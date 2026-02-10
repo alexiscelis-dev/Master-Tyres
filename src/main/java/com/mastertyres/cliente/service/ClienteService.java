@@ -27,8 +27,10 @@ public class ClienteService implements IClienteService {
     private VehiculoRepository vehiculoRepository;
 
     @Autowired
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository,
+                          VehiculoRepository vehiculoRepository) {
         this.clienteRepository = clienteRepository;
+        this.vehiculoRepository = vehiculoRepository;
     }
 
     public List<Cliente> obtenerClientesAplicables(Integer promocionId) {
@@ -112,6 +114,8 @@ public class ClienteService implements IClienteService {
     @Transactional
     @Override
     public int eliminarCliente(String eliminar, Integer idCliente) {
+
+        vehiculoRepository.eliminarVehiculosPorCliente(eliminar, idCliente);
 
         int filasEliminadas = clienteRepository.eliminarCliente(eliminar, idCliente);
 
