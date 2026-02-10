@@ -150,8 +150,6 @@ public class VehiculoService implements IVehiculoService {
 //        return vehiculoRepository.listarVehiculosPaginado(vehiculoStatus);
 //    }
 
-
-
     @Transactional(readOnly = true)
     public Vehiculo Vehiculo_SinDTO(Integer id) {
         return vehiculoRepository.Vehiculo_SinDTO(id);
@@ -162,8 +160,7 @@ public class VehiculoService implements IVehiculoService {
     public int eliminarVehiculo(String eliminar, Integer idVehiculo) {
 
         int filasEliminadas = vehiculoRepository.eliminarVehiculo(eliminar, idVehiculo);
-
-
+        
         if (filasEliminadas == 0)
          throw new VehiculoException("Error interno. No se pudo eliminar el vehiculo seleccionado.");
 
