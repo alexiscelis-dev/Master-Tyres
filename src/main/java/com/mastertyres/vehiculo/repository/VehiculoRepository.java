@@ -184,6 +184,10 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
             " WHERE v.active = 'ACTIVE' AND v.vehiculoId = :vehiculoId")
     Vehiculo Vehiculo_SinDTO(@Param("vehiculoId") Integer vehiculoId);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE Vehiculo v SET v.active = :inactive WHERE v.cliente.clienteId = :idCliente")
+    int eliminarVehiculosPorCliente(@Param("inactive") String eliminar, @Param("idCliente") Integer idCliente);
 
     @Transactional
     @Modifying

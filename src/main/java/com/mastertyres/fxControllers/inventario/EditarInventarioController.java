@@ -362,7 +362,7 @@ public class EditarInventarioController implements IFxController, ILoading {
 
         if (!confirmar) return; //Evita que siga si el usuario cancela
 
-        cerrarVentana(); // cierra la ventana emergente para que al momento de actualizar el loading pueda bloaquear toda la pantalla
+        //cerrarVentana(); // cierra la ventana emergente para que al momento de actualizar el loading pueda bloaquear toda la pantalla
         String codigoBarras = (txtCodBarras.getText() != null && !txtCodBarras.getText().isBlank())
                 ? txtCodBarras.getText()
                 : null;
