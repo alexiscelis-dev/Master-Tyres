@@ -210,7 +210,8 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                                     inventarioService.eliminarInventario(StatusInventario.INACTIVE.toString(), inventarioId);
                                                     return null;
                                                 }, (resultado) -> {
-                                                    cargarInventario();
+                                                    //cargarInventario();
+                                                    resetBusqueda();
                                                     mostrarInformacion("Elemento eliminado", "", "Elemento eliminado exitosamente");
 
                                                 }, (ex) -> {
@@ -246,8 +247,8 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                         stage.setResizable(false);
                                         stage.setScene(new Scene(root));
                                         stage.showAndWait();
-                                        cargarDatosInventario();
-
+                                        //cargarDatosInventario();
+                                        resetBusqueda();
 
                                     } catch (IOException ex) {
                                         mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Intente de nuevo mas tarde.");
@@ -467,6 +468,10 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
         terminoBusquedaActual = "";
         atributoBusquedaInventario.setValue(null);
         buscarInventarioBuscador.clear();
+        dpInventarioInicio.setValue(null);
+        dpInventarioFin.setValue(null);
+        chkRangoInventario.setSelected(false);
+        actualizarVisibilidaddeDatePicker(false);
 
         paginadorInventarios.setPageFactory(this::crearPaginaInventario);
         paginadorInventarios.setCurrentPageIndex(0);
@@ -819,15 +824,15 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
 
     //actualiza
     private void actualizarTabla() {
-        atributoBusquedaInventario.setValue(null);
-        buscarInventarioBuscador.setText("");
-
-        modoBusqueda = false;
-        terminoBusquedaActual = "";
-
-        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
-        paginadorInventarios.setCurrentPageIndex(0);
-
+//        atributoBusquedaInventario.setValue(null);
+//        buscarInventarioBuscador.setText("");
+//
+//        modoBusqueda = false;
+//        terminoBusquedaActual = "";
+//
+//        paginadorInventarios.setPageFactory(this::crearPaginaInventario);
+//        paginadorInventarios.setCurrentPageIndex(0);
+        resetBusqueda();
         //cargarInventario();
     }
 

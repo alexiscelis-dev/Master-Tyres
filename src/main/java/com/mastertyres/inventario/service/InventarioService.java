@@ -200,7 +200,7 @@ public class InventarioService implements IInventarioService {
                 inv.setImagen(inventario.getImagen());
                 inv.setActive(StatusInventario.ACTIVE.toString());
                 inv.setUpdated_at(LocalDateTime.now().toString());
-
+                inv.setCreated_at(LocalDateTime.now().toString());
 
                 inv.setCodigoBarras(inventario.getCodigoBarras());
                 inv.setDot(inventario.getDot());
@@ -236,6 +236,7 @@ public class InventarioService implements IInventarioService {
                     inv.setImagen(inventario.getImagen());
                     inv.setActive(StatusInventario.ACTIVE.toString());
                     inv.setUpdated_at(LocalDateTime.now().toString());
+                    inv.setCreated_at(LocalDateTime.now().toString());
 
 
                     inv.setCodigoBarras(inventario.getCodigoBarras());
@@ -272,6 +273,7 @@ public class InventarioService implements IInventarioService {
                     inv.setCodigoBarras(inventario.getCodigoBarras());
                     inv.setDot(inventario.getDot());
                     inv.setUpdated_at(LocalDateTime.now().toString());
+                    inv.setCreated_at(LocalDateTime.now().toString());
 
                     inventarioRepository.save(inv);
                     return;
@@ -314,6 +316,7 @@ public class InventarioService implements IInventarioService {
                 inv.setCodigoBarras(inventario.getCodigoBarras());
                 inv.setDot(inventario.getDot());
                 inv.setUpdated_at(LocalDateTime.now().toString());
+                inv.setCreated_at(LocalDateTime.now().toString());
 
                 return;
 

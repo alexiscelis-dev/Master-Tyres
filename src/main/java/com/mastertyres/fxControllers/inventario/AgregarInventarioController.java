@@ -118,9 +118,9 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         btnRegistrar.disableProperty().bind(
                 (txtMarca.textProperty().isEmpty())
                         .or(txtMarca.textProperty().isNull())
+                        .or(choiceAncho.valueProperty().isNull())
                         .or(txtModelo.textProperty().isEmpty())
                         .or(txtModelo.textProperty().isNull())
-                        .or(choiceAncho.valueProperty().isNull())
                         .or(choicePerfil.valueProperty().isNull())
                         .or(choiceRin.valueProperty().isNull())
                         .or(cbIndiceCarga.valueProperty().isNull())
@@ -173,8 +173,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                 return change;
             }
 
-            codBarrasValido.set(false);
-            txtCodBarras.setStyle(COLOR_RED);
+            //codBarrasValido.set(false);
+            //txtCodBarras.setStyle(COLOR_RED);
             return null;
         }));
 
@@ -192,8 +192,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                 return change;
             }
 
-            dotValido.set(false);
-            txtDot.setStyle(COLOR_RED);
+//            dotValido.set(false);
+//            txtDot.setStyle(COLOR_RED);
 
             return null;
         }));
