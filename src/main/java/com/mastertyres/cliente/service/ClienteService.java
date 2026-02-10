@@ -30,8 +30,10 @@ public class ClienteService implements IClienteService {
     private ClienteValidator clienteValidator;
 
     @Autowired
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository,
+                          VehiculoRepository vehiculoRepository) {
         this.clienteRepository = clienteRepository;
+        this.vehiculoRepository = vehiculoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -121,6 +123,8 @@ public class ClienteService implements IClienteService {
     @Transactional
     @Override
     public int eliminarCliente(String eliminar, Integer idCliente) {
+
+        vehiculoRepository.eliminarVehiculosPorCliente(eliminar, idCliente);
 
         int filasEliminadas = clienteRepository.eliminarCliente(eliminar, idCliente);
 
