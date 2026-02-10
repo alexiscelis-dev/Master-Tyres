@@ -197,6 +197,8 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         MenuContextSetting.disableMenu(pickerUltimoServicio.getEditor());
 
 
+
+
         int currentYear = Year.now().getValue();
         SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
         spinnerAnio.setValueFactory(yearFactory);
@@ -325,6 +327,12 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     }//listeners
 
     private void configurarValidaciones() {
+
+        txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,6}")) {
+                txtKilometros.setText(oldValue);
+            }
+        });
 
         // Placas
         txtPlacas.textProperty().addListener((obs, oldText, newText) -> {

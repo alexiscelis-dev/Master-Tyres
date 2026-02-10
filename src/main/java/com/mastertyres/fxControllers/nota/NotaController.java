@@ -535,6 +535,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR NOTA");
 
 
+
     }//agregarNotas
 
     private void editarNota(String numNota) {

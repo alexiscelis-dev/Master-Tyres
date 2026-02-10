@@ -21,7 +21,7 @@ public interface InventarioRepository extends JpaRepository<Inventario,Integer> 
     @Query("SELECT i FROM Inventario i WHERE i.active = :active ORDER BY i.identificadorLlanta ASC")
     Page<Inventario> listarInventarioPaginada(@Param("active")String active, Pageable pageable);
 
-    @Query("SELECT COUNT(v) FROM Inventario v WHERE v.active = :active")
+    @Query("SELECT COUNT(v) FROM Inventario v WHERE v.active = :active ORDER BY v.identificadorLlanta ASC")
     long contarInventarioActivos(@Param("active") String active);
 
     @Query("SELECT i FROM Inventario i WHERE i.active = :active AND " +

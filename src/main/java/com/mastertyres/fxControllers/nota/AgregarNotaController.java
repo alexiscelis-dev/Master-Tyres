@@ -565,6 +565,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
                 RegistrarNotaController controller = loader.getController();
                 controller.agregarNota(nuevaNota);
+                controller.setInitializeLoading(loadingOverlayController);
                 controller.setOnRegistroCompleto(() -> refrescar(null));
 
 
@@ -578,7 +579,9 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
                 stage.showAndWait();
 
             } catch (Exception e) {
-                mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+                mostrarError("Error de carga",
+                        "",
+                        "Ocurrió un problema al cargar la vista. Vuelve a intentarlo mas tarde");
 
                 e.printStackTrace();
             }

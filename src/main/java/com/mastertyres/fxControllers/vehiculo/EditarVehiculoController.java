@@ -143,6 +143,12 @@ public class EditarVehiculoController implements IFxController, ILoading {
 
     private void configurarValidaciones() {
 
+        txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,6}")) {
+                txtKilometros.setText(oldValue);
+            }
+        });
+
         // Placas
         txtPlacas.textProperty().addListener((obs, oldText, newText) -> {
             String texto = newText.toUpperCase();

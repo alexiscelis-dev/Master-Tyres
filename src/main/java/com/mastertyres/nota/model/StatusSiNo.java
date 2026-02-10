@@ -1,6 +1,6 @@
 package com.mastertyres.nota.model;
 
-public enum StatatusSiNo {
+public enum StatusSiNo {
     SI,
     NO,
     DESELECCIONADO

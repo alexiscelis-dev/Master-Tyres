@@ -275,6 +275,8 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void guardarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle) {
+
+        notaValidator.validarAgregarNota(nota,notaDetalle,clienteDetalle);
         Nota porNumNota = notaRepository.findByNumNota(nota.getNumNota());
 
         //si no es null encontro coincidencia y ya existe
@@ -347,6 +349,7 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void actualizarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle) {
+        notaValidator.validarAgregarNota(nota, notaDetalle, clienteDetalle);
         notaRepository.save(nota);
         notaDetalleRepository.save(notaDetalle);
         notaClienteDetRepository.save(clienteDetalle);
