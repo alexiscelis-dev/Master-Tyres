@@ -19,13 +19,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Service
 public class NotaService implements INotaService {
@@ -86,54 +82,44 @@ public class NotaService implements INotaService {
                     paginaFiltrada = buscarPorRfc(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
             case "adeudo" -> {
-                try {
-                    BigDecimal adeudo = new BigDecimal(busqueda.trim());
-                    paginaFiltrada = buscarPorAdeudo(
-                            adeudo, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
-                    );
-                } catch (NumberFormatException ex) {
 
-                    mostrarWarning(
-                            "Valor inválido",
-                            "Adeudo incorrecto",
-                            "Ingrese un valor numérico válido para el adeudo."
-                    );
 
+                    paginaFiltrada = buscarPorAdeudo(StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
                     return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
-                }
+
             }
 
             case "total" -> {
                 try {
                     Double total = Double.parseDouble(busqueda.trim());
                     paginaFiltrada = buscarPorTotal(
-                            total, "ACTIVE", IndicePagina, tamañoPagina
+                            total, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
                     );
                 } catch (NumberFormatException ex) {
+
+                    throw new NotaException("Valor inválido. Ingrese un valor numérico válido para el total. ");
+                    /*
                     mostrarWarning(
                             "Valor inválido",
                             "Total incorrecto",
                             "Ingrese un valor numérico válido para el total."
                     );
+
+
                     return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
+
+                     */
                 }
             }
 
             case "saldo a favor" -> {
-                try {
-                    Double saldo = Double.parseDouble(busqueda.trim());
-                    paginaFiltrada = buscarPorSaldoFavor(
-                            saldo, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
-                    );
-                } catch (NumberFormatException ex) {
-                    mostrarWarning(
-                            "Valor inválido",
-                            "Saldo incorrecto",
-                            "Ingrese un valor numérico válido para el saldo a favor."
-                    );
+
+
+                    paginaFiltrada = buscarPorSaldoFavor(StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+
                     return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
-                }
+
             }
 
             default -> paginaFiltrada = listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
@@ -246,9 +232,9 @@ public class NotaService implements INotaService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<NotaDTO> buscarPorAdeudo(BigDecimal filtro, String active, int pagina, int tamanoPagina) {
+    public Page<NotaDTO> buscarPorAdeudo(String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
-        return notaRepository.buscarPorAdeudo(filtro, active, pageable);
+        return notaRepository.buscarPorAdeudo(active, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -260,9 +246,9 @@ public class NotaService implements INotaService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<NotaDTO> buscarPorSaldoFavor(Double filtro, String active, int pagina, int tamanoPagina) {
-        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
-        return notaRepository.buscarPorSaldoFavor(filtro, active, pageable);
+    public Page<NotaDTO> buscarPorSaldoFavor(String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return notaRepository.buscarPorSaldoFavor(active, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -271,6 +257,7 @@ public class NotaService implements INotaService {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
         return notaRepository.buscarPorNumeroNota(filtro, active, pageable);
     }
+
 
     @Transactional
     @Override

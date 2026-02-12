@@ -62,8 +62,8 @@
                                         <String fx:value="Fecha de emicion" />
                                         <String fx:value="Fecha de vencimiento" />
                                         <String fx:value="Adeudo" />
-                                        <String fx:value="Total" />
                                         <String fx:value="Saldo a favor" />
+                                        <String fx:value="Total" />
                                     </FXCollections>
                                 </items>
                             </ChoiceBox>

@@ -178,6 +178,39 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
     @Override
     public void listeners() {
 
+        atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue == null ) {
+                return;
+            }
+
+            switch (newValue.toString()){
+
+                case "Adeudo" ->  filtroActual = "Adeudo";
+                case "Saldo a favor" -> filtroActual = "Saldo a favor";
+
+            }//switch
+
+            txtBuscar.clear();
+            modoBusqueda = false;
+
+            if (PaginadorNotas.getCurrentPageIndex() == 0){
+                cargarPagina(0);
+            }else {
+                PaginadorNotas.setCurrentPageIndex(0);
+            }
+
+        });
+
+
+        atributoBusquedaNota.setOnMousePressed(event -> {
+                    if (!atributoBusquedaNota.isShowing()) {
+                        atributoBusquedaNota.show();
+                        atributoBusquedaNota.hide();
+                    }
+                }
+        );
+
         // Listener para detectar cambios en el ChoiceBox
         atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             configurarBuscador(newVal);
@@ -213,15 +246,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
                 darPlazo(notaSeleccionada.getNotaId()));
 
         btnRefrescar.setOnAction(event -> {
-            taskService.runTask(
-                    loadingOverlayController,
-                    () -> {
-                    },
-                    () -> {
-                        resetBusqueda();
-                        cargarNota();
-                    }
-            );
+            resetBusqueda();
+            cargarNota();
         });
 
 
@@ -251,7 +277,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
 
     private void cargarPagina(int indicePagina) {
 
-        //    try {
+
         taskService.runTask(
                 loadingOverlayController,
                 () -> {
@@ -265,7 +291,15 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
                             pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
                         }
                     } else {
-                        pagina = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
+
+                        if ("Adeudo".equals(filtroActual)){
+                            pagina = notaService.buscarPorAdeudo(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
+                        } else if ("Saldo a favor".equals(filtroActual)) {
+                            pagina = notaService.buscarPorSaldoFavor(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
+                        } else {
+                            pagina = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
+                        }
+
                     }
 
                     return pagina;
@@ -276,12 +310,12 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
 
                 }, (ex) -> {
 
-                    if (ex instanceof NotaException){
-                        mostrarError("Error de busqueda","Ocurrio un problema al mostrar las notas",""+ex.getMessage());
-                    }else {
+                    if (ex instanceof NotaException) {
+                        mostrarWarning("Error de busqueda", "Ocurrio un problema al mostrar las notas", "" + ex.getMessage());
+                    } else {
                         ex.printStackTrace();
                         ex.getMessage();
-                        mostrarError("Error interno", "","Ocurrio un problema al mostrar las notas");
+                        mostrarError("Error interno", "", "Ocurrio un problema al mostrar las notas");
                     }
 
                 }, null

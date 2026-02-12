@@ -327,7 +327,11 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
             );
 
-            notaUtils.campoFormatter(cliente.getDomicilio() != null ? cliente.getDomicilio() : "", txtDireccion, txtDireccion2);
+            String domicilio = (cliente.getDomicilio() != null ? cliente.getDomicilio() : "") + " " +
+                    (cliente.getCiudad() != null ? cliente.getCiudad() : "") + " " +
+                    (cliente.getEstado() != null ? cliente.getEstado() : "");
+
+            notaUtils.campoFormatter(domicilio,txtDireccion, txtDireccion2);
 
             notaUtils.campoFormatter(
                     cliente.getRfc() != null ? cliente.getRfc() : "",

@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -155,20 +154,14 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
                                 @Param("active") String active,
                                 Pageable pageable);
 
-    @Query( SELECT_NOTA_DTO + " WHERE n.active = :active AND n.adeudo = :adeudo")
-    Page<NotaDTO> buscarPorAdeudo(@Param("adeudo") BigDecimal adeudo,
-                                  @Param("active") String active,
-                                  Pageable pageable);
+    @Query( SELECT_NOTA_DTO + " WHERE n.active = :active  AND n.adeudo > 0 ORDER BY n.createdAt DESC")
+    Page<NotaDTO> buscarPorAdeudo( @Param("active") String active, Pageable pageable);
 
     @Query(SELECT_NOTA_DTO + " WHERE n.active = :active AND n.total = :total")
     Page<NotaDTO> buscarPorTotal(@Param("total") Double total, @Param("active") String active, Pageable pageable);
 
-    @Query(SELECT_NOTA_DTO + " WHERE n.active = :active AND n.saldoFavor = :saldoFavor")
-    Page<NotaDTO> buscarPorSaldoFavor(
-            @Param("saldoFavor") Double saldoFavor,
-            @Param("active") String active,
-            Pageable pageable
-    );
+    @Query(SELECT_NOTA_DTO + " WHERE n.active = :active AND n.saldoFavor > 0 ORDER BY n.createdAt DESC")
+    Page<NotaDTO> buscarPorSaldoFavor(@Param("active") String active, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query("""
@@ -244,6 +237,8 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @Query(SELECT_NOTA_DTO + " WHERE n.active = :active " +
             " AND LOWER(ndc.nombreClienteNota) LIKE LOWER(CONCAT('%', :nombreCliente, '%')) ORDER BY n.createdAt DESC")
     List<NotaDTO> buscarHistorial(@Param("active") String active,@Param("nombreCliente")String nombreCliente,  Pageable pageable);
+
+
 
 
 }//clase
