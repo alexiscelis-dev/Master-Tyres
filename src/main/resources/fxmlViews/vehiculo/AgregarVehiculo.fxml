@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.AgregarVehiculoController">
     <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0">
@@ -83,6 +84,7 @@
 
                     </VBox>
 
+
                     <!-- Sección Derecha: Datos del Cliente (Actualizada) -->
                     <VBox alignment="TOP_CENTER" minWidth="500.0" prefWidth="500.0" spacing="15.0" styleClass="secciones">
 
@@ -97,9 +99,10 @@
 
                             <!-- Búsqueda -->
                             <TextField fx:id="txtBuscarCliente" promptText="Buscar Cliente:" styleClass="buscador" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
-                        <GridPane.margin>
-                           <Insets left="10.0" />
-                        </GridPane.margin></TextField>
+                                <GridPane.margin>
+                                    <Insets left="10.0" />
+                                </GridPane.margin>
+                            </TextField>
 
                             <Button fx:id="btnBuscarCliente" minWidth="150.0" prefWidth="150.0" styleClass="boton-accion" text="Buscar" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
@@ -118,9 +121,10 @@
 
                             <!-- Etiquetas de selección -->
                             <Label text="Cliente Seleccionado:" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                        <GridPane.margin>
-                           <Insets left="10.0" />
-                        </GridPane.margin></Label>
+                                <GridPane.margin>
+                                    <Insets left="10.0" />
+                                </GridPane.margin>
+                            </Label>
                             <TextField fx:id="txtClienteNombre" editable="false" promptText="Nombre" styleClass="buscador2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             <TextField fx:id="txtClienteTipo" editable="false" promptText="Tipo Cliente" styleClass="buscador2" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
@@ -130,14 +134,29 @@
                                 <RowConstraints />
                             </rowConstraints>
                         </GridPane>
+
+                        <Label translateX="20" fx:id="statusLabel" alignment="CENTER" prefHeight="15.0" prefWidth="300.0" text="" textAlignment="CENTER" textFill="WHITE" visible="true">
+
+                            <font>
+                                <Font name="Roboto Bold" size="12.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="20.0" />
+                            </VBox.margin>
+                        </Label>
+
+
                     </VBox>
                 </HBox>
+
+
             </ScrollPane>
+
 
             <!-- Botones centrados abajo -->
             <HBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                 <Button fx:id="btnGuardar" onAction="#guardarVehiculos" styleClass="boton-accion" text="Guardar" />
-                <Button fx:id="btnCancelar" styleClass="boton-accion" text="Limpiar" />
+                <Button fx:id="btnLimpiar" styleClass="boton-accion" text="Limpiar" />
             </HBox>
         </children>
     </AnchorPane>

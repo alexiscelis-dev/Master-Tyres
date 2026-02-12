@@ -169,6 +169,12 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
 
         notaUtils.mostrarPopupHora(txtHoraEntrega);
+        notaUtils.descripcionComponent(btnNotaDetalles,"Detalles cliente");
+        notaUtils.descripcionComponent(btnActualizarAdeudo,"Actualizar adeudo");
+        notaUtils.descripcionComponent(btnActualizarSaldoFavor,"Actualizar saldo favor");
+        notaUtils.descripcionComponent(btnAgregarNumFactura,"Agregar numero de factura");
+        notaUtils.descripcionComponent(btnActualizarDatos,"Actualizar datos cliente");
+        notaUtils.descripcionComponent(btnGuardar,"Guardar cambios");
 
 
     }//configuraciones
@@ -453,7 +459,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             actualizarDatosCliente(notaAdeudo);
 
         } catch (Exception e) {
-            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista.");
+            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
 
         }

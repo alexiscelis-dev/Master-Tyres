@@ -1,10 +1,10 @@
 package com.mastertyres.ClientesPromocion.repository;
 
 import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
-import com.mastertyres.cliente.model.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -34,4 +34,9 @@ public interface ClientePromocionRepository extends JpaRepository<ClientesPromoc
     @Transactional
     void deleteByPromocionPromocionId(Integer promocionId);
 
-}
+    @Query("SELECT p.img FROM ClientesPromocion cp JOIN cp.promocion p " +
+            "WHERE cp.cliente.clienteId = :clienteId AND p.promocionId = :promocionId AND p.active = 'ACTIVE'")
+    List<String> buscarImgPromocion(@Param("clienteId") Integer clienteId , @Param("promocionId") Integer promocionId);
+
+
+}//class

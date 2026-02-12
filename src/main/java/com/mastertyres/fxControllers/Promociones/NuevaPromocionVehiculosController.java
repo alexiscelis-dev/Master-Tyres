@@ -1,13 +1,15 @@
 package com.mastertyres.fxControllers.Promociones;
 
+import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
@@ -16,6 +18,7 @@ import com.mastertyres.promociones.model.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,6 +29,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,15 +38,13 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionController implements IVentanaPrincipal, IFxController, ILoading {
+public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFxController, ILoading {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -87,8 +89,11 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
     private TextField textFieldImg;
     @FXML
     private TableColumn<VehiculoPromocion, Void> colEliminar;
+    @FXML
+    private Label statusLabel;
 
     private ObservableList<VehiculoPromocion> vehiculos = FXCollections.observableList(FXCollections.observableArrayList());
+    private PauseTransition pauseTransition;
 
     @Autowired
     private PromocionService promocionService;
@@ -138,21 +143,24 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
             return null;
         }));
 
-
         colEliminar.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button();
 
             {
                 // Quitar texto y agregar imagen
                 Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
-                ImageView iv = new ImageView(img);
-                iv.setFitWidth(18);   // tamaño icono
-                iv.setFitHeight(18);
-                btn.setGraphic(iv);
+                ImageView imgView = new ImageView(img);
+                imgView.setFitWidth(18);   // tamaño icono
+                imgView.setFitHeight(18);
+                btn.setGraphic(imgView);
 
                 btn.setOnAction(e -> {
-                    VehiculoPromocion v = getTableView().getItems().get(getIndex());
-                    vehiculos.remove(v);
+
+                    VehiculoPromocion vp = getTableView().getItems().get(getIndex());
+                    String mensaje = vp.getMarca().getNombreMarca() + " " + vp.getModelo().getNombreModelo()  + " " + vp.getAnnio();
+                            showLabel(mensaje, "eliminado");
+                    vehiculos.remove(vp);
+
                 });
 
                 // (opcional) estilo para que sea redondo o plano
@@ -216,6 +224,7 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         });
 
         choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
+
         choiceAnio.disableProperty().bind(
                 choiceMarca.valueProperty().isNull().or(choiceModelo.valueProperty().isNull())
         );
@@ -473,14 +482,22 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         Modelo modelo = choiceModelo.getValue();
         Integer anio = choiceAnio.getValue();
 
+        System.out.println(modelo);
+
+        String mensaje = marca + " " + modelo + " " + anio;
+
         if (marca != null && modelo != null && anio != null) {
             VehiculoPromocion vehiculo = new VehiculoPromocion();
             vehiculo.setMarca(marca);
             vehiculo.setModelo(modelo);
             vehiculo.setAnnio(anio);
 
-            if (choiceMarca != null && choiceModelo != null && choiceAnio != null && !vehiculos.contains(vehiculo))
+            if (choiceMarca != null && choiceModelo != null && choiceAnio != null && !vehiculos.contains(vehiculo)){
                 vehiculos.add(vehiculo);
+
+                showLabel(mensaje, "agregado");
+            }
+
         }
 
     }//agregarVehiculo
@@ -557,21 +574,6 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         );
 
 
-        //     try {
-
-
-
-
-/*
-        } catch (Exception e) {
-            mostrarError("Error al crear promocion", "","Ha ocurrido un error al crear la promocion vuelva a iintentarlo mas tarde");
-            clean();
-
-        }
-
- */
-
-
     }//insertarPromocion
 
     private void seleccionarImg() {
@@ -590,6 +592,18 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         }
 
     }//seleccionarImg
+
+    private void showLabel(String mensaje, String accion){
+        statusLabel.setText(mensaje +  " " + accion);
+
+        if (pauseTransition != null){
+            pauseTransition.stop();
+        }
+        pauseTransition = new PauseTransition(Duration.seconds(2.5));
+        pauseTransition.setOnFinished(event -> statusLabel.setText(""));
+        pauseTransition.play();
+
+    }//showLabel
 
 
 }//clase

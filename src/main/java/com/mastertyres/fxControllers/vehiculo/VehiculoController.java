@@ -5,17 +5,16 @@ import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -52,7 +51,6 @@ import java.util.List;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
 import static com.mastertyres.common.utils.MensajesAlert.*;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component
@@ -103,6 +101,8 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
+    private PauseTransition pauseTransition;
+
     //presiona una tecla hace un delay
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -269,7 +269,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         stage.showAndWait();
                                         cargarVehiculos();
                                     } catch (IOException ex) {
-                                        ex.printStackTrace();
+                                      mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
                                     }
                                 }
 
@@ -288,7 +288,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         stage.initModality(Modality.APPLICATION_MODAL);
                                         stage.showAndWait();
                                     } catch (IOException ex) {
-                                        ex.printStackTrace();
+                                        mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
                                     }
                                 }
 
@@ -311,16 +311,17 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                             statusLabel.setVisible(true);
                                             statusLabel.setText("Texto copiado ");
 
-                                            new Thread(() -> {
-                                                try {
-                                                    Thread.sleep(2500);
+                                            if (pauseTransition != null){
+                                                pauseTransition.stop();
+                                            }
 
-                                                } catch (InterruptedException exception) {
-                                                    exception.printStackTrace();
-                                                }
-                                                Platform.runLater(() -> statusLabel.setText(""));
+                                            pauseTransition = new PauseTransition(Duration.seconds(2.5));
 
-                                            }).start();
+                                            pauseTransition.setOnFinished(e1 ->{
+                                                statusLabel.setVisible(false);
+                                                statusLabel.setText("");
+                                            });
+                                            pauseTransition.play();
 
 
                                         }
@@ -370,19 +371,17 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         statusLabel.setVisible(true);
                                         statusLabel.setText("Fila copiada");
 
-                                        new Thread(() -> {
-                                            try {
-                                                Thread.sleep(2500);
+                                        if (pauseTransition != null){
+                                            pauseTransition.stop();
+                                        }
 
-                                            } catch (InterruptedException exception) {
-                                                exception.printStackTrace();
-                                            }
-                                            Platform.runLater(() -> {
-                                                        statusLabel.setText("");
-                                                        statusLabel.setVisible(false);
-                                                    }
-                                            );
-                                        }).start();
+                                        pauseTransition = new PauseTransition(Duration.seconds(2.5));
+                                        pauseTransition.setOnFinished(event1 -> {
+                                            statusLabel.setVisible(false);
+                                            statusLabel.setText("");
+                                        });
+                                        pauseTransition.play();
+
                                     }
                                 }
                             }//switch

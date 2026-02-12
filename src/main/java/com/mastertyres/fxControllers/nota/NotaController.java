@@ -4,6 +4,7 @@ import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
@@ -12,7 +13,6 @@ import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.historial.HistorialController;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -250,32 +250,43 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
     }//configurarBuscador
 
     private void cargarPagina(int indicePagina) {
-        Page<NotaDTO> pagina;
 
-        try {
+        //    try {
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
+                    Page<NotaDTO> pagina;
 
-            if (modoBusqueda) {
-                // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
-                if (esRangoActual) {
-                    pagina = notaService.buscadorRangos(filtroActual, textoBusquedaActual, textoBusquedaActual2, indicePagina, tamañoPagina);
-                } else {
-                    pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
-                }
-            } else {
-                pagina = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
-            }
+                    if (modoBusqueda) {
+                        // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
+                        if (esRangoActual) {
+                            pagina = notaService.buscadorRangos(filtroActual, textoBusquedaActual, textoBusquedaActual2, indicePagina, tamañoPagina);
+                        } else {
+                            pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
+                        }
+                    } else {
+                        pagina = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
+                    }
 
-            mostrarNotas(pagina.getContent());
-            PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
+                    return pagina;
+                }, (pagina) -> {
 
-        }catch (NotaException ne){
-            mostrarError("Error de busqueda","",""+ne);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            e.getMessage();
-            mostrarError("Error inesperado", "","Ocurrio un problema al mostrar las notas");
-        }
+                    mostrarNotas(pagina.getContent());
+                    PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
+
+                }, (ex) -> {
+
+                    if (ex instanceof NotaException){
+                        mostrarError("Error de busqueda","Ocurrio un problema al mostrar las notas",""+ex.getMessage());
+                    }else {
+                        ex.printStackTrace();
+                        ex.getMessage();
+                        mostrarError("Error interno", "","Ocurrio un problema al mostrar las notas");
+                    }
+
+                }, null
+        );
+
 
     }//cargarPagina
 
@@ -533,7 +544,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
                 "/fxmlViews/nota/NotaFormulario.fxml",
                 "Agregar Nota");
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR NOTA");
-
 
 
     }//agregarNotas

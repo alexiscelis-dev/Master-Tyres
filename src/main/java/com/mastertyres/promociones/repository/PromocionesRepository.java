@@ -64,4 +64,5 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
     List<Categoria> listarCategorias();
 
 
+
 }//interface

@@ -68,6 +68,8 @@ public class FechaUtils {
         String hora = fechayHora.format(formatter);
         txtHoraEntrega.setText(hora);
 
+
+
     }//mostrarFecha
 
 

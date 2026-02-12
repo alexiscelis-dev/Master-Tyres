@@ -171,7 +171,7 @@ public class NotaService implements INotaService {
     @Transactional(readOnly = true)
     @Override
     public Page<NotaDTO> buscarNotas(String filtro, int pagina, int tamanio) {
-        return notaRepository.buscarNotas("ACTIVE", filtro, PageRequest.of(pagina, tamanio));
+        return notaRepository.buscarNotas(StatusNota.ACTIVE.toString(), filtro, PageRequest.of(pagina, tamanio));
     }
 
     @Transactional(readOnly = true)

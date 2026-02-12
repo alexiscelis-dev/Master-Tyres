@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -29,6 +30,15 @@ import static com.mastertyres.common.utils.FechaUtils.mostrarFechayHora;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 @Component
 public class AgregarNotaController extends BaseNota implements IFxController, ILoading {
+    @FXML
+    private Button btnBuscarCliente;
+    @FXML
+    private Button btnBuscarLlanta;
+    @FXML
+    private Button btnBorrarCliente;
+    @FXML
+    private Button btnBorrarInventario;
+
 
     private BooleanProperty boolTotal = new SimpleBooleanProperty(true);
     private LoadingComponentController loadingOverlayController;
@@ -118,10 +128,25 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
         RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
 
+
+
+        notaUtils.descripcionComponent(btnBuscarCliente, "Buscar cliente");
+        notaUtils.descripcionComponent(btnBuscarLlanta, "Buscar llantas");
+        notaUtils.descripcionComponent(btnBorrarCliente,"Eliminar Cliente de la nota");
+        notaUtils.descripcionComponent(btnBorrarInventario,"Eliminar llanta de la nota");
+        notaUtils.descripcionComponent(btnGuardar,"Guardar");
+        notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
+        notaUtils.descripcionComponent(txtHoraEntrega,"Haz doble clic para modificar la Hora de Entrega");
+        notaUtils.descripcionComponent(spPorcentajeGas,"Haz clic para modificar el porcentaje de Gasolina");
+
+
+
+
     }//configuraciones
 
     @Override
     public void listeners() {
+
 
         operacionesCampos();
 
@@ -134,76 +159,91 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
                 cbRayonesNo.setSelected(false);
             }
         });
+
         cbRayonesNo.setOnAction(event -> {
             if (cbRayonesNo.isSelected()) {
                 cbRayonesSi.setSelected(false);
             }
         });
+
         cbGolpesSi.setOnAction(event -> {
             if (cbGolpesSi.isSelected()) {
                 cbGolpesNo.setSelected(false);
             }
         });
+
         cbGolpesNo.setOnAction(event -> {
             if (cbGolpesNo.isSelected()) {
                 cbGolpesSi.setSelected(false);
             }
         });
+
         cbTaponesSi.setOnAction(event -> {
             if (cbTaponesSi.isSelected()) {
                 cbTaponesNo.setSelected(false);
             }
         });
+
         cbTaponesNo.setOnAction(event -> {
             if (cbTaponesNo.isSelected()) {
                 cbTaponesSi.setSelected(false);
             }
         });
+
         cbTapetesSi.setOnAction(event -> {
             if (cbTapetesSi.isSelected()) {
                 cbTapetesNo.setSelected(false);
             }
         });
+
         cbTapetesNo.setOnAction(event -> {
             if (cbTapetesNo.isSelected()) {
                 cbTapetesSi.setSelected(false);
             }
         });
+
         cbRadioSi.setOnAction(event -> {
             if (cbRadioSi.isSelected()) {
                 cbRadioNo.setSelected(false);
             }
         });
+
         cbRadioNo.setOnAction(event -> {
             if (cbRadioNo.isSelected()) {
                 cbRadioSi.setSelected(false);
             }
         });
+
         cbGatoSi.setOnAction(event -> {
             if (cbGatoSi.isSelected()) {
                 cbGatoNo.setSelected(false);
             }
         });
+
         cbGatoNo.setOnAction(event -> {
             if (cbGatoNo.isSelected()) {
                 cbGatoSi.setSelected(false);
             }
         });
+
         cbLlaveSi.setOnAction(event -> {
             if (cbLlaveSi.isSelected()) {
                 cbLlaveNo.setSelected(false);
             }
         });
+
         cbLlaveNo.setOnAction(event -> {
             if (cbLlaveNo.isSelected()) {
                 cbLlaveSi.setSelected(false);
             }
         });
+
         cbLlantaSi.setOnAction(event -> {
             if (cbLlantaSi.isSelected()) {
                 cbLlantaNo.setSelected(false);
             }
         });
+
         cbLlantaNo.setOnAction(event -> {
             if (cbLlantaNo.isSelected()) {
                 cbLlantaSi.setSelected(false);
@@ -242,7 +282,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
 
         } catch (Exception e) {
-            mostrarError("Error", "", "Error inesperado.");
+            mostrarError("Error de carga", "", "Ocurrio un problema al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
         }
 
@@ -269,7 +309,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
 
         } catch (Exception e) {
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista. Vuelva a intentarlo mas tarde.");
 
             e.printStackTrace();
         }
@@ -688,8 +728,8 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         txtTotal.setText("");
 
 
-        habilitar(true, "inventario");
-        habilitar(true, "cliente");
+        habilitar(true, CampoNota.INVENTARIO.toString());
+        habilitar(true, CampoNota.CLIENTE.toString());
 
     }//refrescar
 

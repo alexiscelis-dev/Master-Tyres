@@ -46,6 +46,7 @@ public class PromocionService implements IPromocionService {
       }
     }
 
+
     @Transactional(readOnly = true)
     @Override
     public List<Marca> listarMarcas() {

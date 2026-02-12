@@ -61,41 +61,66 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
     }
 
 
-    @FXML private AnchorPane rootPane;
-    @FXML private TableView<Cliente> tablaClientes;
-    @FXML private TableColumn<Cliente, String> colTipoCliente;
-    @FXML private TableColumn<Cliente, String> colNombreEmpresa;
-    @FXML private TableColumn<Cliente, String> colGenero;
-    @FXML private TableColumn<Cliente, String> colCumpleanos;
-    @FXML private TableColumn<Cliente, String> colRegistro;
-    @FXML private TableColumn<Cliente, String> colNombre;
-    @FXML private TableColumn<Cliente, String> colRFC;
-    @FXML private TableColumn<Cliente, String> colTelefono;
-    @FXML private TableColumn<Cliente, String> colCorreo;
-    @FXML private TableColumn<Cliente, String> colEstado;
-    @FXML private TableColumn<Cliente, String> colCiudad;
-    @FXML private TableColumn<Cliente, String> colDomicilio;
-    @FXML private TableColumn<Cliente, String> colHobbie;
-    @FXML private TableColumn<Cliente, String> colVehiculo;
-    @FXML private TextField buscarClienteBuscador;
-    @FXML private ChoiceBox<String> atributoBusquedaClientes;
-    @FXML private DatePicker dpBuscarCliente, dpClienteFin;
-    @FXML private CheckBox chkRangoCliente;
-    @FXML private Label lblHastaCliente;
-    @FXML private Label statusLabel;
-    @FXML private HBox limpiarChoiceBox;
-    @FXML private Button refrescar;
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private TableView<Cliente> tablaClientes;
+    @FXML
+    private TableColumn<Cliente, String> colTipoCliente;
+    @FXML
+    private TableColumn<Cliente, String> colNombreEmpresa;
+    @FXML
+    private TableColumn<Cliente, String> colGenero;
+    @FXML
+    private TableColumn<Cliente, String> colCumpleanos;
+    @FXML
+    private TableColumn<Cliente, String> colRegistro;
+    @FXML
+    private TableColumn<Cliente, String> colNombre;
+    @FXML
+    private TableColumn<Cliente, String> colRFC;
+    @FXML
+    private TableColumn<Cliente, String> colTelefono;
+    @FXML
+    private TableColumn<Cliente, String> colCorreo;
+    @FXML
+    private TableColumn<Cliente, String> colEstado;
+    @FXML
+    private TableColumn<Cliente, String> colCiudad;
+    @FXML
+    private TableColumn<Cliente, String> colDomicilio;
+    @FXML
+    private TableColumn<Cliente, String> colHobbie;
+    @FXML
+    private TableColumn<Cliente, String> colVehiculo;
+    @FXML
+    private TextField buscarClienteBuscador;
+    @FXML
+    private ChoiceBox<String> atributoBusquedaClientes;
+    @FXML
+    private DatePicker dpBuscarCliente, dpClienteFin;
+    @FXML
+    private CheckBox chkRangoCliente;
+    @FXML
+    private Label lblHastaCliente;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private HBox limpiarChoiceBox;
+    @FXML
+    private Button refrescar;
+    @FXML
+    private Pagination paginadorClientes;
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
     //presiona una tecla hace un delay
+    private PauseTransition pauseTransition;
 
     @Autowired
     private ClienteService clienteService;
     @Autowired
     private TaskService taskService;
 
-    @FXML
-    private Pagination paginadorClientes;
     private static final int CLIENTES_POR_PAGINA = 20;
     private List<Cliente> todosLosClientes;
     private String terminoBusquedaActual = "";
@@ -119,7 +144,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
     }// initialize
 
-    private void actualizarVisibilidaddeDatePicker (boolean esFecha){
+    private void actualizarVisibilidaddeDatePicker(boolean esFecha) {
         // Alternar entre Texto y Fecha
         buscarClienteBuscador.setVisible(!esFecha);
         buscarClienteBuscador.setManaged(!esFecha);
@@ -158,7 +183,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
     }
 
     @Override
-    public void configuraciones(){
+    public void configuraciones() {
 
         MenuContextSetting.disableMenu(rootPane);
 
@@ -251,7 +276,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         refrescarTabla();
 
                                     } catch (IOException ex) {
-                                        ex.printStackTrace();
+                                        mostrarError("Error de carga", "", "Ocurrió un error al cargar la vista. Vuelva a intentarlo mas tarde.");
                                     }
                                 }
 
@@ -270,7 +295,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         stage.initModality(Modality.APPLICATION_MODAL);
                                         stage.showAndWait();
                                     } catch (IOException ex) {
-                                        ex.printStackTrace();
+                                        mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
                                     }
                                 }
 
@@ -292,17 +317,15 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                             statusLabel.setVisible(true);
                                             statusLabel.setText("Texto copiado");
 
-                                            new Thread(() -> {
-                                                try {
-                                                    Thread.sleep(2500);
-
-                                                } catch (InterruptedException exception) {
-                                                    exception.printStackTrace();
-                                                }
-                                                javafx.application.Platform.runLater(() -> statusLabel.setText(""));
-
-                                            }).start();
-
+                                            if (pauseTransition != null) {
+                                                pauseTransition.stop();
+                                            }
+                                            pauseTransition = new PauseTransition(Duration.seconds(2.5));
+                                            pauseTransition.setOnFinished(e1 -> {
+                                                statusLabel.setText("");
+                                                statusLabel.setVisible(false);
+                                            });
+                                            pauseTransition.play();
 
                                         }
 
@@ -345,19 +368,18 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
                                         statusLabel.setVisible(true);
                                         statusLabel.setText("Fila copiada");
-                                        new Thread(() -> {
-                                            try {
-                                                Thread.sleep(2500);
 
-                                            } catch (InterruptedException exception) {
-                                                exception.printStackTrace();
-                                            }
-                                            javafx.application.Platform.runLater(() -> {
-                                                statusLabel.setText("");
-                                                statusLabel.setVisible(false);
-                                            });
+                                        if (pauseTransition != null) {
+                                            pauseTransition.stop();
+                                        }
+                                        pauseTransition = new PauseTransition(Duration.seconds(2.5));
+                                        pauseTransition.setOnFinished(e1 -> {
+                                                    statusLabel.setText("");
+                                                    statusLabel.setVisible(false);
+                                                }
+                                        );
+                                        pauseTransition.play();
 
-                                        }).start();
                                     }
                                 }
 
@@ -635,7 +657,8 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                     }
 
                 }
-                default -> paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
+                default ->
+                        paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
             }
         } else {
             paginaClientes = clienteService.listarClientesConVehiculosPaginado(
@@ -658,7 +681,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                 new SimpleStringProperty(valorONull(data.getValue().getTipoCliente()))
         );
 
-        colNombreEmpresa.setCellValueFactory(data->
+        colNombreEmpresa.setCellValueFactory(data ->
                 new SimpleStringProperty(valorONull(data.getValue().getNombreEmpresa()))
         );
 
@@ -734,17 +757,21 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
     }//cargarClientes
 
     private String valorONull(String valor) {
-        return (valor == null || valor.isBlank()) ? "N/A" : valor;
+        return (valor == null || valor.isBlank()) ? "N/D" : valor;
     }
 
     private String formatearGenero(String genero) {
-        if (genero == null || genero.isBlank()) return "N/A";
+        if (genero == null || genero.isBlank()) return "N/D";
 
         switch (genero.trim().toUpperCase()) {
-            case "M": return "Masculino";
-            case "F": return "Femenino";
-            case "O": return "Otro";
-            default: return "N/A";
+            case "M":
+                return "Masculino";
+            case "F":
+                return "Femenino";
+            case "O":
+                return "Otro";
+            default:
+                return "N/D";
         }
     }
 
@@ -755,7 +782,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
         String full = String.join(" ", n, a1, a2).trim();
 
-        return full.isBlank() ? "N/A" : full;
+        return full.isBlank() ? "N/D" : full;
     }
 
     private void cargarDatosClientes() {
@@ -823,10 +850,6 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                     clienteService.buscarClientePorRfcPaginado(
                             StatusCliente.ACTIVE.toString(), busqueda, 0, CLIENTES_POR_PAGINA);
 
-//            case "fecha de nacimiento" -> paginaFiltrada =
-//                    clienteService.buscarClientePorCumpleanosPaginado(
-//                            StatusCliente.ACTIVE.toString(), terminoBusquedaFechaActual, 0, CLIENTES_POR_PAGINA);
-
             case "fecha de nacimiento" -> {
                 LocalDate fechaInicio = dpBuscarCliente.getValue();
 
@@ -866,9 +889,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                     }
                 }
             }
-//            case "fecha de registro" -> paginaFiltrada =
-//                    clienteService.buscarClientePorRegistroPaginado(
-//                            StatusCliente.ACTIVE.toString(), terminoBusquedaFechaActual, 0, CLIENTES_POR_PAGINA);
+
 
             case "fecha de registro" -> {
                 LocalDate fechaInicio = dpBuscarCliente.getValue();
@@ -918,7 +939,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
         // Ir a la primera página
         paginadorClientes.setCurrentPageIndex(0);
-    }
+    }//buscarCliente
 
     public void buscarCliente(String busqueda) {
         terminoBusquedaActual = busqueda;
@@ -984,9 +1005,9 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
         String seleccion = atributoBusquedaClientes.getValue();
 
         String busqueda;
-        if (atributoBusquedaClientes.getValue().equals("Fecha de nacimiento") || atributoBusquedaClientes.getValue().equals("Fecha de registro")){
+        if (atributoBusquedaClientes.getValue().equals("Fecha de nacimiento") || atributoBusquedaClientes.getValue().equals("Fecha de registro")) {
             busqueda = dpBuscarCliente.getValue().toString();
-        }else {
+        } else {
             busqueda = buscarClienteBuscador.getText();
         }
 

@@ -6,10 +6,8 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.PopupControl;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -125,6 +123,7 @@ public class NotaUtils {
                 txtTarget.setText(String.format("%02d:%02d",
                         cmbHora.getValue(),
                         cmbMinuto.getValue()));
+
             }
             popup.hide();
         });
@@ -285,6 +284,13 @@ public class NotaUtils {
             return texto.substring(0, texto.length() - 3).trim();
         }
         return texto;
+
+    }
+
+    public void descripcionComponent(Node node, String texto){
+        Tooltip tooltip = new Tooltip(texto);
+        tooltip.setShowDelay(Duration.millis(200));
+        Tooltip.install(node, tooltip);
 
     }
 
