@@ -11,7 +11,9 @@ import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.service.ModeloService;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.model.StatusPromocion;
 import com.mastertyres.promociones.model.TipoDescuento;
@@ -103,6 +105,10 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     private TaskService taskService;
     @Autowired
     private DetalleCategoriaService detalleCategoriaService;
+    @Autowired
+    private MarcaService marcaService;
+    @Autowired
+    private ModeloService modeloService;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -325,8 +331,8 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
     private void vehiculosParticipantesInitialize() {
 
-        List<Marca> marcas = promocionService.listarMarcas();
-        List<Modelo> modelos = promocionService.listarModelos();
+        List<Marca> marcas = marcaService.listarMarcas();
+        List<Modelo> modelos = modeloService.listarModelos();
         List<Integer> anios = new ArrayList<>();
 
         int anioActual = LocalDate.now().getYear();

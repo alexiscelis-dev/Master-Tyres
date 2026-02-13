@@ -187,7 +187,7 @@ public class VehiculoService implements IVehiculoService {
 
     @Transactional(readOnly = true)
     public Vehiculo Vehiculo_SinDTO(Integer id) {
-        return vehiculoRepository.Vehiculo_SinDTO(id);
+        return vehiculoRepository.VehiculoSinDTO(id);
     }
 
     @Transactional
