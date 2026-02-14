@@ -5,11 +5,10 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.model.TipoCliente;
-import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -51,7 +50,7 @@ import java.util.*;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoading {
+public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoader {
 
     @Autowired
     private MarcaService marcaService;
@@ -154,6 +153,9 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     private TextField txtObservaciones;
     @FXML
     private TextField txtCorreo;
+    @FXML
+    private Button btnLimpiar;
+
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
 
     // Botones Principales
@@ -272,6 +274,14 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     @Override
     public void listeners() {
 
+ btnLimpiar.setOnAction(event -> {
+     limpiarCamposVehiculo();
+     LimpiarCamposClientes();
+     tablaVehiculos.getItems().clear();
+ });
+
+      //pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
         configurarValidaciones();
 
         pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
@@ -335,6 +345,12 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     }
 
     private void configurarValidaciones() {
+
+        txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,6}")) {
+                txtKilometros.setText(oldValue);
+            }
+        });
 
         // NOMBRE
         txtNombre.textProperty().addListener((obs, oldText, newText) -> {
@@ -810,6 +826,9 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         txtObservaciones.setStyle(STILE);
         pickerUltimoServicio.setStyle(STILE);
         spinnerAnio.setStyle(STILE);
+
+
+
 
 
     }

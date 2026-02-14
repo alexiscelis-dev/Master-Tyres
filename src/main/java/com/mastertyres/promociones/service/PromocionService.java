@@ -69,6 +69,7 @@ public class PromocionService implements IPromocionService {
       }
     }
 
+/*
     @Transactional(readOnly = true)
     @Override
     public List<Marca> listarMarcas() {
@@ -81,12 +82,16 @@ public class PromocionService implements IPromocionService {
         return promocionRepository.listarModelos();
     }
 
+
+
     @Transactional(readOnly = true)
     @Override
     public List<Categoria> listarCategorias() {
         return promocionRepository.listarCategorias();
     }
 
+
+ */
 
     @Transactional
     @Override

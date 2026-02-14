@@ -1,6 +1,7 @@
 package com.mastertyres.inventario.service;
 
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.inventario.domain.InventarioValidator;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.repository.InventarioRepository;
@@ -20,6 +21,9 @@ import java.util.Optional;
 @Service
 public class InventarioService implements IInventarioService {
     private InventarioRepository inventarioRepository;
+
+    @Autowired
+    private InventarioValidator inventarioValidator;
 
     @Autowired
     public InventarioService(InventarioRepository inventarioRepository) {
@@ -172,6 +176,7 @@ public class InventarioService implements IInventarioService {
     @Override
     public void guardarInventario(Inventario inventario) {
 
+        inventarioValidator.validarGuardar(inventario);
 
         //Buscar una llanta por medio del identificador llanta
         Optional<Inventario> porIdentificador = inventarioRepository.findByIdentificadorLlanta(inventario.getIdentificadorLlanta());
@@ -290,6 +295,9 @@ public class InventarioService implements IInventarioService {
     @Transactional
     @Override
     public void actualizarInventario(Inventario inventario) {
+
+        inventarioValidator.validarGuardar(inventario);
+
         Optional<Inventario> porIdentificador = inventarioRepository.findByIdentificadorLlanta(inventario.getIdentificadorLlanta());
 
         if (porIdentificador.isPresent() && !porIdentificador.get().getInventarioId().equals(inventario.getInventarioId())) {

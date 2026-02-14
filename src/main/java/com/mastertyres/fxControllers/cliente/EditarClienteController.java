@@ -6,7 +6,7 @@ import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxComponents.LoadingComponentController;
@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarClienteController implements IFxController, ILoading {
+public class EditarClienteController implements IFxController, ILoader {
 
     @FXML
     private TextField txtNombreEmpresa;
@@ -216,7 +216,7 @@ public class EditarClienteController implements IFxController, ILoading {
 
         // correo: opcional, acepta minúsculas
         txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
-            // ✅ Verificar que newText no sea null
+            //  Verificar que newText no sea null
             if (newText == null || newText.isEmpty()) {
                 CorreoValido.set(true);
                 txtCorreo.setStyle("");
@@ -359,36 +359,6 @@ public class EditarClienteController implements IFxController, ILoading {
             return;
         }
 
-        /*
-
-
-        if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre del cliente no puede estar vacío.");
-            return;
-        }
-
-        if (txtTelefono.getText() == null || txtTelefono.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El numero de telefono del cliente no puede estar vacío.");
-            return;
-        }
-
-        if (txtApellido.getText() == null || txtApellido.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El primer apellido del cliente no puede estar vacío.");
-            return;
-        }
-
-        if (txtTelefono.getText() == null || txtTelefono.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El telefono del cliente no puede estar vacío.");
-            return;
-        }
-
-
-        if (choiceTipoCliente.getValue() == null) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar un tipo de cliente.");
-            return;
-        }
-
-         */
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",

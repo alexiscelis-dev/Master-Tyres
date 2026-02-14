@@ -5,7 +5,7 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.inventario.model.Inventario;
@@ -31,7 +31,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class AgregarInventarioController implements IVentanaPrincipal, IFxController, ILoading {
+public class AgregarInventarioController implements IVentanaPrincipal, IFxController, ILoader {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -109,26 +109,13 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
 
         configuraciones();
         listeners();
+        configurarValidaciones();
 
     }//ininitialize
 
     @Override
     public void configuraciones() {
 
-        btnRegistrar.disableProperty().bind(
-                (txtMarca.textProperty().isEmpty())
-                        .or(txtMarca.textProperty().isNull())
-                        .or(choiceAncho.valueProperty().isNull())
-                        .or(txtModelo.textProperty().isEmpty())
-                        .or(txtModelo.textProperty().isNull())
-                        .or(choicePerfil.valueProperty().isNull())
-                        .or(choiceRin.valueProperty().isNull())
-                        .or(cbIndiceCarga.valueProperty().isNull())
-                        .or(cbIndiceVelocidad.valueProperty().isNull())
-                        .or(txtStock.textProperty().isEmpty())
-                        .or(dotValido)
-                        .or(codBarrasValido)
-        );
 
 
         txtStock.setTextFormatter(new TextFormatter<>(change -> {
@@ -173,8 +160,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                 return change;
             }
 
-            //codBarrasValido.set(false);
-            //txtCodBarras.setStyle(COLOR_RED);
+            codBarrasValido.set(false);
+            txtCodBarras.setStyle(COLOR_RED);
             return null;
         }));
 
@@ -192,8 +179,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                 return change;
             }
 
-//            dotValido.set(false);
-//            txtDot.setStyle(COLOR_RED);
+            dotValido.set(false);
+            txtDot.setStyle(COLOR_RED);
 
             return null;
         }));
@@ -276,6 +263,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         txtCodBarras.setStyle("");
         txtDot.setStyle("");
         txtMarca.setStyle("");
+        txtModelo.setStyle("");
         txtPrecioC.setStyle("");
         txtPrecioV.setStyle("");
         txtStock.setStyle("");
@@ -328,12 +316,12 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                     clean();
 
                 }, (ex) -> {
-                    if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
+                    if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         ex.printStackTrace();
                         mostrarError("Operacion cancelada", "", "La acción fue cancelada por el usuario. ");
-                    } else if (ex.getCause() instanceof InventarioException) {
+                    } else if (ex instanceof InventarioException) {
                         ex.printStackTrace();
-                        mostrarError("Error al agregar al inventario", "", "" + ex.getCause().getMessage());
+                        mostrarError("Error al agregar al inventario", "", "" + ex.getMessage());
                     } else {
                         ex.printStackTrace();
                         mostrarError("Error inesperado", "", "No se pudo guardar el inventario, vuelva a intentarlo más tarde.");
@@ -343,14 +331,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
 
 
 
-      /*  } else {
-            mostrarWarning("Campos oblicatorios", "", "los campos marcados con '*' son obligatorios");
-       }
-
-       */
 
     }//registrar
-
 
     // solo verifica si los campos necesarios estan vacios (marca,medida,stock,precios)
 
@@ -436,7 +418,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                 marcaValido.set(false);
             } else {
                 marcaValido.set(true);
-                txtMarca.setStyle("-fx-border-color: red;");
+                txtMarca.setStyle("");
 
             }
 

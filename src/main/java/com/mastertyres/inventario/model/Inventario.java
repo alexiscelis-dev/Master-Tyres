@@ -28,11 +28,11 @@ public class Inventario {
     private String indiceCarga;
     @Column(name = "indice_velocidad")
     private String indiceVelocidad;
-    private int stock;
+    private Integer stock;
     @Column(name = "precio_compra")
-    private float precioCompra;
+    private Float precioCompra;
     @Column(name = "precio_venta")
-    private float precioVenta;
+    private Float precioVenta;
     private String observaciones;
     private String imagen;
     @Column(name = "active",insertable = false, updatable = true)

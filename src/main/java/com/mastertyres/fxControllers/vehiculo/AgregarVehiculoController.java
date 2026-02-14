@@ -7,7 +7,7 @@ import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -47,7 +47,7 @@ import java.util.*;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoading {
+public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoader {
 
     @Autowired
     private MarcaService marcaService;
@@ -151,6 +151,8 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
     @FXML
     private Button btnBuscarCliente;
+    @FXML
+    private Button btnLimpiar;
 
     private static final String STYLE_FIELD = "";
 
@@ -268,6 +270,18 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     @Override
     public void listeners() {
 
+        btnLimpiar.setOnAction(event -> {
+            limpiarCamposVehiculo();
+            tablaClientes.setItems(FXCollections.observableArrayList());
+            tablaVehiculos.setItems(FXCollections.observableArrayList());
+        });
+
+        //  Listener del botón buscar
+        btnBuscarCliente.setOnAction(e -> {
+            if (!txtBuscarCliente.getText().isEmpty())
+                buscarCliente();
+        });
+
         configurarValidaciones();
 
         //Hacer que se pueda borrar en los DatePicker
@@ -326,6 +340,12 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         //VALIDACIONES DE CHOICESBOXS
         choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
         choiceCategoria.disableProperty().bind(choiceModelo.valueProperty().isNull());
+
+        txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,6}")) {
+                txtKilometros.setText(oldValue);
+            }
+        });
 
         // Placas
         txtPlacas.textProperty().addListener((obs, oldText, newText) -> {
@@ -511,7 +531,10 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
                                 .add(modelo));
                 List<Modelo> modelosFiltrados = modelosPorNombre.values().stream()
                         .map(modelosConNombre -> modelosConNombre.get(0))
+                        .sorted(Comparator.comparing(Modelo::getNombreModelo))
                         .toList();
+
+
                 choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
                 choiceModelo.getSelectionModel().clearSelection();
                 choiceCategoria.getItems().clear();
@@ -541,13 +564,6 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
                 choiceCategoria.setItems(FXCollections.observableArrayList(categoriasPorId.values()));
                 choiceCategoria.getSelectionModel().clearSelection();
 
-//                List<Categoria> categoriasFiltradas =
-//                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
-//                                marcaSeleccionada.getMarcaId(),
-//                                newModelo.getModeloId()
-//                        );
-//
-//                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
 
             } else {
                 choiceCategoria.getItems().clear();
@@ -590,10 +606,6 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
             pause.playFromStart();
         });
 
-        //  Listener del botón buscar
-        btnBuscarCliente.setOnAction(e -> {
-            buscarCliente();
-        });
     }
 
     private String normalizarModelo(String nombre) {
@@ -614,7 +626,6 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     private void buscarCliente() {
         // Llenar tabla
         List<Cliente> clientes = clienteService.listarClientesConVehiculos(StatusCliente.ACTIVE.toString());
-        //tablaClientes.setItems(FXCollections.observableArrayList(clientes));
 
 
         ObservableList<Cliente> listaClientesOriginal = FXCollections.observableArrayList(clientes);
@@ -681,7 +692,6 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     private void guardarVehiculos(ActionEvent event) {
 
 
-
         Cliente clienteSeleccionado = tablaClientes.getSelectionModel().getSelectedItem();
         if (clienteSeleccionado == null) {
             mostrarWarning("Cliente no seleccionado", "", "Por favor selecciona un cliente.");
@@ -721,32 +731,31 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         }
         taskService.runTask(
                 loadingOverlayController,
-                () ->{
+                () -> {
                     vehiculoService.guardarVehiculos(clienteSeleccionado, listaVehiculos);
 
 
                     return null;
 
-                },(resultado) ->{
+                }, (resultado) -> {
                     mostrarInformacion("Éxito", "", "Vehículos guardados correctamente.");
                     listaVehiculos.clear();
                     limpiarCamposVehiculo();
                     tablaClientes.getSelectionModel().clearSelection();
 
-                },(ex) ->{
+                }, (ex) -> {
 
-                    if (ex instanceof VehiculoException){
+                    if (ex instanceof VehiculoException) {
                         mostrarWarning("No se pudo guardar", "Ocurrio un problema al guardar el/los vehiclos", ex.getMessage());
 
-                    }else{
+                    } else {
                         mostrarError("Error interno",
                                 "Error inesperado",
                                 "Ocurrio un error al intentar registrar el/los vehiculos");
                     }
 
-                },null
+                }, null
         );
-
 
 
     }//guardarVehiculos

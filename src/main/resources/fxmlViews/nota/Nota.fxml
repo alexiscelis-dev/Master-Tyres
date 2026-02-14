@@ -32,7 +32,7 @@
 
                             <DatePicker fx:id="dpBuscarFin" managed="false" prefHeight="26.0" prefWidth="150.0" promptText="Fecha fin..." visible="false" />
 
-                            <Button mnemonicParsing="false" onAction="#accionBuscar" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
+                            <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#accionBuscar" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
                                 <graphic>
                                     <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
                                         <image>
@@ -62,8 +62,8 @@
                                         <String fx:value="Fecha de emicion" />
                                         <String fx:value="Fecha de vencimiento" />
                                         <String fx:value="Adeudo" />
-                                        <String fx:value="Total" />
                                         <String fx:value="Saldo a favor" />
+                                        <String fx:value="Total" />
                                     </FXCollections>
                                 </items>
                             </ChoiceBox>
@@ -90,7 +90,7 @@
                 <center>
                     <SplitPane dividerPositions="0.40694650817236255" prefHeight="476.0" prefWidth="1117.0" styleClass="seccion">
                         <!-- Panel izquierdo: listado de servicios -->
-                        <ScrollPane styleClass="scrollNota" fitToWidth="true" style="-fx-background-color: #080808; -fx-border-radius: 10; -fx-background-radius: 10;">
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: #080808; -fx-border-radius: 10; -fx-background-radius: 10;" styleClass="scrollNota">
                             <TilePane fx:id="contenedorNotas" alignment="CENTER" hgap="10" prefColumns="1" prefTileHeight="100.0" prefTileWidth="400.0" style="-fx-background-color: #080808; " vgap="10">
                                 <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -186,7 +186,7 @@
                                 <Label fx:id="lblTotal" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                                 <Button fx:id="btnNuevaNota" onAction="#agregarNotas" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Nueva nota" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2" />
                                 <Button fx:id="btnEditar" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Editar" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.rowSpan="2" />
-                                <Button fx:id="btnImprimir" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Ver e Imprimir" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
+                                <Button fx:id="btnImprimir" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Imprimir" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
                                 <Button fx:id="btnDarPlazo" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Dar plazo" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.rowSpan="2" />
                                 <Button fx:id="btnHistorial" disable="false" onAction="#historial" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Historial" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.rowSpan="2" />
                                 <Button fx:id="btnEliminar" disable="true" prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion" text="Eliminar" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="10" GridPane.rowSpan="2" />

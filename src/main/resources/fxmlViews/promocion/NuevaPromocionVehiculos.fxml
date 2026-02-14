@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.Promociones.NuevaPromocionController">
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.Promociones.NuevaPromocionVehiculosController">
     <children>
         <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
             <children>
@@ -256,7 +256,18 @@
                         </children>
                     </VBox>
 
+
                 </VBox>
+
+                <Label fx:id="statusLabel" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="15.0" prefWidth="300.0" textAlignment="LEFT" textFill="WHITE" visible="true">
+                    <VBox.margin>
+                        <Insets left="20.0" top="20.0" />
+                    </VBox.margin>
+                    <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                    </font>
+                </Label>
+
                 <HBox alignment="BOTTOM_CENTER" prefHeight="140.0" prefWidth="500.0">
                     <children>
                         <Button fx:id="btnRegistrar" contentDisplay="CENTER" mnemonicParsing="false" styleClass="boton-accion" text="Registrar">

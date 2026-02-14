@@ -3,7 +3,7 @@ package com.mastertyres.fxControllers.ProximosServicios;
 
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -35,7 +35,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class ProximosServiciosController implements IFxController, ILoading {
+public class ProximosServiciosController implements IFxController, ILoader {
 
     @FXML
     private AnchorPane ventanaProximosServicios;

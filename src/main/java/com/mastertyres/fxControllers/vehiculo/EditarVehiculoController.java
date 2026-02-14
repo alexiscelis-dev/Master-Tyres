@@ -4,7 +4,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -36,7 +36,7 @@ import java.util.*;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarVehiculoController implements IFxController, ILoading {
+public class EditarVehiculoController implements IFxController, ILoader {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -147,6 +147,12 @@ public class EditarVehiculoController implements IFxController, ILoading {
         //VALIDACIONES DE CHOICESBOXS
         choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
         choiceCategoria.disableProperty().bind(choiceModelo.valueProperty().isNull());
+
+        txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,6}")) {
+                txtKilometros.setText(oldValue);
+            }
+        });
 
         // Placas
         txtPlacas.textProperty().addListener((obs, oldText, newText) -> {
@@ -298,6 +304,7 @@ public class EditarVehiculoController implements IFxController, ILoading {
                                 .add(modelo));
                 List<Modelo> modelosFiltrados = modelosPorNombre.values().stream()
                         .map(modelosConNombre -> modelosConNombre.get(0))
+                        .sorted(Comparator.comparing(Modelo::getNombreModelo))
                         .toList();
                 choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
                 choiceModelo.getSelectionModel().clearSelection();

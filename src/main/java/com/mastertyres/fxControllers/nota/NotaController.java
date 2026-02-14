@@ -3,7 +3,8 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
@@ -12,7 +13,6 @@ import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.historial.HistorialController;
 import com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -48,6 +48,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
@@ -55,7 +56,7 @@ import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NotaController implements IVentanaPrincipal, IFxController, ILoading {
+public class NotaController implements IVentanaPrincipal, IFxController, ILoader {
     @FXML
     private AnchorPane ventanaNotas;
     @FXML
@@ -94,6 +95,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
     private Button btnRefrescar;
     @FXML
     private Button btnHistorial;
+    @FXML
+    private Button btnBuscar;
     @FXML
     private TextField txtBuscar;
     @FXML
@@ -178,6 +181,40 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
     @Override
     public void listeners() {
 
+
+        atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue == null) {
+                return;
+            }
+
+            switch (newValue.toString()) {
+
+                case "Adeudo" -> filtroActual = "Adeudo";
+                case "Saldo a favor" -> filtroActual = "Saldo a favor";
+
+            }//switch
+
+            txtBuscar.clear();
+            modoBusqueda = false;
+
+            if (PaginadorNotas.getCurrentPageIndex() == 0) {
+                cargarPagina(0);
+            } else {
+                PaginadorNotas.setCurrentPageIndex(0);
+            }
+
+        });
+
+
+        atributoBusquedaNota.setOnMousePressed(event -> {
+                    if (!atributoBusquedaNota.isShowing()) {
+                        atributoBusquedaNota.show();
+                        atributoBusquedaNota.hide();
+                    }
+                }
+        );
+
         // Listener para detectar cambios en el ChoiceBox
         atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             configurarBuscador(newVal);
@@ -213,15 +250,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
                 darPlazo(notaSeleccionada.getNotaId()));
 
         btnRefrescar.setOnAction(event -> {
-            taskService.runTask(
-                    loadingOverlayController,
-                    () -> {
-                    },
-                    () -> {
-                        resetBusqueda();
-                        cargarNota();
-                    }
-            );
+            resetBusqueda();
+            cargarNota();
         });
 
 
@@ -250,32 +280,51 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
     }//configurarBuscador
 
     private void cargarPagina(int indicePagina) {
-        Page<NotaDTO> pagina;
 
-        try {
 
-            if (modoBusqueda) {
-                // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
-                if (esRangoActual) {
-                    pagina = notaService.buscadorRangos(filtroActual, textoBusquedaActual, textoBusquedaActual2, indicePagina, tamañoPagina);
-                } else {
-                    pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
-                }
-            } else {
-                pagina = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
-            }
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
+                    Page<NotaDTO> pagina = null;
 
-            mostrarNotas(pagina.getContent());
-            PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
+                    if (modoBusqueda) {
+                        // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
+                        if (esRangoActual) {
+                            pagina = notaService.buscadorRangos(filtroActual, textoBusquedaActual, textoBusquedaActual2, indicePagina, tamañoPagina);
+                        } else {
+                            pagina = notaService.buscador(filtroActual, textoBusquedaActual, indicePagina, tamañoPagina);
+                        }
+                    } else {
 
-        }catch (NotaException ne){
-            mostrarError("Error de busqueda","",""+ne);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            e.getMessage();
-            mostrarError("Error inesperado", "","Ocurrio un problema al mostrar las notas");
-        }
+                        if ("Adeudo".equals(filtroActual)) {
+                            pagina = notaService.buscarPorAdeudo(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
+                        } else if ("Saldo a favor".equals(filtroActual)) {
+                            pagina = notaService.buscarPorSaldoFavor(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
+                        } else {
+                            pagina = notaService.listarNotasPaginado(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
+                        }
+
+                    }
+
+                    return pagina;
+                }, (pagina) -> {
+
+                    mostrarNotas(pagina.getContent());
+                    PaginadorNotas.setPageCount(Math.max(pagina.getTotalPages(), 1));
+
+                }, (ex) -> {
+
+                    if (ex instanceof NotaException) {
+                        mostrarWarning("Error de busqueda", "Ocurrio un problema al mostrar las notas", "" + ex.getMessage());
+                    } else {
+                        ex.printStackTrace();
+                        ex.getMessage();
+                        mostrarError("Error interno", "", "Ocurrio un problema al mostrar las notas");
+                    }
+
+                }, null
+        );
+
 
     }//cargarPagina
 
@@ -657,7 +706,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
                             mostrarError("Error al generar archivo",
                                     "El archivo no pudo crearse o está siendo usado por otro programa.",
                                     "Cierra otros programas e inténtalo de nuevo.");
-                        } else if (excepcion instanceof InterruptedException || excepcion instanceof java.util.concurrent.CancellationException) {
+                        } else if (excepcion instanceof InterruptedException || excepcion instanceof CancellationException) {
                             mostrarWarning("Operación cancelada",
                                     "",
                                     "La impresión del documento fue cancelada por el usuario.");
@@ -749,6 +798,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
         cargarPagina(0);
     }
 
+    @FXML
     public void accionBuscar(ActionEvent actionEvent) {
 
         String seleccion = atributoBusquedaNota.getValue();
@@ -756,6 +806,46 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
             atributoBusquedaNota.setValue("Sin Filtro");
             return;
         }
+
+
+        if (seleccion != null && atributoBusquedaNota.equals("Total")) {
+            String arrayTotal[] = txtBuscar.getText().trim().split(",");
+
+            if (!txtBuscar.getText().isEmpty()) {
+
+                if (arrayTotal.length == 1) {
+                    arrayTotal = new String[]{arrayTotal[0], arrayTotal[0]};
+                }
+
+                if (arrayTotal.length > 2) {
+                    mostrarWarning("Valores invalidos.", "", "Solo se permiten dos valores separados por una coma.");
+                    return;
+                }
+
+                try {
+
+                    String valor1 = arrayTotal[0].trim();
+                    String valor2 = (arrayTotal.length == 2)
+                            ? arrayTotal[1].trim()
+                            : valor1;
+
+                    Double total1 = Double.parseDouble(arrayTotal[0].trim());
+                    Double total2 = Double.parseDouble(arrayTotal[1].trim());
+
+                    Page<NotaDTO> notaTotal = notaService.buscarPorTotal(total1, total2, StatusNota.ACTIVE.toString(), 0, 20);
+                    mostrarNotas(notaTotal.getContent());
+
+
+                } catch (NumberFormatException e) {
+                    mostrarWarning("Valores invalidos", "", "Ingrese un rango de valores numericos separados por una coma (,) ej. 0,0.");
+                    return;
+                }
+            }
+
+
+        }//if-total
+
+
 
         String busqueda = "";
         String busqueda2 = "";
@@ -796,6 +886,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
 
         // Si pasó las validaciones, configuramos el paginador
         ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
+
     }//accionBuscar
 
 }//class

@@ -4,10 +4,12 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.ClipboardUtil;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.promociones.model.TipoPromocion;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
@@ -30,12 +32,14 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class ClientesAplicablesController implements IFxController, ILoading {
+public class ClientesAplicablesController implements IFxController, ILoader {
 
     @Autowired
     private ClienteService clienteService;
     @Autowired
     private ClientePromocionService clientePromocionService;
+    @Autowired
+    private PromocionService promocionService;
     @Autowired
     private TaskService taskService;
 
@@ -103,15 +107,6 @@ public class ClientesAplicablesController implements IFxController, ILoading {
         this.loadingOverlayController = loading;
     }
 
-//    public void LlenarTabla(Promocion promocionSeleccionada) {
-//        this.p = promocionSeleccionada;
-//        List<Cliente> clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
-//        data.clear();
-//        for (Cliente c : clientes) {
-//            data.add(new ClienteSeleccion(c));
-//        }
-//        tablaClientes.setItems(data);
-//    }
 
     public void LlenarTabla(Promocion promocionSeleccionada) {
         this.promocion = promocionSeleccionada;
@@ -152,10 +147,13 @@ public class ClientesAplicablesController implements IFxController, ILoading {
                 loadingOverlayController,
                 () -> {
 
+
                     List<Cliente> seleccionados = data.stream()
                             .filter(ClienteSeleccion::isSeleccionado)
                             .map(ClienteSeleccion::getCliente)
                             .toList();
+
+
 
                     ArrayList<String> whatsAppUrls = new ArrayList<>();
                     String telefono = "", mensaje = "", url = "";
@@ -173,17 +171,24 @@ public class ClientesAplicablesController implements IFxController, ILoading {
 
                         whatsAppUrls.add(url);
                     }
-                    return whatsAppUrls;
+                    return new Object[] {whatsAppUrls,promocion.getImg()};
 
-                }, (whatsAppUrls) -> {
+                }, (resultado) -> {
+
+                    Object datos[] = (Object[]) resultado;
+
+                    ArrayList<String> whatsAppUrls = (ArrayList<String>) datos[0];
+                    String urlImagen = (String) datos[1];
+
+                    ClipboardUtil.copiarImagenURL(urlImagen);
 
 
-                    if ( whatsAppUrls == null || whatsAppUrls.isEmpty()){
+                    if (whatsAppUrls == null || whatsAppUrls.isEmpty()) {
                         return;
                     }
 
-                    for(String urlNavegador: whatsAppUrls){
-                        if(hostServices != null){
+                    for (String urlNavegador : whatsAppUrls) {
+                        if (hostServices != null) {
                             hostServices.showDocument(urlNavegador);
                         }
                     }
@@ -194,11 +199,11 @@ public class ClientesAplicablesController implements IFxController, ILoading {
                             "Por favor, revise las pestañas abiertas y presione el botón de enviar en cada chat para finalizar."
                     );
 
-                }, (ex) ->{
+                }, (ex) -> {
                     ex.printStackTrace();
-                    mostrarError("Error al enviar","","No se pudieron generar los enlaces de WhatsApp.");
+                    mostrarError("Error al enviar", "", "No se pudieron generar los enlaces de WhatsApp.");
 
-                },null
+                }, null
 
 
         );

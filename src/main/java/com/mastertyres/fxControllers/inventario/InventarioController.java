@@ -2,7 +2,7 @@ package com.mastertyres.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -53,7 +53,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @NoArgsConstructor
 @Component
-public class InventarioController implements IVentanaPrincipal, IFxController, ILoading {
+public class InventarioController implements IVentanaPrincipal, IFxController, ILoader {
 
 
     @FXML
