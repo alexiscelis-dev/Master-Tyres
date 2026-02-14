@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
+            style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.fxControllers.Configuracion.ConfiguracionController">
+
+    <children>
+
+        <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0"
+                    style="-fx-background-color: #080808;" styleClass="clientes-panel"
+                    stylesheets="/styles_css/ClientesStyles.css" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0"
+                    xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+
+
+            <Button fx:id="Respaldo" styleClass="boton-action" text="Hacer Respaldo"/>
+
+
+        </AnchorPane>
+    </children>
+</AnchorPane>

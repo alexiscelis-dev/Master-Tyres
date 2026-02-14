@@ -2,7 +2,7 @@ package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
@@ -29,7 +29,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class EditarAdeudoController implements IFxController, ILoading {
+public class EditarAdeudoController implements IFxController, ILoader {
 
     @FXML
     private AnchorPane root;

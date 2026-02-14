@@ -4,12 +4,13 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ClipboardUtil;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
+import com.mastertyres.promociones.model.TipoPromocion;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,7 +32,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class ClientesAplicablesController implements IFxController, ILoading {
+public class ClientesAplicablesController implements IFxController, ILoader {
 
     @Autowired
     private ClienteService clienteService;
@@ -112,9 +113,9 @@ public class ClientesAplicablesController implements IFxController, ILoading {
 
         List<Cliente> clientes;
 
-        if ("VEHICULO".equals(promocionSeleccionada.getTipoPromocion())) {
+        if (TipoPromocion.VEHICULO.toString().equals(promocionSeleccionada.getTipoPromocion())) {
             clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
-        } else if ("CLIENTE".equals(promocionSeleccionada.getTipoPromocion())) {
+        } else if (TipoPromocion.CLIENTE.toString().equals(promocionSeleccionada.getTipoPromocion())) {
             clientes = clientePromocionService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
         } else {
             clientes = new ArrayList<>();

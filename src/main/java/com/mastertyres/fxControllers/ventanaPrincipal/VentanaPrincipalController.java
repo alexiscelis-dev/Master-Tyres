@@ -5,7 +5,7 @@ import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import javafx.animation.TranslateTransition;
@@ -34,7 +34,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
-public class VentanaPrincipalController implements ILoading {
+public class VentanaPrincipalController implements ILoader {
 
     @FXML private AnchorPane sidebar;
     @FXML private HBox HBoxLogOut;
@@ -44,6 +44,7 @@ public class VentanaPrincipalController implements ILoading {
     @FXML private HBox HBoxPromociones;
     @FXML private HBox HBoxInventario;
     @FXML private HBox HBoxServicios;
+    @FXML private HBox HBoxConfiguracion;
     @FXML private Pane panelMenu;
     @FXML private ImageView LogoPrincipal;
     @FXML public Label cambiarPaginaEtiqueta;
@@ -115,6 +116,11 @@ public class VentanaPrincipalController implements ILoading {
         HBoxServicios.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/vehiculo/ProximosServicios.fxml", "Proximos Servicios");
             cambiarPaginaEtiqueta.setText("PROXIMOS SERVICIOS");
+        });
+
+        HBoxConfiguracion.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/configuracion/Configuracion.fxml", "Configuracion");
+            cambiarPaginaEtiqueta.setText("CONFIGURACION");
         });
 
         LogoPrincipal.setOnMouseClicked(event -> {
@@ -237,8 +243,8 @@ public class VentanaPrincipalController implements ILoading {
     public void configurarControlador(Object controller) {
 
         // 1. Inyección automática de Loading con Interfaz
-        if (controller instanceof ILoading) {
-            ((ILoading) controller).setInitializeLoading(this.loadingOverlayController);
+        if (controller instanceof ILoader) {
+            ((ILoader) controller).setInitializeLoading(this.loadingOverlayController);
         }
 
         if (controller instanceof IVentanaPrincipal){

@@ -3,7 +3,7 @@ package com.mastertyres.fxControllers.nota;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
@@ -56,7 +56,7 @@ import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NotaController implements IVentanaPrincipal, IFxController, ILoading {
+public class NotaController implements IVentanaPrincipal, IFxController, ILoader {
     @FXML
     private AnchorPane ventanaNotas;
     @FXML

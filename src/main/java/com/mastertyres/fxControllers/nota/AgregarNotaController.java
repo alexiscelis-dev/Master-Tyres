@@ -6,7 +6,7 @@ import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.CampoNota;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 import static com.mastertyres.common.utils.FechaUtils.mostrarFechayHora;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 @Component
-public class AgregarNotaController extends BaseNota implements IFxController, ILoading {
+public class AgregarNotaController extends BaseNota implements IFxController, ILoader {
     @FXML
     private Button btnBuscarCliente;
     @FXML

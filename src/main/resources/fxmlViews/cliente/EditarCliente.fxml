@@ -30,11 +30,11 @@
                 <TextField fx:id="txtNombreEmpresa" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                 <!-- Nombre -->
-                <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label text="*Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                 <TextField fx:id="txtNombre" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                 <!-- Primer Apellido -->
-                <Label text="Primer Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label text="*Primer Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                 <TextField fx:id="txtApellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                 <!-- Segundo Apellido -->
@@ -42,7 +42,7 @@
                 <TextField fx:id="txtSegundoApellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
                 <!-- Teléfono -->
-                <Label text="Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <Label text="*Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                 <TextField fx:id="txtTelefono" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
                 <!-- Hobbie -->
@@ -71,11 +71,11 @@
 
 
                 <!-- Género -->
-                <Label text="Género:" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+                <Label text="*Género:" GridPane.columnIndex="0" GridPane.rowIndex="11" />
                 <ChoiceBox fx:id="choiceGenero" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="11" />
 
                 <!-- Tipo Cliente -->
-                <Label text="Tipo Cliente:" GridPane.columnIndex="0" GridPane.rowIndex="12" />
+                <Label text="*Tipo Cliente:" GridPane.columnIndex="0" GridPane.rowIndex="12" />
                 <ChoiceBox fx:id="choiceTipoCliente" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="12" />
 
                 <!-- Fecha Cumpleaños -->

@@ -3,7 +3,7 @@ package com.mastertyres.fxControllers.ProximosServicios;
 
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -35,7 +35,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class ProximosServiciosController implements IFxController, ILoading {
+public class ProximosServiciosController implements IFxController, ILoader {
 
     @FXML
     private AnchorPane ventanaProximosServicios;
@@ -270,7 +270,6 @@ public class ProximosServiciosController implements IFxController, ILoading {
         return card;
     }
 
-
     private String emptyIfNull(String value) {
         return value == null ? "" : value;
     }
@@ -278,7 +277,6 @@ public class ProximosServiciosController implements IFxController, ILoading {
     private String naIfNullOrEmpty(String value) {
         return (value == null || value.trim().isEmpty()) ? "N/A" : value;
     }
-
 
     @FXML
     private void ActualizarServicio(ActionEvent actionEvent) {
@@ -326,7 +324,7 @@ public class ProximosServiciosController implements IFxController, ILoading {
         btnEnviarAviso.setDisable(false);
         MarcaServicioRealizado.setDisable(false);
 
-        lblNombre.setText(p.getNombreCliente() + " " + p.getApellido() + " " + p.getSegundoApellido());
+        lblNombre.setText(emptyIfNull(p.getNombreCliente()) + " " + emptyIfNull(p.getApellido()) + " " + emptyIfNull(p.getSegundoApellido()));
         lblNumeroTelefono.setText(p.getNumTelefono());
         lblMarca.setText(p.getNombreMarca());
         lblModelo.setText(p.getNombreModelo());

@@ -32,13 +32,13 @@
 
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
-                                        <String fx:value="Individual" />
-                                        <String fx:value="Empresa" />
+                                        <String fx:value="INDIVIDUAL"/>
+                                        <String fx:value="EMPRESA"/>
                                     </FXCollections>
                                 </items>
                             </ChoiceBox>
 
-                            <Label text="Genero: " GridPane.rowIndex="1" />
+                            <Label text="*Genero: " GridPane.rowIndex="1" />
                             <ChoiceBox fx:id="choiceGenero" prefHeight="26.0" prefWidth="151.0" style="-fx-text-alignment: right;" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
@@ -90,22 +90,22 @@
                             </columnConstraints>
 
                             <!-- Fila 0 -->
-                            <Label text="Marca:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label text="*Marca:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                             <ChoiceBox fx:id="choiceMarca" styleClass="choicebox-mini2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                             <TextField fx:id="txtSerie" promptText="Número de Serie" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
                             <!-- Fila 1 -->
-                            <Label text="Modelo:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label text="*Modelo:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                             <ChoiceBox fx:id="choiceModelo" styleClass="choicebox-mini2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                             <TextField fx:id="txtColor" promptText="Color" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
                             <!-- Fila 2 -->
-                            <Label text="Categoría:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Label text="*Categoría:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                             <ChoiceBox fx:id="choiceCategoria" styleClass="choicebox-mini2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                             <TextField fx:id="txtPlacas" promptText="Placas" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
                             <!-- Fila 3 -->
-                            <Label text="Año:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <Label text="*Año:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                             <Spinner fx:id="spinnerAnio" editable="true" promptText="Año" styleClass="spinner" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                             <TextField fx:id="txtKilometros" promptText="Kilómetros" styleClass="buscador" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 
