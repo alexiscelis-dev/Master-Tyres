@@ -1,7 +1,6 @@
 package com.mastertyres.fxControllers.Promociones;
 
 
-import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
 import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
@@ -9,27 +8,22 @@ import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.model.StatusPromocion;
 import com.mastertyres.promociones.model.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
-import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -51,7 +45,7 @@ public class NuevaPromocionClienteController {
     @FXML private DatePicker fechaInicio;
     @FXML private DatePicker fechaFin;
     @FXML private Button btnRegistrar;
-    @FXML private Button btnRegresar;
+    @FXML private Button btnLimpiar;
     @FXML private ChoiceBox<String> tipoDescuento;
     @FXML private TextField nombrePromocion;
     @FXML private TextField descripcion;
@@ -59,8 +53,8 @@ public class NuevaPromocionClienteController {
     @FXML private TextField textFieldImg;
 
 
-    @FXML private TableView<Cliente> Tabla_Clientes;
-    @FXML private ListView<Cliente> ClientesAgregados;
+    @FXML private TableView<Cliente> tablaClientes;
+    @FXML private ListView<Cliente> clientesAgregados;
     @FXML private TableColumn<Cliente, Boolean> colSeleccionCliente;
     @FXML private TextField txtBuscador;
     @FXML private TableColumn<Cliente, String> colNombre;
@@ -70,13 +64,15 @@ public class NuevaPromocionClienteController {
     @FXML private TableColumn<Cliente, String> colNombreEmpresa;
     @FXML private TableColumn<Cliente, String> colTipoCliente;
     @FXML private TableColumn<Cliente, String> colHobbie;
+    @FXML private Pagination PaginadorClientes;
+    @FXML private Label statusLabel;
     @FXML private Button btnBuscar;
 
     private static final int CLIENTES_POR_PAGINA = 20;
-    @FXML private Pagination PaginadorClientes;
     private String terminoBusquedaActual = "";
     private String terminoBusqueda = "";
     private boolean modoBusqueda = false;
+    private PauseTransition pauseTransition;
 
     private final ObservableSet<Cliente> clientesSeleccionados =
             FXCollections.observableSet();
@@ -123,6 +119,13 @@ public class NuevaPromocionClienteController {
     }//configuraciones
 
     public void listeners() {
+
+        btnLimpiar.setOnAction(event -> {
+            clean();
+            clientesAgregados.getItems().clear();
+            clientesSeleccionados.clear();
+            tablaClientes.refresh();
+        });
 
         btnBuscar.setOnAction(event -> buscarClientes());
 
@@ -205,11 +208,19 @@ public class NuevaPromocionClienteController {
                     Cliente cliente = getTableView()
                             .getItems()
                             .get(getIndex());
+                    String mensaje = "";
 
                     if (checkBox.isSelected()) {
+
                         clientesSeleccionados.add(cliente);
+                        mensaje = nombreCompleto(cliente);
+
+                        showLabel(mensaje, "agregado");
+
                     } else {
                         clientesSeleccionados.remove(cliente);
+                        mensaje = nombreCompleto(cliente);
+                        showLabel(mensaje, "eliminado");
                     }
                 });
             }
@@ -228,21 +239,22 @@ public class NuevaPromocionClienteController {
                 checkBox.setSelected(clientesSeleccionados.contains(cliente));
 
                 setGraphic(checkBox);
+
             }
         });
     }
 
     private void configurarListaClientesAgregados() {
 
-        ClientesAgregados.setItems(
+        clientesAgregados.setItems(
                 FXCollections.observableArrayList(clientesSeleccionados)
         );
 
         clientesSeleccionados.addListener((SetChangeListener<Cliente>) change -> {
-            ClientesAgregados.getItems().setAll(clientesSeleccionados);
+            clientesAgregados.getItems().setAll(clientesSeleccionados);
         });
 
-        ClientesAgregados.setCellFactory(list -> new ListCell<>() {
+        clientesAgregados.setCellFactory(list -> new ListCell<>() {
             @Override
             protected void updateItem(Cliente c, boolean empty) {
                 super.updateItem(c, empty);
@@ -284,10 +296,10 @@ public class NuevaPromocionClienteController {
             );
         }
 
-        Tabla_Clientes.setItems(
+        tablaClientes.setItems(
                 FXCollections.observableArrayList(resultado.getContent())
         );
-        Tabla_Clientes.refresh();
+        tablaClientes.refresh();
     }
 
     /* ================= BUSCADOR ================= */
@@ -371,13 +383,13 @@ public class NuevaPromocionClienteController {
             }
 
             // 2. Validar clientes
-            if (ClientesAgregados.getItems().isEmpty()) {
+            if (clientesAgregados.getItems().isEmpty()) {
                 mostrarError("Error", "", "Debe agregar al menos un cliente a la promoción");
                 return;
             }
 
             // 3. Extraer IDs de clientes del ListView
-            List<Integer> clientesIds = ClientesAgregados.getItems()
+            List<Integer> clientesIds = clientesAgregados.getItems()
                     .stream()
                     .map(Cliente::getClienteId)
                     .toList();
@@ -528,7 +540,7 @@ public class NuevaPromocionClienteController {
     /* ================= HELPERS ================= */
 
     private String valorONull(String valor) {
-        return (valor == null || valor.isBlank()) ? "N/A" : valor;
+        return (valor == null || valor.isBlank()) ? "N/D" : valor;
     }
 
     private String nombreCompleto(Cliente c) {
@@ -538,7 +550,7 @@ public class NuevaPromocionClienteController {
 
         String full = String.join(" ", n, a1, a2).trim();
 
-        return full.isBlank() ? "N/A" : full;
+        return full.isBlank() ? "N/D" : full;
     }
 
     private void clean() {
@@ -552,9 +564,23 @@ public class NuevaPromocionClienteController {
         tipoDescuento.setValue(null);
 
         txtBuscador.setText("");
-        ClientesAgregados.getItems().clear();
+        clientesAgregados.getItems().clear();
         textFieldImg.setText("");
+
     }
 
+    private void showLabel(String mensaje, String accion){
+        statusLabel.setText(mensaje +  " " + accion);
 
-}
+        if (pauseTransition != null){
+            pauseTransition.stop();
+        }
+        pauseTransition = new PauseTransition(Duration.seconds(2.5));
+        pauseTransition.setOnFinished(event -> statusLabel.setText(""));
+        pauseTransition.play();
+
+
+    }//showLabel
+
+
+}//class

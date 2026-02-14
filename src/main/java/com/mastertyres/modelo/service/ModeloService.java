@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -44,11 +43,7 @@ public class ModeloService implements IModeloService {
     @Transactional(readOnly = true)
     @Override
     public List<Modelo> listarModelos() {
-        return modeloRepository.findAll()
-                .stream()
-                .filter(m -> m.getModeloId() != 1)
-                .sorted(Comparator.comparing(Modelo::getNombreModelo))
-                .toList();
+        return modeloRepository.listarModelos();
     }
 
     //  Listar nombres sin incluir el genérico

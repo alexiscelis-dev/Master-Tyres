@@ -10,13 +10,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public interface MarcaRepository extends JpaRepository<Marca, Integer> {
+    final String SELECT_FROM_MARCA = "SELECT m FROM Marca m";
+    final String DELETE_MARCA = "DELETE FROM Marca m";
 
     @Query("SELECT m.nombreMarca FROM Marca m WHERE m.marcaId <> 1")
     List<String> listarNombresMarcas();
@@ -26,45 +27,36 @@ public interface MarcaRepository extends JpaRepository<Marca, Integer> {
     Page<String> listarNombresMarcasPaginado(Pageable pageable);
 
 
-    @Query("""
-    SELECT m FROM Marca m
-    WHERE LOWER(m.nombreMarca) LIKE LOWER(CONCAT('%', :filtro, '%')) AND m.marcaId <> 1
-""")
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query(SELECT_FROM_MARCA + " " + " WHERE LOWER(m.nombreMarca) LIKE LOWER(CONCAT('%', :filtro, '%')) AND m.marcaId <> 1")
     Page<Marca> buscarMarcasPorNombre(@Param("filtro") String filtro, Pageable pageable);
 
-
-    @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1 ORDER BY m.nombreMarca ASC")
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query(SELECT_FROM_MARCA + " " + " WHERE m.marcaId <> 1 ORDER BY m.nombreMarca ASC")
     List<Marca> listarMarcasSinGenerica();
 
-    @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1 ORDER BY m.nombreMarca ASC")
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query(SELECT_FROM_MARCA + " " + " WHERE m.marcaId <> 1 ORDER BY m.nombreMarca ASC")
     Page<Marca> listarMarcasPaginadoSinGenerica(Pageable pageable);
 
 
     //  Buscar por nombre ignorando mayúsculas/minúsculas (sin incluir la genérica)
-    @Query("""
-        SELECT m FROM Marca m
-        WHERE LOWER(m.nombreMarca) LIKE LOWER(CONCAT('%', :nombre, '%'))
-        AND m.marcaId <> 1
-    """)
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query(SELECT_FROM_MARCA + " " + " WHERE LOWER(m.nombreMarca) LIKE LOWER(CONCAT('%', :nombre, '%')) AND m.marcaId <> 1 ")
     Page<Marca> findByNombreMarcaContainingIgnoreCaseExcludingGenerica(@Param("nombre") String nombre, Pageable pageable);
 
 
-//    @Query("SELECT m.nombreMarca FROM Marca m WHERE LOWER(m.nombreMarca) LIKE LOWER(CONCAT('%', :filtro, '%'))")
-//    Page<String> buscarMarcasPorNombre(@Param("filtro") String filtro, Pageable pageable);
-
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     Page<Marca> findByNombreMarcaContainingIgnoreCase(String nombre, Pageable pageable);
 
     // Eliminar marca (si no es el genérico)
     @Modifying
-    @Transactional
-    @Query("DELETE FROM Marca m WHERE m.marcaId = :marcaId AND m.marcaId <> 1")
+    @Query(DELETE_MARCA + " " + " WHERE m.marcaId = :marcaId AND m.marcaId <> 1")
     int eliminarMarcaPorId(Integer marcaId);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT m FROM Marca m WHERE m.nombreMarca = :nombreMarca")
+    @Query(SELECT_FROM_MARCA + " " + " WHERE m.nombreMarca = :nombreMarca")
     Optional<Marca> findByNombreMarca(@Param("nombreMarca") String nombreMarca);
-
-
 
 
 

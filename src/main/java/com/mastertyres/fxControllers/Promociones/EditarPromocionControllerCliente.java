@@ -6,24 +6,20 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
-import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -41,7 +37,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 
 @Component
-public class EditarPromocionControllerCliente {
+public class EditarPromocionControllerCliente implements  IFxController {
 
     @FXML
     private TextField txtNombre;
@@ -287,6 +283,7 @@ public class EditarPromocionControllerCliente {
     }
 
 
+    @Override
     public void configuraciones(){
 
         txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
@@ -306,6 +303,7 @@ public class EditarPromocionControllerCliente {
 
     }//configuraciones
 
+    @Override
     public void listeners() {
 
         configurarValidaciones();
@@ -647,5 +645,6 @@ public class EditarPromocionControllerCliente {
         Stage stage = (Stage) txtNombre.getScene().getWindow();
         stage.close();
     }
+
 
 }

@@ -148,6 +148,12 @@ public class EditarVehiculoController implements IFxController, ILoading {
         choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
         choiceCategoria.disableProperty().bind(choiceModelo.valueProperty().isNull());
 
+        txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,6}")) {
+                txtKilometros.setText(oldValue);
+            }
+        });
+
         // Placas
         txtPlacas.textProperty().addListener((obs, oldText, newText) -> {
             String texto = newText.toUpperCase();
@@ -298,6 +304,7 @@ public class EditarVehiculoController implements IFxController, ILoading {
                                 .add(modelo));
                 List<Modelo> modelosFiltrados = modelosPorNombre.values().stream()
                         .map(modelosConNombre -> modelosConNombre.get(0))
+                        .sorted(Comparator.comparing(Modelo::getNombreModelo))
                         .toList();
                 choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
                 choiceModelo.getSelectionModel().clearSelection();
