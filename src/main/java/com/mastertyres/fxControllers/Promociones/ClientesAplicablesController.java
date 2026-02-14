@@ -8,6 +8,7 @@ import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.model.TipoPromocion;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -117,9 +118,9 @@ public class ClientesAplicablesController implements IFxController, ILoading {
 
         List<Cliente> clientes;
 
-        if ("VEHICULO".equals(promocionSeleccionada.getTipoPromocion())) {
+        if (TipoPromocion.VEHICULO.toString().equals(promocionSeleccionada.getTipoPromocion())) {
             clientes = clienteService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
-        } else if ("CLIENTE".equals(promocionSeleccionada.getTipoPromocion())) {
+        } else if (TipoPromocion.CLIENTE.toString().equals(promocionSeleccionada.getTipoPromocion())) {
             clientes = clientePromocionService.obtenerClientesAplicables(promocionSeleccionada.getPromocionId());
         } else {
             clientes = new ArrayList<>();

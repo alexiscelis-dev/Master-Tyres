@@ -4,7 +4,10 @@ import com.mastertyres.nota.model.Nota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
+import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface INotaService {
@@ -40,6 +43,42 @@ public interface INotaService {
 
 
     List<NotaDTO> buscarHistorial(int cantidadResultados,String nombreCliente);
+
+    Page<NotaDTO> buscador (String filtro, String busqueda, int IndicePagina, int tamañoPagina);
+
+    Page<NotaDTO> buscadorRangos (String filtro, String busqueda, String busqueda2, int IndicePagina, int tamañoPagina);
+
+    Page<NotaDTO> listarNotasPaginado(String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarNotas(String filtro, int pagina, int tamanio);
+
+    Page<NotaDTO> buscarPorNumeroFactura(String numFactura, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorNombreCliente(String nombreCliente, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorFechaNota(LocalDate fecha, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorFechaNotaRango(String fecha, String fecha2, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorVehiculo(String filtro, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorFechaVencimiento(String filtro, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorFechaVencimientoRango(String filtro, String filtro2, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorDireccion(String filtro, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorPlacas(String filtro, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorRfc(String filtro, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorAdeudo(BigDecimal filtro, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorTotal(Double filtro, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> buscarPorSaldoFavor(Double filtro, String active, int pagina, int tamanoPagina);
+
+    Page<NotaDTO> BucarPorNumNota(String filtro, String active, int pagina, int tamanoPagina);
 
 
 

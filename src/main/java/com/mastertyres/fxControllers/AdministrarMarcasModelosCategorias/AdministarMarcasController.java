@@ -38,6 +38,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
@@ -256,7 +257,7 @@ public class AdministarMarcasController implements IFxController, ILoading {
 
             configurarPaginador();
         } catch (IOException ex) {
-            mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
 
             ex.printStackTrace();
         }
@@ -276,6 +277,8 @@ public class AdministarMarcasController implements IFxController, ILoading {
         int id = m.getMarcaId();
         TablaVehiculoMarca.getItems().clear();
         TablaVehiculoMarca.getItems().addAll(detalleCategoriaService.listarPorMarca(m));
+        TablaVehiculoMarca.getItems().sort(Comparator.comparing((DetalleCategoria dc) ->
+                dc.getModelo().getNombreModelo()).thenComparing(dc -> dc.getCategoria().getNombreCategoria()));
     }
 
     public void EditarMarca(ActionEvent actionEvent) {
@@ -330,7 +333,7 @@ public class AdministarMarcasController implements IFxController, ILoading {
 
             configurarPaginador();
         } catch (IOException ex) {
-            mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
         }
     }
 

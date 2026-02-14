@@ -5,10 +5,13 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.model.TipoCliente;
+import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
@@ -18,9 +21,11 @@ import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.service.ModeloService;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -65,6 +70,9 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
     @Autowired
     private DetalleCategoriaService detalleCategoriaService;
+
+    @Autowired
+    private TaskService taskService;
 
     // Columnas de tabla vehiculos
     @FXML
@@ -182,7 +190,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     @Override
     public void configuraciones() {
 
-
         MenuContextSetting.disableMenu(ventanaAgregarCliente);
 
         //Deshabilitar los menus de los demas campos mendiante el nodo interno que es un texfield
@@ -265,11 +272,15 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     @Override
     public void listeners() {
 
-      pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
-
         configurarValidaciones();
 
-//eliminar contenido de DatePickerUltimoServicio
+        pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
+        txtNombreEmpresa.disableProperty().bind(
+                choiceTipoCliente.valueProperty().isNotEqualTo(TipoCliente.EMPRESA.toString())
+        );
+
+        //eliminar contenido de DatePickerUltimoServicio
         pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case BACK_SPACE, DELETE -> {
@@ -312,7 +323,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         }
 
     }//listeners
-
 
     @Override
     public void setInitializeLoading(LoadingComponentController loading) {
@@ -424,7 +434,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
             }
         });
 
-
         // correo: opcional, acepta minúsculas
         txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
             String texto = newText.toLowerCase(); // convertir a minusculas para la validación
@@ -456,7 +465,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                 txtPlacas.setStyle("");
             }
         });
-
 
 // Número de serie (VIN)
         txtSerie.textProperty().addListener((obs, oldText, newText) -> {
@@ -513,6 +521,35 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
         choiceCategoria.disableProperty().bind(choiceModelo.valueProperty().isNull());
 
+        BooleanBinding nombreEmpresaValido = Bindings.createBooleanBinding(
+                () -> {
+                    String tipo = choiceTipoCliente.getValue();
+
+                    if (tipo == null) return false;
+
+                    // Si NO es empresa → es válido automáticamente
+                    if (!tipo.equalsIgnoreCase(TipoCliente.EMPRESA.toString())) {
+                        txtNombreEmpresa.setText("");
+                        return true;
+                    }
+
+                    // Si es empresa → no puede estar vacío
+                    return !txtNombreEmpresa.getText().isBlank();
+                },
+                choiceTipoCliente.valueProperty(),
+                txtNombreEmpresa.textProperty()
+        );
+
+        txtNombreEmpresa.styleProperty().bind(
+                Bindings.when(nombreEmpresaValido.not()
+                                .and(choiceTipoCliente.valueProperty()
+                                        .isEqualTo(TipoCliente.EMPRESA.toString())))
+                        .then("-fx-border-color: red;")
+                        .otherwise("")
+        );
+
+
+
         // Deshabilitar botón "Agregar Vehículo" hasta que se llenen los campos requeridos
         btnAgregarVehiculo.disableProperty().bind(
                 choiceMarca.valueProperty().isNull()
@@ -531,11 +568,15 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                         .or(txtApellido.textProperty().isEmpty())
                         .or(txtTelefono.textProperty().isEmpty())
                         .or(choiceTipoCliente.valueProperty().isNull())
+                        .or(choiceGenero.valueProperty().isNull())
                         .or(rfcValido.not())
                         .or(telefonoValido.not())
                         .or(CorreoValido.not())
+                        .or(nombreEmpresaValido.not())
 
         );
+
+
 
     }
 
@@ -758,9 +799,23 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         txtKilometros.clear();
         pickerUltimoServicio.setValue(null);
         txtObservaciones.clear();
+
+        //Quitar estilo border
+        String STILE = "";
+
+        txtColor.setStyle(STILE);
+        txtPlacas.setStyle(STILE);
+        txtSerie.setStyle(STILE);
+        txtKilometros.setStyle(STILE);
+        txtObservaciones.setStyle(STILE);
+        pickerUltimoServicio.setStyle(STILE);
+        spinnerAnio.setStyle(STILE);
+
+
     }
 
     private void LimpiarCamposClientes() {
+
         txtNombre.clear();
         txtApellido.clear();
         txtSegundoApellido.clear();
@@ -773,6 +828,22 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         txtRFC.clear();
         pickerCumpleanos.setValue(null);
         choiceTipoCliente.setValue(null);
+
+        //quitar border estilo
+        String STILE = "";
+
+        txtNombre.setStyle(STILE);
+        txtApellido.setStyle(STILE);
+        txtSegundoApellido.setStyle(STILE);
+        //txtNombreEmpresa.setStyle(STILE);
+        txtDomicilio.setStyle(STILE);
+        txtEstado.setStyle(STILE);
+        txtCiudad.setStyle(STILE);
+        txtTelefono.setStyle(STILE);
+        txtHobbie.setStyle(STILE);
+        txtRFC.setStyle(STILE);
+        pickerCumpleanos.setStyle(STILE);
+
     }
 
     @FXML
@@ -781,37 +852,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         if (!rfcValido.get() || !telefonoValido.get()) {
             mostrarError("Error en campos", "", "Por favor, corrige los campos marcados en rojo antes de guardar.");
             return;
-        }
-
-        // Validar RFC duplicado
-        String rfc = txtRFC.getText();
-        if (rfc != null && !rfc.isBlank()) {
-            if (clienteService.existeClientePorRFC(rfc)) {
-                mostrarWarning("RFC duplicado", "", "Ya existe un cliente activo con este RFC.");
-                return;
-            }
-        }
-
-        // Validar vehículos duplicados contra la base
-        for (Vehiculo v : listaVehiculos) {
-            String placas = v.getPlacas();
-            String numSerie = v.getNumSerie();
-
-            if (placas != null && !placas.isBlank()) {
-                if (vehiculoService.existeVehiculoPorPlacas(placas)) {
-                    mostrarWarning("Vehículo duplicado", "",
-                            "Ya existe un vehículo activo con las mismas placas.");
-                    return;
-                }
-            }
-
-            if (numSerie != null && !numSerie.isBlank()) {
-                if (vehiculoService.existeVehiculoPorNumeroSerie(numSerie)) {
-                    mostrarWarning("Vehículo duplicado", "",
-                            "Ya existe un vehículo activo con el mismo numero de serie.");
-                    return;
-                }
-            }
         }
 
 // Validar que no haya duplicados en la lista antes de guardar
@@ -844,7 +884,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
         // Crear Cliente
         Cliente cliente = new Cliente();
-        cliente.setUpdated_at(LocalDate.now().toString());  // <<< AGREGADO
+        cliente.setUpdated_at(LocalDate.now().toString());
         cliente.setNombre(txtNombre.getText());
         cliente.setApellido(txtApellido.getText());
         cliente.setNombreEmpresa(txtNombreEmpresa.getText());
@@ -860,7 +900,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         if (pickerCumpleanos.getValue() != null) {
             cliente.setFechaCumple(pickerCumpleanos.getValue().toString());
         }
-        cliente.setActive("ACTIVE");
+        cliente.setActive(StatusCliente.ACTIVE.toString());
         cliente.setCreated_at(LocalDate.now().toString());
 
         if (choiceGenero.getValue() != null) {
@@ -876,7 +916,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
             v.setContador_mensaje(0);
             v.setCliente(cliente); // relación bidireccional
             if (v.getActive() == null) {
-                v.setActive("ACTIVE");
+                v.setActive(StatusVehiculo.ACTIVE.toString());
             }
             if (v.getCreated_at() == null) {
                 v.setCreated_at(LocalDate.now().toString());  // Asignar fecha creación aquí
@@ -890,22 +930,41 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         }
         cliente.setVehiculos(listaVehiculos);
 
-        try {
-            // Guardar usando el servicio
-            clienteService.guardarCliente(cliente);
 
-            // Limpiar formulario
-            limpiarCamposVehiculo();
-            LimpiarCamposClientes();
-            listaVehiculos.clear();
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
 
-            mostrarInformacion("Cliente guardado con éxito", "", "El cliente guardado con éxito");
-            ventanaPrincipalController.irAtras();
-        } catch (Exception e) {
-            mostrarError("Error", "Cliente NO guardado", "El cliente NO pudo ser guardado");
-        }
+                    // Guardar usando el servicio
+                    //true - > registra hace validaciones en vehiculo el metodo Validator
+                    clienteService.guardarCliente(cliente,true);
+                return null;
 
-    }
+                }, (resultado) ->{
+
+
+
+                    mostrarInformacion("Guardado exitoso", "", "El cliente guardado con éxito");
+                    // Limpiar formulario
+                    limpiarCamposVehiculo();
+                    LimpiarCamposClientes();
+                    listaVehiculos.clear();
+
+                },(ex) ->{
+
+                    if (ex instanceof ClienteException){
+                        mostrarError("No se pudo guardar","Ocurrio un problema al guardar el cliente","" + ex.getMessage());
+                    }else {
+                        mostrarError("Error interno",
+                                "Error inesperado",
+                                "Ocurrio un error al intentar registrar el cliente.");
+                    }
+
+                },null
+        );
+
+
+    }//GuardarCliente
 
     public void Cancelar(ActionEvent actionEvent) {
         ventanaPrincipalController.irAtras();

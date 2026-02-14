@@ -2,11 +2,15 @@ package com.mastertyres.fxControllers.vehiculo;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -29,21 +33,34 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+
 @Component
-public class EditarVehiculoController implements IFxController {
+public class EditarVehiculoController implements IFxController, ILoading {
     @FXML
     private AnchorPane rootPane;
-    @FXML private ChoiceBox<Marca> choiceMarca;
-    @FXML private ChoiceBox<Modelo> choiceModelo;
-    @FXML private ChoiceBox<Categoria> choiceCategoria;
-    @FXML private Spinner<Integer> spinnerAnio;
-    @FXML private TextField txtKilometros;
-    @FXML private TextField txtColor;
-    @FXML private TextField txtPlacas;
-    @FXML private TextField txtNumSerie;
-    @FXML private TextField txtObservaciones;
-    @FXML private DatePicker dateUltimoServicio;
-    @FXML private Button btnCambiar;
+    @FXML
+    private ChoiceBox<Marca> choiceMarca;
+    @FXML
+    private ChoiceBox<Modelo> choiceModelo;
+    @FXML
+    private ChoiceBox<Categoria> choiceCategoria;
+    @FXML
+    private Spinner<Integer> spinnerAnio;
+    @FXML
+    private TextField txtKilometros;
+    @FXML
+    private TextField txtColor;
+    @FXML
+    private TextField txtPlacas;
+    @FXML
+    private TextField txtNumSerie;
+    @FXML
+    private TextField txtObservaciones;
+    @FXML
+    private DatePicker dateUltimoServicio;
+    @FXML
+    private Button btnCambiar;
 
     private VehiculoDTO vehiculo;
 
@@ -62,7 +79,12 @@ public class EditarVehiculoController implements IFxController {
     @Autowired
     private DetalleCategoriaService detalleCategoriaService;
 
+    @Autowired
+    private TaskService taskService;
+
     private List<Modelo> modelos;
+    private LoadingComponentController loadingOverlayController;
+
 
     private BooleanProperty serieValido = new SimpleBooleanProperty(true);
     private BooleanProperty placasValido = new SimpleBooleanProperty(true);
@@ -83,7 +105,12 @@ public class EditarVehiculoController implements IFxController {
     }//initialize
 
     @Override
-    public void configuraciones(){
+    public void setInitializeLoading(LoadingComponentController loading) {
+        loadingOverlayController = loading;
+    }
+
+    @Override
+    public void configuraciones() {
 
         MenuContextSetting.disableMenuDatePicker(rootPane);
         MenuContextSetting.disableMenu(rootPane);
@@ -369,7 +396,7 @@ public class EditarVehiculoController implements IFxController {
 
     private void actualizarVehiculo() {
         if (vehiculo == null) {
-            MensajesAlert.mostrarError(
+            mostrarError(
                     "Error",
                     "No hay vehiculo seleccionado",
                     "Debe seleccionar un vehiculo antes de poder modificarlo."
@@ -408,54 +435,72 @@ public class EditarVehiculoController implements IFxController {
             return; // Usuario canceló
         }
 
-        String placas = txtPlacas.getText();
-        String numSerie = txtNumSerie.getText();
-        Integer id = vehiculo.getId();
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
 
-        if (placas != null && !placas.isBlank()){
-            if (vehiculoService.existeVehiculoPlacas_Editar(placas, id)){
-                MensajesAlert.mostrarError( "Error al actualizar","Vehículo duplicado",
-                        "Ya existe un vehículo activo con las mismas placas.");
-                return;
-            }
-        }
+                    String placas = txtPlacas.getText();
+                    String numSerie = txtNumSerie.getText();
+                    Integer id = vehiculo.getId();
 
-        if (numSerie != null && !numSerie.isBlank()){
-            if (vehiculoService.existeVehiculoNumeroSerie_Editar(numSerie, id)){
-                MensajesAlert.mostrarError( "Error al actualizar","Vehículo duplicado",
-                        "Ya existe un vehículo activo con el mismo numero de serie.");
-                return;
-            }
-        }
+                    if (placas != null && !placas.isBlank()) {
+                        if (vehiculoService.existeVehiculoPlacasEditar(placas, id)) {
+                            throw new VehiculoException("Ya existe un vehículo regstrado con la misma placa.");
+                        }
+                    }
 
-        try {
-            Vehiculo v = new Vehiculo();
-            v.setVehiculoId(vehiculo.getId());
-            v.setMarca(choiceMarca.getValue());
-            //v.setModelo(choiceModelo.getValue());
-            v.setModelo(obtenerModeloSeleccionado());
-            v.setCategoria(choiceCategoria.getValue());
-            v.setAnio(spinnerAnio.getValue());
-            v.setKilometros(Integer.parseInt(txtKilometros.getText()));
-            v.setColor(txtColor.getText());
-            v.setPlacas(txtPlacas.getText());
-            v.setNumSerie(txtNumSerie.getText());
-            v.setObservaciones(txtObservaciones.getText());
-            if (dateUltimoServicio.getValue() != null) {
-                v.setUltimoServicio(dateUltimoServicio.getValue().toString());
-            }
+                    if (numSerie != null && !numSerie.isBlank()) {
+                        if (vehiculoService.existeVehiculoNumeroSerieEditar(numSerie, id)) {
+                            throw new VehiculoException("Ya existe un vehículo regstrado con el mismo número de serie.");
+                        }
+                    }
 
 
-            // 🔹 Guardar en la BD
-            vehiculoService.actualizarVehiculo(vehiculo.getId(), v);
+                    Vehiculo vehiculo = new Vehiculo();
+                    vehiculo.setVehiculoId(this.vehiculo.getId());
+                    vehiculo.setMarca(choiceMarca.getValue());
+                    vehiculo.setModelo(obtenerModeloSeleccionado());
+                    //vehiculo.setModelo(choiceModelo.getValue());
+                    vehiculo.setCategoria(choiceCategoria.getValue());
+                    vehiculo.setAnio(spinnerAnio.getValue());
+                    vehiculo.setKilometros(Integer.parseInt(txtKilometros.getText()));
+                    vehiculo.setColor(txtColor.getText());
+                    vehiculo.setPlacas(txtPlacas.getText());
+                    vehiculo.setNumSerie(txtNumSerie.getText());
+                    vehiculo.setObservaciones(txtObservaciones.getText());
 
-            MensajesAlert.mostrarInformacion("Éxito", "Vehículo actualizado", "El vehículo se actualizó correctamente.");
-            cerrarVentana();
+                    if (dateUltimoServicio.getValue() != null) {
+                        vehiculo.setUltimoServicio(dateUltimoServicio.getValue().toString());
+                    }
 
-        } catch (Exception e) {
-            MensajesAlert.mostrarError("Error al actualizar", "No se pudo actualizar el vehículo", "Detalles: " + e.getMessage());
-            e.printStackTrace();
-        }
+
+                    //  Guardar en la BD
+                    vehiculoService.actualizarVehiculo(this.vehiculo.getId(), vehiculo);
+
+                    return null;
+
+                }, (resultado) -> {
+
+                    MensajesAlert.mostrarInformacion("Vehículo actualizado",
+                            "",
+                            "El vehículo se actualizó correctamente.");
+                    cerrarVentana();
+
+                }, (ex) -> {
+
+                    if (ex instanceof VehiculoException) {
+                        mostrarError("Error al actualizar",
+                                "Ocurrio un problema al guardar los cambios",
+                                "" + ex.getMessage());
+                    } else {
+                        mostrarError("Error interno",
+                                "",
+                                "Ocurrio un error inesperado al intentar guardar los cambios. Vuelva a intentarlo mas tarde.");
+                    }
+
+                }, null
+        );
+
 
     }
 
@@ -464,4 +509,6 @@ public class EditarVehiculoController implements IFxController {
         Stage stage = (Stage) btnCambiar.getScene().getWindow();
         stage.close();
     }
+
+
 }

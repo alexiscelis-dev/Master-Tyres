@@ -33,7 +33,7 @@ public interface MarcaRepository extends JpaRepository<Marca, Integer> {
     Page<Marca> buscarMarcasPorNombre(@Param("filtro") String filtro, Pageable pageable);
 
 
-    @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1")
+    @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1 ORDER BY m.nombreMarca ASC")
     List<Marca> listarMarcasSinGenerica();
 
     @Query("SELECT m FROM Marca m WHERE m.marcaId <> 1 ORDER BY m.nombreMarca ASC")

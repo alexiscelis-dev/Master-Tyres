@@ -15,6 +15,7 @@ import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.model.TipoPromocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
 import javafx.event.ActionEvent;
@@ -349,7 +350,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     @FXML
     private void abrirVentanaEditarPromocion() {
 
-        if (promocionSeleccionada.getTipoPromocion().equals("VEHICULO")){
+        if (promocionSeleccionada.getTipoPromocion().equals(TipoPromocion.VEHICULO.toString())){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/promocion/EditarPromocion.fxml"));
                 loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -372,7 +373,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             } catch (IOException ex) {
                 mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             }
-        } else if (promocionSeleccionada.getTipoPromocion().equals("CLIENTE")){
+        } else if (promocionSeleccionada.getTipoPromocion().equals(TipoPromocion.CLIENTE.toString())){
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/promocion/EditarPromocionCliente.fxml"));
                 loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -437,7 +438,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         lblFechaInicio.setText(formatearFecha(p.getFechaInicio()));
         lblFechaFin.setText(formatearFecha(p.getFechaFin()));
 
-        if (p.getTipoPromocion().equals("VEHICULO")){
+        if (p.getTipoPromocion().equals(TipoPromocion.VEHICULO.toString())){
             lblTituloClientes.setManaged(false);
             lblTituloClientes.setVisible(false);
             lblTituloVehiculos.setVisible(true);
@@ -447,7 +448,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             ListaVehiculosPromocion.setVisible(true);
             ListaVehiculosPromocion.setManaged(true);
             cargarVehiculosPromocion(p.getPromocionId());
-        }else if (p.getTipoPromocion().equals("CLIENTE")){
+        }else if (p.getTipoPromocion().equals(TipoPromocion.CLIENTE.toString())){
             lblTituloVehiculos.setVisible(false);
             lblTituloVehiculos.setManaged(false);
             lblTituloClientes.setVisible(true);
@@ -544,5 +545,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         cargarPromociones();
     }
 
+    public void actualizarOut (){
+        actualizar(null);
+    }
 
 }//class

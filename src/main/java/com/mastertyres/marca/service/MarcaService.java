@@ -27,6 +27,8 @@ public class MarcaService implements IMarcaServices {
 
 
 
+    @Transactional
+    @Override
     public Marca guardarMarca(Marca marca) {
         //validar exepciones al guardar
         marcaValidator.validarGuardar(marca);
@@ -34,46 +36,61 @@ public class MarcaService implements IMarcaServices {
         return marcaRepository.save(marca);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Marca> listarMarcas() {
         return marcaRepository.listarMarcasSinGenerica();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Marca> findByNombreMarca(String nombreMarca) {
         return marcaRepository.findByNombreMarca(nombreMarca);
     }
 
-
+    @Transactional(readOnly = true)
+    @Override
     public List<String> listarNombresMarcas() {
         return marcaRepository.listarNombresMarcas();
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<String> listarNombresMarcas( Pageable pageable) {
         return marcaRepository.listarNombresMarcasPaginado(pageable);
     }
 
     // Buscar marcas por nombre (paginado)
+    @Transactional(readOnly = true)
+    @Override
     public Page<Marca> buscarMarcasPorNombre(String filtro, Pageable pageable) {
         return marcaRepository.buscarMarcasPorNombre(filtro, pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<Marca> listarMarcasPaginado(Pageable pageable) {
         return marcaRepository.listarMarcasPaginadoSinGenerica(pageable);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<Marca> buscarMarcasPorNombreMarca(String filtro, Pageable pageable) {
         return marcaRepository.findByNombreMarcaContainingIgnoreCaseExcludingGenerica(filtro, pageable);
     }
 
 
     //  Listar paginado
+    @Transactional(readOnly = true)
+    @Override
     public Page<Marca> listarMarcasPaginado(int numeroPagina, int tamañoPagina) {
         Pageable pageable = PageRequest.of(numeroPagina, tamañoPagina);
         return marcaRepository.listarMarcasPaginadoSinGenerica(pageable);
     }
 
     //  Buscar marcas paginado
+    @Transactional(readOnly = true)
+    @Override
     public Page<Marca> buscarMarcasPorNombre(String filtro, int numeroPagina, int tamañoPagina) {
         Pageable pageable = PageRequest.of(numeroPagina, tamañoPagina);
         return marcaRepository.findByNombreMarcaContainingIgnoreCaseExcludingGenerica(filtro, pageable);
@@ -81,6 +98,7 @@ public class MarcaService implements IMarcaServices {
 
 
     @Transactional
+    @Override
     public int eliminarMarcaPorId(Integer marcaId) {
 
         marcaValidator.validarEliminacion(marcaId);
@@ -88,7 +106,5 @@ public class MarcaService implements IMarcaServices {
         return marcaRepository.eliminarMarcaPorId(marcaId);
 
     }
-
-
 
 }//class

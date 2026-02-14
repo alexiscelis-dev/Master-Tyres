@@ -4,6 +4,7 @@ import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoading;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -13,6 +14,7 @@ import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.model.StatusPromocion;
 import com.mastertyres.promociones.model.TipoDescuento;
+import com.mastertyres.promociones.model.TipoPromocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
@@ -64,7 +66,7 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
     @FXML
     private TextField nombrePromocion;
     @FXML
-    private TextField descripcion;
+    private TextArea descripcion;
     @FXML
     private ChoiceBox<Marca> choiceMarca;
     @FXML
@@ -107,7 +109,6 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
-
 
     @FXML
     public void initialize() {
@@ -413,20 +414,6 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
         return empty;
     }
 
-    private boolean registrarPromocion() {
-
-        if (!empty() && validarFecha(fechaInicio.getValue(), fechaFin.getValue())) {
-
-            String nombre, descripcion, tipoDescuento, precio, porcentaje, inicioPromo, finPromo;
-            insertarPromocion();
-            ventanaPrincipalController.irAtras();
-
-        } else if (empty())
-            mostrarWarning("Campos vacios", "", "Favor de completar cada uno de los campos solicitados.");
-
-        return true;
-    }
-
     private boolean validarFecha(LocalDate fechaInicioLD, LocalDate fechaFinLD) {
         boolean fechaValida = false;
 
@@ -486,7 +473,6 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
     }//agregarVehiculo
 
     //metodo se manda llamar en registrar promocion
-
     private void insertarPromocion() {
 
         taskService.runTask(loadingOverlayController,
@@ -501,47 +487,54 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
                             .fechaFin(String.valueOf(fechaFin.getValue()))
                             .active(StatusPromocion.ACTIVE.toString())
                             .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
-                            .TipoPromocion("VEHICULO")
+                            .TipoPromocion(TipoPromocion.VEHICULO.toString())
                             .build();
 
-                    promocionService.guardarPromocion(promocion);
+                    //promocionService.guardarPromocion(promocion);
 
-                    if (promocion.getPromocionId() == null) {
-                        //     mostrarError("Error", "", "Error al insertar promocion");
-                        throw new PromocionException("Error interno: No se pudo recuperar la promocion creada");
-                    }
+//                    if (promocion.getPromocionId() == null) {
+//                        //     mostrarError("Error", "", "Error al insertar promocion");
+//                        throw new PromocionException("Error interno: No se pudo recuperar la promocion creada");
+//                    }
 
 
                     ObservableList<VehiculoPromocion> vehiculos = tableVehiculosParticipantes.getItems();
 
-                    for (VehiculoPromocion vehiculoPromocionSeleccionado : vehiculos) {
+//                    for (VehiculoPromocion vehiculoPromocionSeleccionado : vehiculos) {
+//
+//                        Integer marcaId = vehiculoPromocionSeleccionado.getMarca().getMarcaId();
+//                        Integer modeloId = vehiculoPromocionSeleccionado.getModelo().getModeloId();
+//                        Integer anio = vehiculoPromocionSeleccionado.getAnnio();
+//
+//                        Marca marca = new Marca();
+//                        marca.setMarcaId(marcaId);
+//
+//                        Modelo modelo = new Modelo();
+//                        modelo.setModeloId(modeloId);
+//
+//                        VehiculoPromocion vehiculosCompatibles = VehiculoPromocion.builder()
+//                                .marca(marca)
+//                                .modelo(modelo)
+//                                //.promocion(promocion)
+//                                .annio(anio)
+//                                .build();
+//                        //vehiculoPromocionService.guardarVehiculosAplicables(vehiculosCompatibles);
+//
+//                    }//for
 
-                        Integer marcaId = vehiculoPromocionSeleccionado.getMarca().getMarcaId();
-                        Integer modeloId = vehiculoPromocionSeleccionado.getModelo().getModeloId();
-                        Integer anio = vehiculoPromocionSeleccionado.getAnnio();
+                    //System.out.println(vehiculos);
 
-                        Marca marca = new Marca();
-                        marca.setMarcaId(marcaId);
-
-                        Modelo modelo = new Modelo();
-                        modelo.setModeloId(modeloId);
-
-                        VehiculoPromocion vehiculosCompatibles = VehiculoPromocion.builder()
-                                .marca(marca)
-                                .modelo(modelo)
-                                .promocion(promocion)
-                                .annio(anio)
-                                .build();
-                        vehiculoPromocionService.guardarVehiculosAplicables(vehiculosCompatibles);
-
-                    }//for
+                    promocionService.crearPromocionConVehiculos(promocion, vehiculos);
 
                     return null;
 
                 }, (resultado) -> {
 
                     mostrarInformacion("Guardado exitoso", "", "La promocion se registro exitosamente.");
+                    actualizarPromocionesActivas();
                     clean();
+                    ventanaPrincipalController.irAtras();
+
 
                 }, (ex) -> {
                     if (ex instanceof PromocionException){
@@ -573,6 +566,31 @@ public class NuevaPromocionController implements IVentanaPrincipal, IFxControlle
 
 
     }//insertarPromocion
+
+    private boolean registrarPromocion() {
+
+        if (!empty() && validarFecha(fechaInicio.getValue(), fechaFin.getValue())) {
+
+            //String nombre, descripcion, tipoDescuento, precio, porcentaje, inicioPromo, finPromo;
+            insertarPromocion();
+            //ventanaPrincipalController.irAtras();
+
+        } else if (empty())
+            mostrarWarning("Campos vacios", "", "Favor de completar cada uno de los campos solicitados.");
+
+        return true;
+    }
+
+    private void actualizarPromocionesActivas() {
+        try {
+            PromocionesActivasController controller = ApplicationContextProvider
+                    .getApplicationContext()
+                    .getBean(PromocionesActivasController.class);
+            controller.actualizar(null);
+        } catch (Exception ignored) {
+            // Si no existe contexto disponible en este momento, la vista se recargará al regresar.
+        }
+    }
 
     private void seleccionarImg() {
         FileChooser fileChooser = new FileChooser();

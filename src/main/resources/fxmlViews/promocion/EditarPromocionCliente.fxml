@@ -5,6 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.text.Font?>
 <AnchorPane prefHeight="572.0" prefWidth="1220.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.Promociones.EditarPromocionControllerCliente">
 
     <children>
@@ -31,7 +32,10 @@
 
                     <!-- Descripcion -->
                     <Label text="Descripcion:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <TextField fx:id="txtDescripcion" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <TextArea fx:id="txtDescripcion" prefHeight="45.0" prefWidth="348.0" styleClass="TextAreaDescripcion" GridPane.columnIndex="1" GridPane.rowIndex="1" >
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font></TextArea>
 
                     <!-- Precio sin descuento -->
                     <Label text="Precio sin descuento:" GridPane.columnIndex="0" GridPane.rowIndex="2" />

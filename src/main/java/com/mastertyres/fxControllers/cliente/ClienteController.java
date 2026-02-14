@@ -236,7 +236,8 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         Parent root = loader.load();
 
                                         EditarClienteController controller = loader.getController();
-                                        controller.editarCliente(clienteSeleccionado);
+                                        controller.editarCliente(clienteSeleccionado); // pasa el cliente actual
+                                        controller.setInitializeLoading(loadingOverlayController);
 
                                         Stage stage = new Stage(StageStyle.UTILITY);
                                         stage.setTitle("Editar Cliente");
