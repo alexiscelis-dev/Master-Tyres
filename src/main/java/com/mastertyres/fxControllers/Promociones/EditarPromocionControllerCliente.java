@@ -34,6 +34,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarConfirmacion;
@@ -45,7 +46,7 @@ public class EditarPromocionControllerCliente {
 
     @FXML
     private TextField txtNombre;
-    @FXML private TextField txtDescripcion;
+    @FXML private TextArea txtDescripcion;
     @FXML private TextField txtPrecio;
     @FXML private ChoiceBox<String> txtTipoDescuento;
     @FXML private Slider porcentajeDescuento;
@@ -285,7 +286,6 @@ public class EditarPromocionControllerCliente {
 
         cargarPagina(0);
     }
-
 
     public void configuraciones(){
 
@@ -529,6 +529,7 @@ public class EditarPromocionControllerCliente {
     // Acción para guardar cambios
     @FXML
     private void cambiarPromocion() {
+
         if (promocionSeleccionada == null) {
             MensajesAlert.mostrarError(
                     "Error",
@@ -538,7 +539,6 @@ public class EditarPromocionControllerCliente {
             return;
         }
 
-        // Validar que haya al menos un cliente seleccionado
         if (clientesSeleccionados.isEmpty()) {
             MensajesAlert.mostrarWarning(
                     "Validación",
@@ -548,31 +548,30 @@ public class EditarPromocionControllerCliente {
             return;
         }
 
-        //  Validaciones básicas
         if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre de la promoción no puede estar vacío.");
+            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre no puede estar vacío.");
             return;
         }
 
         if (txtDescripcion.getText() == null || txtDescripcion.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "La descipcion de la promoción no puede estar vacío.");
+            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "La descripción no puede estar vacía.");
             return;
         }
 
         try {
             Float.parseFloat(txtPrecio.getText());
         } catch (NumberFormatException e) {
-            MensajesAlert.mostrarError("Error de formato", "Precio inválido", "Ingrese un valor numérico válido para el precio.");
+            MensajesAlert.mostrarError("Error de formato", "Precio inválido", "Ingrese un valor numérico válido.");
             return;
         }
 
         if (dateInicio.getValue() == null || dateFin.getValue() == null) {
-            MensajesAlert.mostrarWarning("Validación", "Fechas requeridas", "Debe ingresar la fecha de inicio y de fin.");
+            MensajesAlert.mostrarWarning("Validación", "Fechas requeridas", "Debe ingresar la fecha de inicio y fin.");
             return;
         }
 
         if (dateInicio.getValue().isAfter(dateFin.getValue())) {
-            MensajesAlert.mostrarError("Error en fechas", "Fechas inválidas", "La fecha de inicio no puede ser mayor a la fecha de fin.");
+            MensajesAlert.mostrarError("Error en fechas", "Fechas inválidas", "La fecha inicio no puede ser mayor a la final.");
             return;
         }
 
@@ -581,26 +580,19 @@ public class EditarPromocionControllerCliente {
             return;
         }
 
-//        if (vehiculosPromocionList == null || vehiculosPromocionList.isEmpty()) {
-//            MensajesAlert.mostrarWarning("Validación", "Vehículos requeridos", "Debe asignar al menos un vehículo a la promoción.");
-//            return;
-//        }
-
-        //  Confirmación antes de actualizar
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
-                "¿Desea guardar los cambios en la promoción?",
-                "Se actualizarán los datos de la promoción seleccionada.",
+                "¿Desea guardar los cambios?",
+                "",
                 "Sí, guardar",
                 "Cancelar"
         );
 
-        if (!confirmar) {
-            return; // Usuario canceló
-        }
+        if (!confirmar) return;
 
         try {
-            //  Actualizar datos generales
+
+            // 🔹 Solo actualizas los datos
             promocionSeleccionada.setNombre(txtNombre.getText().trim());
             promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
             promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
@@ -611,35 +603,139 @@ public class EditarPromocionControllerCliente {
             promocionSeleccionada.setImg(txtRutaImagen.getText());
             promocionSeleccionada.setUpdated_at(LocalDateTime.now());
 
-            //  Guardar cambios en la promoción
-            promocionService.guardarPromocion(promocionSeleccionada);
+            promocionService.actualizarPromocionConClientes(
+                    promocionSeleccionada,
+                    new ArrayList<>(clientesSeleccionados)
+            );
 
-            // 1. Eliminar todos los clientes de esa promoción en BD
-            clientePromocionService.eliminarPorPromocionId(promocionSeleccionada.getPromocionId());
 
-            // 2. Guardar de nuevo los que están seleccionados
-            for (Cliente cliente : clientesSeleccionados) {
-                ClientesPromocion cp = new ClientesPromocion();
-                cp.setPromocion(promocionSeleccionada);
-                cp.setCliente(cliente);
-                // Agregar otros campos necesarios según tu modelo
+            MensajesAlert.mostrarInformacion(
+                    "Éxito",
+                    "Promoción actualizada",
+                    "La promoción se actualizó correctamente."
+            );
 
-                clientePromocionService.guardar(cp); // Ajusta el nombre del método según tu servicio
-            }
-
-            MensajesAlert.mostrarInformacion("Éxito", "Promoción actualizada", "La promoción se actualizó correctamente.");
             cerrarVentana();
 
         } catch (Exception e) {
-            // Cualquier error en la BD o lógica cae aquí
+
             MensajesAlert.mostrarError(
                     "Error al actualizar",
                     "No se pudo actualizar la promoción",
-                    "Detalles: " + e.getMessage()
+                    e.getMessage()
             );
+
             e.printStackTrace();
         }
     }
+//    @FXML
+//    private void cambiarPromocion() {
+//        if (promocionSeleccionada == null) {
+//            MensajesAlert.mostrarError(
+//                    "Error",
+//                    "No hay promoción seleccionada",
+//                    "Debe seleccionar una promoción antes de poder modificarla."
+//            );
+//            return;
+//        }
+//
+//        // Validar que haya al menos un cliente seleccionado
+//        if (clientesSeleccionados.isEmpty()) {
+//            MensajesAlert.mostrarWarning(
+//                    "Validación",
+//                    "Clientes requeridos",
+//                    "Debe asignar al menos un cliente a la promoción."
+//            );
+//            return;
+//        }
+//
+//        //  Validaciones básicas
+//        if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
+//            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre de la promoción no puede estar vacío.");
+//            return;
+//        }
+//
+//        if (txtDescripcion.getText() == null || txtDescripcion.getText().trim().isEmpty()) {
+//            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "La descipcion de la promoción no puede estar vacío.");
+//            return;
+//        }
+//
+//        try {
+//            Float.parseFloat(txtPrecio.getText());
+//        } catch (NumberFormatException e) {
+//            MensajesAlert.mostrarError("Error de formato", "Precio inválido", "Ingrese un valor numérico válido para el precio.");
+//            return;
+//        }
+//
+//        if (dateInicio.getValue() == null || dateFin.getValue() == null) {
+//            MensajesAlert.mostrarWarning("Validación", "Fechas requeridas", "Debe ingresar la fecha de inicio y de fin.");
+//            return;
+//        }
+//
+//        if (dateInicio.getValue().isAfter(dateFin.getValue())) {
+//            MensajesAlert.mostrarError("Error en fechas", "Fechas inválidas", "La fecha de inicio no puede ser mayor a la fecha de fin.");
+//            return;
+//        }
+//
+//        if (txtTipoDescuento.getValue() == null) {
+//            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar un tipo de descuento.");
+//            return;
+//        }
+//
+//
+//        //  Confirmación antes de actualizar
+//        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+//                "Confirmar actualización",
+//                "¿Desea guardar los cambios en la promoción?",
+//                "Se actualizarán los datos de la promoción seleccionada.",
+//                "Sí, guardar",
+//                "Cancelar"
+//        );
+//
+//        if (!confirmar) {
+//            return; // Usuario canceló
+//        }
+//
+//        try {
+//            //  Actualizar datos generales
+//            promocionSeleccionada.setNombre(txtNombre.getText().trim());
+//            promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
+//            promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
+//            promocionSeleccionada.setTipoDescuento(txtTipoDescuento.getValue());
+//            promocionSeleccionada.setPorcentaje((int) porcentajeDescuento.getValue());
+//            promocionSeleccionada.setFechaInicio(dateInicio.getValue().toString());
+//            promocionSeleccionada.setFechaFin(dateFin.getValue().toString());
+//            promocionSeleccionada.setImg(txtRutaImagen.getText());
+//            promocionSeleccionada.setUpdated_at(LocalDateTime.now());
+//
+//            //  Guardar cambios en la promoción
+//            promocionService.guardarPromocion(promocionSeleccionada);
+//
+//            // 1. Eliminar todos los clientes de esa promoción en BD
+//            clientePromocionService.eliminarPorPromocionId(promocionSeleccionada.getPromocionId());
+//
+//            // 2. Guardar de nuevo los que están seleccionados
+//            for (Cliente cliente : clientesSeleccionados) {
+//                ClientesPromocion cp = new ClientesPromocion();
+//                cp.setPromocion(promocionSeleccionada);
+//                cp.setCliente(cliente);
+//
+//                clientePromocionService.guardar(cp); // Ajusta el nombre del método según tu servicio
+//            }
+//
+//            MensajesAlert.mostrarInformacion("Éxito", "Promoción actualizada", "La promoción se actualizó correctamente.");
+//            cerrarVentana();
+//
+//        } catch (Exception e) {
+//            // Cualquier error en la BD o lógica cae aquí
+//            MensajesAlert.mostrarError(
+//                    "Error al actualizar",
+//                    "No se pudo actualizar la promoción",
+//                    "Detalles: " + e.getMessage()
+//            );
+//            e.printStackTrace();
+//        }
+//    }
 
     // Acción de cancelar -> cerrar ventana
     @FXML

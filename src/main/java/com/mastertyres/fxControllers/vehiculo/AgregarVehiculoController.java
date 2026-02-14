@@ -184,7 +184,6 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
     }//initialize
 
-
     @Override
     public void configuraciones() {
 

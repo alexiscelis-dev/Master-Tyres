@@ -114,7 +114,10 @@
 
                             <children>
 
-                                <TextField fx:id="descripcion" prefHeight="45.0" prefWidth="348.0" styleClass="buscador" />
+                                <TextArea fx:id="descripcion" prefHeight="45.0" prefWidth="348.0" styleClass="TextAreaDescripcion">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font></TextArea>
 
                             </children>
 

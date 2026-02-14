@@ -6,6 +6,8 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -14,6 +16,7 @@ import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.model.StatusPromocion;
 import com.mastertyres.promociones.model.TipoDescuento;
+import com.mastertyres.promociones.model.TipoPromocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,7 +45,7 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionClienteController {
+public class NuevaPromocionClienteController implements IVentanaPrincipal {
 
     @FXML private AnchorPane rootPane;
     @FXML private Slider porcentajeDescuento;
@@ -54,7 +57,7 @@ public class NuevaPromocionClienteController {
     @FXML private Button btnRegresar;
     @FXML private ChoiceBox<String> tipoDescuento;
     @FXML private TextField nombrePromocion;
-    @FXML private TextField descripcion;
+    @FXML private TextArea descripcion;
     @FXML private Button btnImagen;
     @FXML private TextField textFieldImg;
 
@@ -92,6 +95,7 @@ public class NuevaPromocionClienteController {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+    @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
     }
@@ -333,9 +337,6 @@ public class NuevaPromocionClienteController {
         try {
             if (!empty() && validarFecha(fechaInicio.getValue(), fechaFin.getValue())) {
                 insertarPromocion();
-                if (ventanaPrincipalController != null) {
-                    ventanaPrincipalController.irAtras();
-                }
             } else if (empty()) {
                 mostrarWarning("Campos vacíos", "", "Favor de completar todos los campos.");
             }
@@ -358,17 +359,17 @@ public class NuevaPromocionClienteController {
                 .fechaFin(String.valueOf(fechaFin.getValue()))
                 .active(StatusPromocion.ACTIVE.toString())
                 .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
-                .TipoPromocion("CLIENTE")
+                .TipoPromocion(TipoPromocion.CLIENTE.toString())
                 .build();
 
         try {
             // 1. Guardar promoción
-            promocionService.guardarPromocion(promocion);
+            //promocionService.guardarPromocion(promocion);
 
-            if (promocion.getPromocionId() == null) {
-                mostrarError("Error", "", "Error al insertar promoción");
-                return;
-            }
+//            if (promocion.getPromocionId() == null) {
+//                mostrarError("Error", "", "Error al insertar promoción");
+//                return;
+//            }
 
             // 2. Validar clientes
             if (ClientesAgregados.getItems().isEmpty()) {
@@ -383,10 +384,12 @@ public class NuevaPromocionClienteController {
                     .toList();
 
             // 4. Guardar relaciones usando el service
-            clientePromocionService.guardarClientesPromocion(
-                    promocion.getPromocionId(),
-                    clientesIds
-            );
+//            clientePromocionService.guardarClientesPromocion(
+//                    promocion.getPromocionId(),
+//                    clientesIds
+//            );
+            //System.out.println(clientesIds);
+            promocionService.crearPromocionConClientes(promocion, clientesIds);
 
             mostrarInformacion(
                     "Promoción registrada",
@@ -394,7 +397,11 @@ public class NuevaPromocionClienteController {
                     "La promoción se registró exitosamente"
             );
 
+            actualizarPromocionesActivas();
             clean();
+            if (ventanaPrincipalController != null) {
+                ventanaPrincipalController.irAtras();
+            }
 
         } catch (Exception e) {
             mostrarError(
@@ -404,6 +411,17 @@ public class NuevaPromocionClienteController {
             );
             clean();
             e.printStackTrace();
+        }
+    }
+
+    private void actualizarPromocionesActivas() {
+        try {
+            PromocionesActivasController controller = ApplicationContextProvider
+                    .getApplicationContext()
+                    .getBean(PromocionesActivasController.class);
+            controller.actualizar(null);
+        } catch (Exception ignored) {
+            // Si no existe contexto disponible en este momento, la vista se recargará al regresar.
         }
     }
 

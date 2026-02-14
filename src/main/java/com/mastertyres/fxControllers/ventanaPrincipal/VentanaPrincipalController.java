@@ -44,6 +44,7 @@ public class VentanaPrincipalController implements ILoading {
     @FXML private HBox HBoxPromociones;
     @FXML private HBox HBoxInventario;
     @FXML private HBox HBoxServicios;
+    @FXML private HBox HBoxConfiguracion;
     @FXML private Pane panelMenu;
     @FXML private ImageView LogoPrincipal;
     @FXML public Label cambiarPaginaEtiqueta;
@@ -115,6 +116,11 @@ public class VentanaPrincipalController implements ILoading {
         HBoxServicios.setOnMouseClicked(event -> {
             viewContent(event, "/fxmlViews/vehiculo/ProximosServicios.fxml", "Proximos Servicios");
             cambiarPaginaEtiqueta.setText("PROXIMOS SERVICIOS");
+        });
+
+        HBoxConfiguracion.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/configuracion/Configuracion.fxml", "Configuracion");
+            cambiarPaginaEtiqueta.setText("CONFIGURACION");
         });
 
         LogoPrincipal.setOnMouseClicked(event -> {
