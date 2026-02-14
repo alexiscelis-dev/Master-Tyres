@@ -10,11 +10,12 @@ import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.Setting.setPantallaSize;
 
-
+@EnableScheduling
 @SpringBootApplication
 public class MasterTyresApplication extends Application {
 

@@ -5,7 +5,7 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.inventario.model.Inventario;
@@ -31,7 +31,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class AgregarInventarioController implements IVentanaPrincipal, IFxController, ILoading {
+public class AgregarInventarioController implements IVentanaPrincipal, IFxController, ILoader {
     @FXML
     private AnchorPane rootPane;
     @FXML

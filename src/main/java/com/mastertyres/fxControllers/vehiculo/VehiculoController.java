@@ -4,7 +4,7 @@ package com.mastertyres.fxControllers.vehiculo;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
@@ -54,7 +54,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class VehiculoController implements IVentanaPrincipal, IFxController, ILoading {
+public class VehiculoController implements IVentanaPrincipal, IFxController, ILoader {
 
     @FXML
     private AnchorPane rootPane;

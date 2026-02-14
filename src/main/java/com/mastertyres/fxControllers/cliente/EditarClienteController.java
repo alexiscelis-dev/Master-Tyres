@@ -6,10 +6,12 @@ import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxComponents.LoadingComponentController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -25,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarClienteController implements IFxController, ILoading {
+public class EditarClienteController implements IFxController, ILoader {
 
     @FXML
     private TextField txtNombreEmpresa;
@@ -93,6 +95,10 @@ public class EditarClienteController implements IFxController, ILoading {
 
     @Override
     public void listeners() {
+
+        txtNombreEmpresa.disableProperty().bind(
+                choiceTipoCliente.valueProperty().isNotEqualTo(TipoCliente.EMPRESA.toString())
+        );
 
         if (choiceTipoCliente.equals(TipoCliente.INDIVIDUAL)){
             txtNombreEmpresa.setText("");
@@ -228,15 +234,44 @@ public class EditarClienteController implements IFxController, ILoading {
             }
         });
 
+        BooleanBinding nombreEmpresaValido = Bindings.createBooleanBinding(
+                () -> {
+                    String tipo = choiceTipoCliente.getValue();
+
+                    if (tipo == null) return false;
+
+                    // Si NO es empresa → es válido automáticamente
+                    if (!tipo.equalsIgnoreCase(TipoCliente.EMPRESA.toString())) {
+                        txtNombreEmpresa.setText("");
+                        return true;
+                    }
+
+                    // Si es empresa → no puede estar vacío
+                    return !txtNombreEmpresa.getText().isBlank();
+                },
+                choiceTipoCliente.valueProperty(),
+                txtNombreEmpresa.textProperty()
+        );
+
+        txtNombreEmpresa.styleProperty().bind(
+                Bindings.when(nombreEmpresaValido.not()
+                                .and(choiceTipoCliente.valueProperty()
+                                        .isEqualTo(TipoCliente.EMPRESA.toString())))
+                        .then("-fx-border-color: red;")
+                        .otherwise("")
+        );
+
         // Deshabilitar botón "Guardar" hasta que se llenen los campos requeridos y haya al menos un vehículo
         btnCambiar.disableProperty().bind(
                 (txtNombre.textProperty().isEmpty())
                         .or(txtApellido.textProperty().isEmpty())
                         .or(txtTelefono.textProperty().isEmpty())
                         .or(choiceTipoCliente.valueProperty().isNull())
+                        .or(choiceGenero.valueProperty().isNull())
                         .or(rfcValido.not())
                         .or(telefonoValido.not())
                         .or(CorreoValido.not())
+                        .or(nombreEmpresaValido.not())
 
         );
 

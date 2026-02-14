@@ -4,7 +4,7 @@ import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 
 //el metododo agregarNota() recibe de parametro true si quiere la nota original
 @Component
-public class ImprimirNotaController extends BaseNota implements IFxController, ILoading {
+public class ImprimirNotaController extends BaseNota implements IFxController, ILoader {
 
     @FXML
     private VBox contenedorTipoNota;

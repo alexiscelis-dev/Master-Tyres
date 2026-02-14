@@ -7,7 +7,7 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.fxControllers.nota.NotaPreviewController;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
@@ -40,7 +40,7 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class HistorialController extends BaseNota implements IFxController, ILoading {
+public class HistorialController extends BaseNota implements IFxController, ILoader {
     @FXML
     private AnchorPane rootPane;
     @FXML

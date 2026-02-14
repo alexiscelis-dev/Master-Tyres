@@ -283,14 +283,14 @@ SpinnerAnnio
     -fx-background-radius: 5px;
     -fx-padding: 2px;
     -fx-pref-height: 36px;
-    -fx-pref-width: 180px;
+    -fx-pref-width: 200px;
     -fx-font-size: 12px;
 }
 
 /* Menú desplegable más compacto */
 .vehiculosParticipantes .context-menu {
     -fx-background-color: #080808;
-    -fx-pref-width: 180px;
+    -fx-pref-width: 200px;
     -fx-pref-height: 280px;
 }
 
@@ -359,6 +359,30 @@ SpinnerAnnio
     -fx-text-fill: black;
     -fx-border-radius: 15px;
 }
+
+/*Estilos TextArea*/
+
+.TextAreaDescripcion {
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+
+    -fx-border-color: #8EB83D;      /* Verde */
+    -fx-border-radius: 5;
+
+    -fx-background-radius: 5;
+}
+
+/* Fondo real del área editable */
+.TextAreaDescripcion .content {
+    -fx-background-color: #2A2A2A;   /* Gris */
+    -fx-background-radius: 5;
+}
+
+/* Si quieres que el fondo no cambie al enfocarse */
+.TextAreaDescripcion:focused .content {
+    -fx-background-color: #2A2A2A;
+}
+
 
 
 

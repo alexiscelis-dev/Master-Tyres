@@ -30,17 +30,6 @@
     -fx-border-width: 2;
 }
 
-/* ChoiceBox visible */
-.choice-box,
-.compact-choicebox {
-    -fx-background-color: #1A1A1A;
-    -fx-mark-color: #F2F2F2;
-    -fx-text-fill: #F2F2F2;
-    -fx-padding: 2px;
-    -fx-background-radius: 5px;
-    -fx-pref-width: 150px;
-    -fx-font-size: 13px;
-}
 
 /* Label del filtro */
 .label {
@@ -98,27 +87,6 @@
     -fx-background-color: #AEE83A;
 }
 
-
-
-/* Estilo para el menú desplegable del ChoiceBox */
-.choice-box .context-menu {
-    -fx-background-color: #1A1A1A;
-    -fx-pref-width: 250px;
-    -fx-pref-height: 450px;
-}
-
-/* Estilo para los ítems dentro del menú */
-.choice-box .menu-item > .label {
-    -fx-font-size: 13px;
-    -fx-padding: 4 10 4 10;
-    -fx-text-fill: #F2F2F2;
-}
-
-/* Opcional: hover de los ítems */
-.choice-box .menu-item:focused {
-    -fx-background-color: #8EB83D;
-}
-
 /*AgregarCliente*/
 
 
@@ -170,56 +138,6 @@
 .boton-accion:hover {
     -fx-background-color: #AEE83A;
 }
-
-/* Estilo para un ChoiceBox más pequeño y oscuro */
-.choicebox-mini {
-    -fx-background-color: #080808;
-    -fx-mark-color: #F2F2F2;
-    -fx-text-fill: #F2F2F2;
-    -fx-background-radius: 5px;
-    -fx-padding: 2px;
-    -fx-pref-height: 26px;
-    -fx-pref-width: 120px;
-    -fx-font-size: 12px;
-}
-
-/* Menú desplegable más compacto */
-.choicebox-mini .context-menu {
-    -fx-background-color: #080808;
-    -fx-pref-width: 130px;
-    -fx-pref-height: 100px;
-}
-
-/* Ítems del menú */
-.choicebox-mini .menu-item > .label {
-    -fx-font-size: 12px;
-    -fx-padding: 2 8 2 8;
-    -fx-text-fill: #F2F2F2;
-}
-
-.choice-box .menu-item {
-    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
-    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
-    -fx-pref-height: 40px; /* altura preferida para la celda */
-}
-
-
-/* Hover en ítems */
-.choicebox-mini .menu-item:focused {
-    -fx-background-color: #8EB83D;
-}
-
-
-
-/*  CHOICEBOX-MINI 2 */
-
-
-.choice-box .menu-item {
-    -fx-padding: 5px 7px; /* arriba/abajo 2px, izquierda/derecha 10px */
-    -fx-font-size: 15px;   /* tamaño del texto (opcional) */
-    -fx-pref-height: 30px; /* altura preferida para la celda */
-}
-
 
 
 
@@ -417,4 +335,77 @@ SpinnerAnnio
 
 .scroll-pane .viewport {
     -fx-background-color: #080808;
+}
+
+
+/*ChoiceBox unificados*/
+
+/* ChoiceBox unificado (mini, mini2, mini3) */
+.choicebox-mini,
+.choicebox-mini2,
+.choicebox-mini3 {
+    -fx-background-color: #080808;
+    -fx-mark-color: #F2F2F2;
+    -fx-text-fill: #F2F2F2;
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+    -fx-pref-height: 36px;
+    -fx-pref-width: 170px;
+    -fx-font-size: 12px;
+}
+
+.choicebox-mini .context-menu,
+.choicebox-mini2 .context-menu,
+.choicebox-mini3 .context-menu {
+    -fx-background-color: #080808;
+    -fx-pref-width: 170px;
+    -fx-min-height: 60px;
+    -fx-max-height: 210px;
+}
+
+.choicebox-mini .menu-item,
+.choicebox-mini2 .menu-item,
+.choicebox-mini3 .menu-item {
+    -fx-padding: 2px 7px;
+    -fx-pref-height: 24px;
+}
+
+.choicebox-mini .menu-item > .label,
+.choicebox-mini2 .menu-item > .label,
+.choicebox-mini3 .menu-item > .label {
+    -fx-font-size: 12px;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: #F2F2F2;
+}
+
+.choicebox-mini .menu-item:focused,
+.choicebox-mini2 .menu-item:focused,
+.choicebox-mini3 .menu-item:focused {
+    -fx-background-color: #8EB83D;
+}
+
+
+
+
+/*Estilos TextArea*/
+
+.TextAreaDescripcion {
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #BBBBBB;
+
+    -fx-border-color: #8EB83D;      /* Verde */
+    -fx-border-radius: 5;
+
+    -fx-background-radius: 5;
+}
+
+/* Fondo real del área editable */
+.TextAreaDescripcion .content {
+    -fx-background-color: #2A2A2A;   /* Gris */
+    -fx-background-radius: 5;
+}
+
+/* Si quieres que el fondo no cambie al enfocarse */
+.TextAreaDescripcion:focused .content {
+    -fx-background-color: #2A2A2A;
 }

@@ -4,7 +4,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -36,7 +36,7 @@ import java.util.*;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarVehiculoController implements IFxController, ILoading {
+public class EditarVehiculoController implements IFxController, ILoader {
     @FXML
     private AnchorPane rootPane;
     @FXML

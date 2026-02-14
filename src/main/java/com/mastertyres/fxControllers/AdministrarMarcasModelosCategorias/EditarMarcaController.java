@@ -2,7 +2,7 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.common.exeptions.MarcaException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxComponents.LoadingComponentController;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarMarcaController implements IFxController, ILoading {
+public class EditarMarcaController implements IFxController, ILoader {
 
     @FXML
     private Button btnAgregar;
