@@ -10,7 +10,7 @@ import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.nota.model.*;
@@ -43,7 +43,7 @@ import java.time.format.DateTimeFormatter;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class EditarNotaController extends BaseNota implements IFxController, ILoading {
+public class EditarNotaController extends BaseNota implements IFxController, ILoader {
 
     @FXML
     private Button btnGuardar;

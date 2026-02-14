@@ -2,7 +2,7 @@ package com.mastertyres.common.interfaces;
 
 import com.mastertyres.fxComponents.LoadingComponentController;
 
-public interface ILoading {
+public interface ILoader {
 
    void setInitializeLoading(LoadingComponentController loading);
 

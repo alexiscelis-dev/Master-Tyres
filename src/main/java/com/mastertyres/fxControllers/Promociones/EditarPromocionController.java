@@ -1,8 +1,7 @@
 package com.mastertyres.fxControllers.Promociones;
 
-import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxComponents.LoadingComponentController;
@@ -44,7 +43,7 @@ import java.util.List;
 import static javafx.collections.FXCollections.observableList;
 
 @Component
-public class EditarPromocionController implements IFxController, ILoading {
+public class EditarPromocionController implements IFxController, ILoader {
 
     @FXML
     private TextField txtNombre;

@@ -3,7 +3,7 @@ package com.mastertyres.fxControllers.Promociones;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFxController, ILoading {
+public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFxController, ILoader {
     @FXML
     private AnchorPane rootPane;
     @FXML

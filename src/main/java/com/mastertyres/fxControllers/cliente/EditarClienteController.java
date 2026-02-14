@@ -6,7 +6,7 @@ import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxComponents.LoadingComponentController;
@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarClienteController implements IFxController, ILoading {
+public class EditarClienteController implements IFxController, ILoader {
 
     @FXML
     private TextField txtNombreEmpresa;

@@ -6,7 +6,7 @@ import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
@@ -54,7 +54,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoading {
+public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader {
 
     @FXML
     private AnchorPane ventanaPromocionesActivas;

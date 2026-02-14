@@ -7,7 +7,7 @@ import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -47,7 +47,7 @@ import java.util.*;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoading {
+public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoader {
 
     @Autowired
     private MarcaService marcaService;

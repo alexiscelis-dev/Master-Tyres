@@ -5,7 +5,7 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -41,7 +41,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class RegistrarNotaController implements IFxController, ILoading {
+public class RegistrarNotaController implements IFxController, ILoader {
     @FXML
     private AnchorPane root;
     @FXML
