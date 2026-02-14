@@ -56,7 +56,7 @@
 
                 <children>
 
-                    <Button onAction="#buscarCliente" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="25.0"
+                    <Button onAction="#buscarCliente" fx:id="btnBuscarCliente" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
@@ -73,7 +73,7 @@
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/car-wheel.png"/>
+                                    <Image url="@/icons/nota/find-car-wheel.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
@@ -106,7 +106,7 @@
                     </Button>
 
 
-                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="4" prefHeight="25.0"
+                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="5" prefHeight="25.0"
                             prefWidth="25.0"
                             styleClass="boton-accion">
                         <graphic>
@@ -118,7 +118,7 @@
                         </graphic>
 
                     </Button>
-                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="5"
+                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="4"
                             mnemonicParsing="false" prefHeight="25.0"
                             prefWidth="25.0" styleClass="boton-accion">
 
@@ -231,7 +231,7 @@
                                     </Label>
 
 
-                                    <TextField fx:id="txtDia" alignment="BOTTOM_CENTER" nodeOrientation="LEFT_TO_RIGHT"
+                                    <TextField  fx:id="txtDia" alignment="BOTTOM_CENTER" nodeOrientation="LEFT_TO_RIGHT"
                                                styleClass="textfield-fecha">
                                         <HBox.margin>
                                             <Insets top="15.0"/>

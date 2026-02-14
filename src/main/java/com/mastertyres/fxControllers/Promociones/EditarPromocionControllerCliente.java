@@ -6,6 +6,7 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -42,7 +43,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 
 @Component
-public class EditarPromocionControllerCliente {
+public class EditarPromocionControllerCliente implements  IFxController {
 
     @FXML
     private TextField txtNombre;
@@ -287,6 +288,8 @@ public class EditarPromocionControllerCliente {
         cargarPagina(0);
     }
 
+
+    @Override
     public void configuraciones(){
 
         txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
@@ -306,6 +309,7 @@ public class EditarPromocionControllerCliente {
 
     }//configuraciones
 
+    @Override
     public void listeners() {
 
         configurarValidaciones();
@@ -539,6 +543,7 @@ public class EditarPromocionControllerCliente {
             return;
         }
 
+        // Validar que haya al menos un cliente seleccionado
         if (clientesSeleccionados.isEmpty()) {
             MensajesAlert.mostrarWarning(
                     "Validación",
@@ -548,30 +553,31 @@ public class EditarPromocionControllerCliente {
             return;
         }
 
+        //  Validaciones básicas
         if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre no puede estar vacío.");
+            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre de la promoción no puede estar vacío.");
             return;
         }
 
         if (txtDescripcion.getText() == null || txtDescripcion.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "La descripción no puede estar vacía.");
+            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "La descipcion de la promoción no puede estar vacío.");
             return;
         }
 
         try {
             Float.parseFloat(txtPrecio.getText());
         } catch (NumberFormatException e) {
-            MensajesAlert.mostrarError("Error de formato", "Precio inválido", "Ingrese un valor numérico válido.");
+            MensajesAlert.mostrarError("Error de formato", "Precio inválido", "Ingrese un valor numérico válido para el precio.");
             return;
         }
 
         if (dateInicio.getValue() == null || dateFin.getValue() == null) {
-            MensajesAlert.mostrarWarning("Validación", "Fechas requeridas", "Debe ingresar la fecha de inicio y fin.");
+            MensajesAlert.mostrarWarning("Validación", "Fechas requeridas", "Debe ingresar la fecha de inicio y de fin.");
             return;
         }
 
         if (dateInicio.getValue().isAfter(dateFin.getValue())) {
-            MensajesAlert.mostrarError("Error en fechas", "Fechas inválidas", "La fecha inicio no puede ser mayor a la final.");
+            MensajesAlert.mostrarError("Error en fechas", "Fechas inválidas", "La fecha de inicio no puede ser mayor a la fecha de fin.");
             return;
         }
 
@@ -582,17 +588,18 @@ public class EditarPromocionControllerCliente {
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
-                "¿Desea guardar los cambios?",
-                "",
+                "¿Desea guardar los cambios en la promoción?",
+                "Se actualizarán los datos de la promoción seleccionada.",
                 "Sí, guardar",
                 "Cancelar"
         );
 
-        if (!confirmar) return;
+        if (!confirmar) {
+            return; // Usuario canceló
+        }
 
         try {
-
-            // 🔹 Solo actualizas los datos
+            //  Actualizar datos generales
             promocionSeleccionada.setNombre(txtNombre.getText().trim());
             promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
             promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));

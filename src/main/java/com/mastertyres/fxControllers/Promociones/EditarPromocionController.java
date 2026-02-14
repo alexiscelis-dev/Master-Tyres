@@ -7,7 +7,9 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.fxComponents.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.service.ModeloService;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
@@ -100,6 +102,10 @@ public class EditarPromocionController implements IFxController, ILoading {
     private TaskService taskService;
     @Autowired
     private DetalleCategoriaService detalleCategoriaService;
+    @Autowired
+    private MarcaService marcaService;
+    @Autowired
+    private ModeloService modeloService;
 
     //Validaciones:
     private BooleanProperty precioValido = new SimpleBooleanProperty(true);
@@ -355,8 +361,8 @@ public class EditarPromocionController implements IFxController, ILoading {
 
     private void vehiculosParticipantesInitialize() {
 
-        choiceMarca.setItems(observableList(promocionService.listarMarcas()));
-        List<Modelo> modelos = promocionService.listarModelos();
+        choiceMarca.setItems(observableList(marcaService.listarMarcas()));
+        List<Modelo> modelos = modeloService.listarModelos();
         choiceModelo.setItems(observableList(modelos));
         choiceModelo.setConverter(new StringConverter<>() {
             @Override

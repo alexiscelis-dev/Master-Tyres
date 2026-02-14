@@ -154,6 +154,9 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     private TextField txtObservaciones;
     @FXML
     private TextField txtCorreo;
+    @FXML
+    private Button btnLimpiar;
+
     private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
 
     // Botones Principales
@@ -272,6 +275,14 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     @Override
     public void listeners() {
 
+ btnLimpiar.setOnAction(event -> {
+     limpiarCamposVehiculo();
+     LimpiarCamposClientes();
+     tablaVehiculos.getItems().clear();
+ });
+
+      //pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
         configurarValidaciones();
 
         pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
@@ -335,6 +346,12 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     }
 
     private void configurarValidaciones() {
+
+        txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,6}")) {
+                txtKilometros.setText(oldValue);
+            }
+        });
 
         // NOMBRE
         txtNombre.textProperty().addListener((obs, oldText, newText) -> {
@@ -810,6 +827,9 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         txtObservaciones.setStyle(STILE);
         pickerUltimoServicio.setStyle(STILE);
         spinnerAnio.setStyle(STILE);
+
+
+
 
 
     }

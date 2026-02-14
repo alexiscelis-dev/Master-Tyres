@@ -10,6 +10,7 @@
 
     <children>
 
+
         <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
 
             <children>
@@ -432,7 +433,7 @@
                 </HBox>
 
                 <!-- TABLA -->
-                <TableView fx:id="Tabla_Clientes" prefHeight="300" styleClass="tabla-promocion" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tablaClientes" prefHeight="300" styleClass="tabla-promocion" VBox.vgrow="ALWAYS">
 
                     <columns>
                         <TableColumn fx:id="colSeleccionCliente" prefWidth="25" />
@@ -454,26 +455,44 @@
                 <!-- PAGINADOR -->
                 <Pagination fx:id="PaginadorClientes" maxPageIndicatorCount="5" prefHeight="50" />
 
-                <!-- CLIENTES AGREGADOS -->
-                <Label style="-fx-font-weight: bold;" text="Clientes Agregados:" textFill="WHITE">
-                    <VBox.margin>
-                        <Insets top="5" />
-                    </VBox.margin>
-                </Label>
+               <HBox spacing="5">
+                   <!-- CLIENTES AGREGADOS -->
+                   <Label style="-fx-font-weight: bold;" text="Clientes Agregados:" textFill="WHITE">
+                       <VBox.margin>
+                           <Insets top="5" />
+                       </VBox.margin>
+                   </Label>
 
-                <ListView fx:id="ClientesAgregados" prefHeight="120" styleClass="ListaClientes" />
+                   <Label fx:id="statusLabel" textAlignment="LEFT" alignment="CENTER_LEFT" maxWidth="Infinity"  prefHeight="15.0" prefWidth="300.0" text="" textFill="WHITE" visible="true">
+                       <VBox.margin>
+                           <Insets top="15.0" />
+                       </VBox.margin>
+                       <font>
+                           <Font name="Roboto Bold" size="12.0" />
+                       </font>
+                   </Label>
+
+               </HBox>
+
+                <ListView fx:id="clientesAgregados" prefHeight="120" styleClass="ListaClientes" />
 
                 <!-- BOTONES -->
                 <HBox alignment="CENTER" spacing="20">
                     <Button fx:id="btnRegistrar" prefWidth="120" styleClass="boton-accion" text="Agregar" />
-                    <Button fx:id="btnRegresar" prefWidth="120" styleClass="boton-accion" text="Regresar" />
+                    <Button fx:id="btnLimpiar" prefWidth="120" styleClass="boton-accion" text="Limpiar" />
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
                 </HBox>
 
+
             </children>
+
         </VBox>
+
+
+
+
 
     </children>
 </AnchorPane>
