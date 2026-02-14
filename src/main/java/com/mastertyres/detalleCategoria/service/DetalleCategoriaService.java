@@ -24,14 +24,25 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
     @Autowired
     private DetalleCategoriaRepository detalleCategoriaRepository;
 
+    @Autowired
+    public DetalleCategoriaService(DetalleCategoriaRepository detalleCategoriaRepository) {
+        this.detalleCategoriaRepository = detalleCategoriaRepository;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<DetalleCategoria> getByMarca(Integer marcaId) {
         return detalleCategoriaRepository.findByMarcaId(marcaId);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public List<Categoria> listarCategoriasPorMarcaYModelo(Integer marcaId, Integer modeloId) {
         return detalleCategoriaRepository.findCategoriasByMarcaAndModelo(marcaId, modeloId);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public List<DetalleCategoria> buscarPorTexto(String busqueda) {
         if (busqueda == null || busqueda.trim().isEmpty()) {
             return detalleCategoriaRepository.findAll();
@@ -39,6 +50,8 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
         return detalleCategoriaRepository.buscarPorMarcaModeloOCategoria(busqueda.trim());
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public Page<DetalleCategoria> buscarPorTextoPaginado(String busqueda, Pageable pageable) {
         if (busqueda == null || busqueda.trim().isEmpty()) {
             return Page.empty();
@@ -46,24 +59,25 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
         return detalleCategoriaRepository.buscarPorMarcaModeloOCategoriaPaginado(busqueda.trim(), pageable);
     }
 
-    @Autowired
-    public DetalleCategoriaService(DetalleCategoriaRepository detalleCategoriaRepository){
-        this.detalleCategoriaRepository = detalleCategoriaRepository;
-    }
-
+    @Transactional(readOnly = true)
+    @Override
     public List<DetalleCategoria> listarTodos() {
         return detalleCategoriaRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public List<DetalleCategoria> listarPorMarca(Marca marca) {
         return detalleCategoriaRepository.findByMarcaWithRelations(marca);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<DetalleCategoria> listarDetalleCategoria() {
         return detalleCategoriaRepository.findAll();
     }
 
+    @Transactional
     public DetalleCategoria guardarDetalleCategoria(DetalleCategoria detalle) {
 
         categoriaValidator.guardarValidator(detalle);
@@ -71,6 +85,7 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
         return detalleCategoriaRepository.save(detalle);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<DetalleCategoria> findByCategoria(Categoria categoria) {
         return detalleCategoriaRepository.findByCategoria(categoria);
@@ -78,6 +93,7 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
 
 
     @Transactional
+    @Override
     public void reasignarOEliminarPorModelo(Integer modeloId) {
         List<DetalleCategoria> registros = detalleCategoriaRepository.findByModeloId(modeloId);
 
@@ -101,6 +117,7 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
     }
 
     @Transactional
+    @Override
     public void eliminarPorMarca(Integer marcaId) {
         try {
             detalleCategoriaRepository.eliminarPorMarcaId(marcaId);
@@ -110,6 +127,4 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
     }
 
 
-
-
-}
+}//class

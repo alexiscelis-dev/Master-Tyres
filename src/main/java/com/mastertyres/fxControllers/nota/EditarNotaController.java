@@ -169,6 +169,12 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
 
         notaUtils.mostrarPopupHora(txtHoraEntrega);
+        notaUtils.descripcionComponent(btnNotaDetalles,"Detalles cliente");
+        notaUtils.descripcionComponent(btnActualizarAdeudo,"Actualizar adeudo");
+        notaUtils.descripcionComponent(btnActualizarSaldoFavor,"Actualizar saldo favor");
+        notaUtils.descripcionComponent(btnAgregarNumFactura,"Agregar numero de factura");
+        notaUtils.descripcionComponent(btnActualizarDatos,"Actualizar datos cliente");
+        notaUtils.descripcionComponent(btnGuardar,"Guardar cambios");
 
 
     }//configuraciones
@@ -453,7 +459,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             actualizarDatosCliente(notaAdeudo);
 
         } catch (Exception e) {
-            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista.");
+            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
 
         }
@@ -606,133 +612,139 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         checkCheckBoxes();
 
         if (guardar) {
-            Nota notaRegistrar = notaService.buscarPorId(notaActualizar.getNotaId());
-            NotaDetalle ndRegistrar = notaDetalleService.buscarNotaDetalle(notaRegistrar);
-            NotaClienteDetalle detalleCliente = notaClienteDetService.buscarclienteDetalle(notaRegistrar);
-
-
-            Cliente cliente = clienteService.buscarClientePorId(notaActualizar.getClienteId(), StatusNota.ACTIVE.toString());
-            Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(notaActualizar.getVehiculoId(), StatusVehiculo.ACTIVE.toString());
-
-            Inventario inventario = null;
-            if (notaActualizar.getInventarioId() != null)
-                inventario = inventarioService.buscarLlantaPorId(notaActualizar.getInventarioId());
-
-
-            //actualizar campos nota
-            String fechaYHora = txtAnio.getText() + "-" + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
-
-            notaRegistrar.setNumFactura(notaActualizar.getNumFactura());
-            notaRegistrar.setTotal(notaUtils.toFloatSafe(txtTotal.getText()));
-            notaRegistrar.setFechaYhora(fechaYHora); //pendiente
-            notaRegistrar.setFechaVencimiento(notaActualizar.getFechaVencimiento());
-            notaRegistrar.setAdeudo(notaActualizar.getAdeudo());
-            notaRegistrar.setSaldoFavor(notaActualizar.getSaldoFavor());
-            notaRegistrar.setStatusNota(notaActualizar.getStatusNota());
-            notaRegistrar.setCliente(cliente);
-            notaRegistrar.setVehiculo(vehiculo);
-            notaRegistrar.setCreatedAt(LocalDateTime.now().toString());
-
-
-            //datos cliente y vehiculo
-            //en el caso de la entidad cliente no se setean ya que en caso de haber cambios el usuario los hace con el UPDATE y
-            //estos se traen directo de la BD no de los campos de texto. El mismo caso con vehiculo
-
-
-            //actualizar nota detalle
-            ndRegistrar.setObservaciones(txtObservaciones.getText());
-            ndRegistrar.setObservaciones2(txtObservaciones2.getText());
-            ndRegistrar.setPorcentajeGas(getPorcentajeGasNota());
-            ndRegistrar.setRayones(getRayones());//comienzan checkBox
-            ndRegistrar.setGolpes(getGolpes());
-            ndRegistrar.setTapones(getTapones());
-            ndRegistrar.setTapetes(getTapetes());
-            ndRegistrar.setRadio(getRadio());
-            ndRegistrar.setGato(getGato());
-            ndRegistrar.setLlave(getLlave());
-            ndRegistrar.setLlanta(getLlanta()); //terminan CkeckBox
-            ndRegistrar.setAlineacion(txtAlineacion.getText()); //comienzan campos de la nota
-            ndRegistrar.setAlineacionCantidad(notaUtils.toIntSafe(txtAlineacionCantidad.getText()));
-            ndRegistrar.setAlineacionUnitario(notaUtils.toFloatSafe(txtAlineacionUnitario.getText()));
-            ndRegistrar.setAlineacionTotal(notaUtils.toFloatSafe(txtAlineacionTotal.getText()));
-            ndRegistrar.setBalanceo(txtBalanceo.getText());
-            ndRegistrar.setBalanceoCantidad(notaUtils.toIntSafe(txtBalanceoCantidad.getText()));
-            ndRegistrar.setBalanceoUnitario(notaUtils.toFloatSafe(txtBalanceoUnitario.getText()));
-            ndRegistrar.setBalanceoTotal(notaUtils.toFloatSafe(txtBalanceoTotal.getText()));
-            ndRegistrar.setAmorDelanteros(txtAmorDelanteros.getText());
-            ndRegistrar.setAmorDelCantidad(notaUtils.toIntSafe(txtAmorDelCantidad.getText()));
-            ndRegistrar.setAmorDelUnitario(notaUtils.toFloatSafe(txtAmorDelUnitario.getText()));
-            ndRegistrar.setAmorDelTotal(notaUtils.toFloatSafe(txtAmorDelTotal.getText()));
-            ndRegistrar.setAmorTraseros(txtAmorTraseros.getText());
-            ndRegistrar.setAmorTrasCantidad(notaUtils.toIntSafe(txtAmorTrasCantidad.getText()));
-            ndRegistrar.setAmorTrasUnitario(notaUtils.toFloatSafe(txtAmorTrasUnitario.getText()));
-            ndRegistrar.setAmorTrasTotal(notaUtils.toFloatSafe(txtAmorTrasTotal.getText()));
-            ndRegistrar.setSuspension(txtSuspension.getText());
-            ndRegistrar.setSuspensionCantidad(notaUtils.toIntSafe(txtSuspensionCantidad.getText()));
-            ndRegistrar.setSuspensionUnitario(notaUtils.toFloatSafe(txtSuspensionUnitario.getText()));
-            ndRegistrar.setSuspensionTotal(notaUtils.toFloatSafe(txtSuspensionTotal.getText()));
-            ndRegistrar.setSuspension2(txtSuspension2.getText());
-            ndRegistrar.setSuspensionCantidad2(notaUtils.toIntSafe(txtSuspensionCantidad2.getText()));
-            ndRegistrar.setSuspensionUnitario2(notaUtils.toFloatSafe(txtSuspensionUnitario2.getText()));
-            ndRegistrar.setMecanica(txtMecanica.getText());
-            ndRegistrar.setMecanicaCantidad(notaUtils.toIntSafe(txtMecanicaCantidad.getText()));
-            ndRegistrar.setMecanicaUnitario(notaUtils.toFloatSafe(txtMecanicaUnitario.getText()));
-            ndRegistrar.setMecanicaTotal(notaUtils.toFloatSafe(txtMecanicaTotal.getText()));
-            ndRegistrar.setMecanica2(txtMecanica2.getText());
-            ndRegistrar.setMecanicaCantidad2(notaUtils.toIntSafe(txtMecanicaCantidad2.getText()));
-            ndRegistrar.setMecanicaUnitario2(notaUtils.toFloatSafe(txtMecanicaUnitario2.getText()));
-            ndRegistrar.setMecanicaTotal2(notaUtils.toFloatSafe(txtMecanicaTotal2.getText()));
-            ndRegistrar.setFrenos(txtFrenos.getText());
-            ndRegistrar.setFrenosCantidad(notaUtils.toIntSafe(txtFrenosCantidad.getText()));
-            ndRegistrar.setFrenosUnitario(notaUtils.toFloatSafe(txtFrenosUnitario.getText()));
-            ndRegistrar.setFrenosTotal(notaUtils.toFloatSafe(txtFrenosTotal.getText()));
-            ndRegistrar.setFrenos2(txtFrenos2.getText());
-            ndRegistrar.setFrenosCantidad2(notaUtils.toIntSafe(txtFrenosCantidad2.getText()));
-            ndRegistrar.setFrenosUnitario2(notaUtils.toFloatSafe(txtFrenosUnitario2.getText()));
-            ndRegistrar.setFrenosTotal2(notaUtils.toFloatSafe(txtFrenosTotal2.getText()));
-            ndRegistrar.setOtros(txtOtros.getText());
-            ndRegistrar.setOtrosCantidad(notaUtils.toIntSafe(txtOtrosCantidad.getText()));
-            ndRegistrar.setOtrosUnitario(notaUtils.toFloatSafe(txtOtrosUnitario.getText()));
-            ndRegistrar.setOtrosTotal(notaUtils.toFloatSafe(txtOtrosTotal.getText()));
-            ndRegistrar.setOtros2(txtOtros2.getText());
-            ndRegistrar.setOtrosCantidad2(notaUtils.toIntSafe(txtOtrosCantidad2.getText()));
-            ndRegistrar.setOtrosUnitario2(notaUtils.toFloatSafe(txtOtrosUnitario2.getText()));
-            ndRegistrar.setOtrosTotal2(notaUtils.toFloatSafe(txtOtrosTotal2.getText()));
-            ndRegistrar.setSubTotalFrenos(notaUtils.toFloatSafe(txtSubTotalOtros.getText()));
-            ndRegistrar.setSubTotalMecanica(notaUtils.toFloatSafe(txtSubTotalMecanica.getText()));
-            ndRegistrar.setSubTotalOtros(notaUtils.toFloatSafe(txtSubTotalOtros.getText()));
-            ndRegistrar.setLlantaCampo(txtLlantas.getText());
-            ndRegistrar.setLlantaCantidad(notaUtils.toIntSafe(txtLlantasCantidad.getText()));
-            ndRegistrar.setLlantaUnitario(notaUtils.toFloatSafe(txtLlantasUnitario.getText()));
-            ndRegistrar.setLlantaTotal(notaUtils.toFloatSafe(txtLlantasTotal.getText()));
-
-            //actuallizar Nota Cliente Detalle
-            detalleCliente.setNombreClienteNota(txtNombre.getText());
-            detalleCliente.setDireccion1Nota(txtDireccion.getText());
-            detalleCliente.setDireccion2Nota(txtDireccion2.getText());
-            detalleCliente.setRfcNota(txtRfc.getText());
-            detalleCliente.setCorreoNota(txtCorreo.getText());
-            detalleCliente.setMarcaNota(txtMarca.getText());
-            detalleCliente.setModeloNota(txtModelo.getText());
-            detalleCliente.setCategoriaNota(detalleCliente.getCategoriaNota());
-            detalleCliente.setAnioNota(notaUtils.toIntSafe(txtAnioVehiculo.getText()));
-            detalleCliente.setKilometrosNota(notaUtils.toIntSafe(txtKms.getText()));
-            detalleCliente.setPlacasNota(txtPlacas.getText());
-
 
             taskService.runTask(
                     loadingOverlayController,
                     () -> {
+
+                        Nota notaRegistrar = notaService.buscarPorId(notaActualizar.getNotaId());
+                        NotaDetalle ndRegistrar = notaDetalleService.buscarNotaDetalle(notaRegistrar);
+                        NotaClienteDetalle detalleCliente = notaClienteDetService.buscarclienteDetalle(notaRegistrar);
+
+
+                        Cliente cliente = clienteService.buscarClientePorId(notaActualizar.getClienteId(), StatusNota.ACTIVE.toString());
+                        Vehiculo vehiculo = vehiculoService.buscarVehiculoPorId(notaActualizar.getVehiculoId(), StatusVehiculo.ACTIVE.toString());
+
+                        Inventario inventario = null;
+                        if (notaActualizar.getInventarioId() != null)
+                            inventario = inventarioService.buscarLlantaPorId(notaActualizar.getInventarioId());
+
+
+                        //actualizar campos nota
+                        String fechaYHora = txtAnio.getText() + "-" + "-" + txtMes.getText() + "-" + txtDia.getText() + " " + txtHoraEntrega.getText() + ":00";
+
+                        notaRegistrar.setNumFactura(notaActualizar.getNumFactura());
+                        notaRegistrar.setTotal(notaUtils.toFloatSafe(txtTotal.getText()));
+                        notaRegistrar.setFechaYhora(fechaYHora); //pendiente
+                        notaRegistrar.setFechaVencimiento(notaActualizar.getFechaVencimiento());
+                        notaRegistrar.setAdeudo(notaActualizar.getAdeudo());
+                        notaRegistrar.setSaldoFavor(notaActualizar.getSaldoFavor());
+                        notaRegistrar.setStatusNota(notaActualizar.getStatusNota());
+                        notaRegistrar.setCliente(cliente);
+                        notaRegistrar.setVehiculo(vehiculo);
+                        notaRegistrar.setCreatedAt(LocalDateTime.now().toString());
+
+
+                        //datos cliente y vehiculo
+                        //en el caso de la entidad cliente no se setean ya que en caso de haber cambios el usuario los hace con el UPDATE y
+                        //estos se traen directo de la BD no de los campos de texto. El mismo caso con vehiculo
+
+
+                        //actualizar nota detalle
+                        ndRegistrar.setObservaciones(txtObservaciones.getText());
+                        ndRegistrar.setObservaciones2(txtObservaciones2.getText());
+                        ndRegistrar.setPorcentajeGas(getPorcentajeGasNota());
+                        ndRegistrar.setRayones(getRayones());//comienzan checkBox
+                        ndRegistrar.setGolpes(getGolpes());
+                        ndRegistrar.setTapones(getTapones());
+                        ndRegistrar.setTapetes(getTapetes());
+                        ndRegistrar.setRadio(getRadio());
+                        ndRegistrar.setGato(getGato());
+                        ndRegistrar.setLlave(getLlave());
+                        ndRegistrar.setLlanta(getLlanta()); //terminan CkeckBox
+                        ndRegistrar.setAlineacion(txtAlineacion.getText()); //comienzan campos de la nota
+                        ndRegistrar.setAlineacionCantidad(notaUtils.toIntSafe(txtAlineacionCantidad.getText()));
+                        ndRegistrar.setAlineacionUnitario(notaUtils.toFloatSafe(txtAlineacionUnitario.getText()));
+                        ndRegistrar.setAlineacionTotal(notaUtils.toFloatSafe(txtAlineacionTotal.getText()));
+                        ndRegistrar.setBalanceo(txtBalanceo.getText());
+                        ndRegistrar.setBalanceoCantidad(notaUtils.toIntSafe(txtBalanceoCantidad.getText()));
+                        ndRegistrar.setBalanceoUnitario(notaUtils.toFloatSafe(txtBalanceoUnitario.getText()));
+                        ndRegistrar.setBalanceoTotal(notaUtils.toFloatSafe(txtBalanceoTotal.getText()));
+                        ndRegistrar.setAmorDelanteros(txtAmorDelanteros.getText());
+                        ndRegistrar.setAmorDelCantidad(notaUtils.toIntSafe(txtAmorDelCantidad.getText()));
+                        ndRegistrar.setAmorDelUnitario(notaUtils.toFloatSafe(txtAmorDelUnitario.getText()));
+                        ndRegistrar.setAmorDelTotal(notaUtils.toFloatSafe(txtAmorDelTotal.getText()));
+                        ndRegistrar.setAmorTraseros(txtAmorTraseros.getText());
+                        ndRegistrar.setAmorTrasCantidad(notaUtils.toIntSafe(txtAmorTrasCantidad.getText()));
+                        ndRegistrar.setAmorTrasUnitario(notaUtils.toFloatSafe(txtAmorTrasUnitario.getText()));
+                        ndRegistrar.setAmorTrasTotal(notaUtils.toFloatSafe(txtAmorTrasTotal.getText()));
+                        ndRegistrar.setSuspension(txtSuspension.getText());
+                        ndRegistrar.setSuspensionCantidad(notaUtils.toIntSafe(txtSuspensionCantidad.getText()));
+                        ndRegistrar.setSuspensionUnitario(notaUtils.toFloatSafe(txtSuspensionUnitario.getText()));
+                        ndRegistrar.setSuspensionTotal(notaUtils.toFloatSafe(txtSuspensionTotal.getText()));
+                        ndRegistrar.setSuspension2(txtSuspension2.getText());
+                        ndRegistrar.setSuspensionCantidad2(notaUtils.toIntSafe(txtSuspensionCantidad2.getText()));
+                        ndRegistrar.setSuspensionUnitario2(notaUtils.toFloatSafe(txtSuspensionUnitario2.getText()));
+                        ndRegistrar.setMecanica(txtMecanica.getText());
+                        ndRegistrar.setMecanicaCantidad(notaUtils.toIntSafe(txtMecanicaCantidad.getText()));
+                        ndRegistrar.setMecanicaUnitario(notaUtils.toFloatSafe(txtMecanicaUnitario.getText()));
+                        ndRegistrar.setMecanicaTotal(notaUtils.toFloatSafe(txtMecanicaTotal.getText()));
+                        ndRegistrar.setMecanica2(txtMecanica2.getText());
+                        ndRegistrar.setMecanicaCantidad2(notaUtils.toIntSafe(txtMecanicaCantidad2.getText()));
+                        ndRegistrar.setMecanicaUnitario2(notaUtils.toFloatSafe(txtMecanicaUnitario2.getText()));
+                        ndRegistrar.setMecanicaTotal2(notaUtils.toFloatSafe(txtMecanicaTotal2.getText()));
+                        ndRegistrar.setFrenos(txtFrenos.getText());
+                        ndRegistrar.setFrenosCantidad(notaUtils.toIntSafe(txtFrenosCantidad.getText()));
+                        ndRegistrar.setFrenosUnitario(notaUtils.toFloatSafe(txtFrenosUnitario.getText()));
+                        ndRegistrar.setFrenosTotal(notaUtils.toFloatSafe(txtFrenosTotal.getText()));
+                        ndRegistrar.setFrenos2(txtFrenos2.getText());
+                        ndRegistrar.setFrenosCantidad2(notaUtils.toIntSafe(txtFrenosCantidad2.getText()));
+                        ndRegistrar.setFrenosUnitario2(notaUtils.toFloatSafe(txtFrenosUnitario2.getText()));
+                        ndRegistrar.setFrenosTotal2(notaUtils.toFloatSafe(txtFrenosTotal2.getText()));
+                        ndRegistrar.setOtros(txtOtros.getText());
+                        ndRegistrar.setOtrosCantidad(notaUtils.toIntSafe(txtOtrosCantidad.getText()));
+                        ndRegistrar.setOtrosUnitario(notaUtils.toFloatSafe(txtOtrosUnitario.getText()));
+                        ndRegistrar.setOtrosTotal(notaUtils.toFloatSafe(txtOtrosTotal.getText()));
+                        ndRegistrar.setOtros2(txtOtros2.getText());
+                        ndRegistrar.setOtrosCantidad2(notaUtils.toIntSafe(txtOtrosCantidad2.getText()));
+                        ndRegistrar.setOtrosUnitario2(notaUtils.toFloatSafe(txtOtrosUnitario2.getText()));
+                        ndRegistrar.setOtrosTotal2(notaUtils.toFloatSafe(txtOtrosTotal2.getText()));
+                        ndRegistrar.setSubTotalFrenos(notaUtils.toFloatSafe(txtSubTotalOtros.getText()));
+                        ndRegistrar.setSubTotalMecanica(notaUtils.toFloatSafe(txtSubTotalMecanica.getText()));
+                        ndRegistrar.setSubTotalOtros(notaUtils.toFloatSafe(txtSubTotalOtros.getText()));
+                        ndRegistrar.setLlantaCampo(txtLlantas.getText());
+                        ndRegistrar.setLlantaCantidad(notaUtils.toIntSafe(txtLlantasCantidad.getText()));
+                        ndRegistrar.setLlantaUnitario(notaUtils.toFloatSafe(txtLlantasUnitario.getText()));
+                        ndRegistrar.setLlantaTotal(notaUtils.toFloatSafe(txtLlantasTotal.getText()));
+
+                        //actuallizar Nota Cliente Detalle
+                        detalleCliente.setNombreClienteNota(txtNombre.getText());
+                        detalleCliente.setDireccion1Nota(txtDireccion.getText());
+                        detalleCliente.setDireccion2Nota(txtDireccion2.getText());
+                        detalleCliente.setRfcNota(txtRfc.getText());
+                        detalleCliente.setCorreoNota(txtCorreo.getText());
+                        detalleCliente.setMarcaNota(txtMarca.getText());
+                        detalleCliente.setModeloNota(txtModelo.getText());
+                        detalleCliente.setCategoriaNota(detalleCliente.getCategoriaNota());
+                        detalleCliente.setAnioNota(notaUtils.toIntSafe(txtAnioVehiculo.getText()));
+                        detalleCliente.setKilometrosNota(notaUtils.toIntSafe(txtKms.getText()));
+                        detalleCliente.setPlacasNota(txtPlacas.getText());
+
+
                         notaService.actualizarNota(notaRegistrar, ndRegistrar, detalleCliente);
                         return null;
                     }, (resultado) -> {
                         mostrarInformacion("Nota Actualizada", "", "Los cambios se guardaron correctamente.");
                     }, (excepcion) -> {
+
                         excepcion.printStackTrace();
+
                         if (excepcion.getCause() instanceof NotaException) {
                             mostrarError("No se pudieron guardar los cambios", "", "" + excepcion);
                         } else {
-                            mostrarError("Error inesperado", "Ocurrió un problema al actualizar la nota. Intente nuevamente mas tarde", "");
+                            mostrarError("Error interno",
+                                    "",
+                                    "Ocurrió un problema al actualizar la nota. Intente nuevamente mas tarde");
                         }
 
                     }, null

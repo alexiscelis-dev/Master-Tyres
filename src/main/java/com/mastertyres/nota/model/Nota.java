@@ -65,7 +65,7 @@ public class Nota {
     @Column(name = "saldo_favor")
     private float saldoFavor;
 
-    private float total;
+    private Float total;
 
 
     @OneToMany(mappedBy = "nota",cascade = CascadeType.ALL)

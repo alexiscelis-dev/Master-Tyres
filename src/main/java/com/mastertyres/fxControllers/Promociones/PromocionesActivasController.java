@@ -152,7 +152,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
         ventanaPrincipalController.viewContent(
                 null, // no se requiere el MouseEvent
-                "/fxmlViews/promocion/NuevaPromocion.fxml",
+                "/fxmlViews/promocion/NuevaPromocionVehiculos.fxml",
                 "Agregar promocion vehiculos"
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR PROMOCION VEHICULOS");

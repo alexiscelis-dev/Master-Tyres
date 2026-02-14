@@ -210,7 +210,7 @@ public class EditarClienteController implements IFxController, ILoading {
 
         // correo: opcional, acepta minúsculas
         txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
-            // ✅ Verificar que newText no sea null
+            //  Verificar que newText no sea null
             if (newText == null || newText.isEmpty()) {
                 CorreoValido.set(true);
                 txtCorreo.setStyle("");
@@ -324,36 +324,6 @@ public class EditarClienteController implements IFxController, ILoading {
             return;
         }
 
-        /*
-
-
-        if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre del cliente no puede estar vacío.");
-            return;
-        }
-
-        if (txtTelefono.getText() == null || txtTelefono.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El numero de telefono del cliente no puede estar vacío.");
-            return;
-        }
-
-        if (txtApellido.getText() == null || txtApellido.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El primer apellido del cliente no puede estar vacío.");
-            return;
-        }
-
-        if (txtTelefono.getText() == null || txtTelefono.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El telefono del cliente no puede estar vacío.");
-            return;
-        }
-
-
-        if (choiceTipoCliente.getValue() == null) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar un tipo de cliente.");
-            return;
-        }
-
-         */
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",

@@ -19,13 +19,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Service
 public class NotaService implements INotaService {
@@ -53,7 +49,7 @@ public class NotaService implements INotaService {
     @Transactional(readOnly = true)
     @Override
     public Page<NotaDTO> buscador(String filtro, String busqueda, int IndicePagina, int tamañoPagina) {
-        Page<NotaDTO> paginaFiltrada;
+        Page<NotaDTO> paginaFiltrada = null;
 
         switch (filtro.toLowerCase()) {
             case "sin filtro" -> paginaFiltrada = buscarNotas(busqueda, IndicePagina, tamañoPagina);
@@ -86,54 +82,72 @@ public class NotaService implements INotaService {
                     paginaFiltrada = buscarPorRfc(busqueda, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
             case "adeudo" -> {
-                try {
-                    BigDecimal adeudo = new BigDecimal(busqueda.trim());
-                    paginaFiltrada = buscarPorAdeudo(
-                            adeudo, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
-                    );
-                } catch (NumberFormatException ex) {
 
-                    mostrarWarning(
-                            "Valor inválido",
-                            "Adeudo incorrecto",
-                            "Ingrese un valor numérico válido para el adeudo."
-                    );
 
+                    paginaFiltrada = buscarPorAdeudo(StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
                     return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
-                }
+
             }
 
             case "total" -> {
+
+
+                if (!filtro.isEmpty()){
+                    String arrayTotal [] = busqueda.split(",");
+
+                    if (arrayTotal.length == 1 ){
+                        arrayTotal = new String[]{arrayTotal[0],arrayTotal[0]};
+                    }
+                    if (arrayTotal.length > 2){
+                        throw new NotaException("Valores invalidos. Solo se permiten dos valores separados por una coma.");
+                    }
+
+
+                    System.out.println("arrayTotal[0] = " + arrayTotal[0].trim());;
+                    System.out.println("arrayTotal[1] = " + arrayTotal[1].trim());
+
+                    try {
+
+                        Double total1 = Double.parseDouble(arrayTotal[0].trim());
+                        Double total2 = Double.parseDouble(arrayTotal[1].trim());
+
+                        paginaFiltrada = buscarPorTotal(total1,total2,StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+                        return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
+
+
+
+
+                    }catch (NotaException ne){
+                        throw new NotaException("Valores invalidos. Ingrese un rango de valores separados por una coma (,) ej. 0,0");
+                    }
+
+
+                }
+
+                /*
+
                 try {
                     Double total = Double.parseDouble(busqueda.trim());
                     paginaFiltrada = buscarPorTotal(
-                            total, "ACTIVE", IndicePagina, tamañoPagina
+                            total, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
                     );
                 } catch (NumberFormatException ex) {
-                    mostrarWarning(
-                            "Valor inválido",
-                            "Total incorrecto",
-                            "Ingrese un valor numérico válido para el total."
-                    );
-                    return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
+
+                    throw new NotaException("Valor inválido. Ingrese un valor numérico válido para el total. ");
+
                 }
-            }
+
+                 */
+
+            }//case total
 
             case "saldo a favor" -> {
-                try {
-                    Double saldo = Double.parseDouble(busqueda.trim());
-                    paginaFiltrada = buscarPorSaldoFavor(
-                            saldo, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
-                    );
-                } catch (NumberFormatException ex) {
-                    mostrarWarning(
-                            "Valor inválido",
-                            "Saldo incorrecto",
-                            "Ingrese un valor numérico válido para el saldo a favor."
-                    );
+
+                    paginaFiltrada = buscarPorSaldoFavor(StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+
                     return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
-                }
+
             }
 
             default -> paginaFiltrada = listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
@@ -171,7 +185,7 @@ public class NotaService implements INotaService {
     @Transactional(readOnly = true)
     @Override
     public Page<NotaDTO> buscarNotas(String filtro, int pagina, int tamanio) {
-        return notaRepository.buscarNotas("ACTIVE", filtro, PageRequest.of(pagina, tamanio));
+        return notaRepository.buscarNotas(StatusNota.ACTIVE.toString(), filtro, PageRequest.of(pagina, tamanio));
     }
 
     @Transactional(readOnly = true)
@@ -246,23 +260,25 @@ public class NotaService implements INotaService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<NotaDTO> buscarPorAdeudo(BigDecimal filtro, String active, int pagina, int tamanoPagina) {
+    public Page<NotaDTO> buscarPorAdeudo(String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
-        return notaRepository.buscarPorAdeudo(filtro, active, pageable);
+        return notaRepository.buscarPorAdeudo(active, pageable);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<NotaDTO> buscarPorTotal(Double filtro, String active, int pagina, int tamanoPagina) {
+    public Page<NotaDTO> buscarPorTotal(Double total1,Double total2, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
-        return notaRepository.buscarPorTotal(filtro, active, pageable);
+        System.out.println("total1 = " + total1);
+        System.out.println("total2 = " + total2);
+        return notaRepository.buscarPorTotal(total1, total2, active, pageable);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<NotaDTO> buscarPorSaldoFavor(Double filtro, String active, int pagina, int tamanoPagina) {
-        Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
-        return notaRepository.buscarPorSaldoFavor(filtro, active, pageable);
+    public Page<NotaDTO> buscarPorSaldoFavor(String active, int pagina, int tamanoPagina) {
+        Pageable pageable = PageRequest.of(pagina, tamanoPagina);
+        return notaRepository.buscarPorSaldoFavor(active, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -272,9 +288,12 @@ public class NotaService implements INotaService {
         return notaRepository.buscarPorNumeroNota(filtro, active, pageable);
     }
 
+
     @Transactional
     @Override
     public void guardarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle) {
+
+        notaValidator.validarAgregarNota(nota,notaDetalle,clienteDetalle);
         Nota porNumNota = notaRepository.findByNumNota(nota.getNumNota());
 
         //si no es null encontro coincidencia y ya existe
@@ -347,6 +366,7 @@ public class NotaService implements INotaService {
     @Transactional
     @Override
     public void actualizarNota(Nota nota, NotaDetalle notaDetalle, NotaClienteDetalle clienteDetalle) {
+        notaValidator.validarAgregarNota(nota, notaDetalle, clienteDetalle);
         notaRepository.save(nota);
         notaDetalleRepository.save(notaDetalle);
         notaClienteDetRepository.save(clienteDetalle);

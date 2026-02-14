@@ -16,6 +16,9 @@ import java.util.List;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
+    final String SELECT_FROM_CLIENTE = "SELECT c FROM Cliente c";
+    final String UPDATE_CLIENTE = "UPDATE Cliente c SET";
+
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query("""
                 SELECT DISTINCT c 
@@ -39,11 +42,11 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     // Consulta base: solo clientes activos
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active")
     List<Cliente> listarClientesActivos(@Param("active") String active);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active ORDER BY c.nombre ASC, c.apellido ASC, c.segundoApellido ASC")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active ORDER BY c.nombre ASC, c.apellido ASC, c.segundoApellido ASC")
     Page<Cliente> listarClientesActivos(@Param("active") String active, Pageable pageable);
 
 
@@ -53,11 +56,11 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Cliente c SET c.active = :inactive WHERE c.clienteId = :idCliente")
+    @Query(UPDATE_CLIENTE + " " + "c.active = :inactive WHERE c.clienteId = :idCliente")
     int eliminarCliente(@Param("inactive") String eliminar, @Param("idCliente") Integer idCliente);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = 'ACTIVE' AND (" +
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = 'ACTIVE' AND (" +
             "LOWER(c.nombre) LIKE LOWER(CONCAT('%', :filtro, '%')) OR " +
             "LOWER(c.apellido) LIKE LOWER(CONCAT('%', :filtro, '%')) OR " +
             "LOWER(c.segundoApellido) LIKE LOWER(CONCAT('%', :filtro, '%')) OR " +
@@ -74,105 +77,105 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     List<Cliente> buscarClientes(@Param("filtro") String filtro);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER( CONCAT( CONCAT(CONCAT(c.nombre, ' '), " +
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER( CONCAT( CONCAT(CONCAT(c.nombre, ' '), " +
             "COALESCE(c.apellido, '')), CONCAT(' ', COALESCE(c.segundoApellido, '')) ) ) " +
             "LIKE LOWER(CONCAT('%', :nombre, '%'))")
     List<Cliente> buscarClientePorNombre(@Param("active") String active, @Param("nombre") String nombre);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER( CONCAT( CONCAT(CONCAT(c.nombre, ' '), " +
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER( CONCAT( CONCAT(CONCAT(c.nombre, ' '), " +
             "COALESCE(c.apellido, '')), CONCAT(' ', COALESCE(c.segundoApellido, '')) ) ) " +
             "LIKE LOWER(CONCAT('%', :nombre, '%'))")
     Page<Cliente> buscarClientePorNombrePaginado(@Param("active") String active,
                                                  @Param("nombre") String nombre,
                                                  Pageable pageable);
 
-@QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.numTelefono = :numTelefono")
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND c.numTelefono = :numTelefono")
     List<Cliente> buscarClientePorNumTelefono(@Param("active") String active, @Param("numTelefono") String numTelefono);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.numTelefono = :numTelefono")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND c.numTelefono = :numTelefono")
     Page<Cliente> buscarClientePorNumTelefonoPaginado(@Param("active") String active, @Param("numTelefono") String numTelefono, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :estado , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :estado , '%'))")
     List<Cliente> buscarClientePorEstado(@Param("active") String active, @Param("estado") String estado);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :estado , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER (COALESCE(c.estado, '')) LIKE LOWER (CONCAT('%', :estado , '%'))")
     Page<Cliente> buscarClientePorEstadoPaginado(@Param("active") String active, @Param("estado") String estado, Pageable pageable);
 
-   @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER (COALESCE(c.nombreEmpresa, '')) LIKE LOWER (CONCAT('%', :nombreEmpresa , '%'))")
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER (COALESCE(c.nombreEmpresa, '')) LIKE LOWER (CONCAT('%', :nombreEmpresa , '%'))")
     Page<Cliente> buscarClientePorNombreEmpresaPaginado(@Param("active") String active, @Param("nombreEmpresa") String nombreEmpresa, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :ciudad , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :ciudad , '%'))")
     List<Cliente> buscarClientePorCiudad(@Param("active") String active, @Param("ciudad") String ciudad);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :ciudad , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.ciudad, '')) LIKE LOWER (CONCAT('%', :ciudad , '%'))")
     Page<Cliente> buscarClientePorCiudadPaginado(@Param("active") String active, @Param("ciudad") String ciudad, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :domicilio , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :domicilio , '%'))")
     List<Cliente> buscarClientePorDomicilio(@Param("active") String active, @Param("domicilio") String domicilio);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :domicilio , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.domicilio, '')) LIKE LOWER (CONCAT('%', :domicilio , '%'))")
     Page<Cliente> buscarClientePorDomicilioPaginado(@Param("active") String active, @Param("domicilio") String domicilio, Pageable pageable);
 
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.hobbie, '')) LIKE LOWER (CONCAT('%', :hobbie , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.hobbie, '')) LIKE LOWER (CONCAT('%', :hobbie , '%'))")
     List<Cliente> buscarClientePorHobbie(@Param("active") String active, @Param("hobbie") String hobbie);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.hobbie, '')) LIKE LOWER (CONCAT('%', :hobbie , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.hobbie, '')) LIKE LOWER (CONCAT('%', :hobbie , '%'))")
     Page<Cliente> buscarClientePorHobbiePaginado(@Param("active") String active, @Param("hobbie") String hobbie, Pageable pageable);
 
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
     List<Cliente> buscarClientePorRfc(@Param("active") String active, @Param("rfc") String rfc);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.rfc, '')) LIKE LOWER (CONCAT('%', :rfc , '%'))")
     Page<Cliente> buscarClientePorRfcPaginado(@Param("active") String active, @Param("rfc") String rfc, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.correo, '')) LIKE LOWER (CONCAT('%', :correo , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.correo, '')) LIKE LOWER (CONCAT('%', :correo , '%'))")
     Page<Cliente> buscarClientePorCorreoPaginado(@Param("active") String active, @Param("correo") String correo, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.fechaCumple, '')) LIKE LOWER (CONCAT('%', :cumpleanos , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.fechaCumple, '')) LIKE LOWER (CONCAT('%', :cumpleanos , '%'))")
     Page<Cliente> buscarClientePorCumpleanosPaginado(@Param("active") String active, @Param("cumpleanos") String cumpleanos, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND LOWER ( COALESCE(c.created_at, '')) LIKE LOWER (CONCAT('%', :registro , '%'))")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND LOWER ( COALESCE(c.created_at, '')) LIKE LOWER (CONCAT('%', :registro , '%'))")
     Page<Cliente> buscarClientePorRegistroPaginado(@Param("active") String active, @Param("registro") String registro, Pageable pageable);
 
 
     // === BÚSQUEDA POR FECHA DE REGISTRO (created_at es usualmente Timestamp) ===
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND DATE(c.created_at) = :registro")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND DATE(c.created_at) = :registro")
     Page<Cliente> buscarClientePorRegistroPaginado(@Param("active") String active, @Param("registro") LocalDate registro, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND DATE(c.created_at) BETWEEN :inicio AND :fin")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND DATE(c.created_at) BETWEEN :inicio AND :fin")
     Page<Cliente> buscarClientePorRegistroRangoPaginado(@Param("active") String active, @Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin, Pageable pageable);
 
 
 // === BÚSQUEDA POR FECHA DE NACIMIENTO (fechaCumple) ===
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.fechaCumple = :cumple")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND c.fechaCumple = :cumple")
     Page<Cliente> buscarClientePorCumpleanosPaginado(@Param("active") String active, @Param("cumple") LocalDate cumple, Pageable pageable);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active AND c.fechaCumple BETWEEN :inicio AND :fin")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active AND c.fechaCumple BETWEEN :inicio AND :fin")
     Page<Cliente> buscarClientePorCumpleanosRangoPaginado(
             @Param("active") String active,
             @Param("inicio") String inicio, // Cambiado a String
@@ -181,7 +184,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     );
 
     @QueryHints({@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true")})
-    @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND ( " +
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE (c.active = :status) AND ( " +
             "(LOWER (COALESCE(c.nombre, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
             "(LOWER (COALESCE(c.apellido, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
             "(LOWER (COALESCE(c.segundoApellido, '')) LIKE LOWER (CONCAT('%', :busqueda , '%'))) OR " +
@@ -195,7 +198,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     List<Cliente> buscadorClientes(@Param("status") String status, @Param("busqueda") String busqueda);
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
-    @Query("SELECT c FROM Cliente c WHERE (c.active = :status) AND (" +
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE (c.active = :status) AND (" +
             "LOWER(COALESCE(c.nombre, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.nombreEmpresa, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
             "LOWER(COALESCE(c.apellido, '')) LIKE LOWER(CONCAT('%', :busqueda, '%')) OR " +
@@ -216,7 +219,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
                                    @Param("busqueda") String busqueda,
                                    Pageable pageable);
 
-    @Query("SELECT c FROM Cliente c WHERE c.clienteId = :clienteId AND c.active = :status")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.clienteId = :clienteId AND c.active = :status")
     Cliente buscarClientePorId(@Param("clienteId") Integer clienteId, @Param("status") String status);
 
 
@@ -240,7 +243,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     long contarClientesPorBusquedaGeneral(String status, String busqueda);
 
     @QueryHints({@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true")})
-    @Query("SELECT c FROM Cliente c WHERE c.active = :active ORDER BY c.nombre ASC, c.apellido ASC, c.segundoApellido ASC LIMIT 100")
+    @Query(SELECT_FROM_CLIENTE + " " + "WHERE c.active = :active ORDER BY c.nombre ASC, c.apellido ASC, c.segundoApellido ASC LIMIT 100")
     List<Cliente> first100Buscador(@Param("active") String active);
 
 

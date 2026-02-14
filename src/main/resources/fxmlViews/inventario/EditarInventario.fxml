@@ -11,7 +11,7 @@
             fx:controller="com.mastertyres.fxControllers.inventario.EditarInventarioController">
 
     <children>
-        <ScrollPane>
+        <ScrollPane fitToHeight="false" fitToWidth="true" pannable="true">
             <VBox alignment="CENTER" prefHeight="620" prefWidth="600" spacing="10" styleClass="secciones">
 
                 <padding>
