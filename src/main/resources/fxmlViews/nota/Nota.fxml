@@ -32,7 +32,7 @@
 
                             <DatePicker fx:id="dpBuscarFin" managed="false" prefHeight="26.0" prefWidth="150.0" promptText="Fecha fin..." visible="false" />
 
-                            <Button mnemonicParsing="false" onAction="#accionBuscar" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
+                            <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#accionBuscar" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
                                 <graphic>
                                     <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
                                         <image>

@@ -48,6 +48,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
@@ -94,6 +95,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
     private Button btnRefrescar;
     @FXML
     private Button btnHistorial;
+    @FXML
+    private Button btnBuscar;
     @FXML
     private TextField txtBuscar;
     @FXML
@@ -178,15 +181,16 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
     @Override
     public void listeners() {
 
+
         atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
-            if (newValue == null ) {
+            if (newValue == null) {
                 return;
             }
 
-            switch (newValue.toString()){
+            switch (newValue.toString()) {
 
-                case "Adeudo" ->  filtroActual = "Adeudo";
+                case "Adeudo" -> filtroActual = "Adeudo";
                 case "Saldo a favor" -> filtroActual = "Saldo a favor";
 
             }//switch
@@ -194,9 +198,9 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
             txtBuscar.clear();
             modoBusqueda = false;
 
-            if (PaginadorNotas.getCurrentPageIndex() == 0){
+            if (PaginadorNotas.getCurrentPageIndex() == 0) {
                 cargarPagina(0);
-            }else {
+            } else {
                 PaginadorNotas.setCurrentPageIndex(0);
             }
 
@@ -281,7 +285,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
         taskService.runTask(
                 loadingOverlayController,
                 () -> {
-                    Page<NotaDTO> pagina;
+                    Page<NotaDTO> pagina = null;
 
                     if (modoBusqueda) {
                         // Usamos la variable de estado 'esRangoActual' para que el paginado sea consistente
@@ -292,7 +296,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
                         }
                     } else {
 
-                        if ("Adeudo".equals(filtroActual)){
+                        if ("Adeudo".equals(filtroActual)) {
                             pagina = notaService.buscarPorAdeudo(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
                         } else if ("Saldo a favor".equals(filtroActual)) {
                             pagina = notaService.buscarPorSaldoFavor(StatusNota.ACTIVE.toString(), indicePagina, tamañoPagina);
@@ -702,7 +706,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
                             mostrarError("Error al generar archivo",
                                     "El archivo no pudo crearse o está siendo usado por otro programa.",
                                     "Cierra otros programas e inténtalo de nuevo.");
-                        } else if (excepcion instanceof InterruptedException || excepcion instanceof java.util.concurrent.CancellationException) {
+                        } else if (excepcion instanceof InterruptedException || excepcion instanceof CancellationException) {
                             mostrarWarning("Operación cancelada",
                                     "",
                                     "La impresión del documento fue cancelada por el usuario.");
@@ -794,6 +798,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
         cargarPagina(0);
     }
 
+    @FXML
     public void accionBuscar(ActionEvent actionEvent) {
 
         String seleccion = atributoBusquedaNota.getValue();
@@ -801,6 +806,46 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
             atributoBusquedaNota.setValue("Sin Filtro");
             return;
         }
+
+
+        if (seleccion != null && atributoBusquedaNota.equals("Total")) {
+            String arrayTotal[] = txtBuscar.getText().trim().split(",");
+
+            if (!txtBuscar.getText().isEmpty()) {
+
+                if (arrayTotal.length == 1) {
+                    arrayTotal = new String[]{arrayTotal[0], arrayTotal[0]};
+                }
+
+                if (arrayTotal.length > 2) {
+                    mostrarWarning("Valores invalidos.", "", "Solo se permiten dos valores separados por una coma.");
+                    return;
+                }
+
+                try {
+
+                    String valor1 = arrayTotal[0].trim();
+                    String valor2 = (arrayTotal.length == 2)
+                            ? arrayTotal[1].trim()
+                            : valor1;
+
+                    Double total1 = Double.parseDouble(arrayTotal[0].trim());
+                    Double total2 = Double.parseDouble(arrayTotal[1].trim());
+
+                    Page<NotaDTO> notaTotal = notaService.buscarPorTotal(total1, total2, StatusNota.ACTIVE.toString(), 0, 20);
+                    mostrarNotas(notaTotal.getContent());
+
+
+                } catch (NumberFormatException e) {
+                    mostrarWarning("Valores invalidos", "", "Ingrese un rango de valores numericos separados por una coma (,) ej. 0,0.");
+                    return;
+                }
+            }
+
+
+        }//if-total
+
+
 
         String busqueda = "";
         String busqueda2 = "";
@@ -841,6 +886,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoadin
 
         // Si pasó las validaciones, configuramos el paginador
         ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
+
     }//accionBuscar
 
 }//class

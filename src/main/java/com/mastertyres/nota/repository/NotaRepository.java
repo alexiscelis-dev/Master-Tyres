@@ -170,8 +170,8 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @Query(SELECT_NOTA_DTO + " " + "WHERE n.active = :active  AND n.adeudo > 0 ORDER BY n.createdAt DESC")
     Page<NotaDTO> buscarPorAdeudo(@Param("active") String active, Pageable pageable);
 
-    @Query(SELECT_NOTA_DTO + " " + "WHERE n.active = :active AND n.total = :total")
-    Page<NotaDTO> buscarPorTotal(@Param("total") Double total, @Param("active") String active, Pageable pageable);
+    @Query(SELECT_NOTA_DTO + " " + "WHERE n.active = :active AND n.total BETWEEN :total1 AND :total2 ORDER BY n.createdAt DESC")
+    Page<NotaDTO> buscarPorTotal(@Param("total1") Double total1,@Param("total2")Double total2, @Param("active") String active, Pageable pageable);
 
     @Query(SELECT_NOTA_DTO + " " + "WHERE n.active = :active AND n.saldoFavor > 0 ORDER BY n.createdAt DESC")
     Page<NotaDTO> buscarPorSaldoFavor(@Param("active") String active, Pageable pageable);
@@ -179,7 +179,6 @@ public interface NotaRepository extends JpaRepository<Nota, Integer> {
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query(SELECT_NOTA + " " + "WHERE n.active = 'ACTIVE'")
     List<Nota> findNotasActivasConDetalles();
-
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
     @Query(SELECT_NOTA + " " + "WHERE n.active = 'ACTIVE' ")

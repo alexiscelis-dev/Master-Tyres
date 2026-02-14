@@ -49,7 +49,7 @@ public class NotaService implements INotaService {
     @Transactional(readOnly = true)
     @Override
     public Page<NotaDTO> buscador(String filtro, String busqueda, int IndicePagina, int tamañoPagina) {
-        Page<NotaDTO> paginaFiltrada;
+        Page<NotaDTO> paginaFiltrada = null;
 
         switch (filtro.toLowerCase()) {
             case "sin filtro" -> paginaFiltrada = buscarNotas(busqueda, IndicePagina, tamañoPagina);
@@ -91,6 +91,42 @@ public class NotaService implements INotaService {
             }
 
             case "total" -> {
+
+
+                if (!filtro.isEmpty()){
+                    String arrayTotal [] = busqueda.split(",");
+
+                    if (arrayTotal.length == 1 ){
+                        arrayTotal = new String[]{arrayTotal[0],arrayTotal[0]};
+                    }
+                    if (arrayTotal.length > 2){
+                        throw new NotaException("Valores invalidos. Solo se permiten dos valores separados por una coma.");
+                    }
+
+
+                    System.out.println("arrayTotal[0] = " + arrayTotal[0].trim());;
+                    System.out.println("arrayTotal[1] = " + arrayTotal[1].trim());
+
+                    try {
+
+                        Double total1 = Double.parseDouble(arrayTotal[0].trim());
+                        Double total2 = Double.parseDouble(arrayTotal[1].trim());
+
+                        paginaFiltrada = buscarPorTotal(total1,total2,StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
+                        return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
+
+
+
+
+                    }catch (NotaException ne){
+                        throw new NotaException("Valores invalidos. Ingrese un rango de valores separados por una coma (,) ej. 0,0");
+                    }
+
+
+                }
+
+                /*
+
                 try {
                     Double total = Double.parseDouble(busqueda.trim());
                     paginaFiltrada = buscarPorTotal(
@@ -99,22 +135,14 @@ public class NotaService implements INotaService {
                 } catch (NumberFormatException ex) {
 
                     throw new NotaException("Valor inválido. Ingrese un valor numérico válido para el total. ");
-                    /*
-                    mostrarWarning(
-                            "Valor inválido",
-                            "Total incorrecto",
-                            "Ingrese un valor numérico válido para el total."
-                    );
 
-
-                    return listarNotasPaginado(StatusNota.ACTIVE.toString(), 0, tamañoPagina);
-
-                     */
                 }
-            }
+
+                 */
+
+            }//case total
 
             case "saldo a favor" -> {
-
 
                     paginaFiltrada = buscarPorSaldoFavor(StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina);
 
@@ -239,9 +267,11 @@ public class NotaService implements INotaService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<NotaDTO> buscarPorTotal(Double filtro, String active, int pagina, int tamanoPagina) {
+    public Page<NotaDTO> buscarPorTotal(Double total1,Double total2, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
-        return notaRepository.buscarPorTotal(filtro, active, pageable);
+        System.out.println("total1 = " + total1);
+        System.out.println("total2 = " + total2);
+        return notaRepository.buscarPorTotal(total1, total2, active, pageable);
     }
 
     @Transactional(readOnly = true)

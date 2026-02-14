@@ -73,7 +73,7 @@ public interface INotaService {
 
     Page<NotaDTO> buscarPorAdeudo(String active, int pagina, int tamanoPagina);
 
-    Page<NotaDTO> buscarPorTotal(Double filtro, String active, int pagina, int tamanoPagina);
+    Page<NotaDTO> buscarPorTotal(Double total1, Double total2, String active, int pagina, int tamanoPagina);
 
     Page<NotaDTO> buscarPorSaldoFavor(String active, int pagina, int tamanoPagina);
 
