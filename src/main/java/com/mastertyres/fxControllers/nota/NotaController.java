@@ -808,7 +808,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
         }
 
 
-        if (seleccion != null && atributoBusquedaNota.equals("Total")) {
+        if (seleccion.equals("Total")) {
             String arrayTotal[] = txtBuscar.getText().trim().split(",");
 
             if (!txtBuscar.getText().isEmpty()) {
@@ -841,9 +841,11 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                     return;
                 }
             }
-
+            return;
 
         }//if-total
+
+
 
 
 
