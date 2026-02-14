@@ -27,9 +27,13 @@ public class ClienteValidator {
             throw new ClienteException("Error interno: No se pudo recuperar la informacion del cliente");
         }
 
-        //Si recibe true significa que va a regstrar por lo que hace verificaciones del vehiculo
+        //Si recibe true significa que va a registrar por lo que hace verificaciones del vehiculo y el rfc
 
         if (registrar){
+
+            if (existeRFC(cliente.getRfc())) {
+                throw new ClienteException("RFC duplicado: Ya existe un cliente registrado con este RFC.");
+            }
 
             if (existeVehiculoPorPlacas(cliente.getVehiculos())){
                 throw new ClienteException("Vehiculo duplicado: Ya existe un vehiculo registrado con las mismas placas. " );
@@ -71,9 +75,6 @@ public class ClienteValidator {
             throw new ClienteException(excedio + " 'RFC' ");
         }
 
-        if (existeRFC(cliente.getRfc())) {
-            throw new ClienteException("RFC duplicado: Ya existe un cliente registrado con este RFC.");
-        }
 
         if (cliente.getNumTelefono().length() > 13) {
             throw new ClienteException(excedio + " 'Numero de telefono' ");

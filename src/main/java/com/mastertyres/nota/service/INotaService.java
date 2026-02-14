@@ -6,7 +6,6 @@ import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
 import com.mastertyres.notaDetalle.model.NotaDetalle;
 import org.springframework.data.domain.Page;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -72,13 +71,14 @@ public interface INotaService {
 
     Page<NotaDTO> buscarPorRfc(String filtro, String active, int pagina, int tamanoPagina);
 
-    Page<NotaDTO> buscarPorAdeudo(BigDecimal filtro, String active, int pagina, int tamanoPagina);
+    Page<NotaDTO> buscarPorAdeudo(String active, int pagina, int tamanoPagina);
 
-    Page<NotaDTO> buscarPorTotal(Double filtro, String active, int pagina, int tamanoPagina);
+    Page<NotaDTO> buscarPorTotal(Double total1, Double total2, String active, int pagina, int tamanoPagina);
 
-    Page<NotaDTO> buscarPorSaldoFavor(Double filtro, String active, int pagina, int tamanoPagina);
+    Page<NotaDTO> buscarPorSaldoFavor(String active, int pagina, int tamanoPagina);
 
     Page<NotaDTO> BucarPorNumNota(String filtro, String active, int pagina, int tamanoPagina);
+
 
 
 

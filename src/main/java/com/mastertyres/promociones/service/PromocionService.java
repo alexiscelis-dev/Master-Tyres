@@ -1,8 +1,5 @@
 package com.mastertyres.promociones.service;
 
-import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.domain.PromocionValidator;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.repository.PromocionesRepository;
@@ -46,6 +43,7 @@ public class PromocionService implements IPromocionService {
       }
     }
 
+/*
     @Transactional(readOnly = true)
     @Override
     public List<Marca> listarMarcas() {
@@ -58,12 +56,16 @@ public class PromocionService implements IPromocionService {
         return promocionRepository.listarModelos();
     }
 
+
+
     @Transactional(readOnly = true)
     @Override
     public List<Categoria> listarCategorias() {
         return promocionRepository.listarCategorias();
     }
 
+
+ */
 
     @Transactional
     @Override

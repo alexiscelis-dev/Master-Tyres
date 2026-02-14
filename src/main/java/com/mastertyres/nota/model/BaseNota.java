@@ -665,10 +665,10 @@ public abstract class BaseNota {
         }
 
 
-        if (status.equals(StatatusSiNo.SI.toString())) {
+        if (status.equals(StatusSiNo.SI.toString())) {
             checkBoxSi.setSelected(true);
             return checkBoxSi;
-        } else if (status.equals(StatatusSiNo.NO.toString())) {
+        } else if (status.equals(StatusSiNo.NO.toString())) {
             checkBoxNo.setSelected(true);
             return checkBoxNo;
         } else {
@@ -684,69 +684,69 @@ public abstract class BaseNota {
 
         //rayones
         if (cbRayonesSi.isSelected() && !cbRayonesNo.isSelected())
-            setRayones(StatatusSiNo.SI.toString());
+            setRayones(StatusSiNo.SI.toString());
         else if (!cbRayonesSi.isSelected() && !cbRayonesNo.isSelected())
-            setRayones(StatatusSiNo.DESELECCIONADO.toString());
+            setRayones(StatusSiNo.DESELECCIONADO.toString());
         else
-            setRayones(StatatusSiNo.NO.toString());
+            setRayones(StatusSiNo.NO.toString());
 
         //golpes
         if (cbGolpesSi.isSelected() && !cbGolpesNo.isSelected())
-            setGolpes(StatatusSiNo.SI.toString());
+            setGolpes(StatusSiNo.SI.toString());
         else if (!cbGolpesSi.isSelected() && !cbGolpesNo.isSelected())
-            setGolpes(StatatusSiNo.DESELECCIONADO.toString());
+            setGolpes(StatusSiNo.DESELECCIONADO.toString());
         else
-            setGolpes(StatatusSiNo.NO.toString());
+            setGolpes(StatusSiNo.NO.toString());
 
         //tapones
         if (cbTaponesSi.isSelected() && !cbTaponesNo.isSelected())
-            setTapones(StatatusSiNo.SI.toString());
+            setTapones(StatusSiNo.SI.toString());
         else if (!cbTaponesSi.isSelected() && !cbTaponesNo.isSelected())
-            setTapones(StatatusSiNo.DESELECCIONADO.toString());
+            setTapones(StatusSiNo.DESELECCIONADO.toString());
         else
-            setTapones(StatatusSiNo.NO.toString());
+            setTapones(StatusSiNo.NO.toString());
 
 
         //tapetes
         if (cbTapetesSi.isSelected() && !cbTapetesNo.isSelected())
-            setTapetes(StatatusSiNo.SI.toString());
+            setTapetes(StatusSiNo.SI.toString());
         else if (!cbTapetesSi.isSelected() && !cbTapetesNo.isSelected())
-            setTapetes(StatatusSiNo.DESELECCIONADO.toString());
+            setTapetes(StatusSiNo.DESELECCIONADO.toString());
         else
-            setTapetes(StatatusSiNo.NO.toString());
+            setTapetes(StatusSiNo.NO.toString());
 
         //radio
         if (cbRadioSi.isSelected() && !cbRadioNo.isSelected())
-            setRadio(StatatusSiNo.SI.toString());
+            setRadio(StatusSiNo.SI.toString());
         else if (!cbRadioSi.isSelected() && !cbRadioNo.isSelected())
-            setRadio(StatatusSiNo.DESELECCIONADO.toString());
+            setRadio(StatusSiNo.DESELECCIONADO.toString());
         else
-            setRadio(StatatusSiNo.NO.toString());
+            setRadio(StatusSiNo.NO.toString());
 
 
         //gato
         if (cbGatoSi.isSelected() && !cbGatoNo.isSelected())
-            setGato(StatatusSiNo.SI.toString());
+            setGato(StatusSiNo.SI.toString());
         else if (!cbGatoSi.isSelected() && !cbGatoNo.isSelected())
-            setGato(StatatusSiNo.DESELECCIONADO.toString());
+            setGato(StatusSiNo.DESELECCIONADO.toString());
         else
-            setGato(StatatusSiNo.NO.toString());
+            setGato(StatusSiNo.NO.toString());
 
         //llave
         if (cbLlaveSi.isSelected() && !cbLlaveNo.isSelected())
-            setLlave(StatatusSiNo.SI.toString());
+            setLlave(StatusSiNo.SI.toString());
         else if (!cbLlaveSi.isSelected() && !cbLlaveNo.isSelected())
-            setLlave(StatatusSiNo.DESELECCIONADO.toString());
+            setLlave(StatusSiNo.DESELECCIONADO.toString());
         else
-            setLlave(StatatusSiNo.NO.toString());
+            setLlave(StatusSiNo.NO.toString());
 
         //llanta
         if (cbLlantaSi.isSelected() && !cbLlantaNo.isSelected())
-            setLlanta(StatatusSiNo.SI.toString());
+            setLlanta(StatusSiNo.SI.toString());
         else if (!cbLlantaSi.isSelected() && !cbLlantaNo.isSelected())
-            setLlanta(StatatusSiNo.DESELECCIONADO.toString());
+            setLlanta(StatusSiNo.DESELECCIONADO.toString());
         else
-            setLlanta(StatatusSiNo.NO.toString());
+            setLlanta(StatusSiNo.NO.toString());
 
 
     }//checkCheckBoxes

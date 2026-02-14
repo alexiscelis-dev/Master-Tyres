@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class ClientePromocionService {
+public class ClientePromocionService implements IClientePromocionService {
 
     @Autowired
     private ClientePromocionRepository clientePromocionRepository;
@@ -24,6 +24,7 @@ public class ClientePromocionService {
      * Guarda múltiples clientes asociados a una promoción
      */
     @Transactional
+    @Override
     public void guardarClientesPromocion(Integer promocionId, List<Integer> clientesIds) {
 
         Promocion promocion = Promocion.builder()
@@ -49,26 +50,43 @@ public class ClientePromocionService {
     /**
      * Elimina todos los clientes asociados a una promoción
      */
+
+    @Transactional
+    @Override
     public void eliminarClientesPorPromocion(Integer promocionId) {
         clientePromocionRepository.deleteByPromocionId(promocionId);
     }
 
+
     /**
      * Lista los nombres de los clientes relacionados a una promoción
      */
+    @Transactional(readOnly = true)
+    @Override
     public List<ClientesPromocion> listarClientesPorPromocion(Integer promocionId) {
         return clientePromocionRepository.findByPromocionIdConCliente(promocionId);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<String> buscarImgPromocion(Integer clienteId, Integer promocionId) {
+        return clientePromocionRepository.buscarImgPromocion(clienteId, promocionId);
+    }
 
+    @Transactional
+    @Override
     public void eliminarPorPromocionId(Integer promocionId) {
         clientePromocionRepository.deleteByPromocionPromocionId(promocionId);
     }
 
+    @Transactional
+    @Override
     public void guardar(ClientesPromocion clientePromocion) {
         clientePromocionRepository.save(clientePromocion);
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public List<Cliente> obtenerClientesAplicables(Integer promocionId) {
         List<ClientesPromocion> relaciones = clientePromocionRepository.findByPromocionIdConCliente(promocionId);
 
@@ -79,4 +97,4 @@ public class ClientePromocionService {
                 .toList();
     }
 
-}
+}//class
