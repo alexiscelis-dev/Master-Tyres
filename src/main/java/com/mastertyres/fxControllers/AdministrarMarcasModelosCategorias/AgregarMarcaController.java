@@ -6,7 +6,7 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.MarcaException;
 import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
@@ -44,7 +44,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class AgregarMarcaController implements IVentanaPrincipal, IFxController, ILoading {
+public class AgregarMarcaController implements IVentanaPrincipal, IFxController, ILoader {
 
 
     @Autowired

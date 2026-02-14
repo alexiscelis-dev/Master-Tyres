@@ -1,12 +1,14 @@
 package com.mastertyres.promociones.repository;
 
 import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.model.StatusPromocion;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -52,5 +54,18 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
             @Param("texto") String texto);
 
 
+    @Modifying
+    @Transactional
+    @Query("""
+    UPDATE Promocion p
+    SET p.active = :estadoDelete
+    WHERE p.fechaFin < :fechaActual
+    AND p.active = :estadoActive
+""")
+    int marcarPromocionesVencidas(
+            @Param("fechaActual") String fechaActual,
+            @Param("estadoDelete") String estadoDelete,
+            @Param("estadoActive") String estadoActive
+    );
 
 }//interface

@@ -8,7 +8,7 @@ import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -24,6 +24,7 @@ import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -49,7 +50,7 @@ import java.util.*;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoading {
+public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoader {
 
     @Autowired
     private MarcaService marcaService;
@@ -191,7 +192,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     @Override
     public void configuraciones() {
 
-
         MenuContextSetting.disableMenu(ventanaAgregarCliente);
 
         //Deshabilitar los menus de los demas campos mendiante el nodo interno que es un texfield
@@ -280,11 +280,17 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
      tablaVehiculos.getItems().clear();
  });
 
-      pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+      //pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
 
         configurarValidaciones();
 
-//eliminar contenido de DatePickerUltimoServicio
+        pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
+        txtNombreEmpresa.disableProperty().bind(
+                choiceTipoCliente.valueProperty().isNotEqualTo(TipoCliente.EMPRESA.toString())
+        );
+
+        //eliminar contenido de DatePickerUltimoServicio
         pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case BACK_SPACE, DELETE -> {
@@ -327,7 +333,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         }
 
     }//listeners
-
 
     @Override
     public void setInitializeLoading(LoadingComponentController loading) {
@@ -445,7 +450,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
             }
         });
 
-
         // correo: opcional, acepta minúsculas
         txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
             String texto = newText.toLowerCase(); // convertir a minusculas para la validación
@@ -477,7 +481,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                 txtPlacas.setStyle("");
             }
         });
-
 
 // Número de serie (VIN)
         txtSerie.textProperty().addListener((obs, oldText, newText) -> {
@@ -534,6 +537,35 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
         choiceCategoria.disableProperty().bind(choiceModelo.valueProperty().isNull());
 
+        BooleanBinding nombreEmpresaValido = Bindings.createBooleanBinding(
+                () -> {
+                    String tipo = choiceTipoCliente.getValue();
+
+                    if (tipo == null) return false;
+
+                    // Si NO es empresa → es válido automáticamente
+                    if (!tipo.equalsIgnoreCase(TipoCliente.EMPRESA.toString())) {
+                        txtNombreEmpresa.setText("");
+                        return true;
+                    }
+
+                    // Si es empresa → no puede estar vacío
+                    return !txtNombreEmpresa.getText().isBlank();
+                },
+                choiceTipoCliente.valueProperty(),
+                txtNombreEmpresa.textProperty()
+        );
+
+        txtNombreEmpresa.styleProperty().bind(
+                Bindings.when(nombreEmpresaValido.not()
+                                .and(choiceTipoCliente.valueProperty()
+                                        .isEqualTo(TipoCliente.EMPRESA.toString())))
+                        .then("-fx-border-color: red;")
+                        .otherwise("")
+        );
+
+
+
         // Deshabilitar botón "Agregar Vehículo" hasta que se llenen los campos requeridos
         btnAgregarVehiculo.disableProperty().bind(
                 choiceMarca.valueProperty().isNull()
@@ -552,11 +584,15 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                         .or(txtApellido.textProperty().isEmpty())
                         .or(txtTelefono.textProperty().isEmpty())
                         .or(choiceTipoCliente.valueProperty().isNull())
+                        .or(choiceGenero.valueProperty().isNull())
                         .or(rfcValido.not())
                         .or(telefonoValido.not())
                         .or(CorreoValido.not())
+                        .or(nombreEmpresaValido.not())
 
         );
+
+
 
     }
 
@@ -818,7 +854,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         txtNombre.setStyle(STILE);
         txtApellido.setStyle(STILE);
         txtSegundoApellido.setStyle(STILE);
-        txtNombreEmpresa.setStyle(STILE);
+        //txtNombreEmpresa.setStyle(STILE);
         txtDomicilio.setStyle(STILE);
         txtEstado.setStyle(STILE);
         txtCiudad.setStyle(STILE);
@@ -867,7 +903,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
         // Crear Cliente
         Cliente cliente = new Cliente();
-        cliente.setUpdated_at(LocalDate.now().toString());  // <<< AGREGADO
+        cliente.setUpdated_at(LocalDate.now().toString());
         cliente.setNombre(txtNombre.getText());
         cliente.setApellido(txtApellido.getText());
         cliente.setNombreEmpresa(txtNombreEmpresa.getText());

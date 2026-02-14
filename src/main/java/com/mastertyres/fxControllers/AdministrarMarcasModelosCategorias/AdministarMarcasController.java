@@ -4,7 +4,7 @@ import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.MarcaException;
 import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
@@ -44,7 +44,7 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class AdministarMarcasController implements IFxController, ILoading {
+public class AdministarMarcasController implements IFxController, ILoader {
 
     @FXML
     private Label lblNombre;

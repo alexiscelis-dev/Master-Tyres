@@ -157,7 +157,7 @@
                                 <Insets bottom="-10.0" top="-50.0"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="340.0" styleClass="menu-item">
+                        <HBox fx:id="HBoxConfiguracion" prefHeight="100.0" prefWidth="340.0" styleClass="menu-item">
                             <children>
                                 <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true"
                                            styleClass="icono-menu">

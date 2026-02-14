@@ -5,7 +5,7 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoading;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -34,7 +34,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class EditarInventarioController implements IFxController, ILoading {
+public class EditarInventarioController implements IFxController, ILoader {
     @FXML
     private AnchorPane rootPane;
     @FXML
