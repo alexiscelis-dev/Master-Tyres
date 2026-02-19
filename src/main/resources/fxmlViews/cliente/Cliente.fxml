@@ -12,7 +12,7 @@
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
             style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.cliente.ClienteController">
+            fx:controller="com.mastertyres.controllers.fxControllers.cliente.ClienteController">
 
     <children>
 
@@ -40,7 +40,7 @@
                                     promptText="Fecha fin" visible="false" managed="false" />
 
 
-                        <Button mnemonicParsing="false" onAction="#accionBuscarCliente" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
+                        <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#accionBuscarCliente" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
                             <graphic>
                                 <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
                                     <image>
@@ -75,7 +75,7 @@
 
                     <Pane nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS">
                         <children>
-                            <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizarTabla" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
+                            <Button fx:id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#refrescar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
                                 <graphic>
                                     <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                         <image>

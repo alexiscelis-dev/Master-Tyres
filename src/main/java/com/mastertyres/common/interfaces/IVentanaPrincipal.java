@@ -1,6 +1,6 @@
 package com.mastertyres.common.interfaces;
 
-import com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 
 public interface IVentanaPrincipal {
 

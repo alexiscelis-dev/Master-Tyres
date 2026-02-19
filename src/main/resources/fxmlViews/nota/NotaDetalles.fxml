@@ -7,7 +7,7 @@
 
 <AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
             stylesheets="/styles_css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nota.NotaDetallesController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.nota.NotaDetallesController">
 
     <children>
         <VBox alignment="CENTER" prefHeight="600.0" prefWidth="600" spacing="10" styleClass="secciones">

@@ -12,7 +12,7 @@
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
             style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.Configuracion.ConfiguracionController">
+            fx:controller="com.mastertyres.controllers.fxControllers.Configuracion.ConfiguracionController">
 
     <children>
 
@@ -184,22 +184,6 @@
 
                             <!-- Crear Respaldo -->
                             <VBox fx:id="panelCrearRespaldo" styleClass="detail-panel" visible="false" spacing="20">
-                                <Label text="Crear Respaldo Local" styleClass="panel-title"/>
-                                <Separator/>
-                                <VBox spacing="12" maxWidth="440">
-                                    <Label text="Genera una copia de seguridad de todos tus datos en un directorio local."
-                                           styleClass="hint-label" wrapText="true"/>
-                                    <HBox spacing="10" alignment="CENTER_LEFT">
-                                        <Label text="Carpeta de destino:" styleClass="field-label"/>
-                                        <TextField fx:id="tfRutaRespaldo" promptText="/ruta/de/respaldo"
-                                                   styleClass="buscador-img" HBox.hgrow="ALWAYS" editable="false" />
-                                        <Button text="📂" styleClass="boton-img" onAction="#onElegirRutaRespaldo"/>
-                                    </HBox>
-
-                                    <Button fx:id="btnCrearRespaldo" text="Crear respaldo local ahora"
-                                            styleClass="boton-accion"
-                                            onAction="#onCrearRespaldoLocal"/>
-                                </VBox>
 
                                 <Label text="Crear Respaldo en la Nube" styleClass="panel-title"/>
                                 <Separator/>
@@ -207,37 +191,15 @@
                                     <Label text="Genera una copia de seguridad de todos tus datos en la Nube."
                                            styleClass="hint-label" wrapText="true"/>
 
-                                    <Button fx:id="btnRespaldo" styleClass="boton-accion" text="Hacer Respaldo"/>
+                                    <Button fx:id="btnRespaldo" onAction="#crearRespaldo" styleClass="boton-accion" text="Hacer Respaldo"/>
 
-                                    <CheckBox fx:id="chkRespaldoAutomatico" text="Activar respaldo automático"
-                                              styleClass="field-label"/>
                                     <ProgressBar fx:id="respaldoProgress" progress="0" maxWidth="Infinity"
                                                  visible="false" styleClass="strength-bar"/>
                                     <Label fx:id="lblRespaldoEstado" text="" styleClass="hint-label"/>
                                 </VBox>
                             </VBox>
 
-                            <!-- Cargar Respaldo -->
-                            <VBox fx:id="panelCargarRespaldo" styleClass="detail-panel" visible="false" spacing="20">
-                                <Label text="Cargar Respaldo" styleClass="panel-title"/>
-                                <Separator/>
-                                <VBox spacing="12" maxWidth="440">
-                                    <Label text="Restaura tus datos desde una copia de seguridad existente."
-                                           styleClass="hint-label" wrapText="true"/>
-                                    <HBox spacing="10" alignment="CENTER_LEFT">
-                                        <Label text="Archivo de respaldo:" styleClass="field-label"/>
-                                        <TextField fx:id="tfArchivoRespaldo" promptText="Selecciona un archivo .bak"
-                                                   styleClass="buscador-img" editable="false" HBox.hgrow="ALWAYS"/>
-                                        <Button text="📂" styleClass="boton-img" onAction="#onElegirArchivoRespaldo"/>
-                                    </HBox>
-                                    <Label text="⚠ Esta acción sobreescribirá los datos actuales."
-                                           styleClass="warning-label" wrapText="true"/>
-                                    <Button fx:id="btnCargarRespaldo" text="Restaurar respaldo"
-                                            styleClass="boton-accion"
-                                            onAction="#onCargarRespaldo"/>
-                                </VBox>
-                            </VBox>
-
+                            
                             <!-- Fecha Último Respaldo -->
                             <VBox fx:id="panelFechaRespaldo" styleClass="detail-panel" visible="false" spacing="20">
                                 <Label text="Fecha de Último Respaldo" styleClass="panel-title"/>
@@ -251,19 +213,13 @@
                                         </VBox>
                                     </HBox>
                                     <HBox spacing="20" alignment="CENTER_LEFT" styleClass="info-card">
-                                        <Label text="📦" styleClass="info-card-icon"/>
+                                        <Label text="💿" styleClass="info-card-icon"/>
                                         <VBox spacing="4">
                                             <Label text="Tamaño del último respaldo:" styleClass="field-label"/>
                                             <Label fx:id="lblTamanoRespaldo" text="—" styleClass="info-value"/>
                                         </VBox>
                                     </HBox>
-                                    <HBox spacing="20" alignment="CENTER_LEFT" styleClass="info-card">
-                                        <Label text="📁" styleClass="info-card-icon"/>
-                                        <VBox spacing="4">
-                                            <Label text="Ubicación:" styleClass="field-label"/>
-                                            <Label fx:id="lblUbicacionRespaldo" text="—" styleClass="info-value"/>
-                                        </VBox>
-                                    </HBox>
+
                                 </VBox>
                             </VBox>
 
