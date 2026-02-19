@@ -99,6 +99,10 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
         choiceLimite.setValue("Sin Filtro");
         ivZoom.setVisible(false);
 
+        notaUtils.descripcionComponent(btnBuscar,"Buscar");
+        notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
+
+
     }//configuraciones
 
     @Override
