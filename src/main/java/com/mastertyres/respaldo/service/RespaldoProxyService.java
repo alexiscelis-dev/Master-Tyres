@@ -39,4 +39,9 @@ public class RespaldoProxyService implements IRespaldoService {
         respaldoRepository.actualizarEstado(id,estado);
     }
 
+    @Override
+    public Respaldo ObtenerUltimoRespaldo() {
+        return null;
+    }
+
 }//class

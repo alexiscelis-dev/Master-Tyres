@@ -22,8 +22,16 @@
                     AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0"
                     xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
+            <HBox>
+                <Button fx:id="btnRespaldo" styleClass="boton-action" text="Hacer Respaldo"/>
 
-            <Button fx:id="btnRespaldo" styleClass="boton-action" text="Hacer Respaldo"/>
+                <Label text="Ultimo respaldo: ">
+
+
+                </Label>
+
+            </HBox>
+
 
 
         </AnchorPane>

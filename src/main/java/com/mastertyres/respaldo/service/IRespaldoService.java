@@ -10,6 +10,8 @@ public interface IRespaldoService {
 
     void actualizarEstado(Integer id, String estado);
 
+    Respaldo ObtenerUltimoRespaldo();
+
 
 
 }//interface

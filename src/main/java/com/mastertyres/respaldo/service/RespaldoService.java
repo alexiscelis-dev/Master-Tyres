@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -168,12 +169,17 @@ public class RespaldoService implements IRespaldoService {
 
     @Override
     public void guardarRespaldo(Respaldo archivoRespaldo) {
-
     }
 
     @Override
     public void actualizarEstado(Integer id, String estado) {
 
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Respaldo ObtenerUltimoRespaldo() {
+        return respaldoRepository.obtenerUltimoRespaldo();
     }
 
 

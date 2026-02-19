@@ -129,6 +129,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
     @Autowired
     private TaskService taskService;
 
+
     private String filtroActual = "sin filtro";
     private String textoBusquedaActual = "";
     private String textoBusquedaActual2 = "";
@@ -176,6 +177,10 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
         atributoBusquedaNota.setValue("Sin Filtro");
 
+        notaUtils.descripcionComponent(btnBuscar,"Buscar");
+        notaUtils.descripcionComponent(atributoBusquedaNota,"Filtrar busqueda");
+        notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
+
     }//configuraciones
 
     @Override
@@ -190,8 +195,12 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
             switch (newValue.toString()) {
 
-                case "Adeudo" -> filtroActual = "Adeudo";
-                case "Saldo a favor" -> filtroActual = "Saldo a favor";
+                case "Adeudo" ->
+                    filtroActual = "Adeudo";
+
+                case "Saldo a favor" ->
+                    filtroActual = "Saldo a favor";
+
 
             }//switch
 
@@ -824,6 +833,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
                 try {
 
+
                     String valor1 = arrayTotal[0].trim();
                     String valor2 = (arrayTotal.length == 2)
                             ? arrayTotal[1].trim()
@@ -890,5 +900,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
         ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
 
     }//accionBuscar
+
 
 }//class

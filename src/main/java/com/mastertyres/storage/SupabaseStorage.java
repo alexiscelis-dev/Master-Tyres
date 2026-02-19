@@ -44,7 +44,7 @@ public class SupabaseStorage {
                     .build();
 
             HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-            
+
 
             if (httpResponse.statusCode() < 200 || httpResponse.statusCode() >= 300) {
                 respaldoProxyService.actualizarEstado(archivoDatos.getRespaldoId(), StatusRespaldo.FALLIDO.toString());
