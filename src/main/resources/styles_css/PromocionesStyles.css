@@ -1,3 +1,13 @@
+.label, .button, .choice-box, .text-field {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.label {
+    -fx-text-fill: #BBBBBB;
+    -fx-font-weight: bold;
+}
+
 /* Scroll */
 .scroll-pane {
     -fx-background-color: #080808;
@@ -10,7 +20,7 @@
 /* Buscador */
 .buscador {
     -fx-background-color: #1A1A1A;
-    -fx-text-fill: #F2F2F2;
+    -fx-text-fill: white;
     -fx-prompt-text-fill: #BBBBBB;
     -fx-border-color: transparent;
     -fx-padding: 8px;
@@ -19,7 +29,7 @@
 
 .buscador {
     -fx-background-color: #2A2A2A;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-prompt-text-fill: #BBBBBB;
     -fx-border-color: #444;
     -fx-border-radius: 5;
@@ -144,7 +154,7 @@
 .choicebox-mini3 {
     -fx-background-color: #080808;
     -fx-mark-color: #F2F2F2;
-    -fx-text-fill: #F2F2F2;
+    -fx-text-fill: white;
     -fx-background-radius: 5px;
     -fx-padding: 2px;
     -fx-pref-height: 36px;
@@ -173,7 +183,7 @@
 .choicebox-mini3 .menu-item > .label {
     -fx-font-size: 12px;
     -fx-padding: 2 8 2 8;
-    -fx-text-fill: #F2F2F2;
+    -fx-text-fill: white;
 }
 
 .choicebox-mini .menu-item:focused,

@@ -132,9 +132,9 @@
                     </rowConstraints>
                 </GridPane>
 
-                <ImageView fx:id="imgInventario" fitHeight="300" fitWidth="300" smooth="true" styleClass="detalle-img">
-
-                </ImageView>
+                <StackPane alignment="CENTER" prefHeight="300.0" prefWidth="300.0" styleClass="detalle-img-frame">
+                    <ImageView fx:id="imgInventario" fitHeight="300" fitWidth="300" pickOnBounds="true" preserveRatio="true" smooth="true" styleClass="detalle-img" />
+                </StackPane>
 
                 <!-- Botones -->
                 <HBox alignment="CENTER" spacing="20">

@@ -86,7 +86,8 @@ public class MasterTyresApplication extends Application {
 	@Override
 	public void stop() throws Exception {
 		if (context != null){
-			context.stop(); // CIERRA HIKARI para cerrar conexiones en BD
+			//context.stop(); // CIERRA HIKARI para cerrar conexiones en BD
+			context.close(); // CIERRA HIKARI para cerrar conexiones en BD
 		}
 
 		Platform.exit();

@@ -16,6 +16,17 @@
                     <HBox alignment="CENTER_LEFT" spacing="10">
 
                         <TextField fx:id="txtBuscar" promptText="Buscar servicio..." styleClass="buscador" HBox.hgrow="ALWAYS" />
+
+                        <Button mnemonicParsing="false" onAction="#accionBuscarCliente" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
+                            <graphic>
+                                <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
+                                    <image>
+                                        <Image url="@/icons/lupa.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+
                         <Button mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion" text="">
                             <graphic>
                                 <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">

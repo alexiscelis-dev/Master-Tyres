@@ -2,12 +2,14 @@ package com.mastertyres.fxControllers.ProximosServicios;
 
 
 import com.mastertyres.common.exeptions.VehiculoException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.application.HostServices;
@@ -35,14 +37,35 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class ProximosServiciosController implements IFxController, ILoader {
+public class ProximosServiciosController implements IFxController, ILoader, ICleanable {
+
+    @Override
+    public void cleanup() {
+        // Limpiar contenedor de cards
+        if (contenedorServicios != null) {
+            contenedorServicios.getChildren().clear();
+        }
+
+        // Limpiar referencias
+        vehiculoSeleccion = null;
+        filtroActual = null;
+
+        // Limpiar campos de texto
+        if (txtBuscar != null) {
+            txtBuscar.clear();
+        }
+
+        // Anular HostServices
+        hostServices = null;
+
+        // Anular referencias
+        contenedorServicios = null;
+    }
 
     @FXML
     private AnchorPane ventanaProximosServicios;
-
     @FXML
     private TilePane contenedorServicios;
-
     @FXML
     private Label lblNombre;
     @FXML
@@ -364,4 +387,19 @@ public class ProximosServiciosController implements IFxController, ILoader {
     }
 
 
+    public void accionBuscarCliente(ActionEvent actionEvent) {
+
+        String filtro = txtBuscar.getText();
+
+
+        Page<VehiculoDTO> paginaFiltrada = vehiculoService.BuscarVehiculosConServicioVencidoPaginado(filtro, PageRequest.of(0, tamañoPagina));
+        mostrarServicios(paginaFiltrada.getContent());
+        PaginadorServicios.setPageCount(paginaFiltrada.getTotalPages());
+        PaginadorServicios.setCurrentPageIndex(0);
+        PaginadorServicios.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+            Page<VehiculoDTO> nuevaPagina = vehiculoService.BuscarVehiculosConServicioVencidoPaginado(filtro, PageRequest.of(newIndex.intValue(), tamañoPagina));
+            mostrarServicios(nuevaPagina.getContent());
+        });
+
+    }
 }//class
