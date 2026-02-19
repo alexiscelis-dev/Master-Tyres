@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.vehiculo;
 
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.exeptions.VehiculoException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
@@ -54,7 +55,39 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class VehiculoController implements IVentanaPrincipal, IFxController, ILoader {
+public class VehiculoController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
+
+    @Override
+    public void cleanup() {
+        // Limpiar transiciones
+        if (delayQuery != null) {
+            delayQuery.stop();
+        }
+        if (pauseTransition != null) {
+            pauseTransition.stop();
+        }
+
+        // Limpiar tabla
+        if (tablaVehiculos != null) {
+            tablaVehiculos.getItems().clear();
+            tablaVehiculos.setItems(null);
+        }
+
+        // Limpiar referencias
+        todosLosVehiculos = null;
+        terminoBusquedaActual = null;
+
+        // Limpiar campos de texto
+        if (buscarVehiculoBuscador != null) {
+            buscarVehiculoBuscador.clear();
+        }
+
+        // Anular referencias
+        tablaVehiculos = null;
+        atributoBusquedaVehiculos = null;
+        dpVehiculoInicio = null;
+        dpVehiculoFin = null;
+    }
 
     @FXML
     private AnchorPane rootPane;

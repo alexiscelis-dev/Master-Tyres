@@ -159,7 +159,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
     private int tamañoPagina = 20;
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300));
 
-
     @FXML
     private void initialize() {
 
@@ -180,7 +179,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
     @Override
     public void listeners() {
-
 
         atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -369,7 +367,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
     private VBox crearCardNota(NotaDTO nota) {
 
-
         VBox card = new VBox();
         String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
         String estiloAzul = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #87CEEB; -fx-border-radius: 10; -fx-background-radius: 10;";
@@ -483,8 +480,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
     }//crearCardNota
 
     private void mostrarDetalleNota(NotaDTO nota) {
-        notaSeleccionada = nota;
 
+        notaSeleccionada = nota;
         btnEditar.setDisable(false);
         btnImprimir.setDisable(false);
         btnEliminar.setDisable(false);
@@ -572,7 +569,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
 
     }//mostrarDetalleNota
-
 
     @FXML
     private void agregarNotas(ActionEvent actionEvent) {

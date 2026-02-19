@@ -3,6 +3,7 @@ package com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.MarcaException;
 import com.mastertyres.common.exeptions.ModeloException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
@@ -44,7 +45,34 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class AdministarMarcasController implements IFxController, ILoader {
+public class AdministarMarcasController implements IFxController, ILoader, ICleanable {
+
+    @Override
+    public void cleanup() {
+        // Limpiar tabla
+        if (TablaVehiculoMarca != null) {
+            TablaVehiculoMarca.getItems().clear();
+            TablaVehiculoMarca.setItems(null);
+        }
+
+        // Limpiar TilePane
+//        if (contenedorMarcas != null) {
+//            contenedorMarcas.getChildren().clear();
+//        }
+
+        // Limpiar referencias
+        marcaSeleccionada = null;
+        filtroActual = null;
+
+        // Limpiar campos de texto
+        if (txtBuscar != null) {
+            txtBuscar.clear();
+        }
+
+        // Anular referencias
+        //contenedorMarcas = null;
+        TablaVehiculoMarca = null;
+    }
 
     @FXML
     private Label lblNombre;

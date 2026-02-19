@@ -223,27 +223,40 @@ public class EditarInventarioController implements IFxController, ILoader {
         choicePerfil.setValue(perfil);
         choiceRin.setValue(rin);
         vBoxImg.setVisible(true);
-        txtImg.setText(inventario.getImagen());
+        //txtImg.setText(inventario.getImagen());
+        String imagenPath = inventario.getImagen() != null ? inventario.getImagen() : "";
+        txtImg.setText(imagenPath);
 
         File file = new File(txtImg.getText());
 
-        if (file.exists()) {
-            Image image = new Image(file.toURI().toString());
-            ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(200);
-            imageView.setFitWidth(200);
-            imageView.setPreserveRatio(true);
-            vBoxImg.getChildren().clear();
-            vBoxImg.getChildren().add(imageView);
+//        if (file.exists()) {
+//            Image image = new Image(file.toURI().toString());
+//            ImageView imageView = new ImageView(image);
+//            imageView.setFitHeight(200);
+//            imageView.setFitWidth(200);
+//            imageView.setPreserveRatio(true);
+//            vBoxImg.getChildren().clear();
+//            vBoxImg.getChildren().add(imageView);
+        Image image;
+        if (!imagenPath.isBlank() && new File(imagenPath).exists()) {
+            image = new Image(new File(imagenPath).toURI().toString());
         } else {
-            Image image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
-            ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(200);
-            imageView.setFitWidth(200);
-            imageView.setPreserveRatio(true);
-            vBoxImg.getChildren().clear();
-            vBoxImg.getChildren().add(imageView);
+            image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
+//            Image image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
+//            ImageView imageView = new ImageView(image);
+//            imageView.setFitHeight(200);
+//            imageView.setFitWidth(200);
+//            imageView.setPreserveRatio(true);
+//            vBoxImg.getChildren().clear();
+//            vBoxImg.getChildren().add(imageView);
         }
+
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(200);
+        imageView.setFitWidth(200);
+        imageView.setPreserveRatio(true);
+        vBoxImg.getChildren().clear();
+        vBoxImg.getChildren().add(imageView);
 
     }//editarInventario
 

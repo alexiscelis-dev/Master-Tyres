@@ -4,6 +4,7 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
@@ -49,8 +50,35 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class ClienteController implements IVentanaPrincipal, IFxController, ILoader {
+public class ClienteController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
 
+    @Override
+    public void cleanup() {
+        // Limpiar listeners
+        if (delayQuery != null) {
+            delayQuery.stop();
+        }
+        if (pauseTransition != null) {
+            pauseTransition.stop();
+        }
+
+        // Limpiar tabla
+//        if (tablaClientes != null) {
+//            tablaClientes.getItems().clear();
+//            tablaClientes.setItems(null);
+//        }
+
+        // Limpiar referencias
+        todosLosClientes = null;
+        //terminoBusquedaActual = null;
+        //terminoBusquedaFechaActual = null;
+
+        // Anular referencias a campos FXML
+        //buscarClienteBuscador = null;
+        //atributoBusquedaClientes = null;
+        dpBuscarCliente = null;
+        dpClienteFin = null;
+    }
 
     private VentanaPrincipalController ventanaPrincipalController;
 

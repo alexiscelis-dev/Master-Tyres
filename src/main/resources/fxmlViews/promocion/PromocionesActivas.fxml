@@ -14,7 +14,21 @@
             <top>
                 <HBox alignment="CENTER_LEFT" spacing="10">
 
-                    <TextField fx:id="txtBuscar" promptText="Buscar promoción..." styleClass="buscador" HBox.hgrow="ALWAYS" />
+                    <TextField fx:id="txtBuscar" promptText="Buscar promoción..." styleClass="buscador" HBox.hgrow="ALWAYS">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font></TextField>
+
+                    <Button mnemonicParsing="false" onAction="#accionBuscarCliente" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
+                        <graphic>
+                            <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/lupa.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+
                <Button mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion" text="">
                    <graphic>
                        <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
@@ -94,7 +108,7 @@
                             <Label fx:id="lblTituloVehiculos" styleClass="titulo" text="Vehiculos Aplicables:" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                                 <font><Font name="System Bold" size="14.0" /></font>
                             </Label>
-                            <Label fx:id="lblTituloClientes" styleClass="titulo" text="Clientes Aplicables:" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" visible="false" managed="false">
+                            <Label fx:id="lblTituloClientes" managed="false" styleClass="titulo" text="Clientes Aplicables:" textAlignment="CENTER" textFill="WHITE" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                                 <font><Font name="System Bold" size="14.0" /></font>
                             </Label>
                             <ListView fx:id="ListaVehiculosPromocion" styleClass="ListaVehiculos" GridPane.columnSpan="2" GridPane.rowIndex="8" />
