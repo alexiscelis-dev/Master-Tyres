@@ -207,7 +207,7 @@
                                     <Label text="Genera una copia de seguridad de todos tus datos en la Nube."
                                            styleClass="hint-label" wrapText="true"/>
 
-                                    <Button fx:id="Respaldo" styleClass="boton-accion" text="Hacer Respaldo"/>
+                                    <Button fx:id="btnRespaldo" styleClass="boton-accion" text="Hacer Respaldo"/>
 
                                     <CheckBox fx:id="chkRespaldoAutomatico" text="Activar respaldo automático"
                                               styleClass="field-label"/>

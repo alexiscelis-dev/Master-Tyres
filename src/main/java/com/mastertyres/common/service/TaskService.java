@@ -55,25 +55,6 @@ public class TaskService {
                 mostrarError("Error interno", "","Ocurrió un problema inesperado. Vuelva a intentarlo mas tarde.");
 
             }
-
-
-            /*
-            if (loadingController != null) {
-
-                loadingController.hide();
-                Throwable error = task.getException();
-                error.printStackTrace();
-
-                if (onFailed != null) {
-                    onFailed.accept(error);
-                }else {
-                    mostrarError("Error interno", "","Ocurrió un problema inesperado. Vuelva a intentarlo mas tarde.");
-                }
-
-            }
-
-             */
-
         });
 
         task.setOnCancelled(e -> {

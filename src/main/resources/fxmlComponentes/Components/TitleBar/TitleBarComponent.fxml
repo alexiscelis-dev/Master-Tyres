@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="28.0" prefWidth="835.0" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1">
+
+
+    <StackPane fx:id="tittleBar">
+        <GridPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints/>
+            </rowConstraints>
+
+            <children>
+
+
+                <ImageView fitHeight="20.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <image>
+                        <Image url="@/icons/add-line.png"/>
+                    </image>
+                </ImageView>
+
+
+                <HBox alignment="CENTER_RIGHT" prefHeight="40" prefWidth="800" spacing="10"
+                      style="-fx-background-color: #080808;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+
+
+                    <Label>
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/ventana_principal/minimize.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Label>
+                    <Label>
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/ventana_principal/maximize.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Label>
+                    <Label>
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                    <Image url="@/icons/ventana_principal/exit.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </Label>
+
+
+                </HBox>
+
+
+            </children>
+
+        </GridPane>
+    </StackPane>
+
+
+</AnchorPane>

@@ -142,6 +142,7 @@ public class VentanaPrincipalController implements ILoader {
 
             ventanaLogin.show();
         } catch (IOException e) {
+            mostrarError("Error de carga ","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
         }
     }
@@ -170,6 +171,7 @@ public class VentanaPrincipalController implements ILoader {
             AnchorPane.setRightAnchor(contenido, 0.0);
 
         } catch (IOException e) {
+            mostrarError("Error de carga ","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
         }
     }
@@ -235,7 +237,8 @@ public class VentanaPrincipalController implements ILoader {
             return controller;
 
         } catch (IOException e) {
-            mostrarError("Ocurrio un error","",""+ e.getMessage());
+
+            mostrarError("Error de carga ","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
             return null;
         }
@@ -283,6 +286,7 @@ public class VentanaPrincipalController implements ILoader {
             panelMenu.getChildren().add(contenido);
 
         } catch (Exception e) {
+            mostrarError("Error de carga ","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
         }
     }
