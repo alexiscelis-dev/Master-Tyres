@@ -13,7 +13,7 @@
             fx:controller="com.mastertyres.fxControllers.ventanaPrincipal.VentanaPrincipalController">
 
     <fx:include fx:id="loadingOverlay"
-                source="/fxmlComponentes/Loading/LoadingComponent.fxml"
+                source="/fxmlComponentes/Components/Loader/LoadingComponent.fxml"
                 AnchorPane.bottomAnchor="0.0"
                 AnchorPane.leftAnchor="0.0"
                 AnchorPane.rightAnchor="0.0"

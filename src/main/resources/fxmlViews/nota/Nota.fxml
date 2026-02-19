@@ -22,7 +22,10 @@
                     <HBox alignment="CENTER_LEFT" spacing="10">
 
                         <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
-                            <TextField fx:id="txtBuscar" maxWidth="600.0" prefHeight="26.0" prefWidth="350.0" promptText="Buscar notas..." styleClass="buscador" HBox.hgrow="ALWAYS" />
+                            <TextField fx:id="txtBuscar" maxWidth="600.0" prefHeight="26.0" prefWidth="350.0" promptText="Buscar notas..." styleClass="buscador" HBox.hgrow="ALWAYS">
+                        <font>
+                           <Font name="System Bold" size="12.0" />
+                        </font></TextField>
 
                             <DatePicker fx:id="dpBuscar" managed="false" prefHeight="26.0" prefWidth="150.0" promptText="Fecha..." visible="false" />
 
@@ -47,7 +50,10 @@
                         </HBox>
 
                         <HBox alignment="CENTER_RIGHT" spacing="5.0">
-                            <Label prefHeight="18.0" prefWidth="79.0" text="Buscar por:" />
+                            <Label prefHeight="18.0" prefWidth="79.0" text="Buscar por:" textFill="WHITE">
+                        <font>
+                           <Font name="System Bold" size="12.0" />
+                        </font></Label>
                             <ChoiceBox fx:id="atributoBusquedaNota" prefWidth="150.0" styleClass="choicebox-mini2">
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">

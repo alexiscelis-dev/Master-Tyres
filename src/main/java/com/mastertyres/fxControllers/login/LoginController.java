@@ -17,9 +17,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+
 
 @Component
 public class LoginController implements IFxController {
+    @FXML
     private AnchorPane rootPane;
 
 
@@ -69,6 +72,8 @@ public class LoginController implements IFxController {
 
 
         } catch (IOException e) {
+            mostrarError("Error de carga","",
+                    "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.getMessage();
         }
 

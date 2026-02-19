@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.nota;
 
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -31,6 +32,8 @@ public class DarPlazoController implements IFxController {
     private DatePicker dpFecha;
     @Autowired
     private NotaService notaService;
+    @Autowired
+    private NotaUtils notaUtils;
 
     public String fecha;
     public String status = StatusNota.VENCIDO.toString(); // No actualiza solo le da un valor a la ventana de notas a la etiqueta status para actualizar
@@ -47,6 +50,7 @@ public class DarPlazoController implements IFxController {
 
     @Override
     public void configuraciones() {
+
         MenuContextSetting.disableMenuDatePicker(root);
 
         dpFecha.setDayCellFactory(picker -> new DateCell() {
@@ -62,6 +66,8 @@ public class DarPlazoController implements IFxController {
 
             }
         });
+
+        notaUtils.descripcionComponent(dpFecha.getEditor(),"Seleccione una fecha de pago ");
 
     }//configuraciones
 

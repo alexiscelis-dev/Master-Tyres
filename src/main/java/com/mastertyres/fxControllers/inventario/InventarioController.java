@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
@@ -53,8 +54,36 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @NoArgsConstructor
 @Component
-public class InventarioController implements IVentanaPrincipal, IFxController, ILoader {
+public class InventarioController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
 
+    @Override
+    public void cleanup() {
+        // Limpiar transiciones
+        if (delayQuery != null) {
+            delayQuery.stop();
+        }
+
+        // Limpiar tabla
+//        if (tablaInventario != null) {
+//            tablaInventario.getItems().clear();
+//            tablaInventario.setItems(null);
+//        }
+
+        // Limpiar referencias
+        todosLosInventarios = null;
+        //terminoBusquedaActual = null;
+
+        // Limpiar campos de texto
+        if (buscarInventarioBuscador != null) {
+            buscarInventarioBuscador.clear();
+        }
+
+        // Anular referencias
+        //tablaInventario = null;
+        atributoBusquedaInventario = null;
+        dpInventarioInicio = null;
+        dpInventarioFin = null;
+    }
 
     @FXML
     private AnchorPane rootPane;
