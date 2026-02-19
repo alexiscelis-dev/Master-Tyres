@@ -5,6 +5,7 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
@@ -39,7 +40,43 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionClienteController implements IVentanaPrincipal {
+public class NuevaPromocionClienteController implements IVentanaPrincipal, ICleanable {
+
+    @Override
+    public void cleanup() {
+        // 1. Detener animaciones
+        if (pauseTransition != null) {
+            pauseTransition.stop();
+            pauseTransition = null;
+        }
+
+        // 2. Limpiar colecciones
+        if (clientesSeleccionados != null) {
+            clientesSeleccionados.clear();
+        }
+
+//        // 3. Limpiar tablas
+//        if (tablaClientes != null) {
+//            tablaClientes.getItems().clear();
+//            tablaClientes.setItems(null);
+//        }
+
+        if (clientesAgregados != null) {
+            clientesAgregados.getItems().clear();
+            clientesAgregados.setItems(null);
+        }
+
+        // 4. Nullificar referencias grandes
+        ventanaPrincipalController = null;
+        //loadingOverlayController = null;
+        terminoBusqueda = null;
+        terminoBusquedaActual = null;
+
+        // 5. Nullificar referencias FXML
+        //tablaClientes = null;
+        clientesAgregados = null;
+        rootPane = null;
+    }
 
     @FXML private AnchorPane rootPane;
     @FXML private Slider porcentajeDescuento;

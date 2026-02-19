@@ -6,6 +6,7 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.VehiculoException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
@@ -47,7 +48,42 @@ import java.util.*;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoader {
+public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
+
+    @Override
+    public void cleanup() {
+        // 1. Limpiar tablas
+        if (tablaVehiculos != null) {
+            tablaVehiculos.getItems().clear();
+            tablaVehiculos.setItems(null);
+        }
+
+//        if (tablaClientes != null) {
+//            tablaClientes.getItems().clear();
+//            tablaClientes.setItems(null);
+//        }
+
+        // 2. Limpiar colección
+        if (listaVehiculos != null) {
+            listaVehiculos.clear();
+            listaVehiculos = null;
+        }
+
+        // 3. Limpiar mapa
+        if (modeloPorCategoriaId != null) {
+            modeloPorCategoriaId.clear();
+        }
+
+        // 4. Nullificar controladores
+        ventanaPrincipalController = null;
+        loadingOverlayController = null;
+
+        // 5. Nullificar referencias FXML principales
+        tablaVehiculos = null;
+        //tablaClientes = null;
+        rootPane = null;
+        ventanaAgregarCliente = null;
+    }
 
     @Autowired
     private MarcaService marcaService;

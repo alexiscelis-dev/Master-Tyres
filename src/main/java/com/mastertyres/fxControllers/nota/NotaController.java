@@ -129,6 +129,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
     @Autowired
     private TaskService taskService;
 
+
     private String filtroActual = "sin filtro";
     private String textoBusquedaActual = "";
     private String textoBusquedaActual2 = "";
@@ -159,7 +160,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
     private int tamañoPagina = 20;
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300));
 
-
     @FXML
     private void initialize() {
 
@@ -176,11 +176,14 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
         atributoBusquedaNota.setValue("Sin Filtro");
 
+        notaUtils.descripcionComponent(btnBuscar,"Buscar");
+        notaUtils.descripcionComponent(atributoBusquedaNota,"Filtrar busqueda");
+        notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
+
     }//configuraciones
 
     @Override
     public void listeners() {
-
 
         atributoBusquedaNota.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -190,8 +193,12 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
             switch (newValue.toString()) {
 
-                case "Adeudo" -> filtroActual = "Adeudo";
-                case "Saldo a favor" -> filtroActual = "Saldo a favor";
+                case "Adeudo" ->
+                    filtroActual = "Adeudo";
+
+                case "Saldo a favor" ->
+                    filtroActual = "Saldo a favor";
+
 
             }//switch
 
@@ -369,7 +376,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
     private VBox crearCardNota(NotaDTO nota) {
 
-
         VBox card = new VBox();
         String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
         String estiloAzul = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #87CEEB; -fx-border-radius: 10; -fx-background-radius: 10;";
@@ -483,8 +489,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
     }//crearCardNota
 
     private void mostrarDetalleNota(NotaDTO nota) {
-        notaSeleccionada = nota;
 
+        notaSeleccionada = nota;
         btnEditar.setDisable(false);
         btnImprimir.setDisable(false);
         btnEliminar.setDisable(false);
@@ -572,7 +578,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
 
     }//mostrarDetalleNota
-
 
     @FXML
     private void agregarNotas(ActionEvent actionEvent) {
@@ -808,7 +813,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
         }
 
 
-        if (seleccion != null && atributoBusquedaNota.equals("Total")) {
+        if (seleccion.equals("Total")) {
             String arrayTotal[] = txtBuscar.getText().trim().split(",");
 
             if (!txtBuscar.getText().isEmpty()) {
@@ -823,6 +828,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                 }
 
                 try {
+
 
                     String valor1 = arrayTotal[0].trim();
                     String valor2 = (arrayTotal.length == 2)
@@ -841,9 +847,11 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                     return;
                 }
             }
-
+            return;
 
         }//if-total
+
+
 
 
 
@@ -888,5 +896,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
         ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
 
     }//accionBuscar
+
 
 }//class

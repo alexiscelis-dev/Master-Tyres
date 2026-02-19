@@ -1,6 +1,7 @@
 package com.mastertyres.fxControllers.historial;
 
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
@@ -40,7 +41,8 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class HistorialController extends BaseNota implements IFxController, ILoader {
+public class HistorialController extends BaseNota implements IFxController, ILoader, ICleanable {
+
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -96,6 +98,10 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
         MenuContextSetting.disableMenu(rootPane);
         choiceLimite.setValue("Sin Filtro");
         ivZoom.setVisible(false);
+
+        notaUtils.descripcionComponent(btnBuscar,"Buscar");
+        notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
+
 
     }//configuraciones
 
@@ -380,5 +386,26 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
 
     }//modoReset
 
+    @Override
+    public void cleanup() {
+
+        // Limpiar contenedor de cards
+        if (contenedorHistorial != null) {
+            contenedorHistorial.getChildren().clear();
+        }
+
+        // Limpiar referencias
+        cardSeleccionada = null;
+        notaVentana = null;
+
+        // Limpiar campos de texto
+        if (txtBuscar != null) {
+            txtBuscar.clear();
+        }
+
+        // Anular referencias
+        contenedorHistorial = null;
+        detallePromocion = null;
+    }
 
 }//class
