@@ -5,6 +5,7 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
@@ -54,7 +55,36 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader {
+public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
+
+    @Override
+    public void cleanup() {
+        // Limpiar contenedor de cards
+//        if (contenedorPromociones != null) {
+//            contenedorPromociones.getChildren().clear();
+//        }
+
+        // Limpiar listas
+        if (ListaVehiculosPromocion != null) {
+            ListaVehiculosPromocion.getItems().clear();
+        }
+        if (ListaClientesPromocion != null) {
+            ListaClientesPromocion.getItems().clear();
+        }
+
+        // Limpiar referencias
+        promocionSeleccionada = null;
+
+        // Limpiar campos de texto
+//        if (txtBuscar != null) {
+//            txtBuscar.clear();
+//        }
+
+        // Anular referencias
+        contenedorPromociones = null;
+        ListaVehiculosPromocion = null;
+        ListaClientesPromocion = null;
+    }
 
     @FXML
     private AnchorPane ventanaPromocionesActivas;
@@ -118,7 +148,6 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         cargarPromociones();
 
     }//initialize
-
 
     @Override
     public void configuraciones() {
@@ -549,4 +578,11 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         actualizar(null);
     }
 
+    public void accionBuscarCliente(ActionEvent actionEvent) {
+
+        String filtro = txtBuscar.getText();
+        List<Promocion> promociones = promocionService.buscarPromociones(filtro);
+        mostrarPromociones(promociones);
+
+    }
 }//class
