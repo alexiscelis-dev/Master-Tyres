@@ -7,21 +7,21 @@ import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.respaldo.model.Respaldo;
 import com.mastertyres.respaldo.service.RespaldoService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -61,6 +61,10 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     private VBox panelFechaRespaldo;
     @FXML
     private Button btnRespaldo;
+    @FXML
+    private Label lblTamanoRespaldo;
+    @FXML
+    private Label lblFechaUltimoRespaldo;
 
     // Ayuda
     @FXML
@@ -82,6 +86,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         registrarPaneles();
         construirMenu();
         configurarSeleccion();
+        configuraciones();
+        listeners();
     }
 
     /**
@@ -292,6 +298,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     @Override
     public void listeners() {
         //   btnRespaldo.setOnAction(event -> crearRespaldo());
+        panelFechaRespaldo.setOnMouseClicked(event -> mostrarUltimoRespaldo());
 
     }
 
@@ -336,6 +343,61 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         );
     }//crearRespaldo
 
+    private void mostrarUltimoRespaldo(){
+
+      taskService.runTask(
+              loadingComponentController,
+              () ->{
+                  Respaldo ultimoRespaldo = respaldoService.ObtenerUltimoRespaldo();
+
+                  return ultimoRespaldo;
+
+              }, (ultimoRespaldo) ->{
+
+                  if (ultimoRespaldo != null) {
+
+                      DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+                      DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+
+                      LocalDateTime dateTime = LocalDateTime.parse(ultimoRespaldo.getCreatedAt(), inputFormatter);
+
+                      String fecha = dateTime.format(outputFormatter);
+
+                      lblFechaUltimoRespaldo.setText(fecha);
+
+                      long bytes = ultimoRespaldo.getTamanioBytes();
+                      String texto;
+
+
+                      if (bytes < 1024) {
+                          texto = bytes + " B";
+
+                      } else if (bytes < 1024 * 1024) {
+
+                          texto = String.format("%.2f KB", bytes / 1024.0);
+
+                      } else if (bytes < 1024L * 1024L * 1024L) {
+                          texto = String.format("%.2f MB", bytes / (1024.0 * 1024.0));
+                      } else {
+                          texto = String.format("%.2f GB", bytes / (1024.0 * 1024.0 * 1024.0));
+                      }
+
+                      lblTamanoRespaldo.setText(texto);
+                  }
+
+              }, (ex) ->{
+
+                  if (ex instanceof RespaldoException) {
+                      mostrarError("Error al mostrar datos","",""+ex.getMessage());
+                  }else {
+                      mostrarError("Error interno","","Ocurrio un error inesperado al mostrar los datos. Vuelva a intentarlo mas tarde.");
+                  }
+
+              },null
+      );
+
+    }
 
 
 
