@@ -48,7 +48,7 @@ public class LoginController implements IFxController {
 
     @FXML
     private void logIn(ActionEvent event){
-        cambiarVistaPrincipal(event, "/fxmlViews/master_tires/Master Tires Principal.fxml");
+        cambiarVistaPrincipal(event, "/fxmlViews/masterTires/Master Tires Principal.fxml");
 
     }
 

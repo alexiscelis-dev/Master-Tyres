@@ -46,6 +46,10 @@ public class PromocionValidator {
             throw new PromocionException("La fecha de fin es un campo requerido");
         }
 
+        if (promocion.getImg().length() > 1024){
+            throw new PromocionException("La ruta del archivo es demasiado grande para ser almacenada. Intente guardarla en otra ubicacion.");
+        }
+
 
     }//validarGuardar
 
@@ -63,5 +67,7 @@ public class PromocionValidator {
         }
 
     }
+
+
 
 }//class

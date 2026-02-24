@@ -30,10 +30,10 @@
                     <children>
                         <HBox fx:id="HBoxNotas" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
-                                <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true"
+                                <ImageView fitHeight="50.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true"
                                            styleClass="icono-menu">
                                     <image>
-                                        <Image url="@../../icons/file-add-fill.png"/>
+                                        <Image url="@../../icons/ventana_principal/notes.png"/>
                                     </image>
                                     <HBox.margin>
                                         <Insets left="25.0" right="15.0"/>
@@ -54,10 +54,10 @@
                         </HBox>
                         <HBox fx:id="HBoxClientes" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
-                                <ImageView fx:id="iconoCliente" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true"
+                                <ImageView fx:id="iconoCliente" fitHeight="50.0" fitWidth="35.0" pickOnBounds="true"
                                            preserveRatio="true" styleClass="icono-menu">
                                     <image>
-                                        <Image url="@../../icons/group-fill.png"/>
+                                        <Image url="@../../icons/ventana_principal/customers.png"/>
                                     </image>
                                     <HBox.margin>
                                         <Insets left="25.0" right="15.0"/>
@@ -75,10 +75,10 @@
                         </HBox>
                         <HBox fx:id="HBoxVehiculos" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
-                                <ImageView fx:id="iconoProximosServicios" fitHeight="46.0" fitWidth="32.0"
+                                <ImageView fx:id="iconoProximosServicios" fitHeight="50.0" fitWidth="35.0"
                                            pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
-                                        <Image url="@../../icons/car-fill.png"/>
+                                        <Image url="@../../icons/ventana_principal/car.png"/>
                                     </image>
                                     <HBox.margin>
                                         <Insets left="25.0" right="15.0"/>
@@ -96,10 +96,10 @@
                         </HBox>
                         <HBox fx:id="HBoxServicios" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
-                                <ImageView fx:id="iconoPromociones" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true"
+                                <ImageView fx:id="iconoPromociones" fitHeight="50.0" fitWidth="35.0" pickOnBounds="true"
                                            preserveRatio="true" styleClass="icono-menu">
                                     <image>
-                                        <Image url="@../../icons/calendar-fill.png"/>
+                                        <Image url="@../../icons/ventana_principal/schedule.png"/>
                                     </image>
                                     <HBox.margin>
                                         <Insets left="25.0" right="15.0"/>
@@ -117,13 +117,13 @@
                         </HBox>
                         <HBox fx:id="HBoxPromociones" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
-                                <ImageView fx:id="iconoCrearPromociones" fitHeight="46.0" fitWidth="32.0"
+                                <ImageView fx:id="iconoCrearPromociones" fitHeight="50.0" fitWidth="40.0"
                                            pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
                                     <image>
-                                        <Image url="@../../icons/gift-fill.png"/>
+                                        <Image url="@../../icons/ventana_principal/gift.png"/>
                                     </image>
                                     <HBox.margin>
-                                        <Insets left="25.0" right="15.0"/>
+                                        <Insets left="20.0" right="15.0"/>
                                     </HBox.margin>
                                 </ImageView>
                                 <Label styleClass="menu-label" text="Promociones" textFill="WHITE">
@@ -138,13 +138,13 @@
                         </HBox>
                         <HBox fx:id="HBoxInventario" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
                             <children>
-                                <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true"
+                                <ImageView fitHeight="50.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true"
                                            styleClass="icono-menu">
                                     <image>
-                                        <Image url="@../../icons/nota/car-wheel.png"/>
+                                        <Image url="@../../icons/ventana_principal/car-wheel.png"/>
                                     </image>
                                     <HBox.margin>
-                                        <Insets left="25.0" right="15.0"/>
+                                        <Insets left="20.0" right="15.0"/>
                                     </HBox.margin>
                                 </ImageView>
                                 <Label styleClass="menu-label" text="Inventario Llantas" textFill="WHITE">
@@ -159,10 +159,10 @@
                         </HBox>
                         <HBox fx:id="HBoxConfiguracion" prefHeight="100.0" prefWidth="340.0" styleClass="menu-item">
                             <children>
-                                <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true"
+                                <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"
                                            styleClass="icono-menu">
                                     <image>
-                                        <Image url="@../../icons/settings-2-fill.png"/>
+                                        <Image url="@../../icons/ventana_principal/settings.png"/>
                                     </image>
                                     <HBox.margin>
                                         <Insets left="25.0" right="15.0"/>

@@ -10,10 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
@@ -38,6 +35,8 @@ public abstract class BaseNota {
     protected GridPane gridPaneIcons;
     @FXML
     protected StackPane btnShowIcons;
+    @FXML
+    protected HBox hboxFecha;
     @FXML
     protected TextField txtDia;
     @FXML

@@ -78,7 +78,7 @@ public class VentanaPrincipalController implements ILoader {
 
     @FXML
     public void initialize() {
-        historialVistas.push("/fxmlViews/master_tires/RegresarMenu.fxml");
+        historialVistas.push("/fxmlViews/masterTires/RegresarMenu.fxml");
         historialNombreVistas.push("MENU");
 
         HBoxLogOut.setOnMouseClicked(event -> logOut(event, "/fxmlViews/login/Login.fxml"));
@@ -119,7 +119,7 @@ public class VentanaPrincipalController implements ILoader {
         });
 
         LogoPrincipal.setOnMouseClicked(event -> {
-            regresarInicio("/fxmlViews/master_tires/RegresarMenu.fxml");
+            regresarInicio("/fxmlViews/masterTires/RegresarMenu.fxml");
             cambiarPaginaEtiqueta.setText("INICIO");
         });
     }
@@ -186,7 +186,7 @@ public class VentanaPrincipalController implements ILoader {
             viewContentSinHistorial(null, vistaAnterior, nombreAnterior);
             cambiarPaginaEtiqueta.setText(nombreAnterior);
         } else {
-            viewContentSinHistorial(null, "/fxmlViews/master_tires/RegresarMenu.fxml", "Inicio");
+            viewContentSinHistorial(null, "/fxmlViews/masterTires/RegresarMenu.fxml", "Inicio");
             cambiarPaginaEtiqueta.setText("INICIO");
         }
     }

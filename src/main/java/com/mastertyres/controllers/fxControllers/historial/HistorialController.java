@@ -24,6 +24,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
@@ -118,6 +119,12 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
         });
 
         btnRefrescar.setOnAction(event -> modoReset());
+
+        txtBuscar.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER){
+                cargarNota();
+            }
+        });
 
     }//listeners
 

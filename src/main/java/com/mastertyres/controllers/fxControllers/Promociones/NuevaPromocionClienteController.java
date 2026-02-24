@@ -5,11 +5,15 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.ICleanable;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.components.fxComponents.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.model.StatusPromocion;
@@ -40,7 +44,7 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionClienteController implements IVentanaPrincipal, ICleanable {
+public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoader, ICleanable {
 
     @Override
     public void cleanup() {
@@ -78,35 +82,62 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
         rootPane = null;
     }
 
-    @FXML private AnchorPane rootPane;
-    @FXML private Slider porcentajeDescuento;
-    @FXML private Label descuentoLabel;
-    @FXML private TextField precioSinDescuento;
-    @FXML private DatePicker fechaInicio;
-    @FXML private DatePicker fechaFin;
-    @FXML private Button btnRegistrar;
-    @FXML private Button btnLimpiar;
-    @FXML private ChoiceBox<String> tipoDescuento;
-    @FXML private TextField nombrePromocion;
-    @FXML private TextArea descripcion;
-    @FXML private Button btnImagen;
-    @FXML private TextField textFieldImg;
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private Slider porcentajeDescuento;
+    @FXML
+    private Label descuentoLabel;
+    @FXML
+    private TextField precioSinDescuento;
+    @FXML
+    private DatePicker fechaInicio;
+    @FXML
+    private DatePicker fechaFin;
+    @FXML
+    private Button btnRegistrar;
+    @FXML
+    private Button btnLimpiar;
+    @FXML
+    private ChoiceBox<String> tipoDescuento;
+    @FXML
+    private TextField nombrePromocion;
+    @FXML
+    private TextArea descripcion;
+    @FXML
+    private Button btnImagen;
+    @FXML
+    private TextField textFieldImg;
 
 
-    @FXML private TableView<Cliente> tablaClientes;
-    @FXML private ListView<Cliente> clientesAgregados;
-    @FXML private TableColumn<Cliente, Boolean> colSeleccionCliente;
-    @FXML private TextField txtBuscador;
-    @FXML private TableColumn<Cliente, String> colNombre;
-    @FXML private TableColumn<Cliente, String> colRFC;
-    @FXML private TableColumn<Cliente, String> colCumpleanos;
-    @FXML private TableColumn<Cliente, String> colFechaRegistro;
-    @FXML private TableColumn<Cliente, String> colNombreEmpresa;
-    @FXML private TableColumn<Cliente, String> colTipoCliente;
-    @FXML private TableColumn<Cliente, String> colHobbie;
-    @FXML private Pagination PaginadorClientes;
-    @FXML private Label statusLabel;
-    @FXML private Button btnBuscar;
+    @FXML
+    private TableView<Cliente> tablaClientes;
+    @FXML
+    private ListView<Cliente> clientesAgregados;
+    @FXML
+    private TableColumn<Cliente, Boolean> colSeleccionCliente;
+    @FXML
+    private TextField txtBuscador;
+    @FXML
+    private TableColumn<Cliente, String> colNombre;
+    @FXML
+    private TableColumn<Cliente, String> colRFC;
+    @FXML
+    private TableColumn<Cliente, String> colCumpleanos;
+    @FXML
+    private TableColumn<Cliente, String> colFechaRegistro;
+    @FXML
+    private TableColumn<Cliente, String> colNombreEmpresa;
+    @FXML
+    private TableColumn<Cliente, String> colTipoCliente;
+    @FXML
+    private TableColumn<Cliente, String> colHobbie;
+    @FXML
+    private Pagination PaginadorClientes;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private Button btnBuscar;
 
     private static final int CLIENTES_POR_PAGINA = 20;
     private String terminoBusquedaActual = "";
@@ -124,13 +155,23 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
     private PromocionService promocionService;
 
     @Autowired
+    private TaskService taskService;
+
+    @Autowired
     private ClienteService clienteService;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
+    private LoadingComponentController loadingComponentController;
+
     @Override
     public void setVentanaPrincipalController(VentanaPrincipalController controller) {
         this.ventanaPrincipalController = controller;
+    }
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingComponentController = loading;
     }
 
     @FXML
@@ -143,7 +184,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
 
     /* ======= LISTENERS Y CONFIGURACIONES ======= */
 
-    public void configuraciones(){
+    public void configuraciones() {
 
         cargarPorcentaje();
 
@@ -398,27 +439,65 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
 
     private void insertarPromocion() {
 
-        Promocion promocion = Promocion.builder()
-                .nombre(nombrePromocion.getText())
-                .descripcion(descripcion.getText())
-                .tipoDescuento(tipoDescuento.getValue())
-                .precio(Float.parseFloat(precioSinDescuento.getText()))
-                .porcentaje((int) porcentajeDescuento.getValue())
-                .fechaInicio(String.valueOf(fechaInicio.getValue()))
-                .fechaFin(String.valueOf(fechaFin.getValue()))
-                .active(StatusPromocion.ACTIVE.toString())
-                .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
-                .TipoPromocion(TipoPromocion.CLIENTE.toString())
-                .build();
 
+        // 2. Validar clientes
+        if (clientesAgregados.getItems().isEmpty()) {
+            mostrarError("Error", "", "Debe agregar al menos un cliente a la promoción");
+            return;
+        }
+
+
+        taskService.runTask(
+                loadingComponentController,
+                () -> {
+
+                    Promocion promocion = Promocion.builder()
+                            .nombre(nombrePromocion.getText())
+                            .descripcion(descripcion.getText())
+                            .tipoDescuento(tipoDescuento.getValue())
+                            .precio(Float.parseFloat(precioSinDescuento.getText()))
+                            .porcentaje((int) porcentajeDescuento.getValue())
+                            .fechaInicio(String.valueOf(fechaInicio.getValue()))
+                            .fechaFin(String.valueOf(fechaFin.getValue()))
+                            .active(StatusPromocion.ACTIVE.toString())
+                            .img(textFieldImg.getText() != null ? textFieldImg.getText() : "")
+                            .TipoPromocion(TipoPromocion.CLIENTE.toString())
+                            .build();
+
+                    // 3. Extraer IDs de clientes del ListView
+                    List<Integer> clientesIds = clientesAgregados.getItems()
+                            .stream()
+                            .map(Cliente::getClienteId)
+                            .toList();
+
+                    //System.out.println(clientesIds);
+                    promocionService.crearPromocionConClientes(promocion, clientesIds);
+
+
+                    return null;
+                }, (resultado) -> {
+                   mostrarInformacion("Promoción registrada",
+                            "",
+                            "La promoción se registró exitosamente"
+            );
+                    clean();
+
+                }, (ex) -> {
+
+                    if (ex instanceof PromocionException) {
+                        mostrarError("Error al crear promoción", "", "" + ex.getMessage());
+                    } else {
+                        mostrarError("Error interno",
+                                "",
+                                "Ocurrio un error inesperado al crear la promocion. Vuelva a intentarlo mas tarde.");
+                    }
+
+                }, null
+        );
+
+/*
         try {
-            // 1. Guardar promoción
-            //promocionService.guardarPromocion(promocion);
 
-//            if (promocion.getPromocionId() == null) {
-//                mostrarError("Error", "", "Error al insertar promoción");
-//                return;
-//            }
 
             // 2. Validar clientes
             if (clientesAgregados.getItems().isEmpty()) {
@@ -461,7 +540,9 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
             clean();
             e.printStackTrace();
         }
-    }
+
+ */
+    }//insertarPromocion
 
     private void actualizarPromocionesActivas() {
         try {
@@ -493,7 +574,6 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
 
         );
         int porcentajeInt = (int) (porcentaje * 100);
-
 
 
         if (porcentajeDescuento.lookup(".track") != null) {
@@ -539,8 +619,8 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
     private boolean empty() {
         boolean empty = false;
         if (nombrePromocion.getText() == null || descripcion.getText() == null || tipoDescuento.getValue() == null || precioSinDescuento.getText() == null ||
-                fechaInicio.getValue() == null || fechaFin.getValue() == null  || nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() ||
-                precioSinDescuento.getText().isEmpty() )
+                fechaInicio.getValue() == null || fechaFin.getValue() == null || nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() ||
+                precioSinDescuento.getText().isEmpty())
 
             empty = true;
 
@@ -551,17 +631,17 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
         return empty;
     }
 
-    private  void  seleccionarImg(){
+    private void seleccionarImg() {
         FileChooser fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Archivos de imagen","*.png","*.jpg","*.jpeg")
+                new FileChooser.ExtensionFilter("Archivos de imagen", "*.png", "*.jpg", "*.jpeg")
         );
 
         Stage stage = (Stage) btnImagen.getScene().getWindow();
         File archivo = fileChooser.showOpenDialog(stage);
 
-        if (archivo != null){
+        if (archivo != null) {
             String url = archivo.getAbsolutePath();
             textFieldImg.setText(url);
         }
@@ -581,7 +661,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
 
         } else if (fechaFinLD.equals(fechaInicioLD)) {
 
-            fechaValida =  mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
+            fechaValida = mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
 
             if (fechaValida)
                 fechaValida = true;
@@ -624,10 +704,10 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, IClea
 
     }
 
-    private void showLabel(String mensaje, String accion){
-        statusLabel.setText(mensaje +  " " + accion);
+    private void showLabel(String mensaje, String accion) {
+        statusLabel.setText(mensaje + " " + accion);
 
-        if (pauseTransition != null){
+        if (pauseTransition != null) {
             pauseTransition.stop();
         }
         pauseTransition = new PauseTransition(Duration.seconds(2.5));

@@ -2,11 +2,11 @@ package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.CampoNota;
@@ -20,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -138,6 +139,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
         notaUtils.descripcionComponent(txtHoraEntrega,"Haz doble clic para modificar la Hora de Entrega");
         notaUtils.descripcionComponent(spPorcentajeGas,"Haz clic para modificar el porcentaje de Gasolina");
+        notaUtils.descripcionComponent(hboxFecha,"Haz clic derecho para modificar la fecha");
 
 
 
@@ -149,6 +151,12 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
 
         operacionesCampos();
+
+        hboxFecha.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.SECONDARY){
+                notaUtils.mostrarPopupHora(txtNombre);
+            }
+        });
 
         spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
@@ -431,6 +439,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         }//switch
 
     }//habilitar
+
 
     private void registrar(Cliente cRegistro, VehiculoDTO vRegistro, Inventario iRegistro) {
         boolean error = false;

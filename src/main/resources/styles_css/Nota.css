@@ -1,3 +1,4 @@
+/*
 .label, .button, .choice-box, .text-field {
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -7,6 +8,7 @@
     -fx-text-fill: #BBBBBB;
     -fx-font-weight: bold;
 }
+*/
 
 .buscador {
     -fx-background-color: #1A1A1A;
@@ -179,7 +181,7 @@
 -fx-background-insets:0;
 -fx-background-color:transparent;
 -fx-text-fill: black;
--fx-font-font-size: 14px;
+-fx-font-size: 14px;
 -fx-font-weight: bold;
 }
 
