@@ -12,6 +12,8 @@ public interface IRespaldoService {
 
     Respaldo ObtenerUltimoRespaldo();
 
+    void actualizarTipoRespaldo(Integer respaldoId, String tipoRespaldo);
+
 
 
 }//interface

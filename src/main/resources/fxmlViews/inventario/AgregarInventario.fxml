@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.inventario.AgregarInventarioController">
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.inventario.AgregarInventarioController">
     <children>
 
         <VBox layoutX="320.0" layoutY="150.0" prefHeight="620.0" prefWidth="600.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/Inventario.css">
