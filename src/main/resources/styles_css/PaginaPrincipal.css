@@ -15,7 +15,7 @@
     -fx-opacity: 1.0;
     -fx-scale-x: 1.2;
     -fx-scale-y: 1.2;
-   -fx-effect: innershadow(gaussian, white, 20, 1, 0, 0);
+ /*  -fx-effect: innershadow(gaussian, white, 20, 1, 0, 0);*/
 }
 
 /* Etiquetas del menú */

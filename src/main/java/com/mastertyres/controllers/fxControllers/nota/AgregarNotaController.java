@@ -25,10 +25,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static com.mastertyres.common.utils.FechaUtils.mostrarFechayHora;
 import static com.mastertyres.common.utils.MensajesAlert.*;
+
 @Component
 public class AgregarNotaController extends BaseNota implements IFxController, ILoader {
     @FXML
@@ -39,6 +41,24 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
     private Button btnBorrarCliente;
     @FXML
     private Button btnBorrarInventario;
+
+    //caracteres que caben en cada campo
+    @Value("${mastertyres.ui.nota.direccion.campoNombre.maxlength}")
+    private int campoNombre;
+    @Value("${mastertyres.ui.nota.direccion.campoDireccion1.maxlength}")
+    private int campoDireccion1;
+    @Value("${mastertyres.ui.nota.direccion.campoDireccion2.maxlength}")
+    private int campoDireccion2;
+    @Value("${mastertyres.ui.nota.direccion.campoRfc.maxlength}")
+    private int campoRfc;
+    @Value("${mastertyres.ui.nota.direccion.campoCorreo.maxlength}")
+    private int campoCorreo;
+    @Value("${mastertyres.ui.nota.direccion.campoMarca.maxlength}")
+    private int campoMarca;
+    @Value("${mastertyres.ui.nota.direccion.campoModelo.maxlength}")
+    private int campoModelo;
+    @Value("${mastertyres.ui.nota.direccion.campoKilometros.maxlength}")
+    private int campoKilometros;
 
 
     private BooleanProperty boolTotal = new SimpleBooleanProperty(true);
@@ -130,18 +150,14 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
 
 
-
         notaUtils.descripcionComponent(btnBuscarCliente, "Buscar cliente");
         notaUtils.descripcionComponent(btnBuscarLlanta, "Buscar llantas");
-        notaUtils.descripcionComponent(btnBorrarCliente,"Eliminar Cliente de la nota");
-        notaUtils.descripcionComponent(btnBorrarInventario,"Eliminar llanta de la nota");
-        notaUtils.descripcionComponent(btnGuardar,"Guardar");
-        notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
-        notaUtils.descripcionComponent(txtHoraEntrega,"Haz doble clic para modificar la Hora de Entrega");
-        notaUtils.descripcionComponent(spPorcentajeGas,"Haz clic para modificar el porcentaje de Gasolina");
-        notaUtils.descripcionComponent(hboxFecha,"Haz clic derecho para modificar la fecha");
-
-
+        notaUtils.descripcionComponent(btnBorrarCliente, "Eliminar Cliente de la nota");
+        notaUtils.descripcionComponent(btnBorrarInventario, "Eliminar llanta de la nota");
+        notaUtils.descripcionComponent(btnGuardar, "Guardar");
+        notaUtils.descripcionComponent(btnRefrescar, "Refrescar");
+        notaUtils.descripcionComponent(txtHoraEntrega, "Clic derecho para modificar.");
+        notaUtils.descripcionComponent(spPorcentajeGas, "Clic derecho para modificar.");
 
 
     }//configuraciones
@@ -149,16 +165,12 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
     @Override
     public void listeners() {
 
-
         operacionesCampos();
 
-        hboxFecha.setOnMouseClicked(event -> {
-            if (event.getButton() == MouseButton.SECONDARY){
-                notaUtils.mostrarPopupHora(txtNombre);
-            }
+        spPorcentajeGas.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.SECONDARY)
+                mostrarSlider(spPorcentajeGas.getScene().getWindow());
         });
-
-        spPorcentajeGas.setOnMouseClicked(event -> mostrarSlider(spPorcentajeGas.getScene().getWindow()));
 
         //configuracion checkBox
 
@@ -258,7 +270,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
             }
         });
 
-        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons,SLIDE_FROM_TO,TIEMPO));
+        btnShowIcons.setOnMouseClicked(event -> notaUtils.showIcons(gridPaneIcons, SLIDE_FROM_TO, TIEMPO));
 
         btnGuardar.setOnAction(event -> registrar(clienteNota, vehiculosNota, inventarioNota));
 
@@ -327,6 +339,8 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
     protected void llenarNota(Cliente cliente) {
         if (cliente != null) {
 
+            /*
+
             notaUtils.campoFormatter(cliente.getNombre() + " " +
                             (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
                             (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : ""),
@@ -335,12 +349,25 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
             );
 
+             */
+
+            txtNombre.setText(
+                    cliente.getNombre() + " " +
+                            (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
+                            (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : "")
+            );
+
             String domicilio = (cliente.getDomicilio() != null ? cliente.getDomicilio() : "") + " " +
                     (cliente.getCiudad() != null ? cliente.getCiudad() : "") + " " +
                     (cliente.getEstado() != null ? cliente.getEstado() : "");
 
-            notaUtils.campoFormatter(domicilio,txtDireccion, txtDireccion2);
+            notaUtils.campoFormatter(domicilio, txtDireccion, txtDireccion2);
 
+            txtRfc.setText(cliente.getRfc() != null ? cliente.getRfc() : "");
+
+            txtCorreo.setText(cliente.getCorreo() != null ? cliente.getCorreo() : "");
+
+            /*
             notaUtils.campoFormatter(
                     cliente.getRfc() != null ? cliente.getRfc() : "",
                     txtRfc,
@@ -348,11 +375,16 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
             );
 
+             */
+
+            /*
             notaUtils.campoFormatter(
                     cliente.getCorreo() != null ? cliente.getCorreo() : "",
                     txtCorreo
             );
 
+             */
+            habilitarCampo();
 
         }
         setClienteNota(cliente);
@@ -382,9 +414,10 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
             );
             txtPlacas.setText(vehiculos.getPlacas());
-            habilitar(false, CampoNota.CLIENTE.toString());
+
 
             setVehiculoNota(vehiculos);
+            habilitarCampo();
 
         }
 
@@ -398,14 +431,14 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
             if (inventario.getStock() == 0) {
                 txtLlantasCantidad.setText("1");
                 txtLlantasUnitario.setText(inventario.getPrecioVenta() + "");
+                txtLlantasCantidad.setEditable(false);
             } else {
                 txtLlantasCantidad.setText(inventario.getStock() + "");
                 txtLlantasUnitario.setText(inventario.getPrecioVenta() + "");
+                txtLlantasCantidad.setEditable(false);
 
             }
 
-
-            habilitar(false, CampoNota.INVENTARIO.toString());
 
         }
 
@@ -415,6 +448,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
     }//llenarNota
 
+    /*
     private void habilitar(boolean habilitar, String opcion) {
 
         switch (opcion) {
@@ -437,6 +471,35 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
             }
 
         }//switch
+
+    }//habilitar
+
+     */
+
+    private void habilitarCampo() {
+
+        if (txtNombre.getText().length() > campoNombre) {
+            txtNombre.setEditable(true);
+        }
+        if (txtDireccion.getText().length() > campoDireccion1) {
+            txtDireccion.setEditable(true);
+        }
+        if (txtDireccion2.getText().length() > campoDireccion2) {
+            txtDireccion2.setEditable(true);
+        }
+        if (txtRfc.getText().length() > campoRfc) {
+            txtRfc.setEditable(true);
+        }
+        if (txtCorreo.getText().length() > campoCorreo) {
+            txtCorreo.setEditable(true);
+        }
+        if (txtMarca.getText().length() > campoMarca) {
+            txtMarca.setEditable(true);
+        }
+        if (txtModelo.getText().length() > campoModelo) {
+            txtModelo.setEditable(true);
+        }
+
 
     }//habilitar
 
@@ -485,7 +548,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
         if (!error) {
 
-          checkCheckBoxes();
+            checkCheckBoxes();
 
 
             try {
@@ -693,6 +756,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         txtBalanceoTotal.setText("");
         txtLlantas.setText("");
         txtLlantasCantidad.setText("");
+        txtLlantasCantidad.setEditable(true);
         txtLlantasUnitario.setText("");
         txtLlantasTotal.setText("");
         txtAmorDelanteros.setText("");
@@ -741,9 +805,6 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         txtTotal.setText("");
 
 
-        habilitar(true, CampoNota.INVENTARIO.toString());
-        habilitar(true, CampoNota.CLIENTE.toString());
-
     }//refrescar
 
     //pone en null stock de inventario para desasociar la relacion Entidad nota-inventario
@@ -764,6 +825,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
             setInventarioNota(null);
             txtLlantas.setText("");
             txtLlantasCantidad.setText("");
+            txtLlantasCantidad.setEditable(true);
             txtLlantasUnitario.setText("");
             txtLlantasTotal.setText("");
             btnBorrarInventario.setDisable(true);
@@ -819,7 +881,6 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
     private void setVehiculoNota(VehiculoDTO vehiculos) {
         this.vehiculosNota = vehiculos;
     }
-
 
 
 }//class

@@ -36,8 +36,6 @@ public abstract class BaseNota {
     @FXML
     protected StackPane btnShowIcons;
     @FXML
-    protected HBox hboxFecha;
-    @FXML
     protected TextField txtDia;
     @FXML
     protected TextField txtMes;

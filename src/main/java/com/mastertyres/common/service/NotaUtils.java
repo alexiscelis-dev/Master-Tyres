@@ -8,6 +8,7 @@ import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -112,6 +113,8 @@ public class NotaUtils {
 
         ComboBox<Integer> cmbHora = new ComboBox<>();
         ComboBox<Integer> cmbMinuto = new ComboBox<>();
+        cmbHora.setValue(12);
+        cmbMinuto.setValue(0);
 
         for (int h = 0; h < 24; h++) cmbHora.getItems().add(h);
         for (int m = 0; m < 60; m++) cmbMinuto.getItems().add(m);
@@ -144,9 +147,11 @@ public class NotaUtils {
         popup.getScene().setRoot(layout);
 
         txtTarget.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
+
+            if (e.getButton() == MouseButton.SECONDARY){
                 popup.show(txtTarget, e.getScreenX(), e.getScreenY());
             }
+
         });
     }
 

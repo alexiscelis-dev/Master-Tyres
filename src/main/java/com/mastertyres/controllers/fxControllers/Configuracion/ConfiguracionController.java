@@ -178,6 +178,12 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         Node target = panelMap.get(panelId);
         if (target != null) {
             target.setVisible(true);
+            /*    if (panelId.equals("panelFechaRespaldo")){
+
+            }
+            
+             */
+
         } else {
             panelBienvenida.setVisible(true);
         }
