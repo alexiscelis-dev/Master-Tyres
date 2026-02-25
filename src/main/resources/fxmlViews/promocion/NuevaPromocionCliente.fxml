@@ -140,7 +140,7 @@
 
                     <children>
 
-                        <Label text="Tipo de descuento" textFill="WHITE">
+                        <Label text="Precio sin descuento" textFill="WHITE">
 
                             <font>
 
@@ -162,7 +162,7 @@
 
                         </Label>
 
-                        <Label text="Precio sin descuento" textFill="WHITE">
+                        <Label text="Precio con descuento" textFill="WHITE">
 
                             <font>
 
@@ -189,53 +189,28 @@
                 </HBox>
 
                 <HBox prefHeight="40.0" prefWidth="432.0">
-
                     <children>
-
-                        <ChoiceBox fx:id="tipoDescuento" prefWidth="150.0" styleClass="choicebox-mini2">
-
-                            <HBox.margin>
-
-                                <Insets left="40.0" right="38.0" />
-
-                            </HBox.margin>
-
-                            <items>
-
-
-
-                            </items>
-
-
-
-
-
-                        </ChoiceBox>
-
-                        <TextField fx:id="precioSinDescuento" disable="true" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
-
+                        <TextField fx:id="precioSinDescuento" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
                             <opaqueInsets>
-
                                 <Insets />
-
                             </opaqueInsets>
-
                             <HBox.margin>
-
-                                <Insets />
-
+                                <Insets left="40.0" />
                             </HBox.margin>
-
+                        </TextField>
+                        <TextField fx:id="precioConDescuento" editable="false" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="50.0" />
+                            </HBox.margin>
                         </TextField>
 
                     </children>
-
                     <VBox.margin>
-
                         <Insets bottom="15.0" />
-
                     </VBox.margin>
-
                 </HBox>
 
                 <HBox prefHeight="44.0" prefWidth="393.0">
@@ -246,7 +221,7 @@
 
                             <children>
 
-                                <Slider fx:id="porcentajeDescuento" disable="true" prefHeight="14.0" prefWidth="340.0">
+                                <Slider fx:id="porcentajeDescuento" prefHeight="14.0" prefWidth="340.0">
 
                                     <VBox.margin>
 
@@ -360,7 +335,7 @@
 
                     <children>
 
-                        <DatePicker fx:id="fechaInicio" disable="true" editable="false" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
+                        <DatePicker fx:id="fechaInicio" editable="false" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
 
                             <HBox.margin>
 
@@ -370,7 +345,7 @@
 
                         </DatePicker>
 
-                        <DatePicker fx:id="fechaFin" disable="true" editable="false" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
+                        <DatePicker fx:id="fechaFin" editable="false" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
 
                     </children>
 
@@ -463,7 +438,7 @@
                        </VBox.margin>
                    </Label>
 
-                   <Label fx:id="statusLabel" textAlignment="LEFT" alignment="CENTER_LEFT" maxWidth="Infinity"  prefHeight="15.0" prefWidth="300.0" text="" textFill="WHITE" visible="true">
+                   <Label fx:id="statusLabel" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="15.0" prefWidth="300.0" text="" textAlignment="LEFT" textFill="WHITE" visible="true">
                        <VBox.margin>
                            <Insets top="15.0" />
                        </VBox.margin>

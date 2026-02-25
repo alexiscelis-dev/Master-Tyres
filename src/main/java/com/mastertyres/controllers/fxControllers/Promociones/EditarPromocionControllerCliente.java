@@ -11,6 +11,8 @@ import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.model.TipoDescuento;
+import com.mastertyres.promociones.model.TipoPromocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import javafx.beans.binding.Bindings;
@@ -49,7 +51,9 @@ public class EditarPromocionControllerCliente implements  IFxController {
     private TextField txtNombre;
     @FXML private TextArea txtDescripcion;
     @FXML private TextField txtPrecio;
-    @FXML private ChoiceBox<String> txtTipoDescuento;
+    @FXML private TextField precioConDescuento;
+    //@FXML private ChoiceBox<String> txtTipoDescuento;
+
     @FXML private Slider porcentajeDescuento;
     @FXML private Label porcentaje; //  el Label donde mostramos el valor
     @FXML private DatePicker dateInicio;
@@ -292,7 +296,7 @@ public class EditarPromocionControllerCliente implements  IFxController {
     @Override
     public void configuraciones(){
 
-        txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
+        //txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
 
         txtPrecio.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
@@ -334,7 +338,37 @@ public class EditarPromocionControllerCliente implements  IFxController {
             }
         });
 
+        porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
+            //obtenerPorcentaje(valNuevo.doubleValue());
+            calcularPrecioConDescuento();
+        });
+
+
+        txtPrecio.textProperty().addListener((observable, valAnterior, nuevoValor) -> {
+            calcularPrecioConDescuento();
+        });
+
     }//listeners
+
+    private void calcularPrecioConDescuento() {
+        String precioTexto = txtPrecio.getText();
+
+        if (precioTexto == null || precioTexto.isEmpty()) {
+            precioConDescuento.setText("");
+            return;
+        }
+
+        try {
+            double precio = Double.parseDouble(precioTexto);
+            double porcentaje = porcentajeDescuento.getValue();
+            double descuento = precio * (porcentaje / 100.0);
+            double precioFinal = precio - descuento;
+
+            precioConDescuento.setText(String.format("%.2f", precioFinal));
+        } catch (NumberFormatException e) {
+            precioConDescuento.setText("");
+        }
+    }//calcularPrecioConDescuento
 
     /* ================= HELPERS ================= */
 
@@ -416,7 +450,7 @@ public class EditarPromocionControllerCliente implements  IFxController {
         //Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
         btnCambiar.disableProperty().bind(
                 Bindings.isEmpty(clientesSeleccionados)
-                        .or(txtTipoDescuento.valueProperty().isNull())
+                        //.or(txtTipoDescuento.valueProperty().isNull())
                         .or(txtNombre.textProperty().isEmpty())
                         .or(txtDescripcion.textProperty().isEmpty())
                         .or(precioValido.not())
@@ -455,11 +489,12 @@ public class EditarPromocionControllerCliente implements  IFxController {
             txtNombre.setText(promocion.getNombre());
             txtDescripcion.setText(promocion.getDescripcion());
             txtPrecio.setText(String.valueOf(promocion.getPrecio()));
-            txtTipoDescuento.setValue(promocion.getTipoDescuento());
+            //txtTipoDescuento.setValue(promocion.getTipoDescuento());
 
             // Configurar el valor del slider y actualizar el label
             porcentajeDescuento.setValue(promocion.getPorcentaje());
             porcentaje.setText(promocion.getPorcentaje() + "%");
+            calcularPrecioConDescuento();
 
             dateInicio.setValue(LocalDate.parse(promocion.getFechaInicio()));
             dateFin.setValue(LocalDate.parse(promocion.getFechaFin()));
@@ -581,10 +616,10 @@ public class EditarPromocionControllerCliente implements  IFxController {
             return;
         }
 
-        if (txtTipoDescuento.getValue() == null) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar un tipo de descuento.");
-            return;
-        }
+//        if (txtTipoDescuento.getValue() == null) {
+//            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar un tipo de descuento.");
+//            return;
+//        }
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
@@ -603,7 +638,7 @@ public class EditarPromocionControllerCliente implements  IFxController {
             promocionSeleccionada.setNombre(txtNombre.getText().trim());
             promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
             promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
-            promocionSeleccionada.setTipoDescuento(txtTipoDescuento.getValue());
+            promocionSeleccionada.setTipoDescuento(TipoDescuento.PORCENTAJE.toString());
             promocionSeleccionada.setPorcentaje((int) porcentajeDescuento.getValue());
             promocionSeleccionada.setFechaInicio(dateInicio.getValue().toString());
             promocionSeleccionada.setFechaFin(dateFin.getValue().toString());

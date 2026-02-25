@@ -58,6 +58,8 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     @FXML
     private TextField precioSinDescuento;
     @FXML
+    private TextField precioConDescuento;
+    @FXML
     private DatePicker fechaInicio;
     @FXML
     private DatePicker fechaFin;
@@ -65,8 +67,8 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     private Button btnRegistrar;
     @FXML
     private Button btnLimpiar;
-    @FXML
-    private ChoiceBox<String> tipoDescuento;
+//    @FXML
+//    private ChoiceBox<String> tipoDescuento;
     @FXML
     private TextField nombrePromocion;
     @FXML
@@ -141,7 +143,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     @Override
     public void configuraciones() {
 
-        cargarPorcentaje();
+        //cargarPorcentaje();
 
         precioSinDescuento.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
@@ -242,32 +244,43 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
         });
 
-        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
-
-
-            if (nuevoValor != null && !nuevoValor.isEmpty())
-                tipoDescuento(nuevoValor.toLowerCase());
-
+        porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
+            obtenerPorcentaje(valNuevo.doubleValue());
+            calcularPrecioConDescuento();
         });
+
+
+        precioSinDescuento.textProperty().addListener((observable, valAnterior, nuevoValor) -> {
+            calcularPrecioConDescuento();
+        });
+
+//        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
+//
+//
+//            if (nuevoValor != null && !nuevoValor.isEmpty())
+//                tipoDescuento(nuevoValor.toLowerCase());
+//
+//        });
 
     }//listeners
 
-    private void cargarPorcentaje() {
-        List<String> tiposDescuentos = new ArrayList<>();
-        tiposDescuentos.add(TipoDescuento.PORCENTAJE.toString());
-        tiposDescuentos.add(TipoDescuento.OTRO.toString());
-        tipoDescuento.setItems(FXCollections.observableList(tiposDescuentos));
-    }
+//    private void cargarPorcentaje() {
+//        List<String> tiposDescuentos = new ArrayList<>();
+//        tiposDescuentos.add(TipoDescuento.PORCENTAJE.toString());
+//        tiposDescuentos.add(TipoDescuento.OTRO.toString());
+//        tipoDescuento.setItems(FXCollections.observableList(tiposDescuentos));
+//    }
 
     private void clean() {
         nombrePromocion.setText("");
         descripcion.setText("");
         precioSinDescuento.setText("");
+        precioConDescuento.setText("");
         porcentajeDescuento.setValue(0);
         descuentoLabel.setText("Descuento 0%");
         fechaInicio.setValue(null);
         fechaFin.setValue(null);
-        tipoDescuento.setValue(null);
+
 
         choiceAnio.setValue(null);
         choiceMarca.setValue(null);
@@ -297,38 +310,58 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
         }
     }//obtenerPorcentaje
 
-    private void tipoDescuento(String tipo) {
+//    private void tipoDescuento(String tipo) {
+//
+//        switch (tipo) {
+//
+//            case "porcentaje" -> {
+//                precioSinDescuento.setDisable(false);
+//                porcentajeDescuento.setDisable(false);
+//                LocalDate fecha = LocalDate.now();
+//                fechaInicio.setValue(fecha);
+//                fechaFin.setValue(fecha);
+//                fechaFin.setDisable(false);
+//                fechaInicio.setDisable(false);
+//                btnImagen.setDisable(false);
+//                textFieldImg.setDisable(false);
+//
+//
+//            }
+//            case "otro" -> {
+//                precioSinDescuento.setDisable(false);
+//                porcentajeDescuento.setDisable(false);
+//                LocalDate fecha = LocalDate.now();
+//                fechaInicio.setValue(fecha);
+//                fechaFin.setValue(fecha);
+//                fechaFin.setDisable(false);
+//                fechaInicio.setDisable(false);
+//                btnImagen.setDisable(false);
+//                textFieldImg.setDisable(false);
+//
+//            }
+//        }//switch
+//
+//    }
 
-        switch (tipo) {
+    private void calcularPrecioConDescuento() {
+        String precioTexto = precioSinDescuento.getText();
 
-            case "porcentaje" -> {
-                precioSinDescuento.setDisable(false);
-                porcentajeDescuento.setDisable(false);
-                LocalDate fecha = LocalDate.now();
-                fechaInicio.setValue(fecha);
-                fechaFin.setValue(fecha);
-                fechaFin.setDisable(false);
-                fechaInicio.setDisable(false);
-                btnImagen.setDisable(false);
-                textFieldImg.setDisable(false);
+        if (precioTexto == null || precioTexto.isEmpty()) {
+            precioConDescuento.setText("");
+            return;
+        }
 
+        try {
+            double precio = Double.parseDouble(precioTexto);
+            double porcentaje = porcentajeDescuento.getValue();
+            double descuento = precio * (porcentaje / 100.0);
+            double precioFinal = precio - descuento;
 
-            }
-            case "otro" -> {
-                precioSinDescuento.setDisable(false);
-                porcentajeDescuento.setDisable(false);
-                LocalDate fecha = LocalDate.now();
-                fechaInicio.setValue(fecha);
-                fechaFin.setValue(fecha);
-                fechaFin.setDisable(false);
-                fechaInicio.setDisable(false);
-                btnImagen.setDisable(false);
-                textFieldImg.setDisable(false);
-
-            }
-        }//switch
-
-    }
+            precioConDescuento.setText(String.format("%.2f", precioFinal));
+        } catch (NumberFormatException e) {
+            precioConDescuento.setText("");
+        }
+    }//calcularPrecioConDescuento
 
     private void vehiculosParticipantesInitialize() {
 
@@ -415,7 +448,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
     private boolean empty() {
         boolean empty = false;
-        if (nombrePromocion.getText() == null || descripcion.getText() == null || tipoDescuento.getValue() == null || precioSinDescuento.getText() == null ||
+        if (nombrePromocion.getText() == null || descripcion.getText() == null ||  precioSinDescuento.getText() == null ||
                 fechaInicio.getValue() == null || fechaFin.getValue() == null || choiceMarca.getValue() == null || choiceModelo.getValue() == null ||
                 nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() || precioSinDescuento.getText().isEmpty()
                 || tableVehiculosParticipantes.getItems() == null)
@@ -503,7 +536,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
                     Promocion promocion = Promocion.builder()
                             .nombre(nombrePromocion.getText())
                             .descripcion(descripcion.getText())
-                            .tipoDescuento(tipoDescuento.getValue())
+                            .tipoDescuento(TipoDescuento.PORCENTAJE.toString())
                             .precio(Float.parseFloat(precioSinDescuento.getText()))
                             .porcentaje((int) porcentajeDescuento.getValue())
                             .fechaInicio(String.valueOf(fechaInicio.getValue()))

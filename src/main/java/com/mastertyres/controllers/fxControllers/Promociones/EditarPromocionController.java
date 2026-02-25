@@ -10,9 +10,11 @@ import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.modelo.service.ModeloService;
 import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.model.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
+import jakarta.persistence.Tuple;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -51,8 +53,9 @@ public class EditarPromocionController implements IFxController, ILoader {
     private TextArea txtDescripcion;
     @FXML
     private TextField txtPrecio;
-    @FXML
-    private ChoiceBox<String> txtTipoDescuento;
+    @FXML private TextField precioConDescuento;
+//    @FXML
+//    private ChoiceBox<String> txtTipoDescuento;
     @FXML
     private Slider porcentajeDescuento;
     @FXML
@@ -131,7 +134,7 @@ public class EditarPromocionController implements IFxController, ILoader {
         //elimina scroll horizontal de tabla vehculos paricipantes
         tableVehiculosParticipantes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
+        //txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
 
         // Inicializar columnas
         colMarca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMarca().getNombreMarca()));
@@ -230,8 +233,37 @@ public class EditarPromocionController implements IFxController, ILoader {
         //Actualizar valores
         btnActualizar.setOnAction(event -> actualizarPromocion());
 
+        porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
+            //obtenerPorcentaje(valNuevo.doubleValue());
+            calcularPrecioConDescuento();
+        });
+
+
+        txtPrecio.textProperty().addListener((observable, valAnterior, nuevoValor) -> {
+            calcularPrecioConDescuento();
+        });
 
     }//listeners
+
+    private void calcularPrecioConDescuento() {
+        String precioTexto = txtPrecio.getText();
+
+        if (precioTexto == null || precioTexto.isEmpty()) {
+            precioConDescuento.setText("");
+            return;
+        }
+
+        try {
+            double precio = Double.parseDouble(precioTexto);
+            double porcentaje = porcentajeDescuento.getValue();
+            double descuento = precio * (porcentaje / 100.0);
+            double precioFinal = precio - descuento;
+
+            precioConDescuento.setText(String.format("%.2f", precioFinal));
+        } catch (NumberFormatException e) {
+            precioConDescuento.setText("");
+        }
+    }//calcularPrecioConDescuento
 
     private void configurarValidaciones() {
 
@@ -308,7 +340,7 @@ public class EditarPromocionController implements IFxController, ILoader {
         //Deshabilitar botón "Guardar" cuando NO haya cliente o la lista de vehículos esté vacía
         btnActualizar.disableProperty().bind(
                 Bindings.isEmpty(vehiculosPromocionList)
-                        .or(txtTipoDescuento.valueProperty().isNull())
+                        //.or(txtTipoDescuento.valueProperty().isNull())
                         .or(txtNombre.textProperty().isEmpty())
                         .or(txtDescripcion.textProperty().isEmpty())
                         .or(precioValido.not())
@@ -432,11 +464,12 @@ public class EditarPromocionController implements IFxController, ILoader {
             txtNombre.setText(promocion.getNombre());
             txtDescripcion.setText(promocion.getDescripcion());
             txtPrecio.setText(String.valueOf(promocion.getPrecio()));
-            txtTipoDescuento.setValue(promocion.getTipoDescuento());
+            //txtTipoDescuento.setValue(promocion.getTipoDescuento());
 
             // Configurar el valor del slider y actualizar el label
             porcentajeDescuento.setValue(promocion.getPorcentaje());
             porcentaje.setText(promocion.getPorcentaje() + "%");
+            calcularPrecioConDescuento();
 
             dateInicio.setValue(LocalDate.parse(promocion.getFechaInicio()));
             dateFin.setValue(LocalDate.parse(promocion.getFechaFin()));
@@ -507,7 +540,7 @@ public class EditarPromocionController implements IFxController, ILoader {
                     promocionSeleccionada.setNombre(txtNombre.getText().trim());
                     promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
                     promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
-                    promocionSeleccionada.setTipoDescuento(txtTipoDescuento.getValue());
+                    promocionSeleccionada.setTipoDescuento(TipoDescuento.PORCENTAJE.toString());
                     promocionSeleccionada.setPorcentaje((int) porcentajeDescuento.getValue());
                     promocionSeleccionada.setFechaInicio(dateInicio.getValue().toString());
                     promocionSeleccionada.setFechaFin(dateFin.getValue().toString());
