@@ -50,35 +50,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
-public class ClienteController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
-
-    @Override
-    public void cleanup() {
-        // Limpiar listeners
-        if (delayQuery != null) {
-            delayQuery.stop();
-        }
-        if (pauseTransition != null) {
-            pauseTransition.stop();
-        }
-
-        // Limpiar tabla
-//        if (tablaClientes != null) {
-//            tablaClientes.getItems().clear();
-//            tablaClientes.setItems(null);
-//        }
-
-        // Limpiar referencias
-        todosLosClientes = null;
-        //terminoBusquedaActual = null;
-        //terminoBusquedaFechaActual = null;
-
-        // Anular referencias a campos FXML
-        //buscarClienteBuscador = null;
-        //atributoBusquedaClientes = null;
-        dpBuscarCliente = null;
-        dpClienteFin = null;
-    }
+public class ClienteController implements IVentanaPrincipal, IFxController, ILoader {
 
     private VentanaPrincipalController ventanaPrincipalController;
 

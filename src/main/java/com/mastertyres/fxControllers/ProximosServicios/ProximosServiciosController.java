@@ -37,30 +37,8 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 
 @Component
-public class ProximosServiciosController implements IFxController, ILoader, ICleanable {
+public class ProximosServiciosController implements IFxController, ILoader {
 
-    @Override
-    public void cleanup() {
-        // Limpiar contenedor de cards
-        if (contenedorServicios != null) {
-            contenedorServicios.getChildren().clear();
-        }
-
-        // Limpiar referencias
-        vehiculoSeleccion = null;
-        filtroActual = null;
-
-        // Limpiar campos de texto
-        if (txtBuscar != null) {
-            txtBuscar.clear();
-        }
-
-        // Anular HostServices
-        hostServices = null;
-
-        // Anular referencias
-        contenedorServicios = null;
-    }
 
     @FXML
     private AnchorPane ventanaProximosServicios;

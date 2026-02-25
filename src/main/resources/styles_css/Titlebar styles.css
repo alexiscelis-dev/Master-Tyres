@@ -1,0 +1,28 @@
+/* ===== TITLE BAR ===== */
+
+/* Botón genérico */
+.title-bar-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+    -fx-transition: -fx-background-color 0.15s;
+}
+
+/* Hover minimizar y maximizar */
+.title-bar-btn:hover {
+    -fx-background-color: rgba(142, 184, 61, 0.20);
+}
+
+/* Hover cerrar */
+.title-bar-btn-close:hover {
+    -fx-background-color: #c0392b;
+}
+
+/* Pressed - feedback visual al click */
+.title-bar-btn:pressed {
+    -fx-background-color: rgba(142, 184, 61, 0.38);
+}
+
+.title-bar-btn-close:pressed {
+    -fx-background-color: #922b21;
+}

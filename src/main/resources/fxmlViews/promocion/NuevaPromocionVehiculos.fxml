@@ -74,7 +74,7 @@
 
                 <HBox prefHeight="34.0" prefWidth="432.0">
                     <children>
-                        <Label text="Tipo de descuento" textFill="WHITE">
+                        <Label text="Precio sin descuento" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
@@ -85,7 +85,7 @@
                                 <Insets left="40.0" right="56.0" />
                             </HBox.margin>
                         </Label>
-                        <Label text="Precio sin descuento" textFill="WHITE">
+                        <Label text="Precio con descuento" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
@@ -100,24 +100,23 @@
                 </HBox>
                 <HBox prefHeight="40.0" prefWidth="432.0">
                     <children>
-                        <ChoiceBox fx:id="tipoDescuento" prefWidth="150.0" styleClass="choicebox-mini2">
-                            <HBox.margin>
-                                <Insets left="40.0" right="38.0" />
-                            </HBox.margin>
-                            <items>
-
-                            </items>
-
-
-                        </ChoiceBox>
-                        <TextField fx:id="precioSinDescuento" disable="true" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
+                        <TextField fx:id="precioSinDescuento" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
                             <HBox.margin>
-                                <Insets />
+                                <Insets left="40.0" />
                             </HBox.margin>
                         </TextField>
+                        <TextField fx:id="precioConDescuento" editable="false" prefHeight="26.0" prefWidth="156.0" styleClass="buscador">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <HBox.margin>
+                                <Insets left="50.0" />
+                            </HBox.margin>
+                        </TextField>
+
                     </children>
                     <VBox.margin>
                         <Insets bottom="15.0" />
@@ -127,7 +126,7 @@
                     <children>
                         <VBox alignment="CENTER" prefHeight="44.0" prefWidth="392.0">
                             <children>
-                                <Slider fx:id="porcentajeDescuento" disable="true" prefHeight="14.0" prefWidth="340.0">
+                                <Slider fx:id="porcentajeDescuento" prefHeight="14.0" prefWidth="340.0">
                                     <VBox.margin>
                                         <Insets bottom="5.0" />
                                     </VBox.margin>
@@ -184,12 +183,12 @@
 
                 <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../../styles_css/ClientesStyles.css">
                     <children>
-                        <DatePicker fx:id="fechaInicio" disable="true" editable="false" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
+                        <DatePicker fx:id="fechaInicio" editable="false" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
                             <HBox.margin>
                                 <Insets right="35.0" />
                             </HBox.margin>
                         </DatePicker>
-                        <DatePicker fx:id="fechaFin" disable="true" editable="false" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
+                        <DatePicker fx:id="fechaFin" editable="false" prefHeight="26.0" prefWidth="158.0" styleClass="date-picker" />
                     </children>
                     <VBox.margin>
                         <Insets left="40.0" />

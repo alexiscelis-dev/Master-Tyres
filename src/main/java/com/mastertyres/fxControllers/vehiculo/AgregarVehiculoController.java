@@ -48,42 +48,7 @@ import java.util.*;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
-
-    @Override
-    public void cleanup() {
-        // 1. Limpiar tablas
-        if (tablaVehiculos != null) {
-            tablaVehiculos.getItems().clear();
-            tablaVehiculos.setItems(null);
-        }
-
-//        if (tablaClientes != null) {
-//            tablaClientes.getItems().clear();
-//            tablaClientes.setItems(null);
-//        }
-
-        // 2. Limpiar colección
-        if (listaVehiculos != null) {
-            listaVehiculos.clear();
-            listaVehiculos = null;
-        }
-
-        // 3. Limpiar mapa
-        if (modeloPorCategoriaId != null) {
-            modeloPorCategoriaId.clear();
-        }
-
-        // 4. Nullificar controladores
-        ventanaPrincipalController = null;
-        loadingOverlayController = null;
-
-        // 5. Nullificar referencias FXML principales
-        tablaVehiculos = null;
-        //tablaClientes = null;
-        rootPane = null;
-        ventanaAgregarCliente = null;
-    }
+public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoader {
 
     @Autowired
     private MarcaService marcaService;

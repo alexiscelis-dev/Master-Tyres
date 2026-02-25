@@ -45,41 +45,12 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class AdministarMarcasController implements IFxController, ILoader, ICleanable {
-
-    @Override
-    public void cleanup() {
-        // Limpiar tabla
-        if (TablaVehiculoMarca != null) {
-            TablaVehiculoMarca.getItems().clear();
-            TablaVehiculoMarca.setItems(null);
-        }
-
-        // Limpiar TilePane
-//        if (contenedorMarcas != null) {
-//            contenedorMarcas.getChildren().clear();
-//        }
-
-        // Limpiar referencias
-        marcaSeleccionada = null;
-        filtroActual = null;
-
-        // Limpiar campos de texto
-        if (txtBuscar != null) {
-            txtBuscar.clear();
-        }
-
-        // Anular referencias
-        //contenedorMarcas = null;
-        TablaVehiculoMarca = null;
-    }
+public class AdministarMarcasController implements IFxController, ILoader {
 
     @FXML
     private Label lblNombre;
-
     @FXML
     private TextField txtBuscar;
-
     @FXML
     private TableView<DetalleCategoria> TablaVehiculoMarca;
     @FXML

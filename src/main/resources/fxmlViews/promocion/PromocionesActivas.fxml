@@ -23,7 +23,7 @@
                         <graphic>
                             <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/lupa.png"/>
+                                    <Image url="@/icons/lupa.png" />
                                 </image>
                             </ImageView>
                         </graphic>
@@ -75,11 +75,11 @@
                         </font></Label>
                             <Label fx:id="lblDescripcion" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                            <Label styleClass="titulo" text="Tipo de descuento:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <Label styleClass="titulo" text="Precio con descuento:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="2">
                         <font>
                            <Font name="System Bold" size="14.0" />
                         </font></Label>
-                            <Label fx:id="lblTipoDescuento" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label fx:id="lblPrecioConDescuento" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                             <Label styleClass="titulo" text="Valor de descuento:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="3">
                         <font>
@@ -87,7 +87,7 @@
                         </font></Label>
                             <Label fx:id="lblValorDescuento" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                            <Label styleClass="titulo" text="Precio:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                            <Label styleClass="titulo" text="Precio sin descuento:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
                         <font>
                            <Font name="System Bold" size="14.0" />
                         </font></Label>
@@ -136,8 +136,8 @@
                         </font></Button>
 
                             <columnConstraints>
-                                <ColumnConstraints minWidth="-Infinity" prefWidth="140.0" />
-                                <ColumnConstraints prefWidth="250.0" />
+                                <ColumnConstraints minWidth="-Infinity" prefWidth="160.0" />
+                                <ColumnConstraints prefWidth="230.0" />
                         <ColumnConstraints halignment="CENTER" minWidth="-Infinity" prefWidth="150.0" />
                             </columnConstraints>
                             <rowConstraints>

@@ -4,72 +4,62 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="28.0" prefWidth="835.0" xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="35.0"
+            prefWidth="835.0"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.fxControllers.ventanaPrincipal.TitleBarController">
 
+    <StackPane fx:id="tittleBar"
+               AnchorPane.topAnchor="0.0"
+               AnchorPane.bottomAnchor="0.0"
+               AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0"
+               style="-fx-background-color: #080808;"
+               stylesheets="/styles_css/Titlebar styles.css">
 
-    <StackPane fx:id="tittleBar">
-        <GridPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-            <columnConstraints>
-                <ColumnConstraints/>
-                <ColumnConstraints/>
-            </columnConstraints>
+        <HBox alignment="CENTER_RIGHT" spacing="0">
 
-            <rowConstraints>
-                <RowConstraints/>
-            </rowConstraints>
-
-            <children>
-
-
-                <ImageView fitHeight="20.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true"
-                           GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <!-- Minimizar -->
+            <StackPane fx:id="btnMinimizar"
+                       onMouseClicked="#minimizar"
+                       styleClass="title-bar-btn"
+                       style="-fx-padding: 8 14 8 14;">
+                <ImageView fitHeight="12.0" fitWidth="12.0"
+                           pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@/icons/add-line.png"/>
+                        <Image url="@/icons/ventana_principal/minimize.png"/>
                     </image>
                 </ImageView>
+            </StackPane>
 
+            <!-- Maximizar -->
+            <StackPane fx:id="btnMaximizar"
+                       onMouseClicked="#maximizarRestaurar"
+                       styleClass="title-bar-btn"
+                       style="-fx-padding: 8 14 8 14;">
+                <ImageView fitHeight="12.0" fitWidth="12.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/icons/ventana_principal/maximize.png"/>
+                    </image>
+                </ImageView>
+            </StackPane>
 
-                <HBox alignment="CENTER_RIGHT" prefHeight="40" prefWidth="800" spacing="10"
-                      style="-fx-background-color: #080808;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <!-- Cerrar -->
+            <StackPane fx:id="btnCerrar"
+                       onMouseClicked="#cerrar"
+                       styleClass="title-bar-btn, title-bar-btn-close"
+                       style="-fx-padding: 8 14 8 14;">
+                <ImageView fitHeight="12.0" fitWidth="12.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/icons/ventana_principal/exit.png"/>
+                    </image>
+                </ImageView>
+            </StackPane>
 
-
-                    <Label>
-                        <graphic>
-                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/ventana_principal/minimize.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Label>
-                    <Label>
-                        <graphic>
-                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/ventana_principal/maximize.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Label>
-                    <Label>
-                        <graphic>
-                            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                <image>
-                                    <Image url="@/icons/ventana_principal/exit.png"/>
-                                </image>
-                            </ImageView>
-                        </graphic>
-                    </Label>
-
-
-                </HBox>
-
-
-            </children>
-
-        </GridPane>
+        </HBox>
     </StackPane>
-
 
 </AnchorPane>
