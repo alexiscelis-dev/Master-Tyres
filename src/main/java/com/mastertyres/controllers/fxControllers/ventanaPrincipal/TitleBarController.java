@@ -1,4 +1,4 @@
-package com.mastertyres.fxControllers.ventanaPrincipal;
+package com.mastertyres.controllers.fxControllers.ventanaPrincipal;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
@@ -25,7 +25,7 @@ public class TitleBarController {
 
         tittleBar.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
-                System.out.println("TitleBar conectado a la escena");
+                //System.out.println("TitleBar conectado a la escena");
                 tittleBar.setOnMousePressed(this::capturarPuntoArrastre);
                 tittleBar.setOnMouseDragged(this::arrastrarVentana);
             }

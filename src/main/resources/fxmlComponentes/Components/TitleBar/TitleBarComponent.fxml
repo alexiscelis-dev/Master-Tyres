@@ -8,7 +8,7 @@
             prefWidth="835.0"
             xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.ventanaPrincipal.TitleBarController">
+            fx:controller="com.mastertyres.controllers.fxControllers.ventanaPrincipal.TitleBarController">
 
     <StackPane fx:id="tittleBar"
                AnchorPane.topAnchor="0.0"
