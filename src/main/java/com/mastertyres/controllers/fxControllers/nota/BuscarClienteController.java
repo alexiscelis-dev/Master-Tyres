@@ -32,30 +32,7 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
-public class BuscarClienteController implements IFxController, ICleanable {
-
-    @Override
-    public void cleanup() {
-        // 1. Limpiar tablas
-        if (tablaClientes != null) {
-            tablaClientes.getItems().clear();
-            tablaClientes.setItems(null);
-        }
-
-        if (tablaVehiculos != null) {
-            tablaVehiculos.getItems().clear();
-            tablaVehiculos.setItems(null);
-        }
-
-        // 2. Nullificar referencias
-        clienteSeleccionado = null;
-        vehiculoSeleccionado = null;
-
-        // 3. Nullificar FXML
-        tablaClientes = null;
-        tablaVehiculos = null;
-        root = null;
-    }
+public class BuscarClienteController implements IFxController{
 
     @FXML
     private AnchorPane root;

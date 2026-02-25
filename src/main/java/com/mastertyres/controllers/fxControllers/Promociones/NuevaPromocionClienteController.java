@@ -44,70 +44,22 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoader, ICleanable {
+public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoader {
 
-    @Override
-    public void cleanup() {
-        // 1. Detener animaciones
-        if (pauseTransition != null) {
-            pauseTransition.stop();
-            pauseTransition = null;
-        }
-
-        // 2. Limpiar colecciones
-        if (clientesSeleccionados != null) {
-            clientesSeleccionados.clear();
-        }
-
-//        // 3. Limpiar tablas
-//        if (tablaClientes != null) {
-//            tablaClientes.getItems().clear();
-//            tablaClientes.setItems(null);
-//        }
-
-        if (clientesAgregados != null) {
-            clientesAgregados.getItems().clear();
-            clientesAgregados.setItems(null);
-        }
-
-        // 4. Nullificar referencias grandes
-        ventanaPrincipalController = null;
-        //loadingOverlayController = null;
-        terminoBusqueda = null;
-        terminoBusquedaActual = null;
-
-        // 5. Nullificar referencias FXML
-        //tablaClientes = null;
-        clientesAgregados = null;
-        rootPane = null;
-    }
-
-    @FXML
-    private AnchorPane rootPane;
-    @FXML
-    private Slider porcentajeDescuento;
-    @FXML
-    private Label descuentoLabel;
-    @FXML
-    private TextField precioSinDescuento;
-    @FXML
-    private DatePicker fechaInicio;
-    @FXML
-    private DatePicker fechaFin;
-    @FXML
-    private Button btnRegistrar;
-    @FXML
-    private Button btnLimpiar;
-    @FXML
-    private ChoiceBox<String> tipoDescuento;
-    @FXML
-    private TextField nombrePromocion;
-    @FXML
-    private TextArea descripcion;
-    @FXML
-    private Button btnImagen;
-    @FXML
-    private TextField textFieldImg;
+    @FXML private AnchorPane rootPane;
+    @FXML private Slider porcentajeDescuento;
+    @FXML private Label descuentoLabel;
+    @FXML private TextField precioSinDescuento;
+    @FXML private DatePicker fechaInicio;
+    @FXML private DatePicker fechaFin;
+    @FXML private Button btnRegistrar;
+    @FXML private Button btnLimpiar;
+    //@FXML private ChoiceBox<String> tipoDescuento;
+    @FXML private TextField precioConDescuento;
+    @FXML private TextField nombrePromocion;
+    @FXML private TextArea descripcion;
+    @FXML private Button btnImagen;
+    @FXML private TextField textFieldImg;
 
 
     @FXML
@@ -186,7 +138,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
     public void configuraciones() {
 
-        cargarPorcentaje();
+        //cargarPorcentaje();
 
         precioSinDescuento.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
@@ -221,12 +173,22 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
         });
 
-        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
+//        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
+//
+//
+//            if (nuevoValor != null && !nuevoValor.isEmpty())
+//                tipoDescuento(nuevoValor.toLowerCase());
+//
+//        });
 
 
-            if (nuevoValor != null && !nuevoValor.isEmpty())
-                tipoDescuento(nuevoValor.toLowerCase());
+        porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
+            obtenerPorcentaje(valNuevo.doubleValue());
+            calcularPrecioConDescuento();
+        });
 
+        precioSinDescuento.textProperty().addListener((observable, valAnterior, nuevoValor) -> {
+            calcularPrecioConDescuento();
         });
 
         txtBuscador.setOnKeyPressed(event -> {
@@ -440,6 +402,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
     private void insertarPromocion() {
 
 
+
         // 2. Validar clientes
         if (clientesAgregados.getItems().isEmpty()) {
             mostrarError("Error", "", "Debe agregar al menos un cliente a la promoción");
@@ -454,7 +417,8 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
                     Promocion promocion = Promocion.builder()
                             .nombre(nombrePromocion.getText())
                             .descripcion(descripcion.getText())
-                            .tipoDescuento(tipoDescuento.getValue())
+                            .tipoDescuento(TipoDescuento.PORCENTAJE.toString())
+                            //.tipoDescuento(tipoDescuento.getValue())
                             .precio(Float.parseFloat(precioSinDescuento.getText()))
                             .porcentaje((int) porcentajeDescuento.getValue())
                             .fechaInicio(String.valueOf(fechaInicio.getValue()))
@@ -555,12 +519,12 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
         }
     }
 
-    private void cargarPorcentaje() {
-        List<String> tiposDescuentos = new ArrayList<>();
-        tiposDescuentos.add(TipoDescuento.PORCENTAJE.toString());
-        tiposDescuentos.add(TipoDescuento.OTRO.toString());
-        tipoDescuento.setItems(FXCollections.observableList(tiposDescuentos));
-    }
+//    private void cargarPorcentaje() {
+//        List<String> tiposDescuentos = new ArrayList<>();
+//        tiposDescuentos.add(TipoDescuento.PORCENTAJE.toString());
+//        tiposDescuentos.add(TipoDescuento.OTRO.toString());
+//        tipoDescuento.setItems(FXCollections.observableList(tiposDescuentos));
+//    }
 
     private void obtenerPorcentaje(Double valNuevo) {
 
@@ -616,11 +580,31 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
     }
 
+    private void calcularPrecioConDescuento() {
+        String precioTexto = precioSinDescuento.getText();
+
+        if (precioTexto == null || precioTexto.isEmpty()) {
+            precioConDescuento.setText("");
+            return;
+        }
+
+        try {
+            double precio = Double.parseDouble(precioTexto);
+            double porcentaje = porcentajeDescuento.getValue();
+            double descuento = precio * (porcentaje / 100.0);
+            double precioFinal = precio - descuento;
+
+            precioConDescuento.setText(String.format("%.2f", precioFinal));
+        } catch (NumberFormatException e) {
+            precioConDescuento.setText("");
+        }
+    }//calcularPrecioConDescuento
+
     private boolean empty() {
         boolean empty = false;
-        if (nombrePromocion.getText() == null || descripcion.getText() == null || tipoDescuento.getValue() == null || precioSinDescuento.getText() == null ||
-                fechaInicio.getValue() == null || fechaFin.getValue() == null || nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() ||
-                precioSinDescuento.getText().isEmpty())
+        if (nombrePromocion.getText() == null || descripcion.getText() == null  || precioSinDescuento.getText() == null ||
+                fechaInicio.getValue() == null || fechaFin.getValue() == null  || nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() ||
+                precioSinDescuento.getText().isEmpty() )
 
             empty = true;
 
@@ -692,11 +676,12 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
         nombrePromocion.setText("");
         descripcion.setText("");
         precioSinDescuento.setText("");
+        precioConDescuento.setText("");
         porcentajeDescuento.setValue(0);
         descuentoLabel.setText("Descuento 0%");
         fechaInicio.setValue(null);
         fechaFin.setValue(null);
-        tipoDescuento.setValue(null);
+        //tipoDescuento.setValue(null);
 
         txtBuscador.setText("");
         clientesAgregados.getItems().clear();

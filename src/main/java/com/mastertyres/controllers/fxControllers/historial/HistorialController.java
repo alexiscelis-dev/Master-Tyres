@@ -42,7 +42,7 @@ import java.util.List;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class HistorialController extends BaseNota implements IFxController, ILoader, ICleanable {
+public class HistorialController extends BaseNota implements IFxController, ILoader {
 
     @FXML
     private AnchorPane rootPane;
@@ -393,27 +393,5 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
         contenedorHistorial.getChildren().clear();
 
     }//modoReset
-
-    @Override
-    public void cleanup() {
-
-        // Limpiar contenedor de cards
-        if (contenedorHistorial != null) {
-            contenedorHistorial.getChildren().clear();
-        }
-
-        // Limpiar referencias
-        cardSeleccionada = null;
-        notaVentana = null;
-
-        // Limpiar campos de texto
-        if (txtBuscar != null) {
-            txtBuscar.clear();
-        }
-
-        // Anular referencias
-        contenedorHistorial = null;
-        detallePromocion = null;
-    }
 
 }//class

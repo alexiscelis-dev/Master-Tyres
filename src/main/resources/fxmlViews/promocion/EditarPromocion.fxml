@@ -41,8 +41,9 @@
                     <TextField fx:id="txtPrecio" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                     <!-- Tipo Descuento -->
-                    <Label text="Tipo Descuento:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <ChoiceBox fx:id="txtTipoDescuento" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Label text="Precio con descuento:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <TextField fx:id="precioConDescuento" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="buscador" />
+<!--                    <ChoiceBox fx:id="txtTipoDescuento" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="3" />-->
 
                     <!-- Porcentaje -->
                     <Label text="Porcentaje:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
