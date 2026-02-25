@@ -1,0 +1,459 @@
+.buscador {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: transparent;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+/* para campos deshabilitados */
+.buscador2 {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: transparent;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.buscador:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+
+/* Botones */
+.boton-accion {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.boton-accion:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-background-color: #AEE83A;
+}
+
+
+/* Tabla */
+.table-view {
+    -fx-background-color: #1A1A1A;
+    -fx-table-cell-border-color: #080808;
+    -fx-padding: 5px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #1A1A1A;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #8EB83D;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white; /* Cambia a blanco u otro color con buen contraste */
+    -fx-font-weight: bold; /* Opcional: texto más grueso */
+}
+
+.table-view .column-header-background .label {
+    -fx-text-fill: white; /* O el color que prefieras */
+    -fx-font-weight: bold;
+}
+
+/* Delinea el contorno del vbox de numero de nota*/
+
+.vBoxNumNota{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 10 0;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+}
+/* Delinea el contorno del vbox de informacion cliente y vehiculo*/
+.vBoxInfo{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 10 0;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+}
+/* Delinea el contorno del vbox de informacion cliente y vehiculo*/
+.vBoxSi-No{
+
+  -fx-background-color: white;
+  -fx-border-radius: 10px;
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+
+
+}
+
+/* Delinea el contorno del vbox de */
+.vBoxInfoNota{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 0 10;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+    -fx-pref-height: 705px;
+
+}
+
+.textfield-nota{
+
+-fx-background-color:transparent;
+-fx-background-insets:0;
+-fx-font-weight:bold;
+-fx-background-color:transparent;
+-fx-text-fill:black;
+-fx-font-size: 13px;
+-fx-prompt-text-fill: gray;
+
+}
+
+
+.vBoxFecha{
+
+  -fx-background-color: white;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 10 0 10 0;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10 0 10 0;
+
+}
+
+.label-fecha{
+-fx-background-color: #63605E;
+-fx-font-weight: bold;
+ -fx-font-size: 14px;
+
+}
+
+.textfield-fecha{
+-fx-pref-width: 60px;
+-fx-background-color:transparent;
+-fx-background-insets:0;
+-fx-background-color:transparent;
+-fx-text-fill: black;
+-fx-font-font-size: 14px;
+-fx-font-weight: bold;
+}
+
+
+/* En nota 3 se usa para que el delineado sea mas delgado, se usa en subtotal mecanica, frenos y otros */
+.text-field-nota3 {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 13px;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: black;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-family:"Tahoma";
+
+}
+
+.text-field-nota3:focused {
+    -fx-border-color: transparent transparent #63605E transparent; /* color al enfocar */
+}
+
+/* Esta centra el texto a comparacion de la normal */
+.text-field-nota2 {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
+    -fx-border-width: 0 0 2 0;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: black;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-family:"Tahoma";
+
+}
+
+.text-field-nota2:focused {
+    -fx-border-color: transparent transparent #63605E transparent; /* color al enfocar */
+}
+
+
+.text-field-nota {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent black transparent; /* solo línea abajo */
+    -fx-border-width: 0 0 2 0;
+    -fx-font-size: 14px;
+    -fx-padding: 5 0 5 0;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-family:"Tahoma";
+
+}
+
+.text-field-nota:focused {
+    -fx-border-color: transparent transparent #63605E transparent; /* color al enfocar */
+}
+
+
+.check-box .box {
+    -fx-pref-width: 20px;       /* tamaño del recuadro */
+    -fx-pref-height: 20px;
+    -fx-border-color: black;     /* borde negro */
+    -fx-border-width: 2;         /* grosor del borde */
+    -fx-background-color: transparent; /* fondo transparente */
+    -fx-border-radius: 2px;
+}
+/* Estilo de la palomita solo cuando está seleccionado */
+.check-box:selected .box {
+    -fx-background-color: #8EB83D; /* verde al marcar */
+    -fx-border-color: #4CAF50;
+}
+
+
+.vBoxFillIzquierdo{
+
+  -fx-background-color:  #63605E;
+
+    /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+    -fx-background-radius: 3 0 0 3;
+
+    /* Borde completo, mismo radio que el fondo para que coincida */
+    -fx-border-color: #63605E;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3 0 0 3;
+    -fx-background-radius: 2px;
+}
+
+.vBoxFillDerecho{
+  -fx-background-color:  #63605E;
+
+     /* Esquinas: top-left, top-right, bottom-right, bottom-left */
+     -fx-background-radius: 0 3 3 0;
+
+     /* Borde completo, mismo radio que el fondo para que coincida */
+     -fx-border-color: #63605E;
+     -fx-border-width: 1px;
+     -fx-border-radius: 0 3 3 0;
+     -fx-background-radius: 2px;
+ }
+
+ .vBoxFill{
+ -fx-background-color: #63605E;
+
+ }
+
+ .total{
+  -fx-background-color: #63605E;
+  -fx-border-color: #63605E;
+  -fx-background-radius: 5px;
+  -fx-border-radius: 5px;
+  -fx-prefer-height:30px;
+  -fx-prefer-width: 90px;
+ }
+
+
+.showIcons {
+    -fx-background-color: white;         /* color de fondo */
+    -fx-background-radius: 50%;          /* lo hace circular */
+    -fx-padding: 10;                     /* margen interno para centrar bien la imagen */
+    -fx-cursor: hand;                    /* puntero de mano al pasar */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-alignment: center;
+}
+
+.showIcons:hover {
+    -fx-background-color: #f5f5f5;       /* un poco más gris al pasar el mouse */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.buscar-cliente{
+   -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: White;
+    -fx-border-color: transparent;
+    -fx-padding: 4px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-font-weight: bold;
+
+}
+
+.scroll-paneBuscar {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-paneBuscar > .viewport {
+    -fx-background-color: transparent;
+}
+.titulo {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-max-width: infinity;
+    -fx-text-alignment: center;
+}
+
+.radio-button {
+    -fx-font-size: 14px;
+    -fx-text-fill: White; /* color del texto */
+    -fx-mark-color: #8EB83D; /* color del círculo de selección */
+    -fx-cursor: hand; /* cambia el cursor al pasar por encima */
+}
+
+
+/*
+DatePicker
+*/
+
+
+.date-picker {
+
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 2 6;
+    -fx-font-size: 13px;
+}
+
+.date-picker:focused {
+    -fx-border-color: #8EB83D;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: #8EB83D;
+}
+
+.date-picker .calendar-popup {
+    -fx-background-color: #1A1A1A;
+    -fx-border-color: #8EB83D;
+}
+
+.date-picker .calendar-popup .month-year-pane,
+.date-picker .calendar-popup .day-cell {
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell:hover {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .calendar-popup .selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .text-field {
+    -fx-text-fill: #F2F2F2;
+    -fx-background-color: transparent;
+    -fx-prompt-text-fill: #BBBBBB;
+
+}
+
+.date-picker .calendar-popup {
+    -fx-background-color: #000000;
+    -fx-border-color: #99CC33;
+}
+
+.date-picker .calendar-popup .month-year-pane {
+    -fx-background-color: #000000;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell {
+    -fx-background-color: #000000;
+    -fx-text-fill: #F2F2F2;
+}
+
+.date-picker .calendar-popup .day-cell:hover {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+.date-picker .calendar-popup .selected {
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: black;
+}
+
+
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar,
+.scroll-bar .track,
+.scroll-bar .thumb {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+#stackTransparente {
+    -fx-background-color: transparent;
+}
+
+.label-campos{
+-fx-font-family:"Arial";
+-fx-font-size:14px;
+-fx-margin: 0 0 0 5;
+-fx-font-fill: #000000;
+
+}
+
+.label-campos2{
+-fx-font-family:"Arial";
+-fx-font-size:14px;
+-fx-font-fill: #000000;
+}
+
+

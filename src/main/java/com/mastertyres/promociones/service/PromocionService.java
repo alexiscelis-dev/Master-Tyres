@@ -2,11 +2,8 @@ package com.mastertyres.promociones.service;
 
 import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
 import com.mastertyres.ClientesPromocion.repository.ClientePromocionRepository;
-import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.modelo.model.Modelo;
 import com.mastertyres.promociones.domain.PromocionValidator;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.model.StatusPromocion;
@@ -14,7 +11,6 @@ import com.mastertyres.promociones.repository.PromocionesRepository;
 import com.mastertyres.vehiculoPromocion.domain.VehiculoPromocionValidator;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import com.mastertyres.vehiculoPromocion.repository.VehiculoPromocionRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -129,6 +125,7 @@ public class PromocionService implements IPromocionService {
 
     @Transactional
     public void crearPromocionConClientes(Promocion promocion, List<Integer> clientesIds) {
+        promocionValidator.validarGuardar(promocion);
 
         promocionRepository.save(promocion);
 

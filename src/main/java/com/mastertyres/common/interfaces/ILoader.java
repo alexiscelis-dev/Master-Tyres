@@ -1,6 +1,6 @@
 package com.mastertyres.common.interfaces;
 
-import com.mastertyres.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.LoadingComponentController;
 
 public interface ILoader {
 

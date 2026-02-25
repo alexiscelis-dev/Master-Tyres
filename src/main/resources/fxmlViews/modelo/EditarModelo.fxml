@@ -8,7 +8,7 @@
             style="-fx-background-color: #080808;"
             stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.AdministrarMarcasModelosCategorias.EditarModeloController">
+            fx:controller="com.mastertyres.controllers.fxControllers.AdministrarMarcasModelosCategorias.EditarModeloController">
 
     <children>
         <HBox alignment="TOP_CENTER" spacing="20">

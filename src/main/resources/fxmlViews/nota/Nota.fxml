@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="ventanaNotas" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.nota.NotaController">
+<AnchorPane fx:id="ventanaNotas" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.nota.NotaController">
 
 
 

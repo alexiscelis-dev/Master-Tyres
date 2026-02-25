@@ -12,7 +12,7 @@
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
             style="-fx-background-color: #080808;" stylesheets="/styles_css/Inventario.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.inventario.InventarioController">
+            fx:controller="com.mastertyres.controllers.fxControllers.inventario.InventarioController">
 
 
 
@@ -43,7 +43,7 @@
                         <DatePicker fx:id="dpInventarioFin" prefHeight="26.0" prefWidth="150.0"
                                     promptText="Fecha fin" visible="false" managed="false" />
 
-                        <Button mnemonicParsing="false" onAction="#accionBuscarInventario" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
+                        <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#accionBuscarInventario" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
                             <graphic>
                                 <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
                                     <image>

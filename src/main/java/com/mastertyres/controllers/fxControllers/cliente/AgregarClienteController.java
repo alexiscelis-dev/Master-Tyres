@@ -1,0 +1,993 @@
+package com.mastertyres.controllers.fxControllers.cliente;
+
+import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.service.CategoriaService;
+import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.model.TipoCliente;
+import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.ClienteException;
+import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.utils.RegexTools;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
+import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.service.MarcaService;
+import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.service.ModeloService;
+import com.mastertyres.vehiculo.model.StatusVehiculo;
+import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.service.VehiculoService;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.util.StringConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
+
+@Component
+public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoader {
+
+    @Autowired
+    private MarcaService marcaService;
+
+    @Autowired
+    private ModeloService modeloService;
+
+    @Autowired
+    private CategoriaService categoriaService;
+
+    @Autowired
+    private ClienteService clienteService;
+
+    @Autowired
+    private VehiculoService vehiculoService;
+
+    @Autowired
+    private DetalleCategoriaService detalleCategoriaService;
+
+    @Autowired
+    private TaskService taskService;
+
+    // Columnas de tabla vehiculos
+    @FXML
+    private TableView<Vehiculo> tablaVehiculos;
+    @FXML
+    private TableColumn<Vehiculo, String> colMarca;
+    @FXML
+    private TableColumn<Vehiculo, String> colCategoria;
+    @FXML
+    private TableColumn<Vehiculo, String> colColor;
+    @FXML
+    private TableColumn<Vehiculo, String> colPlacas;
+    @FXML
+    private TableColumn<Vehiculo, String> colAnnio;
+    @FXML
+    private TableColumn<Vehiculo, String> colModelo;
+    @FXML
+    private TableColumn<Vehiculo, String> colNumSerie;
+    @FXML
+    private TableColumn<Vehiculo, String> colKilometros;
+    @FXML
+    private TableColumn<Vehiculo, String> colultimoServicio;
+    @FXML
+    private TableColumn<Vehiculo, String> colObservaciones;
+    @FXML
+    private TableColumn<Vehiculo, Void> colEliminar;
+
+    //Campos Cliente
+
+    @FXML
+    private AnchorPane ventanaAgregarCliente;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtNombreEmpresa;
+    @FXML
+    private TextField txtApellido;
+    @FXML
+    private TextField txtSegundoApellido;
+    @FXML
+    private TextField txtTelefono;
+    @FXML
+    private TextField txtDomicilio;
+    @FXML
+    private TextField txtCiudad;
+    @FXML
+    private TextField txtEstado;
+    @FXML
+    private TextField txtHobbie;
+    @FXML
+    private TextField txtRFC;
+    @FXML
+    private DatePicker pickerCumpleanos;
+    @FXML
+    private ChoiceBox<String> choiceTipoCliente;
+    @FXML
+    private ChoiceBox<String> choiceGenero;
+
+    // Campos Vehiculo
+    @FXML
+    private ChoiceBox<Marca> choiceMarca;
+    @FXML
+    private ChoiceBox<Modelo> choiceModelo;
+    @FXML
+    private ChoiceBox<Categoria> choiceCategoria;
+    @FXML
+    private TextField txtColor;
+    @FXML
+    private TextField txtPlacas;
+    @FXML
+    private Spinner<Integer> spinnerAnio;
+    @FXML
+    private TextField txtSerie;
+    @FXML
+    private TextField txtKilometros;
+    @FXML
+    private DatePicker pickerUltimoServicio;
+    @FXML
+    private TextField txtObservaciones;
+    @FXML
+    private TextField txtCorreo;
+    @FXML
+    private Button btnLimpiar;
+
+    private ObservableList<Vehiculo> listaVehiculos = FXCollections.observableArrayList();
+
+    // Botones Principales
+    @FXML
+    private Button btnAgregarVehiculo;
+    @FXML
+    private Button btnGuardar;
+
+    //Validaciones:
+    private BooleanProperty rfcValido = new SimpleBooleanProperty(true);
+    private BooleanProperty serieValido = new SimpleBooleanProperty(true);
+    private BooleanProperty placasValido = new SimpleBooleanProperty(true);
+    private BooleanProperty telefonoValido = new SimpleBooleanProperty(true);
+    private BooleanProperty kilometrosValido = new SimpleBooleanProperty(true);
+    private BooleanProperty nombreValido = new SimpleBooleanProperty(true);
+    private BooleanProperty apellidoValido = new SimpleBooleanProperty(true);
+    private BooleanProperty ColorValido = new SimpleBooleanProperty(true);
+    private BooleanProperty CorreoValido = new SimpleBooleanProperty(true);
+
+    private VentanaPrincipalController ventanaPrincipalController;
+    private LoadingComponentController loadingOverlayController;
+
+    private final Map<Integer, Modelo> modeloPorCategoriaId = new HashMap<>();
+
+    @FXML
+    private void initialize() {
+
+        configuraciones();
+        listeners();
+        cargarOpciones();
+
+    }//initialize
+
+    @Override
+    public void configuraciones() {
+
+        MenuContextSetting.disableMenu(ventanaAgregarCliente);
+
+        //Deshabilitar los menus de los demas campos mendiante el nodo interno que es un texfield
+        MenuContextSetting.disableMenu(pickerCumpleanos.getEditor());
+        MenuContextSetting.disableMenu(pickerUltimoServicio.getEditor());
+        MenuContextSetting.disableMenu(spinnerAnio.getEditor());
+        RegexTools.aplicarNumeroEntero(spinnerAnio.getEditor());
+
+        //Impetir que se escriba en el DatePicker
+        DatePicker datePicker = new DatePicker();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        tablaVehiculos.setItems(listaVehiculos);
+        colMarca.setCellValueFactory(data -> {
+            Marca marca = data.getValue().getMarca();
+            return new SimpleStringProperty(marca != null ? marca.getNombreMarca() : "");
+        });
+        colModelo.setCellValueFactory(data -> {
+            Modelo modelo = data.getValue().getModelo();
+            return new SimpleStringProperty(modelo != null ? modelo.getNombreModelo() : "");
+        });
+        colCategoria.setCellValueFactory(data -> {
+            Categoria categoria = data.getValue().getCategoria();
+            return new SimpleStringProperty(categoria != null ? categoria.getNombreCategoria() : "");
+        });
+
+        colAnnio.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAnio())));
+        colColor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getColor()));
+        colPlacas.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPlacas()));
+        colNumSerie.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNumSerie()));
+        colKilometros.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getKilometros())));
+        colultimoServicio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUltimoServicio()));
+        colObservaciones.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getObservaciones()));
+
+        // Botón eliminar con icono
+        colEliminar.setCellFactory(col -> new TableCell<>() {
+            private final Button btn = new Button();
+
+            {
+                // Quitar texto y agregar imagen
+                Image img = new Image(getClass().getResourceAsStream("/icons/delete.png"));
+                ImageView imgv = new ImageView(img);
+                imgv.setFitWidth(18);   // tamaño icono
+                imgv.setFitHeight(18);
+                btn.setGraphic(imgv);
+
+                btn.setOnAction(e -> {
+                    Vehiculo v = getTableView().getItems().get(getIndex());
+                    listaVehiculos.remove(v);
+                });
+
+                // (opcional) estilo para que sea redondo o plano
+                btn.setStyle("-fx-background-color: red;");
+
+                btn.hoverProperty().addListener((obs, wasHovered, isNowHovered) -> {
+                    if (isNowHovered) {
+                        btn.setStyle("-fx-scale-x: 1.1;\n" +
+                                "    -fx-scale-y: 1.1;");
+                    } else {
+                        btn.setStyle("-fx-background-color: red;");
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : btn);
+            }
+        });
+
+        //inizializa con el año actual
+        int currentYear = Year.now().getValue();
+        SpinnerValueFactory<Integer> yearFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1900, currentYear, currentYear);
+        spinnerAnio.setValueFactory(yearFactory);
+
+
+    }//configuraciones
+
+    @Override
+    public void listeners() {
+
+ btnLimpiar.setOnAction(event -> {
+     limpiarCamposVehiculo();
+     LimpiarCamposClientes();
+     tablaVehiculos.getItems().clear();
+ });
+
+      //pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
+        configurarValidaciones();
+
+        pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
+        txtNombreEmpresa.disableProperty().bind(
+                choiceTipoCliente.valueProperty().isNotEqualTo(TipoCliente.EMPRESA.toString())
+        );
+
+        //eliminar contenido de DatePickerUltimoServicio
+        pickerUltimoServicio.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case BACK_SPACE, DELETE -> {
+                    pickerUltimoServicio.setValue(null);
+                }
+            }
+        });
+
+        pickerCumpleanos.getEditor().setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case BACK_SPACE, DELETE -> {
+                    pickerCumpleanos.setValue(null);
+                }
+            }
+        });
+
+        //Evitar que los choiceBox se baran debajo de la tabla
+        choiceMarca.setOnMousePressed(event -> {
+            if (!choiceMarca.isShowing()) {
+                choiceMarca.show();
+                choiceMarca.hide();
+            }
+        });
+        choiceModelo.setOnMousePressed(event -> {
+            if (!choiceModelo.isShowing()) {
+                choiceModelo.show();
+                choiceModelo.hide();
+            }
+        });
+        choiceCategoria.setOnMousePressed(event -> {
+            if (!choiceCategoria.isShowing()) {
+                choiceCategoria.show();
+                choiceCategoria.hide();
+            }
+        });
+
+        if (choiceTipoCliente.equals(TipoCliente.INDIVIDUAL)){
+            txtNombreEmpresa.setText("");
+            txtNombreEmpresa.setEditable(false);
+        }
+
+    }//listeners
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+        this.loadingOverlayController = loading;
+    }
+
+    @Override
+    public void setVentanaPrincipalController(VentanaPrincipalController controller) {
+        this.ventanaPrincipalController = ventanaPrincipalController;
+    }
+
+    private void configurarValidaciones() {
+
+        txtKilometros.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d{0,6}")) {
+                txtKilometros.setText(oldValue);
+            }
+        });
+
+        // NOMBRE
+        txtNombre.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isBlank()) {
+                nombreValido.set(false);
+                txtNombre.setStyle("-fx-border-color: red;");
+            } else {
+                nombreValido.set(true);
+                txtNombre.setStyle("");
+            }
+        });
+
+        txtNombre.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) { // pierde foco
+                txtNombre.setText(formatoOracion(txtNombre.getText()));
+            }
+        });
+
+// APELLIDO
+        txtApellido.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isBlank()) {
+                apellidoValido.set(false);
+                txtApellido.setStyle("-fx-border-color: red;");
+            } else {
+                apellidoValido.set(true);
+                txtApellido.setStyle("");
+            }
+        });
+
+        txtApellido.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtApellido.setText(formatoOracion(txtApellido.getText()));
+            }
+        });
+
+// SEGUNDO APELLIDO (no obligatorio, no borde rojo)
+        txtSegundoApellido.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtSegundoApellido.setText(formatoOracion(txtSegundoApellido.getText()));
+            }
+        });
+
+        //Ciudad
+        txtCiudad.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtCiudad.setText(formatoOracion(txtCiudad.getText()));
+            }
+        });
+
+        //Estado
+        txtEstado.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtEstado.setText(formatoOracion(txtEstado.getText()));
+            }
+        });
+
+        //Domicilio
+        txtDomicilio.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                txtDomicilio.setText(formatoOracion(txtDomicilio.getText()));
+            }
+        });
+
+        // Teléfono
+        txtTelefono.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText != null && !newText.isBlank() && newText.matches("^\\+?[\\d\\s\\-()]{7,20}$")) {
+                // Válido: no vacío y cumple formato
+                telefonoValido.set(true);
+                txtTelefono.setStyle("");
+            } else {
+                telefonoValido.set(false);
+                txtTelefono.setStyle("-fx-border-color: red;");
+            }
+        });
+
+        txtTelefono.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("[\\d\\s\\-()+]*")) {
+                return c;
+            }
+            return null;
+        }));
+
+        // RFC: opcional, acepta minúsculas
+        txtRFC.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase(); // convertir a mayúsculas para la validación
+            txtRFC.setText(texto); // actualiza el campo visualmente en mayúsculas
+            if (texto.isEmpty()) {
+                rfcValido.set(true);
+                txtRFC.setStyle("");
+            } else if (!texto.matches("^([A-Z,Ñ,&]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z\\d]{3})$")) {
+                rfcValido.set(false);
+                txtRFC.setStyle("-fx-border-color: red;");
+            } else {
+                rfcValido.set(true);
+                txtRFC.setStyle("");
+                ObtenerFechaCumpleaños(texto);
+            }
+        });
+
+        // correo: opcional, acepta minúsculas
+        txtCorreo.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toLowerCase(); // convertir a minusculas para la validación
+            txtCorreo.setText(texto); // actualiza el campo visualmente en minusculas
+            if (texto.isEmpty()) {
+                CorreoValido.set(true);
+                txtCorreo.setStyle("");
+            } else if (!texto.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,63}$")) {
+                CorreoValido.set(false);
+                txtCorreo.setStyle("-fx-border-color: red;");
+            } else {
+                CorreoValido.set(true);
+                txtCorreo.setStyle("");
+            }
+        });
+
+// Placas
+        txtPlacas.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtPlacas.setText(texto);
+            if (texto.isEmpty()) {
+                placasValido.set(true);
+                txtPlacas.setStyle("");
+            } else if (!texto.matches("^[A-Z0-9]+(-[A-Z0-9]+)*$")) {
+                placasValido.set(false);
+                txtPlacas.setStyle("-fx-border-color: red;");
+            } else {
+                placasValido.set(true);
+                txtPlacas.setStyle("");
+            }
+        });
+
+// Número de serie (VIN)
+        txtSerie.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtSerie.setText(texto);
+            if (texto.isEmpty()) {
+                serieValido.set(true);
+                txtSerie.setStyle("");
+            } else if (!texto.matches("^[A-HJ-NPR-Z0-9]{17}$")) {
+                serieValido.set(false);
+                txtSerie.setStyle("-fx-border-color: red;");
+            } else {
+                serieValido.set(true);
+                txtSerie.setStyle("");
+            }
+        });
+
+        //Color
+        txtColor.textProperty().addListener((obs, oldText, newText) -> {
+            String texto = newText.toUpperCase();
+            txtColor.setText(texto);
+            if (texto.isEmpty()) {
+                ColorValido.set(false);
+                txtColor.setStyle("-fx-border-color: red;");
+            } else if (!texto.matches("^[A-Z]{1,20}")) {
+                ColorValido.set(false);
+                txtColor.setStyle("-fx-border-color: red;");
+            } else {
+                ColorValido.set(true);
+                txtColor.setStyle("");
+            }
+        });
+
+        // Kilómetros
+        txtKilometros.textProperty().addListener((obs, oldText, newText) -> {
+            if (newText.isEmpty()) {
+                kilometrosValido.set(true);
+                txtKilometros.setStyle(""); // estilo normal
+            } else if (!newText.matches("\\d*")) {
+                kilometrosValido.set(false);
+                txtKilometros.setStyle("-fx-border-color: red;"); // borde rojo si es inválido
+            } else {
+                kilometrosValido.set(true);
+                txtKilometros.setStyle("");
+            }
+        });
+        txtKilometros.setTextFormatter(new TextFormatter<>(c -> {
+            if (c.getControlNewText().matches("\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+
+        choiceModelo.disableProperty().bind(choiceMarca.valueProperty().isNull());
+        choiceCategoria.disableProperty().bind(choiceModelo.valueProperty().isNull());
+
+        BooleanBinding nombreEmpresaValido = Bindings.createBooleanBinding(
+                () -> {
+                    String tipo = choiceTipoCliente.getValue();
+
+                    if (tipo == null) return false;
+
+                    // Si NO es empresa → es válido automáticamente
+                    if (!tipo.equalsIgnoreCase(TipoCliente.EMPRESA.toString())) {
+                        txtNombreEmpresa.setText("");
+                        return true;
+                    }
+
+                    // Si es empresa → no puede estar vacío
+                    return !txtNombreEmpresa.getText().isBlank();
+                },
+                choiceTipoCliente.valueProperty(),
+                txtNombreEmpresa.textProperty()
+        );
+
+        txtNombreEmpresa.styleProperty().bind(
+                Bindings.when(nombreEmpresaValido.not()
+                                .and(choiceTipoCliente.valueProperty()
+                                        .isEqualTo(TipoCliente.EMPRESA.toString())))
+                        .then("-fx-border-color: red;")
+                        .otherwise("")
+        );
+
+
+
+        // Deshabilitar botón "Agregar Vehículo" hasta que se llenen los campos requeridos
+        btnAgregarVehiculo.disableProperty().bind(
+                choiceMarca.valueProperty().isNull()
+                        .or(choiceModelo.valueProperty().isNull())
+                        .or(txtColor.textProperty().isEmpty())
+                        .or(spinnerAnio.valueProperty().isNull())
+                        .or(serieValido.not())
+                        .or(placasValido.not())
+                        .or(kilometrosValido.not())
+        );
+
+        // Deshabilitar botón "Guardar" hasta que se llenen los campos requeridos y haya al menos un vehículo
+        btnGuardar.disableProperty().bind(
+                Bindings.isEmpty(listaVehiculos)
+                        .or(txtNombre.textProperty().isEmpty())
+                        .or(txtApellido.textProperty().isEmpty())
+                        .or(txtTelefono.textProperty().isEmpty())
+                        .or(choiceTipoCliente.valueProperty().isNull())
+                        .or(choiceGenero.valueProperty().isNull())
+                        .or(rfcValido.not())
+                        .or(telefonoValido.not())
+                        .or(CorreoValido.not())
+                        .or(nombreEmpresaValido.not())
+
+        );
+
+
+
+    }
+
+    private void ObtenerFechaCumpleaños(String rfc) {
+        String texto = rfc.toUpperCase();
+        // Extraer fecha: YYYY-MM-DD
+        String yy = texto.substring(texto.length() == 13 ? 4 : 3, texto.length() == 13 ? 6 : 5);
+        String mm = texto.substring(texto.length() == 13 ? 6 : 5, texto.length() == 13 ? 8 : 7);
+        String dd = texto.substring(texto.length() == 13 ? 8 : 7, texto.length() == 13 ? 10 : 9);
+
+        int year = Integer.parseInt(yy);
+        int month = Integer.parseInt(mm);
+        int day = Integer.parseInt(dd);
+
+        // Siglo
+        if (year >= 0 && year <= 23) {
+            year += 2000;
+        } else {
+            year += 1900;
+        }
+
+        try {
+            LocalDate fechaNacimiento = LocalDate.of(year, month, day);
+            pickerCumpleanos.setValue(fechaNacimiento);
+        } catch (Exception e) {
+            pickerCumpleanos.setValue(null);
+        }
+    }
+
+    private String formatoOracion(String texto) {
+        if (texto == null || texto.isBlank()) return "";
+        String[] palabras = texto.trim().split("\\s+");
+        StringBuilder resultado = new StringBuilder();
+        for (String palabra : palabras) {
+            if (!palabra.isEmpty()) {
+                resultado.append(palabra.substring(0, 1).toUpperCase())
+                        .append(palabra.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+        return resultado.toString().trim();
+    }
+
+    private void cargarOpciones() {
+        List<Marca> marcas = marcaService.listarMarcas();
+        List<Modelo> modelos = modeloService.listarModelos();
+        List<Categoria> categorias = categoriaService.listarCategorias();
+        Map<String, List<Modelo>> modelosPorNombre = new HashMap<>();
+
+        choiceMarca.setItems(FXCollections.observableArrayList(marcas));
+        choiceModelo.setItems(FXCollections.observableArrayList(modelos)); // se llenará luego con el filtro
+        choiceCategoria.setItems(FXCollections.observableArrayList(categorias));
+
+        // Mostrar nombres
+        choiceMarca.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Marca marca) {
+                return marca != null ? marca.getNombreMarca() : "";
+            }
+
+            @Override
+            public Marca fromString(String string) {
+                return null;
+            }
+        });
+
+        choiceModelo.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Modelo modelo) {
+                return modelo != null ? modelo.getNombreModelo() : "";
+            }
+
+            @Override
+            public Modelo fromString(String string) {
+                return null;
+            }
+        });
+
+        choiceCategoria.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Categoria categoria) {
+                return categoria != null ? categoria.getNombreCategoria() : "";
+            }
+
+            @Override
+            public Categoria fromString(String string) {
+                return null;
+            }
+        });
+
+        //  Listener para filtrar modelos según la marca seleccionada
+        choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
+            if (newMarca != null) {
+                modelosPorNombre.clear();
+                modelos.stream()
+                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+                        .forEach(modelo -> modelosPorNombre
+                                .computeIfAbsent(normalizarModelo(modelo.getNombreModelo()), key -> new ArrayList<>())
+                                .add(modelo));
+                List<Modelo> modelosFiltrados = modelosPorNombre.values().stream()
+                        .map(modelosConNombre -> modelosConNombre.get(0))
+                        .toList();
+                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+                choiceModelo.getSelectionModel().clearSelection();
+                choiceCategoria.getItems().clear();
+            } else {
+                choiceModelo.getItems().clear();
+            }
+        });
+
+//        choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
+//            if (newMarca != null) {
+//                List<Modelo> modelosFiltrados = modelos.stream()
+//                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
+//                        .toList();
+//                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+//            } else {
+//                choiceModelo.getItems().clear();
+//            }
+//        });
+
+        choiceModelo.getSelectionModel().selectedItemProperty().addListener((obs, oldModelo, newModelo) -> {
+            Marca marcaSeleccionada = choiceMarca.getValue();
+
+            if (marcaSeleccionada != null && newModelo != null) {
+                Map<Integer, Categoria> categoriasPorId = new LinkedHashMap<>();
+                modeloPorCategoriaId.clear();
+                List<Modelo> modelosConNombre = modelosPorNombre
+                        .getOrDefault(normalizarModelo(newModelo.getNombreModelo()), List.of());
+                for (Modelo modelo : modelosConNombre) {
+                    List<Categoria> categoriasFiltradas = detalleCategoriaService.listarCategoriasPorMarcaYModelo(
+                            marcaSeleccionada.getMarcaId(),
+                            modelo.getModeloId()
+                    );
+                    for (Categoria categoria : categoriasFiltradas) {
+                        categoriasPorId.putIfAbsent(categoria.getCategoriaId(), categoria);
+                        modeloPorCategoriaId.putIfAbsent(categoria.getCategoriaId(), modelo);
+                    }
+                }
+                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasPorId.values()));
+                choiceCategoria.getSelectionModel().clearSelection();
+//
+//                List<Categoria> categoriasFiltradas =
+//                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
+//                                marcaSeleccionada.getMarcaId(),
+//                                newModelo.getModeloId()
+//                        );
+//
+//                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
+
+            } else {
+                choiceCategoria.getItems().clear();
+            }
+        });
+    }
+
+    private String normalizarModelo(String nombre) {
+        return nombre == null ? "" : nombre.trim().toLowerCase();
+    }
+
+    private Modelo obtenerModeloSeleccionado() {
+        Categoria categoria = choiceCategoria.getValue();
+        if (categoria != null) {
+            Modelo modelo = modeloPorCategoriaId.get(categoria.getCategoriaId());
+            if (modelo != null) {
+                return modelo;
+            }
+        }
+        return choiceModelo.getValue();
+    }
+
+    @FXML
+    private void agregarVehiculo(ActionEvent event) {
+
+        if (!serieValido.get() || !kilometrosValido.get() || !placasValido.get()) {
+            mostrarWarning("Error en campos", "", "Por favor, corrige los campos marcados en rojo antes de agregar vehiculo");
+            return;
+        }
+        Vehiculo v = new Vehiculo();
+
+        v.setColor(txtColor.getText());
+        v.setPlacas(txtPlacas.getText());
+        v.setNumSerie(txtSerie.getText());
+        v.setObservaciones(txtObservaciones.getText());
+
+        if (pickerUltimoServicio.getValue() != null) {
+            v.setUltimoServicio(pickerUltimoServicio.getValue().toString());
+        }
+
+
+        v.setAnio(spinnerAnio.getValue());
+
+
+        try {
+            v.setKilometros(Integer.parseInt(txtKilometros.getText()));
+        } catch (NumberFormatException e) {
+            v.setKilometros(0);
+        }
+
+
+        v.setMarca(choiceMarca.getValue());
+        v.setModelo(obtenerModeloSeleccionado());
+        //v.setModelo(choiceModelo.getValue());
+        v.setCategoria(choiceCategoria.getValue());
+
+        listaVehiculos.add(v);
+        limpiarCamposVehiculo();
+
+    }
+
+    private void limpiarCamposVehiculo() {
+        choiceMarca.setValue(null);
+        choiceModelo.setValue(null);
+        choiceCategoria.setValue(null);
+        spinnerAnio.getValueFactory().setValue(LocalDate.now().getYear());
+
+        txtColor.clear();
+        txtPlacas.clear();
+        txtSerie.clear();
+        txtKilometros.clear();
+        pickerUltimoServicio.setValue(null);
+        txtObservaciones.clear();
+
+        //Quitar estilo border
+        String STILE = "";
+
+        txtColor.setStyle(STILE);
+        txtPlacas.setStyle(STILE);
+        txtSerie.setStyle(STILE);
+        txtKilometros.setStyle(STILE);
+        txtObservaciones.setStyle(STILE);
+        pickerUltimoServicio.setStyle(STILE);
+        spinnerAnio.setStyle(STILE);
+
+
+
+
+
+    }
+
+    private void LimpiarCamposClientes() {
+
+        txtNombre.clear();
+        txtApellido.clear();
+        txtSegundoApellido.clear();
+        txtNombreEmpresa.clear();
+        txtDomicilio.clear();
+        txtEstado.clear();
+        txtCiudad.clear();
+        txtTelefono.clear();
+        txtHobbie.clear();
+        txtRFC.clear();
+        pickerCumpleanos.setValue(null);
+        choiceTipoCliente.setValue(null);
+
+        //quitar border estilo
+        String STILE = "";
+
+        txtNombre.setStyle(STILE);
+        txtApellido.setStyle(STILE);
+        txtSegundoApellido.setStyle(STILE);
+        //txtNombreEmpresa.setStyle(STILE);
+        txtDomicilio.setStyle(STILE);
+        txtEstado.setStyle(STILE);
+        txtCiudad.setStyle(STILE);
+        txtTelefono.setStyle(STILE);
+        txtHobbie.setStyle(STILE);
+        txtRFC.setStyle(STILE);
+        pickerCumpleanos.setStyle(STILE);
+
+    }
+
+    @FXML
+    private void GuardarCliente(ActionEvent event) {
+
+        if (!rfcValido.get() || !telefonoValido.get()) {
+            mostrarError("Error en campos", "", "Por favor, corrige los campos marcados en rojo antes de guardar.");
+            return;
+        }
+
+// Validar que no haya duplicados en la lista antes de guardar
+        Set<String> placasSerieSet = new HashSet<>();
+
+        for (Vehiculo v : listaVehiculos) {
+            String placas = v.getPlacas();
+            String numSerie = v.getNumSerie();
+
+            // Si ambos están vacíos o nulos, lo dejamos pasar
+            if ((placas == null || placas.isBlank()) && (numSerie == null || numSerie.isBlank())) {
+                continue;
+            }
+
+            // Normalizamos valores nulos a vacío
+            placas = placas != null ? placas.trim() : "";
+            numSerie = numSerie != null ? numSerie.trim() : "";
+
+            String key = placas + "|" + numSerie;
+
+            if (!placasSerieSet.add(key)) {
+                mostrarWarning(
+                        "Vehículos repetidos", "",
+                        "Hay vehículos con placas o número de serie repetidos en la lista."
+                );
+                return;
+            }
+        }
+
+
+        // Crear Cliente
+        Cliente cliente = new Cliente();
+        cliente.setUpdated_at(LocalDate.now().toString());
+        cliente.setNombre(txtNombre.getText());
+        cliente.setApellido(txtApellido.getText());
+        cliente.setNombreEmpresa(txtNombreEmpresa.getText());
+        cliente.setSegundoApellido(txtSegundoApellido.getText());
+        cliente.setHobbie(txtHobbie.getText());
+        cliente.setRfc(txtRFC.getText());
+        cliente.setNumTelefono(txtTelefono.getText());
+        cliente.setEstado(txtEstado.getText());
+        cliente.setCiudad(txtCiudad.getText());
+        cliente.setDomicilio(txtDomicilio.getText());
+        cliente.setCorreo(txtCorreo.getText());
+        cliente.setTipoCliente(choiceTipoCliente.getValue() != null ? choiceTipoCliente.getValue().toString() : null);
+        if (pickerCumpleanos.getValue() != null) {
+            cliente.setFechaCumple(pickerCumpleanos.getValue().toString());
+        }
+        cliente.setActive(StatusCliente.ACTIVE.toString());
+        cliente.setCreated_at(LocalDate.now().toString());
+
+        if (choiceGenero.getValue() != null) {
+            switch (choiceGenero.getValue()) {
+                case "Masculino" -> cliente.setGenero("M");
+                case "Femenino" -> cliente.setGenero("F");
+                case "Otro" -> cliente.setGenero("O");
+            }
+        }
+
+        // Asignar los vehículos
+        for (Vehiculo v : listaVehiculos) {
+            v.setContador_mensaje(0);
+            v.setCliente(cliente); // relación bidireccional
+            if (v.getActive() == null) {
+                v.setActive(StatusVehiculo.ACTIVE.toString());
+            }
+            if (v.getCreated_at() == null) {
+                v.setCreated_at(LocalDate.now().toString());  // Asignar fecha creación aquí
+            }
+            if (v.getUpdated_at() == null) {
+                v.setUpdated_at(LocalDate.now().toString());
+            }
+            if (v.getFechaRegistro() == null) {
+                v.setFechaRegistro(LocalDate.now().toString());
+            }
+        }
+        cliente.setVehiculos(listaVehiculos);
+
+
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
+
+                    // Guardar usando el servicio
+                    //true - > registra hace validaciones en vehiculo el metodo Validator
+                    clienteService.guardarCliente(cliente,true);
+                return null;
+
+                }, (resultado) ->{
+
+
+
+                    mostrarInformacion("Guardado exitoso", "", "El cliente guardado con éxito");
+                    // Limpiar formulario
+                    limpiarCamposVehiculo();
+                    LimpiarCamposClientes();
+                    listaVehiculos.clear();
+
+                },(ex) ->{
+
+                    if (ex instanceof ClienteException){
+                        mostrarError("No se pudo guardar","Ocurrio un problema al guardar el cliente","" + ex.getMessage());
+                    }else {
+                        mostrarError("Error interno",
+                                "Error inesperado",
+                                "Ocurrio un error al intentar registrar el cliente.");
+                    }
+
+                },null
+        );
+
+
+    }//GuardarCliente
+
+    public void Cancelar(ActionEvent actionEvent) {
+        ventanaPrincipalController.irAtras();
+    }
+
+
+}//class

@@ -11,7 +11,7 @@
 <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;"
             stylesheets="/styles_css/Historial.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.historial.HistorialController">
+            fx:controller="com.mastertyres.controllers.fxControllers.historial.HistorialController">
     <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0" AnchorPane.leftAnchor="50.0"
                 AnchorPane.rightAnchor="50.0">
         <VBox>
