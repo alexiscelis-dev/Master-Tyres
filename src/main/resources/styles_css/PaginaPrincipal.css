@@ -6,8 +6,8 @@
     -fx-scale-x: 1;
     -fx-scale-y: 1;
     -fx-transition: all 120ms ease-in;
-     -fx-effect: innershadow(gaussian, white, 10, 0.5, 0, 0);
-     -fx-opacity: 1;
+   /*  -fx-effect: innershadow(gaussian, white, 10, 0.5, 0, 0);
+     -fx-opacity: 1; */
      -fx-blend-mode: screen;
 }
 
@@ -15,7 +15,7 @@
     -fx-opacity: 1.0;
     -fx-scale-x: 1.2;
     -fx-scale-y: 1.2;
-   -fx-effect: innershadow(gaussian, white, 20, 1, 0, 0);
+ /*  -fx-effect: innershadow(gaussian, white, 20, 1, 0, 0);*/
 }
 
 /* Etiquetas del menú */

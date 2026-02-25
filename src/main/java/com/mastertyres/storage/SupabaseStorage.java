@@ -3,6 +3,7 @@ package com.mastertyres.storage;
 import com.mastertyres.common.exeptions.RespaldoException;
 import com.mastertyres.respaldo.model.Respaldo;
 import com.mastertyres.respaldo.model.StatusRespaldo;
+import com.mastertyres.respaldo.model.TipoRespaldo;
 import com.mastertyres.respaldo.service.RespaldoProxyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +51,8 @@ public class SupabaseStorage {
                 respaldoProxyService.actualizarEstado(archivoDatos.getRespaldoId(), StatusRespaldo.FALLIDO.toString());
                 throw new RespaldoException("El respaldo se generó localmente, pero no se pudo almacenar en la nube.");
             }
+
+            respaldoProxyService.actualizarTipoRespaldo(archivoDatos.getRespaldoId(), TipoRespaldo.CLOUD.toString());
 
 
         } catch (Exception e) {

@@ -23,4 +23,8 @@ public interface RespaldoRepository extends JpaRepository<Respaldo, Integer> {
     @Query(SELECT_RESPALDO + " WHERE r.estado = 'COMPLETO' ORDER BY r.createdAt DESC LIMIT 1 ")
     Respaldo obtenerUltimoRespaldo();
 
+    @Modifying
+    @Query(UPDATE_RESPALDO + " " + "r.tipoRespaldo = :tipoRespaldo WHERE r.respaldoId = :respaldoId")
+    void actualizarTipoRespaldo(@Param("respaldoId") Integer respaldoId, @Param("tipoRespaldo") String tipoRespaldo);
+
 }//interface

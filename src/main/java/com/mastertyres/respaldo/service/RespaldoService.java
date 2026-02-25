@@ -120,7 +120,7 @@ public class RespaldoService implements IRespaldoService {
                     .tamanioBytes(tamanioBytes)
                     .estado(exitCode == 0 ? StatusRespaldo.COMPLETO.toString() : StatusRespaldo.FALLIDO.toString())
                     .codigoError(exitCode == 0 ? null : errores.toString())
-                    .tipoRespaldo(TipoRespaldo.UPLOAD.toString())
+                    .tipoRespaldo(TipoRespaldo.LOCAL.toString())
                     .createdAt(LocalDateTime.now().toString())
                     .build();
 
@@ -152,7 +152,7 @@ public class RespaldoService implements IRespaldoService {
                     .tamanioBytes(null)
                     .estado(StatusRespaldo.FALLIDO.toString())
                     .codigoError(e.toString())
-                    .tipoRespaldo(TipoRespaldo.UPLOAD.toString())
+                    .tipoRespaldo(TipoRespaldo.LOCAL.toString())
                     .createdAt(LocalDateTime.now().toString())
                     .build();
 
@@ -180,6 +180,11 @@ public class RespaldoService implements IRespaldoService {
     @Override
     public Respaldo ObtenerUltimoRespaldo() {
         return respaldoRepository.obtenerUltimoRespaldo();
+    }
+
+    @Override
+    public void actualizarTipoRespaldo(Integer respaldoId, String tipoRespaldo) {
+
     }
 
 

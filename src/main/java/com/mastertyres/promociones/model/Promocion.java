@@ -59,4 +59,4 @@ public class Promocion {
 
     private String img;
 
-}
+}//class

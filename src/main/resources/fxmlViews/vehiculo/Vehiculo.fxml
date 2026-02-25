@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.vehiculo.VehiculoController">
+<AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.vehiculo.VehiculoController">
 
    <children>
 
@@ -29,7 +29,7 @@
 
                   <DatePicker fx:id="dpVehiculoFin" prefHeight="26.0" prefWidth="150.0" promptText="Fecha fin" visible="false" managed="false" />
 
-                  <Button mnemonicParsing="false" onAction="#accionBuscarVehiculo" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
+                  <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#accionBuscarVehiculo" prefHeight="26.0" prefWidth="40.0" styleClass="boton-accion">
                      <graphic>
                         <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
                            <image>
@@ -65,7 +65,7 @@
                   <children>
                      <Button fx:id="btnModificarMarcaModeloCategoria" layoutX="1.0" layoutY="1.0" onAction="#ModificarMarcaModeloCategoria" prefHeight="25.0" prefWidth="181.0" styleClass="boton-accion" text="Administrar Marcas" />
                      <Button fx:id="btnAgregarVehiculo" layoutX="195.0" layoutY="1.0" onAction="#agregarVehiculo" prefHeight="25.0" prefWidth="150.0" styleClass="boton-accion" text="Agregar Vehiculo" />
-                     <Button id="refrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizarTabla" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
+                     <Button fx:id="btnRefrescar" layoutX="354.0" layoutY="1.0" mnemonicParsing="false" onAction="#actualizarTabla" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion">
                         <graphic>
                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                               <image>

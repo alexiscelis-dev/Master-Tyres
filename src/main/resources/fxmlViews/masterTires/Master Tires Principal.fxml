@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="ventanaPrincipal"
+            minHeight="600" minWidth="1344" prefHeight="600.0" prefWidth="1344.0"
+            style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController">
+
+    <fx:include fx:id="loadingOverlay"
+                source="/fxmlComponentes/Components/Loader/LoadingComponent.fxml"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="0.0"/>
+
+    <children>
+        <AnchorPane fx:id="sidebar" layoutX="14.0" layoutY="114.0" prefHeight="486.0" prefWidth="340.0"
+                    style="-fx-background-color: #080808;" styleClass="sidebar" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="114.0">
+            <children>
+                <VBox alignment="TOP_CENTER" layoutX="-8.0" layoutY="-16.0" prefHeight="509.0" prefWidth="340.0"
+                      spacing="40.0" style="-fx-background-color: #1A1A1A;" AnchorPane.bottomAnchor="-7.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-16.0">
+                    <children>
+                        <HBox fx:id="HBoxNotas" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                            <children>
+                                <ImageView fitHeight="50.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true"
+                                           styleClass="icono-menu">
+                                    <image>
+                                        <Image url="@../../icons/ventana_principal/notes.png"/>
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="25.0" right="15.0"/>
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label contentDisplay="CENTER" styleClass="menu-label" text="Notas" textFill="WHITE">
+                                    <font>
+                                        <Font name="Roboto" size="14.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                            <opaqueInsets>
+                                <Insets/>
+                            </opaqueInsets>
+                            <VBox.margin>
+                                <Insets bottom="-60.0"/>
+                            </VBox.margin>
+                        </HBox>
+                        <HBox fx:id="HBoxClientes" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                            <children>
+                                <ImageView fx:id="iconoCliente" fitHeight="50.0" fitWidth="35.0" pickOnBounds="true"
+                                           preserveRatio="true" styleClass="icono-menu">
+                                    <image>
+                                        <Image url="@../../icons/ventana_principal/customers.png"/>
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="25.0" right="15.0"/>
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label styleClass="menu-label" text="Clientes" textFill="WHITE">
+                                    <font>
+                                        <Font name="Roboto" size="14.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="-50.0"/>
+                            </VBox.margin>
+                        </HBox>
+                        <HBox fx:id="HBoxVehiculos" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                            <children>
+                                <ImageView fx:id="iconoProximosServicios" fitHeight="50.0" fitWidth="35.0"
+                                           pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
+                                    <image>
+                                        <Image url="@../../icons/ventana_principal/car.png"/>
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="25.0" right="15.0"/>
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label contentDisplay="TOP" styleClass="menu-label" text="Vehiculos" textFill="WHITE">
+                                    <font>
+                                        <Font name="Roboto" size="14.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="-30.0" top="-10.0"/>
+                            </VBox.margin>
+                        </HBox>
+                        <HBox fx:id="HBoxServicios" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                            <children>
+                                <ImageView fx:id="iconoPromociones" fitHeight="50.0" fitWidth="35.0" pickOnBounds="true"
+                                           preserveRatio="true" styleClass="icono-menu">
+                                    <image>
+                                        <Image url="@../../icons/ventana_principal/schedule.png"/>
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="25.0" right="15.0"/>
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label styleClass="menu-label" text="Proximos Servicios" textFill="WHITE">
+                                    <font>
+                                        <Font name="Roboto" size="14.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="-10.0" top="-30.0"/>
+                            </VBox.margin>
+                        </HBox>
+                        <HBox fx:id="HBoxPromociones" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                            <children>
+                                <ImageView fx:id="iconoCrearPromociones" fitHeight="50.0" fitWidth="40.0"
+                                           pickOnBounds="true" preserveRatio="true" styleClass="icono-menu">
+                                    <image>
+                                        <Image url="@../../icons/ventana_principal/gift.png"/>
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="20.0" right="15.0"/>
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label styleClass="menu-label" text="Promociones" textFill="WHITE">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="-10.0" top="-50.0"/>
+                            </VBox.margin>
+                        </HBox>
+                        <HBox fx:id="HBoxInventario" prefHeight="100.0" prefWidth="200.0" styleClass="menu-item">
+                            <children>
+                                <ImageView fitHeight="50.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true"
+                                           styleClass="icono-menu">
+                                    <image>
+                                        <Image url="@../../icons/ventana_principal/car-wheel.png"/>
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="20.0" right="15.0"/>
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label styleClass="menu-label" text="Inventario Llantas" textFill="WHITE">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="-10.0" top="-50.0"/>
+                            </VBox.margin>
+                        </HBox>
+                        <HBox fx:id="HBoxConfiguracion" prefHeight="100.0" prefWidth="340.0" styleClass="menu-item">
+                            <children>
+                                <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"
+                                           styleClass="icono-menu">
+                                    <image>
+                                        <Image url="@../../icons/ventana_principal/settings.png"/>
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets left="25.0" right="15.0"/>
+                                    </HBox.margin>
+                                </ImageView>
+                                <Label styleClass="menu-label" text="Configuraciones" textFill="WHITE"/>
+                            </children>
+                            <padding>
+                                <Insets top="15.0"/>
+                            </padding>
+                            <VBox.margin>
+                                <Insets top="-50.0"/>
+                            </VBox.margin>
+                        </HBox>
+
+                    </children>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <padding>
+                        <Insets top="25.0"/>
+                    </padding>
+                </VBox>
+                <HBox id="HBoxLogOut" fx:id="HBoxLogOut" layoutX="70.0" layoutY="536.0" prefHeight="50.0"
+                      prefWidth="307.0" styleClass="menuLogOut-item" AnchorPane.bottomAnchor="10.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                    <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true"
+                                   styleClass="logo-logout">
+                            <image>
+                                <Image url="@../../icons/logout-circle-line.png"/>
+                            </image>
+                            <HBox.margin>
+                                <Insets left="22.0" right="15.0"/>
+                            </HBox.margin>
+                        </ImageView>
+                        <Label styleClass="logOut-label" text="Salir" textFill="#5b0505"/>
+                    </children>
+                </HBox>
+            </children>
+        </AnchorPane>
+
+
+        <Pane id="panelMenu" fx:id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0"
+              style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+        <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0"
+                    style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="200.0"
+                      AnchorPane.rightAnchor="25.0">
+                    <children>
+                        <Label styleClass="label-tarjeta" text="Administrador"/>
+                        <ImageView fx:id="imgPerfil" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true"
+                                   preserveRatio="true" styleClass="usuario-turno">
+                            <image>
+                                <Image url="@../../icons/user.png"/>
+                            </image>
+                            <HBox.margin>
+                                <Insets left="15.0"/>
+                            </HBox.margin>
+                        </ImageView>
+                    </children>
+                </HBox>
+                <ImageView fx:id="LogoPrincipal" fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0"
+                           pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0"
+                           AnchorPane.topAnchor="15.0">
+                    <image>
+                        <Image url="@../../icons/Master Tyres Logo (Fondo Blanco).png"/>
+                    </image>
+                </ImageView>
+                <Label fx:id="cambiarPaginaEtiqueta" layoutX="380.0" layoutY="56.0" text="INICIO" textFill="WHITE"
+                       AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="405.0">
+                    <font>
+                        <Font name="Roboto Bold" size="28.0"/>
+                    </font>
+                </Label>
+                <ImageView fx:id="irAtras" fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0"
+                           onMouseClicked="#irAtras" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu"
+                           AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
+                    <image>
+                        <Image url="@../../icons/arrow-left-s-line.png"/>
+                    </image>
+                </ImageView>
+            </children>
+        </AnchorPane>
+
+        <fx:include
+                source="/fxmlComponentes/Components/TitleBar/TitleBarComponent.fxml"
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"/>
+    </children>
+</AnchorPane>
