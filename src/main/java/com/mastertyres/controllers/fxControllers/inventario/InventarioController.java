@@ -55,7 +55,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @NoArgsConstructor
 @Component
-public class InventarioController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
+public class InventarioController implements IVentanaPrincipal, IFxController, ILoader{
 
     @FXML
     private AnchorPane rootPane;
@@ -447,35 +447,6 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
         btnRefrescar.setOnAction(event -> resetBusqueda());
 
     }//listeners
-
-    @Override
-    public void cleanup() {
-        // Limpiar transiciones
-        if (delayQuery != null) {
-            delayQuery.stop();
-        }
-
-        // Limpiar tabla
-//        if (tablaInventario != null) {
-//            tablaInventario.getItems().clear();
-//            tablaInventario.setItems(null);
-//        }
-
-        // Limpiar referencias
-        todosLosInventarios = null;
-        //terminoBusquedaActual = null;
-
-        // Limpiar campos de texto
-        if (buscarInventarioBuscador != null) {
-            buscarInventarioBuscador.clear();
-        }
-
-        // Anular referencias
-        //tablaInventario = null;
-        atributoBusquedaInventario = null;
-        dpInventarioInicio = null;
-        dpInventarioFin = null;
-    }
 
     private void actualizarVisibilidaddeDatePicker(boolean esFecha) {
         // Alternar entre Texto y Fecha

@@ -230,7 +230,6 @@ public class VentanaPrincipalController implements ILoader {
             AnchorPane.setLeftAnchor(contenido, 0.0);
             AnchorPane.setRightAnchor(contenido, 0.0);
 
-            // NUEVO: Forzar garbage collection (opcional, usar con moderación)
             System.gc();
 
             return controller;
@@ -243,7 +242,6 @@ public class VentanaPrincipalController implements ILoader {
         }
     }
 
-    // NUEVO: Método para limpiar el controlador actual
     private void limpiarControladorActual() {
         if (controladorActual != null && controladorActual instanceof ICleanable) {
             ((ICleanable) controladorActual).cleanup();

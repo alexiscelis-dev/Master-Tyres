@@ -56,43 +56,15 @@ import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
-
-    @Override
-    public void cleanup() {
-        // Limpiar contenedor de cards
-//        if (contenedorPromociones != null) {
-//            contenedorPromociones.getChildren().clear();
-//        }
-
-        // Limpiar listas
-        if (ListaVehiculosPromocion != null) {
-            ListaVehiculosPromocion.getItems().clear();
-        }
-        if (ListaClientesPromocion != null) {
-            ListaClientesPromocion.getItems().clear();
-        }
-
-        // Limpiar referencias
-        promocionSeleccionada = null;
-
-        // Limpiar campos de texto
-//        if (txtBuscar != null) {
-//            txtBuscar.clear();
-//        }
-
-        // Anular referencias
-        contenedorPromociones = null;
-        ListaVehiculosPromocion = null;
-        ListaClientesPromocion = null;
-    }
+public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader{
 
     @FXML
     private AnchorPane ventanaPromocionesActivas;
     @FXML private TilePane contenedorPromociones;
     @FXML private Label lblNombre;
     @FXML private Label lblDescripcion;
-    @FXML private Label lblTipoDescuento;
+    //@FXML private Label lblTipoDescuento;
+    @FXML private Label lblPrecioConDescuento;
     @FXML private Label lblValorDescuento;
     @FXML private Label lblPrecio;
     @FXML private Label lblFechaInicio;
@@ -468,9 +440,10 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
         lblNombre.setText(p.getNombre());
         lblDescripcion.setText(p.getDescripcion());
-        lblTipoDescuento.setText(p.getTipoDescuento());
+        //lblTipoDescuento.setText(p.getTipoDescuento());
         lblValorDescuento.setText(p.getPorcentaje() + "%");
         lblPrecio.setText(p.getPrecio() + "");
+        lblPrecioConDescuento.setText("$"+ ( p.getPrecio() - ( (p.getPorcentaje() * p.getPrecio()) / 100 ) ) );
         lblFechaInicio.setText(formatearFecha(p.getFechaInicio()));
         lblFechaFin.setText(formatearFecha(p.getFechaFin()));
 
@@ -563,7 +536,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     private void limpiarDetallePromocion() {
         lblNombre.setText("");
         lblDescripcion.setText("");
-        lblTipoDescuento.setText("");
+        lblPrecioConDescuento.setText("");
         lblValorDescuento.setText("");
         lblPrecio.setText("");
         lblFechaInicio.setText("");

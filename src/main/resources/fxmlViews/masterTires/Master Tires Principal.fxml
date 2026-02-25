@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="ventanaPrincipal" maxHeight="600" maxWidth="1344"
+<AnchorPane id="ventanaPrincipal"
             minHeight="600" minWidth="1344" prefHeight="600.0" prefWidth="1344.0"
             style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
@@ -250,5 +250,11 @@
                 </ImageView>
             </children>
         </AnchorPane>
+
+        <fx:include
+                source="/fxmlComponentes/Components/TitleBar/TitleBarComponent.fxml"
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0"/>
     </children>
 </AnchorPane>
