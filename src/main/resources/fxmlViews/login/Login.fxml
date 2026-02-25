@@ -6,7 +6,7 @@
 
 <AnchorPane fx:id="rootPane" prefHeight="383.0" prefWidth="835.0" styleClass="root"
             stylesheets="/styles_css/stylesLogin.css" xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.login.LoginController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.login.LoginController">
 
 
 

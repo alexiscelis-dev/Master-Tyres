@@ -6,7 +6,7 @@
 
 <AnchorPane fx:id="rootPane" prefWidth="600" prefHeight="500" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.fxControllers.vehiculo.EditarVehiculoController"
+            fx:controller="com.mastertyres.controllers.fxControllers.vehiculo.EditarVehiculoController"
             style="-fx-background-color: #080808;"
             stylesheets="/styles_css/ClientesStyles.css">
 

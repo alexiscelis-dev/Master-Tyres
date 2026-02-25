@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefHeight="1590" prefWidth="960.0" stylesheets="@../../styles_css/Imprimir.css" translateX="100.0" translateY="0.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.fxControllers.imprimirNota.ImprimirNotaController">
+<AnchorPane fx:id="rootPane" prefHeight="1590" prefWidth="960.0" stylesheets="@../../styles_css/Imprimir.css" translateX="100.0" translateY="0.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.imprimirNota.ImprimirNotaController">
 
 
     <children>

@@ -44,4 +44,10 @@ public class RespaldoProxyService implements IRespaldoService {
         return null;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public void actualizarTipoRespaldo(Integer respaldoId, String tipoRespaldo) {
+        respaldoRepository.actualizarTipoRespaldo(respaldoId, tipoRespaldo);
+    }
+
 }//class
