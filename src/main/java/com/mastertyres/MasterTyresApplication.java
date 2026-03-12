@@ -56,8 +56,10 @@ public class MasterTyresApplication extends Application {
 		//Cargar ventana para ajustar tamaño
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/login/Login.fxml"));
+		loader.setControllerFactory(context::getBean);
 
         FXMLLoader  loaderNavigator = new FXMLLoader(getClass().getResource("/fxmlViews/login/Login.fxml"));
+		loaderNavigator.setControllerFactory(context::getBean);
 
 
 		Parent root = null;

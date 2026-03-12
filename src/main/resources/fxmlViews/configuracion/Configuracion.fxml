@@ -12,7 +12,7 @@
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
             style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.controllers.fxControllers.Configuracion.ConfiguracionController">
+            fx:controller="com.mastertyres.controllers.fxControllers.configuracion.ConfiguracionController">
 
     <children>
 
@@ -76,7 +76,7 @@
                                 <Separator/>
                                 <GridPane hgap="16" vgap="10" styleClass="info-grid">
                                     <Label text="Usuario:" styleClass="info-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                    <Label fx:id="lblUsuarioInfo" text="—" styleClass="info-value" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                    <Label fx:id="lblUsernameInfo" text="—" styleClass="info-value" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
                                     <Label text="Correo:" styleClass="info-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                                     <Label fx:id="lblCorreoInfo" text="—" styleClass="info-value" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                                     <Label text="Miembro desde:" styleClass="info-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
@@ -90,16 +90,115 @@
                                 <Separator/>
                                 <VBox spacing="14" maxWidth="400">
                                     <VBox spacing="4">
-                                        <Label text="Contraseña actual" styleClass="field-label"/>
-                                        <PasswordField fx:id="pfContrasenaActual" promptText="••••••••" styleClass="field-input"/>
+                                        <Label prefWidth="400" text="Contraseña actual" styleClass="field-label"/>
+
+                                        <GridPane>
+                                            <columnConstraints>
+                                                <ColumnConstraints/>
+                                                <ColumnConstraints/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                    <RowConstraints/>
+                                            </rowConstraints>
+
+                                            <children>
+                                                <PasswordField prefWidth="400" visible="true" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="pfContrasenaActual" promptText="••••••••" styleClass="field-input"/>
+
+                                                <TextField fx:id="txtContrasenaActualVisible" visible="false" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0"  promptText="••••••••" styleClass="field-input"></TextField>
+
+
+
+                                                <Button fx:id="btnTogglePassword" styleClass="show-eye" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                                    <graphic>
+                                                        <ImageView fx:id="imageEye" fitHeight="20" fitWidth="20">
+                                                            <image >
+                                                                <Image url="@../../icons/visibility.png"/>
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+
+                                                </Button>
+
+                                            </children>
+
+                                        </GridPane>
+
+
+                                        <Label visible="false" fx:id="lblContrasenaError" text="Contraseña incorrecta" style="-fx-text-fill: red;-fx-font-size:8px;"></Label>
                                     </VBox>
                                     <VBox spacing="4">
                                         <Label text="Nueva contraseña" styleClass="field-label"/>
-                                        <PasswordField fx:id="pfNuevaContrasena" promptText="••••••••" styleClass="field-input"/>
                                     </VBox>
                                     <VBox spacing="4">
-                                        <Label text="Confirmar nueva contraseña" styleClass="field-label"/>
-                                        <PasswordField fx:id="pfConfirmarContrasena" promptText="••••••••" styleClass="field-input"/>
+
+                                        <GridPane  AnchorPane.topAnchor="0">
+                                            <columnConstraints>
+                                                <ColumnConstraints/>
+                                                <ColumnConstraints/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints/>
+
+                                            </rowConstraints>
+
+                                            <children>
+
+                                                <PasswordField visible="true" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="pfNuevaContrasena" promptText="••••••••" styleClass="field-input"/>
+                                                <TextField fx:id="txtNuevaContrasenaVisible" visible="false" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0"  styleClass="field-input">
+
+                                                </TextField>
+
+                                                <Button fx:id="btnTogglePassword2" styleClass="show-eye" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                                    <graphic>
+                                                        <ImageView fx:id="imageEye2" fitHeight="20" fitWidth="20">
+                                                            <image >
+                                                                <Image url="@../../icons/visibility.png"/>
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+
+                                                </Button>
+
+                                            </children>
+                                        </GridPane>
+
+
+
+                                        <Label  text="Confirmar nueva contraseña" styleClass="field-label"/>
+
+                                        <GridPane AnchorPane.topAnchor="0">
+                                            <columnConstraints>
+                                                <ColumnConstraints/>
+                                                <ColumnConstraints/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints/>
+                                            </rowConstraints>
+
+                                            <children>
+
+                                                <PasswordField visible="true" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0"  fx:id="pfConfirmarContrasena" promptText="••••••••" styleClass="field-input"/>
+                                                <TextField fx:id="txtConfirmarContrasenaVisible" visible="false" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0"  promptText="••••••••" styleClass="field-input"></TextField>
+
+                                                <Button   fx:id="btnTogglePassword3" styleClass="show-eye" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                                    <graphic>
+                                                        <ImageView fx:id="imageEye3" fitHeight="20" fitWidth="20">
+                                                            <image >
+                                                                <Image url="@../../icons/visibility.png"/>
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+
+                                                </Button>
+
+                                            </children>
+
+                                        </GridPane>
+
+
+                                        <Label  visible="false" fx:id="lblContrasenaError2" text="" style="-fx-text-fill: red;-fx-font-size:8px;"></Label>
+
+
                                     </VBox>
                                     <ProgressBar fx:id="passwordStrengthBar" progress="0" maxWidth="Infinity"
                                                  styleClass="strength-bar"/>
@@ -110,28 +209,7 @@
                                 </VBox>
                             </VBox>
 
-                            <!-- Editar Correo -->
-                            <VBox fx:id="panelEditarCorreo" styleClass="detail-panel" visible="false" spacing="20">
-                                <Label text="Editar Correo" styleClass="panel-title"/>
-                                <Separator/>
-                                <VBox spacing="14" maxWidth="400">
-                                    <VBox spacing="4">
-                                        <Label text="Correo actual" styleClass="field-label"/>
-                                        <Label fx:id="lblCorreoActual" text="correo@ejemplo.com" styleClass="info-value"/>
-                                    </VBox>
-                                    <VBox spacing="4">
-                                        <Label text="Nuevo correo electrónico" styleClass="field-label"/>
-                                        <TextField fx:id="tfNuevoCorreo" promptText="nuevo@correo.com" styleClass="buscador"/>
-                                    </VBox>
-                                    <VBox spacing="4">
-                                        <Label text="Confirmar nuevo correo" styleClass="field-label"/>
-                                        <TextField fx:id="tfConfirmarCorreo" promptText="nuevo@correo.com" styleClass="buscador"/>
-                                    </VBox>
-                                    <Button fx:id="btnGuardarCorreo" text="Actualizar correo"
-                                            styleClass="boton-accion"
-                                            onAction="#onGuardarCorreo"/>
-                                </VBox>
-                            </VBox>
+
 
                             <!-- Cambiar Nombre de Usuario -->
                             <VBox fx:id="panelCambiarNombreUsuario" styleClass="detail-panel" visible="false" spacing="20">
@@ -144,9 +222,9 @@
                                     </VBox>
                                     <VBox spacing="4">
                                         <Label text="Nuevo nombre de usuario" styleClass="field-label"/>
-                                        <TextField fx:id="tfNuevoNombreUsuario" promptText="nuevo_usuario" styleClass="buscador"/>
+                                        <TextField fx:id="txtNuevoNombreUsuario" promptText="Nuevo usuario" styleClass="buscador"/>
                                     </VBox>
-                                    <Button fx:id="btnCambiarNombreUsuario" text="Guardar nombre de usuario"
+                                    <Button fx:id="btnCambiarNombreUsuario" text="Guardar"
                                             styleClass="boton-accion"
                                             onAction="#onCambiarNombreUsuario"/>
                                 </VBox>
@@ -158,12 +236,12 @@
                                 <Separator/>
                                 <HBox spacing="24" alignment="CENTER_LEFT">
                                     <VBox alignment="CENTER" spacing="10">
-                                        <ImageView fx:id="avatarPreview" fitWidth="110" fitHeight="110"
+                                        <ImageView  fx:id="avatarPreview" fitWidth="110" fitHeight="110"
                                                    styleClass="avatar-view" preserveRatio="true">
                                             <image><Image url="/icons/user.png"/></image>
                                         </ImageView>
                                         <HBox>
-                                            <TextField editable="false"  fx:id="RutaImagen" styleClass="buscador-img" text="Selecione una imagen" />
+                                            <TextField editable="false"  fx:id="txtRutaImg" styleClass="buscador-img" promptText="Selecione una imagen" />
                                             <Button fx:id="btnSeleccionarFoto" text="..."
                                                     styleClass="boton-img"
                                                     onAction="#onSeleccionarFoto"/>
@@ -172,12 +250,19 @@
                                     </VBox>
                                     <VBox spacing="8">
                                         <Label text="Requisitos:" styleClass="field-label"/>
-                                        <Label text="• Formato: JPG, PNG o GIF" styleClass="hint-label"/>
+                                        <Label text="• Formato: JPG, JPEG, PNG " styleClass="hint-label"/>
                                     </VBox>
                                 </HBox>
-                                <Button fx:id="btnGuardarFoto" text="Guardar foto"
-                                        styleClass="boton-accion"
-                                        onAction="#onGuardarFoto"/>
+                                <HBox spacing="5">
+                                    <Button fx:id="btnGuardarFoto" text="Guardar foto"
+                                            styleClass="boton-accion"
+                                            onAction="#onGuardarFoto"/>
+                                    <Button fx:id="btnEliminarFoto" text="Eliminar Foto"
+                                    styleClass="boton-accion"
+                                    onAction="#onEliminarFoto" ></Button>
+
+                                </HBox>
+
                             </VBox>
 
                             <!-- ALMACENAMIENTO   -->
@@ -225,20 +310,6 @@
 
                             <!-- AYUDA -->
 
-                            <!-- Atajos -->
-                            <VBox fx:id="panelAtajos" styleClass="detail-panel" visible="false" spacing="20">
-                                <Label text="Atajos de Teclado" styleClass="panel-title"/>
-                                <Separator/>
-                                <ScrollPane fitToWidth="true" styleClass="scroll-shortcuts" VBox.vgrow="ALWAYS">
-                                    <VBox spacing="6" styleClass="shortcuts-container">
-                                        <!-- Grupos de atajos: el controlador puede poblarlos dinámicamente -->
-                                        <Label text="Atajos" styleClass="shortcut-group-title"/>
-                                        <HBox styleClass="shortcut-row"><Label text="Ctrl + C" styleClass="shortcut-key"/><Label text="Copiar" styleClass="shortcut-desc"/></HBox>
-                                        <HBox styleClass="shortcut-row"><Label text="Ctrl + V" styleClass="shortcut-key"/><Label text="Pehar" styleClass="shortcut-desc"/></HBox>
-                                        <HBox styleClass="shortcut-row"><Label text="Ctrl + X" styleClass="shortcut-key"/><Label text="Cortar" styleClass="shortcut-desc"/></HBox>
-                                    </VBox>
-                                </ScrollPane>
-                            </VBox>
 
                             <!-- Contacto -->
                             <VBox fx:id="panelContacto" styleClass="detail-panel" visible="false" spacing="20">
@@ -276,13 +347,6 @@
                     </HBox>
                 </center>
 
-                <!-- ── PIE / FOOTER ── -->
-                <bottom>
-                    <HBox styleClass="footer-bar" alignment="CENTER_RIGHT" spacing="12">
-                        <Button text="Cancelar" styleClass="boton-accion" onAction="#onCancelar"/>
-                        <Button text="Aceptar"  styleClass="boton-accion"  onAction="#onAceptar"/>
-                    </HBox>
-                </bottom>
 
             </BorderPane>
 

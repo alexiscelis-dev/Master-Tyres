@@ -22,11 +22,55 @@
                 <VBox alignment="CENTER" maxHeight="500" maxWidth="451.0" prefHeight="383.0" prefWidth="451.0" spacing="20"
                       styleClass="login-container">
                     <Label styleClass="title" text="Login"/>
-                    <TextField fx:id="usernameField" promptText="Username" styleClass="input-field"/>
-                    <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
+                    <TextField fx:id="txtCorreo" promptText="Correo electrónico" styleClass="input-field"/>
+
+
+
+                        <GridPane  AnchorPane.topAnchor="0">
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints/>
+                            </rowConstraints>
+
+                            <children>
+
+                                <PasswordField prefWidth="350" visible="true" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="pfPassword" promptText="Contraseña" styleClass="input-field">
+
+                                </PasswordField>
+
+                                <TextField prefWidth="350" visible="false" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="txtPasswordVisible" promptText="Contraseña" styleClass="input-field">
+
+                                </TextField>
+
+                                <Button onAction="#togglePassword" fx:id="btnTogglePassword" styleClass="password-button" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <graphic>
+                                        <ImageView fx:id="imageEye" fitHeight="20" fitWidth="20">
+                                            <image >
+                                                <Image url="@../../icons/visibility.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+
+                                </Button>
+
+
+
+
+                            </children>
+
+                        </GridPane>
+
+
+
+
                     <Button fx:id="loginButton" prefHeight="26.0" prefWidth="451.0" styleClass="login-button"
                             text="Iniciar sesión." onAction="#logIn"/>
-                    <Hyperlink fx:id="forgotPassword" styleClass="forgot-link" text="¿Se te olvidó la contraseña?"/>
+
+
+                    <Hyperlink fx:id="forgotPassword" styleClass="forgot-link" text="¿Has olvidado tu contraseña?"/>
                     <Label fx:id="errorLabel" styleClass="error-label" text="" visible="false"/>
                 </VBox>
 
@@ -50,6 +94,13 @@
                    AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
                    alignment="CENTER"/>
         </HBox>
+
+        <fx:include fx:id="loadingOverlay"
+                    source="/fxmlComponentes/Components/Loader/LoadingComponent.fxml"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0"/>
 
         <fx:include
                 source="/fxmlComponentes/Components/TitleBar/TitleBarComponent.fxml"
