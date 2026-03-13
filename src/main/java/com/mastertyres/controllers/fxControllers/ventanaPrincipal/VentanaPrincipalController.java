@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Stack;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarConfirmacion;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
@@ -114,11 +115,17 @@ public class VentanaPrincipalController implements ILoader, IFxController {
     }//initialize
 
     private void logOut(MouseEvent event, String archivoFXML) {
+
         try {
-            // NUEVO: Limpiar antes de salir
+
             limpiarControladorActual();
 
-            Parent root = FXMLLoader.load(VentanaPrincipalController.class.getResource(archivoFXML));
+            FXMLLoader loader = new FXMLLoader(VentanaPrincipalController.class.getResource(archivoFXML));
+
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
+            Parent root = loader.load();
+
             Stage ventanaLogin = (Stage) ((Node) event.getSource()).getScene().getWindow();
             ventanaLogin.setScene(new Scene(root));
 
@@ -129,11 +136,18 @@ public class VentanaPrincipalController implements ILoader, IFxController {
             ventanaLogin.setHeight(screenBounds.getHeight());
 
             ventanaLogin.show();
+
         } catch (IOException e) {
-            mostrarError("Error de carga ", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+
+            mostrarError(
+                    "Error de carga",
+                    "",
+                    "Ocurrió un error al cargar la vista. Vuelva a intentarlo más tarde."
+            );
+
             e.printStackTrace();
         }
-    }
+    }//logOut
 
     public void viewContentSinHistorial(MouseEvent event, String archivoFXML, String nombreVentana) {
         try {
@@ -331,13 +345,26 @@ public class VentanaPrincipalController implements ILoader, IFxController {
         });
 
         HBoxLogOut.setOnMouseClicked(event -> {
+
+            boolean logOut = mostrarConfirmacion(
+                    "Cerrar sesión",
+                    "Se cerrará la sesión actual.",
+                    "¿Desea continuar?",
+                    "Cerrar sesión",
+                    "Cancelar"
+            );
+
+            if (!logOut)
+                return;
+
+
             userSession = null;
             historialVistas.clear();
             historialNombreVistas.clear();
             lblUsuario.setText("");
             imgPerfil.setImage(new Image(getClass().getResource("/icons/user.png").toExternalForm()));
 
-             logOut(event, "/fxmlViews/login/Login.fxml");
+             logOut(event, "/fxmlViews/login/login/Login.fxml");
 
         });
 

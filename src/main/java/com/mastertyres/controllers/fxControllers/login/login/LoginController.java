@@ -1,4 +1,4 @@
-package com.mastertyres.controllers.fxControllers.login;
+package com.mastertyres.controllers.fxControllers.login.login;
 
 import com.mastertyres.auth.LocalAuthService;
 import com.mastertyres.auth.SupabaseAuthService;
@@ -9,6 +9,7 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
+import com.mastertyres.controllers.fxControllers.login.recuperarPassword.RecuperarPasswordController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.user.model.User;
 import com.mastertyres.user.service.UserService;
@@ -29,6 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -119,7 +121,7 @@ public class LoginController implements IFxController {
         }
 
         //Asegura que tanto el campo invisible de contraseña como el visible tengan la misma informacion
-        if (pfPassword.getText().isEmpty() && !txtPasswordVisible.getText().isEmpty()){
+        if (pfPassword.getText().isEmpty() && !txtPasswordVisible.getText().isEmpty()) {
             pfPassword.setText(txtPasswordVisible.getText());
         } else if (!pfPassword.getText().isEmpty() && txtPasswordVisible.getText().isEmpty()) {
             txtPasswordVisible.setText(pfPassword.getText());
@@ -138,16 +140,15 @@ public class LoginController implements IFxController {
 
                         String fechaStr = user.getNextCheck();
 
-                        LocalDateTime fechaHora = LocalDateTime.parse(fechaStr,formatter);
+                        LocalDateTime fechaHora = LocalDateTime.parse(fechaStr, formatter);
                         LocalDate fecha = fechaHora.toLocalDate();
 
 
-
-                        if (fecha.isEqual(LocalDate.now())){
+                        if (fecha.isEqual(LocalDate.now())) {
                             //Existe el usuario pero es dia de sincronizar cambios
                             supabaseService.supabaseLogin(txtCorreo.getText().trim(), pfPassword.getText().trim());
 
-                        }else { //Se autentifica localmente
+                        } else { //Se autentifica localmente
                             boolean autenticado = localAuthService.authenticate(user, pfPassword.getText().trim());
 
                             if (!autenticado) {
@@ -186,7 +187,7 @@ public class LoginController implements IFxController {
 
     }
 
-    private void cambiarVistaPrincipal(ActionEvent event, String archivoFXML,User user){
+    private void cambiarVistaPrincipal(ActionEvent event, String archivoFXML, User user) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -207,7 +208,7 @@ public class LoginController implements IFxController {
 
             ventanaLogin.show();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             e.getMessage();
             mostrarError("Error de carga",
@@ -233,6 +234,31 @@ public class LoginController implements IFxController {
 
     }//togglePassword
 
+    @FXML
+    private void forgotPassword(ActionEvent event) {
+
+        try {
+            final String ventana = "/fxmlViews/login/recuperarPassword/RecuperarPassword.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(ventana));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            RecuperarPasswordController controller = loader.getController();
+            controller.setInitializeLoading(loadingOverlayController);
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setScene(new Scene(root));
+            stage.show();
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            mostrarError("Error de cargar",
+                    "",
+                    "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+        }
+
+    }
 
 
 }//class

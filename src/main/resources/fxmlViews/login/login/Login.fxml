@@ -6,7 +6,7 @@
 
 <AnchorPane fx:id="rootPane" prefHeight="383.0" prefWidth="835.0" styleClass="root"
             stylesheets="/styles_css/stylesLogin.css" xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.login.LoginController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.login.login.LoginController">
 
     <children>
 
@@ -49,7 +49,7 @@
                                     <graphic>
                                         <ImageView fx:id="imageEye" fitHeight="20" fitWidth="20">
                                             <image >
-                                                <Image url="@../../icons/visibility.png"/>
+                                                <Image url="@../../../icons/visibility.png"/>
                                             </image>
                                         </ImageView>
                                     </graphic>
@@ -70,7 +70,7 @@
                             text="Iniciar sesión." onAction="#logIn"/>
 
 
-                    <Hyperlink fx:id="forgotPassword" styleClass="forgot-link" text="¿Has olvidado tu contraseña?"/>
+                    <Hyperlink onAction="#forgotPassword" fx:id="forgotPassword" styleClass="forgot-link" text="¿Has olvidado tu contraseña?"/>
                     <Label fx:id="errorLabel" styleClass="error-label" text="" visible="false"/>
                 </VBox>
 
@@ -79,7 +79,7 @@
                            style="-fx-background-color: #FFFFFF;  -fx-padding: 20; -fx-background-radius: 10;">
                     <ImageView fx:id="logoImage" fitHeight="200" preserveRatio="true">
                         <image>
-                            <Image url="@../../icons/Master Tyres Logo.png"/>
+                            <Image url="@../../../icons/Master Tyres Logo.png"/>
                         </image>
                     </ImageView>
                 </StackPane>

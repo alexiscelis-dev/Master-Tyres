@@ -8,6 +8,7 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.SessionManager;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -612,7 +613,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     @Override
     public void configuraciones() {
-
+        MenuContextSetting.disableMenu(rootPane);
         txtContrasenaActualVisible.textProperty().bindBidirectional(pfContrasenaActual.textProperty());
         txtNuevaContrasenaVisible.textProperty().bindBidirectional(pfNuevaContrasena.textProperty());
         txtConfirmarContrasenaVisible.textProperty().bindBidirectional(pfConfirmarContrasena.textProperty());
