@@ -17,11 +17,11 @@ import java.net.http.HttpResponse;
 
 @Service
 public class SupabaseStorage {
-    @Value("${SUPABASE_URL}")
+    @Value("${supabase.url}")
     private String supabaseUrl;
-    @Value("${SUPABASE_APIKEY}")
+    @Value("${supabase.api.key}")
     private String supabaseApiKey;
-    @Value("${SUPABASE_BUCKET}")
+    @Value("${supabase.url.bucket}")
     private String supabaseBucket;
 
     @Autowired

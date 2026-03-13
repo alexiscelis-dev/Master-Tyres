@@ -462,3 +462,22 @@
 }
 
 
+.show-eye{
+
+    -fx-background-color: #8EB83D;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+    -fx-background-radius: 3;
+    -fx-pref-height: 40px;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+
+}
+
+.show-eye:hover {
+    -fx-background-color: #AEE83A;
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
+}
+
+
