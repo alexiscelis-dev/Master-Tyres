@@ -5,6 +5,7 @@ import com.mastertyres.common.exeptions.MarcaException;
 import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.interfaces.IRestaurableDatos;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
@@ -41,10 +42,10 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+//import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class AdministarMarcasController implements IFxController, ILoader {
+public class AdministarMarcasController implements IFxController, ILoader, IRestaurableDatos {
 
     @FXML
     private Label lblNombre;
@@ -255,7 +256,12 @@ public class AdministarMarcasController implements IFxController, ILoader {
 
             configurarPaginador();
         } catch (IOException ex) {
-            mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error del sistema",
+                    "Fallo en la visualización",
+                    "No fue posible cargar los componentes de la vista seleccionada.",
+                    ex
+            );
 
             ex.printStackTrace();
         }
@@ -301,8 +307,14 @@ public class AdministarMarcasController implements IFxController, ILoader {
             stage.showAndWait();
 
             configurarPaginador();
+            Actualizar(null);
         } catch (IOException ex) {
-            mostrarError("Error de carga", "", "Error al cargar la vista");
+            MensajesAlert.mostrarExcepcion(
+                    "Error del sistema",
+                    "Fallo en la visualización",
+                    "No fue posible cargar los componentes de la vista seleccionada.",
+                    ex
+            );
 
             ex.printStackTrace();
         }
@@ -330,8 +342,14 @@ public class AdministarMarcasController implements IFxController, ILoader {
 
 
             configurarPaginador();
+            Actualizar(null);
         } catch (IOException ex) {
-            mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error del sistema",
+                    "Fallo en la visualización",
+                    "No fue posible cargar los componentes de la vista seleccionada.",
+                    ex
+            );
         }
     }
 
@@ -356,9 +374,15 @@ public class AdministarMarcasController implements IFxController, ILoader {
             stage.showAndWait();
 
             configurarPaginador();
+            Actualizar(null);
         } catch (IOException ex) {
             ex.printStackTrace();
-            mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error del sistema",
+                    "Fallo en la visualización",
+                    "No fue posible cargar los componentes de la vista seleccionada.",
+                    ex
+            );
         }
     }
 
@@ -367,21 +391,29 @@ public class AdministarMarcasController implements IFxController, ILoader {
         Modelo modeloSeleccionada = TablaVehiculoMarca.getSelectionModel().getSelectedItem().getModelo();
 
         if (modeloSeleccionada == null) {
-            MensajesAlert.mostrarWarning("Advertencia", "Sin seleccion", "Debe seleccionar un modelo para eliminar.");
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Sin selección",
+                    "Debe seleccionar un modelo de la lista antes de intentar eliminarlo."
+            );
             return;
         }
 
         // Evitar eliminar el modelo genérico
         if (modeloSeleccionada.getModeloId() == 1) {
-            MensajesAlert.mostrarWarning("Advertencia", "Operación no permitida", "No se puede eliminar el modelo genérico");
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Operación no permitida",
+                    "No es posible eliminar el modelo genérico del sistema."
+            );
             return;
         }
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
-                "Confirmar Eliminacion",
-                "¿Desea eliminar este Modelo?",
-                "Se eliminara el modelo seleccionada.",
-                "Sí, eliminar",
+                "Confirmar eliminación",
+                "Eliminar modelo",
+                "¿Está seguro de que desea eliminar el modelo seleccionado? Esta acción no se puede deshacer.",
+                "Eliminar",
                 "Cancelar"
         );
 
@@ -400,7 +432,11 @@ public class AdministarMarcasController implements IFxController, ILoader {
                         return null;
                     }, (resultado) -> {
 
-                        MensajesAlert.mostrarInformacion("Éxito", "Modelo eliminado", "El modelo se elimino correctamente.");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Modelo eliminado",
+                                "El modelo ha sido eliminado del sistema correctamente."
+                        );
 
                         txtBuscar.setText("");
                         marcaSeleccionada = null;
@@ -409,13 +445,24 @@ public class AdministarMarcasController implements IFxController, ILoader {
                         lblNombre.setText("");
                         TablaVehiculoMarca.getItems().clear();
                         configurarPaginador();
+                        Actualizar(null);
 
                     }, (ex) -> {
 
                         if (ex.getCause() instanceof ModeloException) {
-                            mostrarError("Error al eliminar marca", "", "" + ex.getMessage());
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al eliminar modelo",
+                                    "Se produjo un problema con el modelo",
+                                    ex.getMessage(),
+                                    ex
+                            );
                         } else if (ex.getCause() instanceof Exception) {
-                            mostrarError("Error inesperado", "", "No se pudo eliminar el modelo selecconada");
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error inesperado",
+                                    "No se pudo completar la operación",
+                                    "Ocurrió un error inesperado al intentar eliminar el modelo seleccionado.",
+                                    ex
+                            );
                         }
 
                     }, null
@@ -429,21 +476,29 @@ public class AdministarMarcasController implements IFxController, ILoader {
 
 
         if (marcaSeleccionada == null) {
-            MensajesAlert.mostrarWarning("Advertencia", "Sin seleccion", "Debe seleccionar una marca para eliminar.");
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Sin selección",
+                    "Debe seleccionar una marca de la lista antes de intentar eliminarla."
+            );
             return;
         }
 
         // Evitar eliminar el modelo genérico
         if (marcaSeleccionada.getMarcaId() == 1) {
-            MensajesAlert.mostrarWarning("Operacion no permitida", "Operación no permitida", "o se puede eliminar la marca genérica");
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Operación no permitida",
+                    "No es posible eliminar la marca genérica del sistema."
+            );
             return;
         }
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
-                "Confirmar Eliminacion",
-                "¿Desea eliminar esta Marca?",
-                "Se eliminara el marca seleccionada.",
-                "Sí, eliminar",
+                "Confirmar eliminación",
+                "Eliminar marca",
+                "¿Está seguro de que desea eliminar la marca seleccionada? Esta acción no se puede deshacer.",
+                "Eliminar",
                 "Cancelar"
         );
 
@@ -465,7 +520,11 @@ public class AdministarMarcasController implements IFxController, ILoader {
                         return null;
 
                     }, (resultado) -> {
-                        MensajesAlert.mostrarInformacion("Éxito", "Marca eliminada", "La marca se elimino correctamente.");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Marca eliminada",
+                                "La marca ha sido eliminada del sistema correctamente."
+                        );
 
                         txtBuscar.setText("");
                         marcaSeleccionada = null;
@@ -475,20 +534,29 @@ public class AdministarMarcasController implements IFxController, ILoader {
                         TablaVehiculoMarca.getItems().clear();
                         configurarPaginador();
 
+                        Actualizar(null);
+
                     }, (ex) -> {
 
                         if (ex.getCause() instanceof MarcaException) {
-                            mostrarError("Error al eliminar marca", "", "" + ex.getMessage());
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al eliminar marca",
+                                    "Se produjo un problema con la marca",
+                                    ex.getMessage(),
+                                    ex
+                            );
                         } else if (ex.getCause() instanceof Exception) {
-                            mostrarError("Error inesperado", "", "No se pudo eliminar la marca selecconada");
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error inesperado",
+                                    "No se pudo completar la operación",
+                                    "Ocurrió un error inesperado al intentar eliminar la marca seleccionada.",
+                                    ex
+                            );
                         }
 
                     }, null
-
             );
-
         }
-
     }
 
     public void Actualizar(ActionEvent actionEvent) {
@@ -498,6 +566,42 @@ public class AdministarMarcasController implements IFxController, ILoader {
         EliminarMarca.setDisable(true);
         lblNombre.setText("");
         TablaVehiculoMarca.getItems().clear();
+        configurarPaginador();
+    }
+
+    @Override
+    public void restaurarEstadoInicial() {
+        // 1. Limpiar campo de búsqueda
+        if (txtBuscar != null) {
+            txtBuscar.clear();
+        }
+
+        // 2. Resetear variables de estado
+        marcaSeleccionada = null;
+        filtroActual = null;
+
+        // 3. Limpiar label de nombre
+        if (lblNombre != null) {
+            lblNombre.setText("");
+        }
+
+        // 4. Limpiar tabla
+        if (TablaVehiculoMarca != null) {
+            TablaVehiculoMarca.getItems().clear();
+        }
+
+        // 5. Deshabilitar botones que requieren selección
+        if (btnEditarMarca != null) {
+            btnEditarMarca.setDisable(true);
+        }
+        if (EliminarMarca != null) {
+            EliminarMarca.setDisable(true);
+        }
+        if (BtnAgregarModelo != null) {
+            BtnAgregarModelo.setDisable(true);
+        }
+
+        // 6. Recargar datos sin filtros (paginador inicial)
         configurarPaginador();
     }
 

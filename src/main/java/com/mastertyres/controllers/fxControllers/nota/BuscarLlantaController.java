@@ -1,6 +1,8 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
@@ -22,9 +24,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Component
 public class BuscarLlantaController implements IFxController {
@@ -155,7 +154,12 @@ public class BuscarLlantaController implements IFxController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de visualización",
+                    "Fallo al cargar registros",
+                    "No se pudieron cargar los datos en la vista. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
         }
 
     }//cargarDatosLlantas
@@ -168,7 +172,12 @@ public class BuscarLlantaController implements IFxController {
             List<Inventario> inventarios = inventarioService.first100Inventario(StatusInventario.ACTIVE.toString());
             tablaLlantas.getItems().setAll(FXCollections.observableList(inventarios));
         }catch (Exception e){
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de visualización",
+                    "Fallo al cargar registros",
+                    "No se pudieron cargar los datos en la tabla. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
         }
 
     }//cargarLlantasInicio
@@ -185,13 +194,11 @@ public class BuscarLlantaController implements IFxController {
             String unidad = (disponible == 1) ? "unidad disponible" : "unidades disponibles";
 
             if (Integer.parseInt(txtStock.getText()) > llantaSeleccionada.getStock()) {
-                mostrarWarning(
+                MensajesAlert.mostrarWarning(
+                        "Advertencia",
                         "Stock insuficiente",
-                        "No hay suficiente stock disponible",
-                        "La llanta seleccionada: " + llantaSeleccionada.getMarca() + " " +
-                                llantaSeleccionada.getModelo() + " " + llantaSeleccionada.getMedida() + "\n" +
-                                "solo cuenta con " + disponible + " " + unidad + ".\n" +
-                                "Cantidad solicitada: " + solicitado + "."
+                        "La llanta seleccionada (" + llantaSeleccionada.getMarca() + " " + llantaSeleccionada.getModelo() + ") " +
+                                "solo cuenta con " + disponible + " " + unidad + ". Cantidad solicitada: " + solicitado + "."
                 );
             }
 

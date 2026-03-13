@@ -1,6 +1,7 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.nota.service.NotaService;
@@ -14,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
 public class AgregarNumFacturaController implements IFxController {
@@ -73,12 +71,21 @@ public class AgregarNumFacturaController implements IFxController {
           notaService.actualizarNumFactura(txtNumFactura.getText(),getNotaId());
 
           notaService.actualizarUpdatedAtNota(getNotaId(),LocalDateTime.now().toString());
-          mostrarInformacion("Numero de factura agregado", "", "Los cambios se guardaron correctamente.");
+          MensajesAlert.mostrarInformacion(
+                  "Operación completada",
+                  "Número de factura registrado",
+                  "El número de factura ha sido agregado y los cambios se guardaron correctamente."
+          );
           cancelar(null);
       }catch (Exception e){
           e.printStackTrace();
 
-          mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
+          MensajesAlert.mostrarExcepcion(
+                  "Error inesperado",
+                  "Se produjo una excepción durante la operación",
+                  "Ocurrió un problema al intentar realizar la operación solicitada.",
+                  e
+          );
           cancelar(null);
 
       }

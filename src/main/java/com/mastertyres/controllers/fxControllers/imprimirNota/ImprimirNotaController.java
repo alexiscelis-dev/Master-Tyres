@@ -1,6 +1,7 @@
 package com.mastertyres.controllers.fxControllers.imprimirNota;
 
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;

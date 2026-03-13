@@ -4,9 +4,11 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
@@ -40,10 +42,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.utils.MensajesAlert.*;
-
 @Component
-public class EditarNotaController extends BaseNota implements IFxController, ILoader {
+public class EditarNotaController extends BaseNota implements IFxController, ILoader{
 
     @FXML
     private Button btnGuardar;
@@ -114,7 +114,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         MenuContextSetting.disableMenu(rootPane);
 
         //validaciones Regex
-        RegexTools.aplicarNumerosDecimalNota(txtTotal);
+        //RegexTools.aplicarNumerosDecimalNota(txtTotal);
         RegexTools.aplicar24Horas(txtHoraEntrega);
         RegexTools.aplicar6Enteros(txtNumNota);
         RegexTools.aplicar2Enteros(txtDia);
@@ -123,50 +123,113 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         RegexTools.aplicar4Enteros(txtAnioVehiculo);
         RegexTools.aplicarNumeroEntero(txtKms);
 
-        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
-        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
-        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
-        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
-        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
-        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
-        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
-        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
-        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
-        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
-        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
-        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
-        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
+//        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
+//        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
+//        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
+//        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
+//        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
+//        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
+//        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
+//        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
+//        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
+//        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
+//        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
+//        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
+//        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
 
-        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
-        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
-        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
-        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
+        RegexTools.aplicarNumeroEnteroConLimite(txtAlineacionCantidad,  6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtBalanceoCantidad,    6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtLlantasCantidad,     6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtAmorDelCantidad,     6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtAmorTrasCantidad,    6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtSuspensionCantidad,  6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtSuspensionCantidad2, 6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtMecanicaCantidad,    6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtMecanicaCantidad2,   6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtFrenosCantidad,      6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtFrenosCantidad2,     6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtOtrosCantidad,       6);
+        RegexTools.aplicarNumeroEnteroConLimite(txtOtrosCantidad2,      6);
+
+        // Decimales con límite de BD — decimal(11,2) = máx 14 chars ("99999999999.99")
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtTotal,              14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtAlineacionUnitario, 14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtAlineacionTotal,    14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtBalanceoUnitario,   14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtBalanceoTotal,      14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtLlantasUnitario,    14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtLlantasTotal,       14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtAmorDelUnitario,    14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtAmorDelTotal,       14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtAmorTrasUnitario,   14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtAmorTrasTotal,      14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtSuspensionUnitario, 14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtSuspensionTotal,    14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtSuspensionUnitario2,14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtSuspensionTotal2,   14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtMecanicaUnitario,   14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtMecanicaTotal,      14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtMecanicaUnitario2,  14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtMecanicaTotal2,     14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtFrenosUnitario,     14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtFrenosTotal,        14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtFrenosUnitario2,    14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtFrenosTotal2,       14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtOtrosUnitario,      14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtOtrosTotal,         14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtOtrosUnitario2,     14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtOtrosTotal2,        14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtSubTotalFrenos,     14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtSubTotalMecanica,   14);
+        RegexTools.aplicarNumerosDecimalNotaConLimite(txtSubTotalOtros,      14);
+
+//        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
+//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
+//        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
+//        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
+//        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
+//        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
+//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
+//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
+//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
+//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
+//        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
+//        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
+//        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
+
+        // Campos de texto libre — solo límite de BD
+        RegexTools.aplicarMaxLength(txtObservaciones,  106);
+        RegexTools.aplicarMaxLength(txtObservaciones2, 120);
+        RegexTools.aplicarMaxLength(txtAlineacion,     56);
+        RegexTools.aplicarMaxLength(txtBalanceo,       56);
+        RegexTools.aplicarMaxLength(txtAmorDelanteros, 90);
+        RegexTools.aplicarMaxLength(txtAmorTraseros,   90);
+        RegexTools.aplicarMaxLength(txtSuspension,     90);
+        RegexTools.aplicarMaxLength(txtSuspension2,    90);
+        RegexTools.aplicarMaxLength(txtMecanica,       90);
+        RegexTools.aplicarMaxLength(txtMecanica2,      90);
+        RegexTools.aplicarMaxLength(txtFrenos,         90);
+        RegexTools.aplicarMaxLength(txtFrenos2,        90);
+        RegexTools.aplicarMaxLength(txtOtros,          90);
+        RegexTools.aplicarMaxLength(txtOtros2,         90);
+        RegexTools.aplicarMaxLength(txtLlantas,        90);
 
         notaUtils.mostrarPopupHora(txtHoraEntrega);
         notaUtils.descripcionComponent(btnNotaDetalles,"Detalles cliente");
@@ -459,7 +522,12 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             actualizarDatosCliente(notaAdeudo);
 
         } catch (Exception e) {
-            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista. Vuelva a intentarlo mas tarde.");
+            MensajesAlert.mostrarExcepcion(
+                "Error de carga",
+                "No se pudo inicializar la vista",
+                "Ocurrió un problema al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
+                e
+            );
             e.printStackTrace();
 
         }
@@ -530,10 +598,19 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
                         txtPlacas.setText(vehiculo.getPlacas() != null ? vehiculo.getPlacas() : "");
 
 
-                        mostrarInformacion("Informacion actualizada", "", "Los campos se actualizaron correctamente.");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Registro actualizado",
+                                "Los campos de información se han actualizado correctamente en el sistema."
+                        );
                     }, (excepcion) -> {
                         excepcion.printStackTrace();
-                        mostrarError("Error inesperado", "Ocurrió un problema al actualizar los datos. Intente nuevamente mas tarde", "");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo en la actualización",
+                                "Ocurrió un problema al intentar actualizar los datos. Por favor, intente nuevamente más tarde.",
+                                excepcion
+                        );
                     }, null
             );
 
@@ -572,9 +649,12 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error de carga",
-                    "",
-                    "Ocurrió un problema al cargar la vista. Vuelva a intentarlo mas tarde");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de carga",
+                    "Fallo al cargar la interfaz",
+                    "Ocurrió un problema al cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
         }
 
 
@@ -600,14 +680,25 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista..");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de carga",
+                    "Error al inicializar componentes",
+                    "Ocurrió un problema técnico al intentar cargar la vista solicitada.",
+                    e
+            );
         }
 
     }//notaDetalles
 
     private void actualizarNota(NotaDTO notaActualizar) {
 
-        boolean guardar = mostrarConfirmacion("Guardar cambios", "", "¿Desea guardar los cambios realizados?", "Guardar", "Cancelar");
+        boolean guardar = MensajesAlert.mostrarConfirmacion(
+                "Confirmar actualización",
+                "Guardar cambios",
+                "¿Está seguro de que desea guardar los cambios realizados en el registro?",
+                "Guardar",
+                "Cancelar"
+        );
 
         checkCheckBoxes();
 
@@ -734,17 +825,29 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
                         notaService.actualizarNota(notaRegistrar, ndRegistrar, detalleCliente);
                         return null;
                     }, (resultado) -> {
-                        mostrarInformacion("Nota Actualizada", "", "Los cambios se guardaron correctamente.");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Nota actualizada",
+                                "Los cambios en la nota se han guardado correctamente en el sistema."
+                        );
                     }, (excepcion) -> {
 
                         excepcion.printStackTrace();
 
                         if (excepcion.getCause() instanceof NotaException) {
-                            mostrarError("No se pudieron guardar los cambios", "", "" + excepcion);
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al guardar",
+                                    "No se pudieron guardar los cambios",
+                                    "Se produjo un error al intentar guardar la información en la base de datos.",
+                                    excepcion
+                            );
                         } else {
-                            mostrarError("Error interno",
-                                    "",
-                                    "Ocurrió un problema al actualizar la nota. Intente nuevamente mas tarde");
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error inesperado",
+                                    "Fallo al actualizar nota",
+                                    "Ocurrió un problema interno al intentar actualizar la nota. Por favor, intente nuevamente más tarde.",
+                                    excepcion
+                            );
                         }
 
                     }, null
@@ -775,7 +878,12 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             actualizarDatosCliente(notaEditar);
 
         } catch (Exception e) {
-            mostrarError("Error de carga", "", "Ocurrió un problema al cargar la vista..");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de carga",
+                    "No se pudo cargar la vista",
+                    "Ocurrió un problema técnico al intentar cargar la interfaz.",
+                    e
+            );
             e.printStackTrace();
 
         }
@@ -790,6 +898,5 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
     public void setNotaEditar(final NotaDTO notaEditar) {
         this.notaEditar = notaEditar;
     }
-
 
 }//class

@@ -2,6 +2,7 @@ package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
@@ -16,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
 public class DarPlazoController implements IFxController {
@@ -101,16 +99,23 @@ public class DarPlazoController implements IFxController {
             notaService.actualilzarFechaVencimiento(fechaVencimiento,notaId, StatusNota.ACTIVE.toString());
             notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(),notaId);
             status = StatusNota.POR_PAGAR.toString();
-            mostrarInformacion("Fecha limite de pago actualizada","","Los cambios se guardaron correctamente.");
-
-
+            MensajesAlert.mostrarInformacion(
+                    "Operación completada",
+                    "Fecha de pago actualizada",
+                    "La fecha límite de pago ha sido actualizada y los cambios se guardaron correctamente."
+            );
             cancelar(null);
 
 
         }catch (Exception e) {
              String status = StatusNota.VENCIDO.toString();
 
-            mostrarError("Error inesperado", "", "Ocurrió un problema al actualizar la fecha de vencimiento.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error del sistema",
+                    "Fallo al actualizar vencimiento",
+                    "Ocurrió un problema técnico al intentar actualizar la fecha de vencimiento de la nota.",
+                    e
+            );
             e.printStackTrace();
 
         }

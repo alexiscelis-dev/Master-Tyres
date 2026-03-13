@@ -7,10 +7,12 @@ import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
@@ -47,10 +49,8 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.mastertyres.common.utils.MensajesAlert.*;
-
 @Component
-public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoader {
+public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
 
     @Autowired
     private MarcaService marcaService;
@@ -768,7 +768,11 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     private void agregarVehiculo(ActionEvent event) {
 
         if (!serieValido.get() || !kilometrosValido.get() || !placasValido.get()) {
-            mostrarWarning("Error en campos", "", "Por favor, corrige los campos marcados en rojo antes de agregar vehiculo");
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Datos inválidos",
+                    "Por favor, corrija los campos marcados en rojo antes de intentar agregar el vehículo."
+            );
             return;
         }
         Vehiculo v = new Vehiculo();
@@ -869,7 +873,11 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     private void GuardarCliente(ActionEvent event) {
 
         if (!rfcValido.get() || !telefonoValido.get()) {
-            mostrarError("Error en campos", "", "Por favor, corrige los campos marcados en rojo antes de guardar.");
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Verificar información",
+                    "Por favor, corrija los campos marcados en rojo antes de continuar con el guardado."
+            );
             return;
         }
 
@@ -892,9 +900,10 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
             String key = placas + "|" + numSerie;
 
             if (!placasSerieSet.add(key)) {
-                mostrarWarning(
-                        "Vehículos repetidos", "",
-                        "Hay vehículos con placas o número de serie repetidos en la lista."
+                MensajesAlert.mostrarWarning(
+                        "Advertencia",
+                        "Vehículos duplicados",
+                        "Se han detectado vehículos con placas o números de serie repetidos en la lista. Por favor, verifique los datos."
                 );
                 return;
             }
@@ -963,7 +972,11 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
 
 
-                    mostrarInformacion("Guardado exitoso", "", "El cliente guardado con éxito");
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Registro exitoso",
+                            "El cliente ha sido guardado en el sistema con éxito."
+                    );
                     // Limpiar formulario
                     limpiarCamposVehiculo();
                     LimpiarCamposClientes();
@@ -971,12 +984,20 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
                 },(ex) ->{
 
-                    if (ex instanceof ClienteException){
-                        mostrarError("No se pudo guardar","Ocurrio un problema al guardar el cliente","" + ex.getMessage());
-                    }else {
-                        mostrarError("Error interno",
+                    if (ex instanceof ClienteException) {
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al guardar",
+                                "Problema con el registro del cliente",
+                                "Ocurrió un problema al intentar guardar la información del cliente: " + ex.getMessage(),
+                                ex
+                        );
+                    } else {
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error del sistema",
                                 "Error inesperado",
-                                "Ocurrio un error al intentar registrar el cliente.");
+                                "Ocurrió un error inesperado al intentar registrar el cliente en el sistema.",
+                                ex
+                        );
                     }
 
                 },null
@@ -989,5 +1010,24 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         ventanaPrincipalController.irAtras();
     }
 
+    @Override
+    public void cleanup() {
+        // 1. Limpiar colecciones
+        if (listaVehiculos != null) {
+            listaVehiculos.clear();
+        }
+
+        // 2. Limpiar tabla
+        if (tablaVehiculos != null) {
+            tablaVehiculos.getItems().clear();
+            tablaVehiculos.setItems(null);
+        }
+
+        // 3. Limpiar Map
+        if (modeloPorCategoriaId != null) {
+            modeloPorCategoriaId.clear();
+        }
+
+    }
 
 }//class

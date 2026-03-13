@@ -5,6 +5,7 @@ import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
@@ -27,9 +28,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-
 
 @Component
 public class BuscarClienteController implements IFxController{
@@ -215,7 +213,12 @@ public class BuscarClienteController implements IFxController{
             }
 
         } catch (Exception e) {
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de visualización",
+                    "Fallo al cargar registros",
+                    "No se pudieron cargar los datos en la tabla. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
         }
     }
 
@@ -225,7 +228,12 @@ public class BuscarClienteController implements IFxController{
             tablaClientes.getItems().setAll(FXCollections.observableList(clientes));
 
         }catch (Exception e){
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de visualización",
+                    "Fallo al cargar registros",
+                    "No se pudieron cargar los datos en la tabla. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
         }
     }
 
@@ -269,9 +277,13 @@ public class BuscarClienteController implements IFxController{
 
 
         } catch (Exception e) {
-            mostrarError("", "", "");
             e.printStackTrace();
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de visualización",
+                    "Fallo al cargar registros",
+                    "No se pudieron cargar los datos en la tabla. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
         }
 
     }//cargarDatosVehiculo
