@@ -7,10 +7,12 @@ import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.interfaces.IRestaurableDatos;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -34,15 +36,14 @@ import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import com.mastertyres.common.interfaces.*;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.*;
-
 @Component
-public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoader {
+public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoader,  ICleanable, IRestaurableDatos {
 
     @FXML private AnchorPane rootPane;
     @FXML private Slider porcentajeDescuento;
@@ -388,7 +389,11 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
             if (!empty() && validarFecha(fechaInicio.getValue(), fechaFin.getValue())) {
                 insertarPromocion();
             } else if (empty()) {
-                mostrarWarning("Campos vacíos", "", "Favor de completar todos los campos.");
+                MensajesAlert.mostrarWarning(
+                        "Datos incompletos",
+                        "Campo obligatorio vacío",
+                        "Por favor, complete todos los campos obligatorios antes de continuar."
+                );
             }
         } finally {
             btnRegistrar.setDisable(false);
@@ -403,7 +408,11 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
         // 2. Validar clientes
         if (clientesAgregados.getItems().isEmpty()) {
-            mostrarError("Error", "", "Debe agregar al menos un cliente a la promoción");
+            MensajesAlert.mostrarWarning(
+                    "Datos incompletos",
+                    "Cliente requerido",
+                    "Debe agregar al menos un cliente a la promoción antes de continuar."
+            );
             return;
         }
 
@@ -438,72 +447,33 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
                     return null;
                 }, (resultado) -> {
-                   mostrarInformacion("Promoción registrada",
-                            "",
-                            "La promoción se registró exitosamente"
-            );
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Promoción registrada",
+                            "La promoción ha sido registrada en el sistema exitosamente."
+                    );
                     clean();
 
                 }, (ex) -> {
 
                     if (ex instanceof PromocionException) {
-                        mostrarError("Error al crear promoción", "", "" + ex.getMessage());
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al crear promoción",
+                                "No se pudo completar la operación",
+                                ex.getMessage(),
+                                ex
+                        );
                     } else {
-                        mostrarError("Error interno",
-                                "",
-                                "Ocurrio un error inesperado al crear la promocion. Vuelva a intentarlo mas tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Se produjo una excepción durante la operación",
+                                "Ocurrió un error inesperado al intentar crear la promoción. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
 
                 }, null
         );
-
-/*
-        try {
-
-
-            // 2. Validar clientes
-            if (clientesAgregados.getItems().isEmpty()) {
-                mostrarError("Error", "", "Debe agregar al menos un cliente a la promoción");
-                return;
-            }
-
-            // 3. Extraer IDs de clientes del ListView
-            List<Integer> clientesIds = clientesAgregados.getItems()
-                    .stream()
-                    .map(Cliente::getClienteId)
-                    .toList();
-
-            // 4. Guardar relaciones usando el service
-//            clientePromocionService.guardarClientesPromocion(
-//                    promocion.getPromocionId(),
-//                    clientesIds
-//            );
-            //System.out.println(clientesIds);
-            promocionService.crearPromocionConClientes(promocion, clientesIds);
-
-            mostrarInformacion(
-                    "Promoción registrada",
-                    "",
-                    "La promoción se registró exitosamente"
-            );
-
-            actualizarPromocionesActivas();
-            clean();
-            if (ventanaPrincipalController != null) {
-                ventanaPrincipalController.irAtras();
-            }
-
-        } catch (Exception e) {
-            mostrarError(
-                    "Error al crear promoción",
-                    "",
-                    "Ha ocurrido un error al crear la promoción. Vuelva a intentarlo más tarde"
-            );
-            clean();
-            e.printStackTrace();
-        }
-
- */
     }//insertarPromocion
 
     private void actualizarPromocionesActivas() {
@@ -516,13 +486,6 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
             // Si no existe contexto disponible en este momento, la vista se recargará al regresar.
         }
     }
-
-//    private void cargarPorcentaje() {
-//        List<String> tiposDescuentos = new ArrayList<>();
-//        tiposDescuentos.add(TipoDescuento.PORCENTAJE.toString());
-//        tiposDescuentos.add(TipoDescuento.OTRO.toString());
-//        tipoDescuento.setItems(FXCollections.observableList(tiposDescuentos));
-//    }
 
     private void obtenerPorcentaje(Double valNuevo) {
 
@@ -637,13 +600,22 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
             fechaValida = true;
 
         } else if (fechaFinLD.isBefore(fechaInicioLD)) {
-            mostrarWarning("Fecha incorrecta", "", "Le fecha de fin no puede ser antes que la fecha de inicio, vuelva a intentarlo");
-
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Rango de fechas no válido",
+                    "La fecha de fin no puede ser anterior a la fecha de inicio. Por favor, intente de nuevo."
+            );
             fechaValida = false;
 
         } else if (fechaFinLD.equals(fechaInicioLD)) {
 
-            fechaValida = mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
+            fechaValida = MensajesAlert.mostrarConfirmacion(
+                    "Confirmar fechas",
+                    "Fechas de inicio y fin idénticas",
+                    "Ha ingresado la misma fecha para el inicio y el fin de la promoción. ¿Desea continuar?",
+                    "Continuar",
+                    "Cancelar"
+            );
 
             if (fechaValida)
                 fechaValida = true;
@@ -700,5 +672,32 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
     }//showLabel
 
+    @Override
+    public void cleanup() {
+        if (pauseTransition != null) {
+            pauseTransition.stop();
+        }
+
+        if (clientesSeleccionados != null) {
+            clientesSeleccionados.clear();
+        }
+    }
+
+    @Override
+    public void restaurarEstadoInicial() {
+        if (txtBuscador != null) {
+            txtBuscador.clear();
+        }
+
+        modoBusqueda = false;
+        terminoBusqueda = "";
+        terminoBusquedaActual = "";
+
+        if (clientesSeleccionados != null) {
+            clientesSeleccionados.clear();
+        }
+
+        configurarPaginador();
+    }
 
 }//class

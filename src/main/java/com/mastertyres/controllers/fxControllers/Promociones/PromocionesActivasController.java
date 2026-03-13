@@ -50,12 +50,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+import com.mastertyres.common.interfaces.*;
 
 @Component
-public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader{
+public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
 
     @FXML
     private AnchorPane ventanaPromocionesActivas;
@@ -211,7 +209,12 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             stage.showAndWait();
             cargarPromociones();
         } catch (IOException ex) {
-          mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de carga",
+                    "No se pudo cargar la vista",
+                    "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
+                    ex
+            );
         }
     }
 
@@ -363,7 +366,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                 Parent root = loader.load();
 
-                EditarPromocionController controller = loader.getController();
+                EditarPromocionVehiculoController controller = loader.getController();
                 controller.setPromocion(promocionSeleccionada);
                 controller.setInitializeLoading(loadingOverlayController);
 
@@ -378,7 +381,12 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                MensajesAlert.mostrarExcepcion(
+                        "Error de carga",
+                        "No se pudo cargar la vista",
+                        "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
+                        ex
+                );
             }
         } else if (promocionSeleccionada.getTipoPromocion().equals(TipoPromocion.CLIENTE.toString())){
             try {
@@ -386,7 +394,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                 Parent root = loader.load();
 
-                EditarPromocionControllerCliente controller = loader.getController();
+                EditarPromocionClienteController controller = loader.getController();
                 controller.setPromocion(promocionSeleccionada);
 
                 Stage stage = new Stage(StageStyle.UTILITY);
@@ -400,7 +408,12 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                MensajesAlert.mostrarExcepcion(
+                        "Error de carga",
+                        "No se pudo cargar la vista",
+                        "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
+                        ex
+                );
             }
         } else {
             try {
@@ -408,7 +421,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
                 Parent root = loader.load();
 
-                EditarPromocionController controller = loader.getController();
+                EditarPromocionVehiculoController controller = loader.getController();
                 controller.setPromocion(promocionSeleccionada);
                 controller.setInitializeLoading(loadingOverlayController);
 
@@ -421,7 +434,12 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                mostrarError("Error de carga","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                MensajesAlert.mostrarExcepcion(
+                        "Error de carga",
+                        "No se pudo cargar la vista",
+                        "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
+                        ex
+                );
             }
         }
 
@@ -495,10 +513,10 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
             //  Confirmación antes de actualizar
             boolean confirmar = MensajesAlert.mostrarConfirmacion(
-                    "Confirmar eliminación.",
-                    "¿Desea eliminar la promoción?",
-                    "Esta accion no podrá deshacerse.",
-                    "Sí, eliminar",
+                    "Confirmar eliminación",
+                    "Eliminar promoción",
+                    "¿Está seguro de que desea eliminar esta promoción? Esta acción no se puede deshacer.",
+                    "Eliminar",
                     "Cancelar"
             );
 
@@ -514,13 +532,27 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                         }, (resultado) ->{
                             cargarPromociones(); // Recargamos la lista para reflejar cambios
                             limpiarDetallePromocion(); // Opcional: limpiar labels después
-                            mostrarInformacion("Eliminado", "Promocion Eliminada", "Promocion Eliminada con exito.");
+                            MensajesAlert.mostrarInformacion(
+                                    "Operación completada",
+                                    "Promoción eliminada",
+                                    "La promoción ha sido eliminada del sistema exitosamente."
+                            );
                         }, (ex) ->{
 
                             if( ex instanceof PromocionException){
-                                mostrarError("Error al Eliminar","Ocurrio un error al eliminar la promocion",""+ex.getMessage());
+                                MensajesAlert.mostrarExcepcionThrowable(
+                                        "Error al eliminar",
+                                        "Problema con la eliminación de la promoción",
+                                        "Ocurrió un error al intentar eliminar la promoción seleccionada: " + ex.getMessage(),
+                                        ex
+                                );
                             }else {
-                                mostrarError("Error inesperado","","Ocurrio un error inesperado al eliminar la promocon. Vuelve a intentarlo mas tarde.");
+                                MensajesAlert.mostrarExcepcionThrowable(
+                                        "Error inesperado",
+                                        "Se produjo una excepción durante la operación",
+                                        "Ocurrió un error inesperado al intentar eliminar la promoción. Por favor, inténtelo de nuevo más tarde.",
+                                        ex
+                                );
                             }
 
                         },null
@@ -564,4 +596,14 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         mostrarPromociones(promociones);
 
     }
+
+    @Override
+    public void cleanup() {
+        promocionSeleccionada = null;
+
+        if (contenedorPromociones != null) {
+            contenedorPromociones.getChildren().clear();
+        }
+    }
+
 }//class

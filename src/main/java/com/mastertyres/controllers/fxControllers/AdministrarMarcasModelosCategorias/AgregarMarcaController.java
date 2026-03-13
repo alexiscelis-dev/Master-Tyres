@@ -5,6 +5,7 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.MarcaException;
 import com.mastertyres.common.exeptions.ModeloException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
@@ -40,11 +41,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+//import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+//import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
-public class AgregarMarcaController implements IVentanaPrincipal, IFxController, ILoader {
+public class AgregarMarcaController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
 
 
     @Autowired
@@ -165,7 +166,11 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
         Categoria categoria = choiceCategoria.getValue();
 
         if (modelo.isEmpty() || categoria == null) {
-            mostrarError("Error", "Campos Vacíos", "Debes ingresar un modelo y seleccionar una categoría.");
+            MensajesAlert.mostrarWarning(
+                    "Datos incompletos",
+                    "Campos obligatorios vacíos",
+                    "Debe ingresar un modelo y seleccionar una categoría antes de continuar."
+            );
             return;
         }
 
@@ -176,8 +181,11 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
         );
 
         if (existe) {
-            mostrarError("Duplicado", "Modelo y Categoría repetidos",
-                    "Ya existe este modelo con la misma categoría en la tabla.");
+            MensajesAlert.mostrarWarning(
+                    "Registro duplicado",
+                    "Modelo y categoría ya registrados",
+                    "Ya existe este modelo asociado a la misma categoría en la tabla."
+            );
             return;
         }
 
@@ -201,6 +209,8 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
     public void cerrarVentana(ActionEvent actionEvent) {
         limpiarCamposVehiculo();
 
+        cleanup();
+
         Stage stage = (Stage) tablaVehiculos.getScene().getWindow();
         stage.close();
     }
@@ -209,9 +219,9 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
     private void GuardarMarca() {
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
-                "Confirmar Agregar",
-                "¿Desea agregar este Modelo?",
-                "Se agregara los modelo de la tabla a esta marca.",
+                "Confirmar registro",
+                "Agregar modelo",
+                "¿Está seguro de que desea agregar este modelo? Se agregarán los modelos de la tabla a la marca seleccionada.",
                 "Sí, agregar",
                 "Cancelar"
         );
@@ -249,7 +259,11 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
 
                         limpiarCamposVehiculo();
 
-                        mostrarInformacion("Guardado exitoso", "", "Marca y modelo(s) guardados correctamente.");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Guardado exitoso",
+                                "La marca y el modelo o modelos han sido registrados correctamente en el sistema."
+                        );
                         cerrarVentana(null);
 
                     }, (ex) -> {
@@ -258,16 +272,29 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
 
                         if (ex instanceof MarcaException) {
 
-                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar la marca", "" + ex.getMessage());
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al guardar",
+                                    "Problema con el registro de la marca",
+                                    "Ocurrió un problema al intentar guardar la información de la marca en el sistema.",
+                                    ex
+                            );
 
                         } else if (ex instanceof ModeloException) {
-                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar alguno(s) de los modelos", "" + ex.getMessage());
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al guardar",
+                                    "Problema con el registro de modelos",
+                                    "Ocurrió un problema al intentar guardar alguno de los modelos proporcionados.",
+                                    ex
+                            );
 
                         } else {
                             cerrarVentana(null);
-                            mostrarError("Error interno",
-                                    "Error inesperado",
-                                    "Ocurrio un error al intentar guardar la marca y modelo(s) proporsonados");
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error interno",
+                                    "Error inesperado en el sistema",
+                                    "Ocurrió un error inesperado al intentar guardar la marca y los modelos proporcionados.",
+                                    ex
+                            );
                         }
 
 
@@ -376,5 +403,27 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
         }
     }
 
+    @Override
+    public void cleanup() {
+        // 1. Limpiar colecciones
+        if (listaVehiculos != null) {
+            listaVehiculos.clear();
+        }
+
+        // 2. Limpiar tabla
+        if (tablaVehiculos != null) {
+            tablaVehiculos.getItems().clear();
+            tablaVehiculos.setItems(null);
+        }
+
+
+        // 5. Limpiar campos de texto
+        if (txtModelo != null) {
+            txtModelo.clear();
+        }
+        if (txtMarca != null) {
+            txtMarca.clear();
+        }
+    }
 
 }//class
