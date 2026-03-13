@@ -4,7 +4,7 @@ import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;

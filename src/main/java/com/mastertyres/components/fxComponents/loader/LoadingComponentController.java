@@ -1,4 +1,4 @@
-package com.mastertyres.components.fxComponents;
+package com.mastertyres.components.fxComponents.loader;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;

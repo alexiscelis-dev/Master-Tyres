@@ -3,7 +3,6 @@ package com.mastertyres.controllers.fxControllers.vehiculo;
 
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.exeptions.VehiculoException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
@@ -11,7 +10,7 @@ import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;

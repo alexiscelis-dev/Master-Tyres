@@ -7,7 +7,7 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ClipboardUtil;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.promociones.model.TipoPromocion;
