@@ -1,13 +1,17 @@
 package com.mastertyres.controllers.fxControllers.ventanaPrincipal;
 
 import com.mastertyres.MasterTyresApplication;
+import com.mastertyres.common.interfaces.ICleanable;
+import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoader;
-import com.mastertyres.common.interfaces.ICleanable;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ProximosServicios.ProximosServiciosController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.controllers.fxControllers.configuracion.ConfiguracionController;
+import com.mastertyres.user.model.User;
+import com.mastertyres.user.service.UserService;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -27,30 +32,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Stack;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarConfirmacion;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 
 @Component
-public class VentanaPrincipalController implements ILoader {
+public class VentanaPrincipalController implements ILoader, IFxController {
 
-    @FXML private AnchorPane sidebar;
-    @FXML private HBox HBoxLogOut;
-    @FXML private HBox HBoxNotas;
-    @FXML private HBox HBoxVehiculos;
-    @FXML private HBox HBoxClientes;
-    @FXML private HBox HBoxPromociones;
-    @FXML private HBox HBoxInventario;
-    @FXML private HBox HBoxServicios;
-    @FXML private HBox HBoxConfiguracion;
-    @FXML private Pane panelMenu;
-    @FXML private ImageView LogoPrincipal;
-    @FXML public Label cambiarPaginaEtiqueta;
-    @FXML private ImageView irAtras;
-    @FXML private ImageView imgPerfil;
-    @FXML public LoadingComponentController loadingOverlayController;
+
+    @FXML
+    private AnchorPane sidebar;
+    @FXML
+    private HBox HBoxLogOut;
+    @FXML
+    private HBox HBoxNotas;
+    @FXML
+    private HBox HBoxVehiculos;
+    @FXML
+    private HBox HBoxClientes;
+    @FXML
+    private HBox HBoxPromociones;
+    @FXML
+    private HBox HBoxInventario;
+    @FXML
+    private HBox HBoxServicios;
+    @FXML
+    private HBox HBoxConfiguracion;
+    @FXML
+    private Pane panelMenu;
+    @FXML
+    private ImageView LogoPrincipal;
+    @FXML
+    public Label cambiarPaginaEtiqueta;
+    @FXML
+    private ImageView irAtras;
+    @FXML
+    private ImageView imgPerfil;
+    @FXML
+    private Label lblUsuario;
+    @FXML
+    public LoadingComponentController loadingOverlayController;
+
 
     @Override
     public void setInitializeLoading(LoadingComponentController loading) {
@@ -61,11 +87,14 @@ public class VentanaPrincipalController implements ILoader {
     private ApplicationContext springContex;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserService userService;
 
     private boolean sidebarVisible = true;
     private double posicionMenu;
     private TranslateTransition transition;
     private TranslateTransition transitionMenu;
+    private User userSession;
 
     // CAMBIO: Usar solo Strings para el historial, no guardar controladores
     public final Stack<String> historialVistas = new Stack<>();
@@ -78,58 +107,25 @@ public class VentanaPrincipalController implements ILoader {
 
     @FXML
     public void initialize() {
-        historialVistas.push("/fxmlViews/masterTires/RegresarMenu.fxml");
-        historialNombreVistas.push("MENU");
 
-        HBoxLogOut.setOnMouseClicked(event -> logOut(event, "/fxmlViews/login/Login.fxml"));
+        configuraciones();
+        listeners();
 
-        HBoxVehiculos.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/vehiculo/Vehiculo.fxml", "Vehiculos");
-            cambiarPaginaEtiqueta.setText("VEHICULOS");
-        });
 
-        HBoxNotas.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/nota/Nota.fxml","Notas");
-            cambiarPaginaEtiqueta.setText("NOTAS");
-        });
-
-        HBoxClientes.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/cliente/Cliente.fxml", "Clientes");
-            cambiarPaginaEtiqueta.setText("CLIENTES");
-        });
-
-        HBoxPromociones.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/promocion/PromocionesActivas.fxml", "Promociones");
-            cambiarPaginaEtiqueta.setText("PROMOCIONES");
-        });
-
-        HBoxInventario.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/inventario/Inventario.fxml", "Inventario de llantas");
-            cambiarPaginaEtiqueta.setText("INVENTARIO DE LLANTAS");
-        });
-
-        HBoxServicios.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/vehiculo/ProximosServicios.fxml", "Proximos Servicios");
-            cambiarPaginaEtiqueta.setText("PROXIMOS SERVICIOS");
-        });
-
-        HBoxConfiguracion.setOnMouseClicked(event -> {
-            viewContent(event, "/fxmlViews/configuracion/Configuracion.fxml", "Configuracion");
-            cambiarPaginaEtiqueta.setText("CONFIGURACION");
-        });
-
-        LogoPrincipal.setOnMouseClicked(event -> {
-            regresarInicio("/fxmlViews/masterTires/RegresarMenu.fxml");
-            cambiarPaginaEtiqueta.setText("INICIO");
-        });
-    }
+    }//initialize
 
     private void logOut(MouseEvent event, String archivoFXML) {
+
         try {
-            // NUEVO: Limpiar antes de salir
+
             limpiarControladorActual();
 
-            Parent root = FXMLLoader.load(VentanaPrincipalController.class.getResource(archivoFXML));
+            FXMLLoader loader = new FXMLLoader(VentanaPrincipalController.class.getResource(archivoFXML));
+
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+
+            Parent root = loader.load();
+
             Stage ventanaLogin = (Stage) ((Node) event.getSource()).getScene().getWindow();
             ventanaLogin.setScene(new Scene(root));
 
@@ -140,11 +136,18 @@ public class VentanaPrincipalController implements ILoader {
             ventanaLogin.setHeight(screenBounds.getHeight());
 
             ventanaLogin.show();
+
         } catch (IOException e) {
-            mostrarError("Error de carga ","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+
+            mostrarError(
+                    "Error de carga",
+                    "",
+                    "Ocurrió un error al cargar la vista. Vuelva a intentarlo más tarde."
+            );
+
             e.printStackTrace();
         }
-    }
+    }//logOut
 
     public void viewContentSinHistorial(MouseEvent event, String archivoFXML, String nombreVentana) {
         try {
@@ -170,7 +173,7 @@ public class VentanaPrincipalController implements ILoader {
             AnchorPane.setRightAnchor(contenido, 0.0);
 
         } catch (IOException e) {
-            mostrarError("Error de carga ","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            mostrarError("Error de carga ", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
         }
     }
@@ -199,12 +202,12 @@ public class VentanaPrincipalController implements ILoader {
     public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
         try {
             // NUEVO: Limpiar controlador anterior antes de cargar nuevo
-            limpiarControladorActual();
+          //  limpiarControladorActual();
 
-            if (vistaActual != null){
+            if (vistaActual != null) {
                 historialVistas.push(vistaActual);
             }
-            if (NombreVistaActual != null){
+            if (NombreVistaActual != null) {
                 historialNombreVistas.push(NombreVistaActual);
             }
 
@@ -236,7 +239,7 @@ public class VentanaPrincipalController implements ILoader {
 
         } catch (IOException e) {
 
-            mostrarError("Error de carga ","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            mostrarError("Error de carga ", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
             return null;
         }
@@ -254,7 +257,7 @@ public class VentanaPrincipalController implements ILoader {
             ((ILoader) controller).setInitializeLoading(this.loadingOverlayController);
         }
 
-        if (controller instanceof IVentanaPrincipal){
+        if (controller instanceof IVentanaPrincipal) {
             ((IVentanaPrincipal) controller).setVentanaPrincipalController(this);
         }
 
@@ -283,12 +286,129 @@ public class VentanaPrincipalController implements ILoader {
             panelMenu.getChildren().add(contenido);
 
         } catch (Exception e) {
-            mostrarError("Error de carga ","","Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+            mostrarError("Error de carga ", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
             e.printStackTrace();
         }
     }
 
-    public LoadingComponentController getLoading(){
+    public LoadingComponentController getLoading() {
         return loadingOverlayController;
     }
-}
+
+    @Override
+    public void configuraciones() {
+
+    }
+
+    @Override
+    public void listeners() {
+
+        historialVistas.push("/fxmlViews/masterTires/RegresarMenu.fxml");
+        historialNombreVistas.push("MENU");
+
+        HBoxVehiculos.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/vehiculo/Vehiculo.fxml", "Vehiculos");
+            cambiarPaginaEtiqueta.setText("VEHICULOS");
+        });
+
+        HBoxNotas.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/nota/Nota.fxml", "Notas");
+            cambiarPaginaEtiqueta.setText("NOTAS");
+        });
+
+        HBoxClientes.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/cliente/Cliente.fxml", "Clientes");
+            cambiarPaginaEtiqueta.setText("CLIENTES");
+        });
+
+        HBoxPromociones.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/promocion/PromocionesActivas.fxml", "Promociones");
+            cambiarPaginaEtiqueta.setText("PROMOCIONES");
+        });
+
+        HBoxInventario.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/inventario/Inventario.fxml", "Inventario de llantas");
+            cambiarPaginaEtiqueta.setText("INVENTARIO DE LLANTAS");
+        });
+
+        HBoxServicios.setOnMouseClicked(event -> {
+            viewContent(event, "/fxmlViews/vehiculo/ProximosServicios.fxml", "Proximos Servicios");
+            cambiarPaginaEtiqueta.setText("PROXIMOS SERVICIOS");
+        });
+
+        HBoxConfiguracion.setOnMouseClicked(event -> {
+            ConfiguracionController controller;
+            controller = (ConfiguracionController) viewContent(event, "/fxmlViews/configuracion/Configuracion.fxml", "Configuracion");
+            controller.setUser(userSession);
+            cambiarPaginaEtiqueta.setText("CONFIGURACION");
+
+        });
+
+        HBoxLogOut.setOnMouseClicked(event -> {
+
+            boolean logOut = mostrarConfirmacion(
+                    "Cerrar sesión",
+                    "Se cerrará la sesión actual.",
+                    "¿Desea continuar?",
+                    "Cerrar sesión",
+                    "Cancelar"
+            );
+
+            if (!logOut)
+                return;
+
+
+            userSession = null;
+            historialVistas.clear();
+            historialNombreVistas.clear();
+            lblUsuario.setText("");
+            imgPerfil.setImage(new Image(getClass().getResource("/icons/user.png").toExternalForm()));
+
+             logOut(event, "/fxmlViews/login/login/Login.fxml");
+
+        });
+
+        LogoPrincipal.setOnMouseClicked(event -> {
+            regresarInicio("/fxmlViews/masterTires/RegresarMenu.fxml");
+            cambiarPaginaEtiqueta.setText("INICIO");
+        });
+
+
+
+    }
+
+    public void setUser(User user) {
+        this.userSession = user;
+
+
+
+        lblUsuario.setText(userSession.getUsername());
+
+        String rutaImagen = userSession.getFotoPerfil();
+
+        Image imagen;
+
+        if (rutaImagen != null && !rutaImagen.isBlank()) {
+            File file = new File(rutaImagen);
+            if (file.exists()) {
+                imagen = new Image(file.toURI().toString());
+            } else {
+                imagen = new Image(getClass().getResource("/icons/user.png").toExternalForm());
+            }
+        } else {
+            imagen = new Image(getClass().getResource("/icons/user.png").toExternalForm());
+        }
+
+        imgPerfil.setImage(imagen);
+
+    }
+
+
+    public Label getCambiarPaginaEtiqueta() {
+        return this.cambiarPaginaEtiqueta;
+    }
+
+    public void setCambiarPaginaEtiqueta(final Label cambiarPaginaEtiqueta) {
+        this.cambiarPaginaEtiqueta = cambiarPaginaEtiqueta;
+    }
+}//class

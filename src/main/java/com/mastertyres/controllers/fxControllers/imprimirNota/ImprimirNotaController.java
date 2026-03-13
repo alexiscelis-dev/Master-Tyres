@@ -3,7 +3,7 @@ package com.mastertyres.controllers.fxControllers.imprimirNota;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.RegexTools;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.nota.model.BaseNota;

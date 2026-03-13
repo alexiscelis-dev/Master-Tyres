@@ -76,7 +76,7 @@
                                     </Label>
 
                                     <TextField fx:id="txtNumNota" editable="false" alignment="CENTER" prefHeight="25"
-                                               prefWidth="150" promptText="Número de nota" styleClass="textfield-nota"/>
+                                               prefWidth="150" promptText="Número de nota" styleClass="textfield-numNota"/>
 
 
                                     <GridPane.margin>
