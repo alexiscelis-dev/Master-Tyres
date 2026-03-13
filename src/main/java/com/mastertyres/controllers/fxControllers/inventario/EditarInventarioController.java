@@ -1,8 +1,10 @@
 package com.mastertyres.controllers.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
@@ -30,8 +32,6 @@ import java.time.LocalDateTime;
 
 import static com.mastertyres.common.utils.InventarioUtils.generarIdentificador;
 import static com.mastertyres.common.utils.InventarioUtils.indicesChoiceBox;
-import static com.mastertyres.common.utils.MensajesAlert.*;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
 public class EditarInventarioController implements IFxController, ILoader {
@@ -367,11 +367,13 @@ public class EditarInventarioController implements IFxController, ILoader {
 
     private void actualizarInventario() {
 
-        boolean confirmar = mostrarConfirmacion("Confirmar actualización",
-                "¿Desea guardar los cambios seleccionados?",
-                "Se actualizarán los datos del inventario seleccionado.",
+        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+                "Confirmar actualización",
+                "Guardar cambios",
+                "¿Está seguro de que desea guardar los cambios seleccionados? Se actualizarán los datos del registro de inventario.",
                 "Sí, guardar",
-                "Cancelar");
+                "Cancelar"
+        );
 
         if (!confirmar) return; //Evita que siga si el usuario cancela
 
@@ -418,19 +420,36 @@ public class EditarInventarioController implements IFxController, ILoader {
                 (resultado) -> {
 
 
-                    mostrarInformacion("Inventario actualizado", "", "Inventario se actualizo correctamente");
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Inventario actualizado",
+                            "Los datos del inventario se han actualizado correctamente en el sistema."
+                    );
                     cerrarVentana();
 
 
                 },
                 (ex) -> {
-                    if (ex.getCause() instanceof InventarioException){
-                        mostrarError("Error al actualizar","","" + ex.getCause().getMessage());
+                    if (ex.getCause() instanceof InventarioException) {
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al actualizar",
+                                "Problema con el registro del inventario",
+                                "Ocurrió un problema al intentar actualizar los datos. ",
+                                ex
+                        );
                     } else if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
-
-                        mostrarError("Operacion cancelada","","La accion fue cancelada por el usuario");
-                    }else {
-                        mostrarError("Ocurrio un error inesperado","","No fue posible actualizar el inventario. vuelva a intentarlo mas tarde");
+                        MensajesAlert.mostrarWarning(
+                                "Operación cancelada",
+                                "Acción interrumpida",
+                                "La acción fue cancelada por el usuario."
+                        );
+                    } else {
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo en el sistema",
+                                "Ocurrió un error inesperado y no fue posible actualizar el inventario. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
                 },null
         );
@@ -473,6 +492,5 @@ public class EditarInventarioController implements IFxController, ILoader {
         }
 
     } //seleccionarImg
-
 
 }//EditarInventario

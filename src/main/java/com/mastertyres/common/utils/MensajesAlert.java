@@ -1,8 +1,14 @@
 package com.mastertyres.common.utils;
 
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.util.converter.IntegerStringConverter;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
@@ -76,6 +82,108 @@ public class MensajesAlert {
 
 
         return resultado.orElse("");
+    }
+
+    public static void mostrarExcepcion(String title, String header, String mensaje, Exception ex) {
+
+        Alert ventana = new Alert(Alert.AlertType.ERROR);
+        ventana.setTitle(title);
+        ventana.setHeaderText(header);
+        ventana.setContentText(mensaje);
+
+        ButtonType copiarBtn = new ButtonType("Copiar detalles");
+        ButtonType cerrarBtn = new ButtonType("Cerrar", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        ventana.getButtonTypes().setAll(copiarBtn, cerrarBtn);
+
+        String clase = ex.getClass() != null
+                ? ex.getClass().toString()
+                : ex.toString();
+        String cause = ex.getCause() != null
+                ? ex.getCause().toString()
+                : ex.toString();
+        String mensage = ex.getMessage() != null
+                ? ex.getMessage().toString()
+                : ex.toString();
+
+        String exceptionText = clase + "\n " + mensage + "\n " + cause;
+
+        TextArea textArea = new TextArea(exceptionText);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane contenido = new GridPane();
+        contenido.setMaxWidth(Double.MAX_VALUE);
+        contenido.add(textArea, 0, 0);
+
+        ventana.getDialogPane().setExpandableContent(contenido);
+
+        Optional<ButtonType> resultado = ventana.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == copiarBtn) {
+
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(exceptionText);
+            clipboard.setContent(content);
+
+        }
+    }
+
+    public static void mostrarExcepcionThrowable(String title, String header, String mensaje, Throwable ex) {
+
+        Alert ventana = new Alert(Alert.AlertType.ERROR);
+        ventana.setTitle(title);
+        ventana.setHeaderText(header);
+        ventana.setContentText(mensaje);
+
+        ButtonType copiarBtn = new ButtonType("Copiar detalles");
+        ButtonType cerrarBtn = new ButtonType("Cerrar", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        ventana.getButtonTypes().setAll(copiarBtn, cerrarBtn);
+
+        String clase = ex.getClass() != null
+                ? ex.getClass().toString()
+                : ex.toString();
+        String cause = ex.getCause() != null
+                ? ex.getCause().toString()
+                : ex.toString();
+        String mensage = ex.getMessage() != null
+                ? ex.getMessage().toString()
+                : ex.toString();
+
+        String exceptionText = clase + "\n " + mensage + "\n " + cause;
+
+        TextArea textArea = new TextArea(exceptionText);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane contenido = new GridPane();
+        contenido.setMaxWidth(Double.MAX_VALUE);
+        contenido.add(textArea, 0, 0);
+
+        ventana.getDialogPane().setExpandableContent(contenido);
+
+        Optional<ButtonType> resultado = ventana.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == copiarBtn) {
+
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(exceptionText);
+            clipboard.setContent(content);
+
+        }
     }
 
 

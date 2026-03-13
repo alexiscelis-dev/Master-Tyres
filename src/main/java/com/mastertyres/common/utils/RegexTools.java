@@ -7,6 +7,54 @@ import java.util.regex.Pattern;
 
 public class RegexTools {
 
+    //Limite decimales
+    public static void aplicarNumerosDecimalNotaConLimite(TextField textField, int maxLength) {
+        Pattern pattern = Pattern.compile("^$|^\\$?\\s*\\d*(?:[.,]\\d*)?$");
+
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            if (newText.isEmpty()) return change;
+
+            if (newText.length() > maxLength) return null; // límite BD
+
+            if (pattern.matcher(newText).matches()) return change;
+
+            return null;
+        });
+
+        textField.setTextFormatter(formatter);
+    }
+
+    //Limite numeros enteros
+    public static void aplicarNumeroEnteroConLimite(TextField textField, int maxLength) {
+        Pattern pattern = Pattern.compile("\\d*");
+
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            if (newText.isEmpty()) return change;
+
+            if (newText.length() > maxLength) return null;
+
+            if (pattern.matcher(newText).matches()) return change;
+
+            return null;
+        });
+
+        textField.setTextFormatter(formatter);
+    }
+
+    //Límite de caracteres, sin restricción de tipo.
+     public static void aplicarMaxLength(TextField textField, int maxLength) {
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() <= maxLength) return change;
+            return null;
+        });
+
+        textField.setTextFormatter(formatter);
+    }
+
     //acepta enteros y dos decimales
     public static void aplicarNumerosDecimal(TextField textField) {
         Pattern pattern = Pattern.compile("\\d*(\\.\\d{0,2})?");

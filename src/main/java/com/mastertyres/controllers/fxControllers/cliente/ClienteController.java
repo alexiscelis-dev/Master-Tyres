@@ -4,11 +4,13 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
+import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
@@ -46,11 +48,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.utils.MensajesAlert.*;
+
 
 
 @Component
-public class ClienteController implements IVentanaPrincipal, IFxController, ILoader {
+public class ClienteController implements IVentanaPrincipal, IFxController, ILoader, ICleanable, IRestaurableDatos {
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -230,11 +232,13 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                             (clienteSeleccionado.getApellido() != null ? clienteSeleccionado.getApellido() : "") + " " +
                                             (clienteSeleccionado.getSegundoApellido() != null ? clienteSeleccionado.getSegundoApellido() : "");
 
-                                    boolean eliminar = mostrarConfirmacion("Eliminar cliente",
-                                            "¿Estas seguro que quieres eliminar el siguiente cliente? \n\n" + cliente,
-                                            "Esta accion no se podra deshacer",
+                                    boolean eliminar = MensajesAlert.mostrarConfirmacion(
+                                            "Confirmar eliminación",
+                                            "Eliminar cliente",
+                                            "¿Está seguro de que desea eliminar al cliente seleccionado? Esta acción no se puede deshacer.",
                                             "Eliminar",
-                                            "Cancelar");
+                                            "Cancelar"
+                                    );
 
                                     if (eliminar) {
                                         taskService.runTask(
@@ -246,20 +250,42 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                                 (resultado) -> {
 
                                                     refrescarTabla();
-                                                    mostrarInformacion("Cliente eliminado", "", "El cliente se eliminó exitosamente.");
+                                                    MensajesAlert.mostrarInformacion(
+                                                            "Operación completada",
+                                                            "Cliente eliminado",
+                                                            "El cliente ha sido eliminado del sistema exitosamente."
+                                                    );
                                                 },
                                                 (ex) -> {
                                                     if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
-                                                        mostrarWarning("Operación cancelada", "", "La acción fue cancelada por el usuario.");
+                                                        MensajesAlert.mostrarWarning(
+                                                                "Operación cancelada",
+                                                                "Acción interrumpida",
+                                                                "La acción fue cancelada por el usuario o el sistema."
+                                                        );
                                                     } else if (ex instanceof ClienteException) {
-                                                        mostrarError("Error al eliminar cliente", "", "" + ex);
+                                                        MensajesAlert.mostrarExcepcionThrowable(
+                                                                "Error al eliminar cliente",
+                                                                "Problema con el registro del cliente",
+                                                                "No se pudo completar la eliminación del cliente debido a un error de validación.",
+                                                                ex
+                                                        );
                                                     } else {
-                                                        mostrarError("Error al eliminar cliente", "", "No se pudo eliminar el cliente seleccionado");
+                                                        MensajesAlert.mostrarExcepcionThrowable(
+                                                                "Error inesperado",
+                                                                "Fallo en la operación",
+                                                                "Ocurrió un error inesperado al intentar eliminar el cliente seleccionado.",
+                                                                ex
+                                                        );
                                                     }
                                                 }, null
                                         );
                                     } else {
-                                        mostrarInformacion("Acción cancelada", "", "Acción cancelada");
+                                        MensajesAlert.mostrarInformacion(
+                                                "Información",
+                                                "Acción cancelada",
+                                                "La operación ha sido cancelada."
+                                        );
                                     }
                                 }//Eliminar
 
@@ -285,7 +311,12 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         refrescarTabla();
 
                                     } catch (IOException ex) {
-                                        mostrarError("Error de carga", "", "Ocurrió un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                                        MensajesAlert.mostrarExcepcion(
+                                                "Error de carga",
+                                                "No se pudo inicializar la vista",
+                                                "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
+                                                ex
+                                        );
                                     }
                                 }
 
@@ -304,7 +335,12 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         stage.initModality(Modality.APPLICATION_MODAL);
                                         stage.showAndWait();
                                     } catch (IOException ex) {
-                                        mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                                        MensajesAlert.mostrarExcepcion(
+                                                "Error de visualización",
+                                                "Fallo al cargar registros",
+                                                "No se pudieron cargar los datos solicitados. Por favor, verifique su conexión e inténtelo de nuevo.",
+                                                ex
+                                        );
                                     }
                                 }
 
@@ -599,7 +635,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                         LocalDate fechaFin = dpClienteFin.getValue();
 
                         if (fechaInicio == null || fechaFin == null) {
-                            mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas.");
+                            MensajesAlert.mostrarWarning(
+                                    "Datos incompletos",
+                                    "Rango de fechas no válido",
+                                    "Por favor, seleccione ambas fechas para establecer el rango de búsqueda correctamente."
+                            );
                             paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
                         } else {
                             if (fechaInicio.isAfter(fechaFin)) {
@@ -618,7 +658,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                         }
                     } else {
                         if (fechaInicio == null) {
-                            mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha.");
+                            MensajesAlert.mostrarWarning(
+                                    "Datos incompletos",
+                                    "Fecha no seleccionada",
+                                    "Por favor, seleccione una fecha en el calendario antes de continuar."
+                            );
                             paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
                         } else {
                             // Aquí ya tenías el .toString(), lo cual está bien
@@ -642,7 +686,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
                         // Validación: Si faltan fechas en el rango
                         if (fechaInicio == null || fechaFin == null) {
-                            mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para el rango.");
+                            MensajesAlert.mostrarWarning(
+                                    "Datos incompletos",
+                                    "Rango de fechas no válido",
+                                    "Por favor, seleccione ambas fechas para establecer el rango de búsqueda correctamente."
+                            );
                             // Cargamos lista normal por defecto para no dejar la vista rota
                             paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
                         } else {
@@ -658,7 +706,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                     // 2. Búsqueda por FECHA ÚNICA
                     else {
                         if (fechaInicio == null) {
-                            mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                            MensajesAlert.mostrarWarning(
+                                    "Datos incompletos",
+                                    "Fecha no seleccionada",
+                                    "Por favor, seleccione una fecha en el calendario antes de continuar."
+                            );
                             paginaClientes = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), indicePagina, CLIENTES_POR_PAGINA);
                         } else {
                             paginaClientes = clienteService.buscarClientePorRegistroPaginado(StatusCliente.ACTIVE.toString(), fechaInicio.toString(), indicePagina, CLIENTES_POR_PAGINA);
@@ -805,7 +857,12 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
             paginadorClientes.setCurrentPageIndex(0);
 
         } catch (Exception e) {
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de visualización",
+                    "Fallo al cargar registros",
+                    "No se pudieron cargar los datos solicitados. Por favor, verifique su conexión e inténtelo de nuevo.",
+                    e
+            );
         }
     }
 
@@ -866,7 +923,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                     LocalDate fechaFin = dpClienteFin.getValue();
 
                     if (fechaInicio == null || fechaFin == null) {
-                        mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas.");
+                        MensajesAlert.mostrarWarning(
+                                "Datos incompletos",
+                                "Rango de fechas no válido",
+                                "Por favor, seleccione ambas fechas para establecer el rango de búsqueda correctamente."
+                        );
                         paginaFiltrada = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
                     } else {
                         if (fechaInicio.isAfter(fechaFin)) {
@@ -885,7 +946,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                     }
                 } else {
                     if (fechaInicio == null) {
-                        mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha.");
+                        MensajesAlert.mostrarWarning(
+                                "Datos incompletos",
+                                "Fecha no seleccionada",
+                                "Por favor, seleccione una fecha en el calendario antes de continuar."
+                        );
                         paginaFiltrada = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
                     } else {
                         // Aquí ya tenías el .toString(), lo cual está bien
@@ -909,7 +974,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
 
                     // Validación: Si faltan fechas en el rango
                     if (fechaInicio == null || fechaFin == null) {
-                        mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para el rango.");
+                        MensajesAlert.mostrarWarning(
+                                "Datos incompletos",
+                                "Rango de fechas no válido",
+                                "Por favor, seleccione ambas fechas para establecer el rango de búsqueda correctamente."
+                        );
                         // Cargamos lista normal por defecto para no dejar la vista rota
                         paginaFiltrada = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
                     } else {
@@ -925,7 +994,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                 // 2. Búsqueda por FECHA ÚNICA
                 else {
                     if (fechaInicio == null) {
-                        mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                        MensajesAlert.mostrarWarning(
+                                "Datos incompletos",
+                                "Fecha no seleccionada",
+                                "Por favor, seleccione una fecha en el calendario antes de continuar."
+                        );
                         paginaFiltrada = clienteService.listarClientesConVehiculosPaginado(StatusCliente.ACTIVE.toString(), 0, CLIENTES_POR_PAGINA);
                     } else {
                         paginaFiltrada = clienteService.buscarClientePorRegistroPaginado(StatusCliente.ACTIVE.toString(), fechaInicio.toString(), 0, CLIENTES_POR_PAGINA);
@@ -1035,4 +1108,53 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
         }
 
     }
+
+    @Override
+    public void cleanup() {
+        // 1. Detener animaciones (previene fugas de CPU)
+        if (delayQuery != null) {
+            delayQuery.stop();
+        }
+
+        if (pauseTransition != null) {
+            pauseTransition.stop();
+        }
+
+    }
+
+    @Override
+    public void restaurarEstadoInicial() {
+        // 1. Limpiar campos de búsqueda
+        if (buscarClienteBuscador != null) {
+            buscarClienteBuscador.clear();
+        }
+
+        // 2. Resetear ChoiceBox de filtros
+        if (atributoBusquedaClientes != null) {
+            atributoBusquedaClientes.setValue("Sin Filtro");
+        }
+
+        // 3. Limpiar DatePickers
+        if (dpBuscarCliente != null) {
+            dpBuscarCliente.setValue(null);
+        }
+        if (dpClienteFin != null) {
+            dpClienteFin.setValue(null);
+        }
+
+        // 4. Resetear CheckBox
+        if (chkRangoCliente != null) {
+            chkRangoCliente.setSelected(false);
+        }
+
+        // 5. Resetear variables de estado
+        terminoBusquedaActual = "";
+        terminoBusquedaFechaActual = "";
+        modoBusqueda = false;
+
+        // 6. Recargar datos sin filtros
+        cargarDatosClientes();
+    }
+
+
 }//class

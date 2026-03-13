@@ -1,10 +1,12 @@
 package com.mastertyres.controllers.fxControllers.historial;
 
+import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
@@ -38,10 +40,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-
 @Component
-public class HistorialController extends BaseNota implements IFxController, ILoader {
+public class HistorialController extends BaseNota implements IFxController, ILoader, ICleanable {
 
     @FXML
     private AnchorPane rootPane;
@@ -167,7 +167,12 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                 }, (ex) -> {
 
                     if (ex.getCause() instanceof Exception) {
-                        mostrarError("Error al cargar vista", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error de carga",
+                                "No se pudo inicializar la interfaz",
+                                "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
 
                 }, null
@@ -207,10 +212,19 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                     mostrarNotas(historial);
                 }, (ex) -> {
                     if (ex instanceof NotaException) {
-                        mostrarError("Error al cargar historial", "", "" + ex);
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error de carga",
+                                "Problema con el historial de notas",
+                                "Se produjo un error de validación al intentar recuperar los registros del historial.",
+                                ex
+                        );
                     } else if (ex instanceof Exception) {
-                        mostrarError("Error inesperado", "", "Ocurrio un problema al cargar los datos del historial. Vuelve a intentarlo mas tarde.");
-
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo al cargar registros",
+                                "Ocurrió un problema inesperado al intentar cargar los datos del historial. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
 
                     ex.printStackTrace();
@@ -300,10 +314,19 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                     llenarNota((NotaDTO) notaPreview);
                 }, (ex) -> {
                     if (ex instanceof NotaException) {
-                        mostrarError("Error de carga", "", "" + ex);
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error de carga",
+                                "Problema con los detalles de la nota",
+                                "No fue posible acceder a la información detallada de la nota seleccionada.",
+                                ex
+                        );
                     } else if (ex instanceof Exception) {
-                        mostrarError("Error al cargar nota", "",
-                                "Ocurrio un error inesperado al cargar los detalles de la nota. Vuelve a intentarlo mas tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "No se pudieron cargar los detalles",
+                                "Ocurrió un error inesperado al intentar cargar los detalles de la nota. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
                 }, null
         );
@@ -392,5 +415,20 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
         contenedorHistorial.getChildren().clear();
 
     }//modoReset
+
+    @Override
+    public void cleanup() {
+
+        // 3. Limpiar contenedor de cards
+        if (contenedorHistorial != null) {
+            contenedorHistorial.getChildren().clear();
+        }
+
+
+        // 5. Limpiar TextField
+        if (txtBuscar != null) {
+            txtBuscar.clear();
+        }
+    }
 
 }//class

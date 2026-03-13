@@ -1,9 +1,11 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
@@ -22,9 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
 public class EditarSaldoController implements IFxController, ILoader {
@@ -121,17 +120,29 @@ public class EditarSaldoController implements IFxController, ILoader {
 
                 },(resultado) ->{
 
-                    mostrarInformacion("Saldo Actualizado",
-                            "",
-                            "El saldo se actualizo correctamente. Puede consultar mas detalles en  nota '+' Detalles cliente.");
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Saldo actualizado",
+                            "El saldo se ha actualizado correctamente. Puede consultar más detalles en la nota '+' de Detalles del cliente."
+                    );
                     cancelar(null);
 
                 },(ex) ->{
 
                     if (ex instanceof NotaException){
-                        mostrarError("Error al actualizar","Ocurrio un problema al guardar los cambios",""+ex.getMessage());
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al actualizar",
+                                "Problema al guardar los cambios",
+                                "Ocurrió un problema técnico al intentar guardar los cambios: " + ex.getMessage(),
+                                ex
+                        );
                     }else {
-                        mostrarError("Error interno", "","Ocurrio un error inesperado al intentar guardar los cambios. Vuelva a intentarlo mas tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo al guardar cambios",
+                                "Ocurrió un error inesperado al intentar guardar los cambios en el sistema. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                         cancelar(null);
                     }
 
@@ -141,7 +152,6 @@ public class EditarSaldoController implements IFxController, ILoader {
 
 
     }//actualizar
-
 
     @FXML
     private void cancelar(ActionEvent event) {
