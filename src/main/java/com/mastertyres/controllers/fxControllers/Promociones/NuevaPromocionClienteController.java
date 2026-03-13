@@ -36,6 +36,7 @@ import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import com.mastertyres.common.interfaces.*;
 
 import java.io.File;
 import java.time.LocalDate;

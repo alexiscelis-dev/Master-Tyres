@@ -1,5 +1,6 @@
 package com.mastertyres.controllers.fxControllers.historial;
 
+import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;

@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import com.mastertyres.common.interfaces.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -50,6 +50,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import com.mastertyres.common.interfaces.*;
 
 @Component
 public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
