@@ -2,13 +2,16 @@ package com.mastertyres.controllers.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.interfaces.*;
+import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;

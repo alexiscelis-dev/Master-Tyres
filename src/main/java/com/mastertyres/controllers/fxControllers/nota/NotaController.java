@@ -8,7 +8,7 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.historial.HistorialController;
 import com.mastertyres.controllers.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -404,19 +404,19 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
                 if (diasRestantes < 0) {
                     // Si no estaba marcado como vencido, lo actualizamos
-                    if (!nota.getStatusNota().equals("VENCIDO")) {
+                    if (!nota.getStatusNota().equals(StatusNota.VENCIDO.toString())) {
                         notaService.actualizarStatus(StatusNota.VENCIDO.toString(), nota.getNotaId());
                     }
                     estiloPorDefecto = estiloRojo;
                 } else if (diasRestantes <= 5) {
                     // Si estaba vencido, lo regresamos a POR_PAGAR
-                    if (nota.getStatusNota().equals("VENCIDO")) {
+                    if (nota.getStatusNota().equals(StatusNota.VENCIDO.toString())) {
                         notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
                     }
                     estiloPorDefecto = estiloAnaranjado;
                 } else {
                     // Si estaba vencido, lo regresamos a POR_PAGAR
-                    if (nota.getStatusNota().equals("VENCIDO")) {
+                    if (nota.getStatusNota().equals(StatusNota.VENCIDO.toString())) {
                         notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(), nota.getNotaId());
                     }
                     estiloPorDefecto = estiloAmarillo;

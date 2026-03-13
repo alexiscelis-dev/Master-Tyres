@@ -142,6 +142,18 @@
 
 }
 
+.textfield-numNota{
+
+-fx-background-color:transparent;
+-fx-background-insets:0;
+-fx-font-weight:bold;
+-fx-background-color:transparent;
+-fx-text-fill:black;
+-fx-font-size: 16px;
+-fx-prompt-text-fill: gray;
+
+}
+
 
 .vBoxFecha{
 

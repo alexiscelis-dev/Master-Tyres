@@ -5,7 +5,7 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;

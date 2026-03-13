@@ -2,14 +2,13 @@ package com.mastertyres.controllers.fxControllers.ProximosServicios;
 
 
 import com.mastertyres.common.exeptions.VehiculoException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.application.HostServices;

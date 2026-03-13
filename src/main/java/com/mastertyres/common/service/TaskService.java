@@ -1,7 +1,7 @@
 package com.mastertyres.common.service;
 
 import com.mastertyres.common.exeptions.AppException;
-import com.mastertyres.components.fxComponents.LoadingComponentController;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import javafx.concurrent.Task;
 import org.springframework.stereotype.Component;
 

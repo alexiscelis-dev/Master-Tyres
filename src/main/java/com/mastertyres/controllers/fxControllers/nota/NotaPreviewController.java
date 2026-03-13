@@ -1,6 +1,8 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
+import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
+import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
 import javafx.fxml.FXML;
@@ -13,7 +15,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class NotaPreviewController extends BaseNota {
+public class NotaPreviewController extends BaseNota implements IFxController {
     @FXML
     private Label lblNumFactura;
 
@@ -24,6 +26,8 @@ public class NotaPreviewController extends BaseNota {
 
     @FXML
     private void initialize(){
+        configuraciones();
+        listeners();
 
     }//initialize
 
@@ -170,4 +174,13 @@ public class NotaPreviewController extends BaseNota {
 
     }//llenarNota
 
+    @Override
+    public void configuraciones() {
+        MenuContextSetting.disableMenu(rootPane);
+    }
+
+    @Override
+    public void listeners() {
+
+    }
 }//class

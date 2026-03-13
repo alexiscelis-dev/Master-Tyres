@@ -1,4 +1,4 @@
-package com.mastertyres.controllers.fxControllers.ventanaPrincipal;
+package com.mastertyres.components.fxComponents.tittleBar;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
@@ -83,4 +83,4 @@ public class TitleBarController {
     private Stage obtenerStage(MouseEvent event) {
         return (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
-}
+}//class
