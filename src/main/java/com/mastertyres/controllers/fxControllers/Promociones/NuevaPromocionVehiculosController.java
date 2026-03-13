@@ -2,11 +2,13 @@ package com.mastertyres.controllers.fxControllers.Promociones;
 
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.common.exeptions.PromocionException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
@@ -45,10 +47,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.mastertyres.common.utils.MensajesAlert.*;
-
 @Component
-public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFxController, ILoader {
+public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -469,13 +469,22 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
             fechaValida = true;
 
         } else if (fechaFinLD.isBefore(fechaInicioLD)) {
-            mostrarWarning("Fecha incorrecta", "", "Le fecha de fin no puede ser antes que la fecha de inicio, vuelva a intentarlo");
-
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Rango de fechas no válido",
+                    "La fecha de fin no puede ser anterior a la fecha de inicio. Por favor, intente de nuevo."
+            );
             fechaValida = false;
 
         } else if (fechaFinLD.equals(fechaInicioLD)) {
 
-            fechaValida = mostrarConfirmacion("Fechas iguales", "Ha ingresado la misma fecha de inicio y de fin para la promocion.", "¿Desea continuar?", "Continuar", "Cancelar");
+            fechaValida = MensajesAlert.mostrarConfirmacion(
+                    "Confirmar fechas",
+                    "Fechas de inicio y fin idénticas",
+                    "Ha ingresado la misma fecha para el inicio y el fin de la promoción. ¿Desea continuar?",
+                    "Continuar",
+                    "Cancelar"
+            );
 
             if (fechaValida)
                 fechaValida = true;
@@ -586,19 +595,31 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
                 }, (resultado) -> {
 
-                    mostrarInformacion("Guardado exitoso", "", "La promocion se registro exitosamente.");
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Promoción registrada",
+                            "La promoción se ha registrado en el sistema exitosamente."
+                    );
                     actualizarPromocionesActivas();
                     clean();
                     ventanaPrincipalController.irAtras();
 
 
                 }, (ex) -> {
-                    if (ex instanceof PromocionException){
-                        mostrarError("No se pudo guardar","Ocurrio un problema al intentar guardar la promocion",""+ex.getMessage());
-                    }else {
-                        mostrarError("Error interno",
+                    if (ex instanceof PromocionException) {
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al guardar",
+                                "Problema con el registro de promoción",
+                                "Ocurrió un problema al intentar guardar la promoción: " + ex.getMessage(),
+                                ex
+                        );
+                    } else {
+                        MensajesAlert.mostrarExcepcionThrowable(
                                 "Error inesperado",
-                                "Ocurrio un error al intentar registrar la promocion.");
+                                "Se produjo una excepción durante la operación",
+                                "Ocurrió un error inesperado al intentar registrar la promoción.",
+                                ex
+                        );
                     }
 
                 }, null
@@ -617,8 +638,11 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
             //ventanaPrincipalController.irAtras();
 
         } else if (empty())
-            mostrarWarning("Campos vacios", "", "Favor de completar cada uno de los campos solicitados.");
-
+            MensajesAlert.mostrarWarning(
+                    "Datos incompletos",
+                    "Campos obligatorios vacíos",
+                    "Por favor, complete cada uno de los campos solicitados antes de continuar."
+            );
         return true;
     }
 
@@ -662,5 +686,15 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
     }//showLabel
 
+    @Override
+    public void cleanup() {
+        if (pauseTransition != null) {
+            pauseTransition.stop();
+        }
+
+        if (vehiculos != null) {
+            vehiculos.clear();
+        }
+    }
 
 }//clase

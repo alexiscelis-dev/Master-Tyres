@@ -1,6 +1,7 @@
 package com.mastertyres.controllers.fxControllers.AdministrarMarcasModelosCategorias;
 
 import com.mastertyres.common.exeptions.MarcaException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
@@ -17,10 +18,8 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-
 @Component
-public class EditarMarcaController implements IFxController, ILoader {
+public class EditarMarcaController implements IFxController, ILoader, ICleanable {
 
     @FXML
     private Button btnAgregar;
@@ -104,8 +103,8 @@ public class EditarMarcaController implements IFxController, ILoader {
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
-                "¿Desea guardar los cambios en esta marca?",
-                "Se actualizarán el nombre de la marca seleccionada.",
+                "Guardar cambios",
+                "¿Está seguro de que desea guardar los cambios en esta marca? Se actualizará el nombre de la marca seleccionada.",
                 "Sí, guardar",
                 "Cancelar"
         );
@@ -120,16 +119,29 @@ public class EditarMarcaController implements IFxController, ILoader {
                         return null;
 
                     }, (resultado)->{
-                        MensajesAlert.mostrarInformacion("Marca actualizada", "", "La marca se actualizó correctamente.");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Registro actualizado",
+                                "La información de la marca ha sido actualizada en el sistema correctamente."
+                        );
                         cerrarVentana();
 
             },(ex) ->{
 
-                        if (ex instanceof MarcaException){
-                            mostrarError("Error al actualzar", "Ocurrio un problema al guardar los cambios", "" + ex.getMessage());
-                        }else {
-                            mostrarError("Error interno", "","Ocurrio un error inesperado al intentar guardar los cambios. Vuelva a intentarlo mas tarde.");
-
+                        if (ex instanceof MarcaException) {
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al actualizar",
+                                    "Problema con el registro de la marca",
+                                    "Ocurrió un problema al intentar guardar los cambios de la marca: " + ex.getMessage(),
+                                    ex
+                            );
+                        } else {
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error inesperado",
+                                    "No se pudo completar la operación",
+                                    "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
+                                    ex
+                            );
                         }
 
                     },null
@@ -141,8 +153,21 @@ public class EditarMarcaController implements IFxController, ILoader {
     @FXML
     private void cerrarVentana() {
         limpiarCamposVehiculo();
+        cleanup();
         Stage stage = (Stage) txtMarca.getScene().getWindow();
         stage.close();
+    }
+
+    @Override
+    public void cleanup() {
+
+        // 2. Nullificar objeto seleccionado
+        marcaSeleccionada = null;
+
+        // 3. Limpiar campo de texto
+        if (txtMarca != null) {
+            txtMarca.clear();
+        }
     }
 
 }//class

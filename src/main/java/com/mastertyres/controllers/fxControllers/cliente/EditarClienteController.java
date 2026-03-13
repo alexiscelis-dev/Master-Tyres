@@ -5,6 +5,7 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
@@ -24,10 +25,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-
 @Component
-public class EditarClienteController implements IFxController, ILoader {
+public class EditarClienteController implements IFxController, ILoader{
 
     @FXML
     private TextField txtNombreEmpresa;
@@ -351,10 +350,10 @@ public class EditarClienteController implements IFxController, ILoader {
     private void actualizarCliente() {
 
         if (cliente == null) {
-            mostrarError(
+            MensajesAlert.mostrarError(
                     "Error",
-                    "No hay cliente seleccionado",
-                    "Debe seleccione un cliente antes de poder modificarlo."
+                    "Sin selección",
+                    "Debe seleccionar un cliente de la lista antes de poder modificarlo."
             );
             return;
         }
@@ -362,8 +361,8 @@ public class EditarClienteController implements IFxController, ILoader {
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
-                "¿Desea guardar los cambios en este cliente?",
-                "Se actualizarán los datos del cliente seleccionado.",
+                "Guardar cambios",
+                "¿Está seguro de que desea guardar los cambios en este cliente? Se actualizarán los datos del registro seleccionado.",
                 "Sí, guardar",
                 "Cancelar"
         );
@@ -416,17 +415,29 @@ public class EditarClienteController implements IFxController, ILoader {
 
                         }, (resultado) -> {
 
-                            MensajesAlert.mostrarInformacion("Éxito", "Cliente actualizado", "El cliente se actualizó correctamente.");
+                            MensajesAlert.mostrarInformacion(
+                                    "Operación completada",
+                                    "Registro actualizado",
+                                    "Los cambios en la información del cliente se han guardado correctamente."
+                            );
                             cerrarVentana();
 
                         }, (ex) -> {
 
                             if (ex instanceof ClienteException) {
-                                mostrarError("Error al actualizar", "Ocurrio un problema al guardar los cambios", "" + ex.getMessage());
+                                MensajesAlert.mostrarExcepcionThrowable(
+                                        "Error al actualizar",
+                                        "Problema con la actualización",
+                                        "Ocurrió un problema al intentar guardar los cambios del cliente: " + ex.getMessage(),
+                                        ex
+                                );
                             } else {
-                                mostrarError("Error interno",
-                                        "",
-                                        "Ocurrio un error inesperado al intentar guardar los cambios. Vuelva a intentarlo mas tarde.");
+                                MensajesAlert.mostrarExcepcionThrowable(
+                                        "Error inesperado",
+                                        "Fallo en el sistema",
+                                        "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
+                                        ex
+                                );
                             }
 
                         }, null

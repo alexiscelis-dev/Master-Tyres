@@ -3,10 +3,12 @@ package com.mastertyres.controllers.fxControllers.Promociones;
 import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ClipboardUtil;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
@@ -28,11 +30,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
-
 @Component
-public class ClientesAplicablesController implements IFxController, ILoader {
+public class ClientesAplicablesController implements IFxController, ILoader, ICleanable {
 
     @Autowired
     private ClienteService clienteService;
@@ -128,12 +127,6 @@ public class ClientesAplicablesController implements IFxController, ILoader {
         tablaClientes.setItems(data);
     }
 
-    @FXML
-    private void cerrarVentana() {
-        Stage stage = (Stage) tablaClientes.getScene().getWindow();
-        stage.close();
-    }
-
     private HostServices hostServices;
 
     public void setHostServices(HostServices hostServices) {
@@ -193,16 +186,20 @@ public class ClientesAplicablesController implements IFxController, ILoader {
                         }
                     }
 
-                    mostrarInformacion(
-                            "¡Chats listos!",
-                            "Se han abierto las ventanas de WhatsApp en su navegador.",
-                            "Por favor, revise las pestañas abiertas y presione el botón de enviar en cada chat para finalizar."
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Ventanas de WhatsApp abiertas",
+                            "Se han abierto las pestañas de WhatsApp en su navegador. Por favor, revise cada una y presione enviar para finalizar el proceso."
                     );
 
                 }, (ex) -> {
                     ex.printStackTrace();
-                    mostrarError("Error al enviar", "", "No se pudieron generar los enlaces de WhatsApp.");
-
+                    MensajesAlert.mostrarExcepcionThrowable(
+                            "Error al enviar",
+                            "Fallo en la generación de enlaces",
+                            "No se pudieron generar los enlaces de WhatsApp debido a un error técnico.",
+                            ex
+                    );
                 }, null
 
 
@@ -247,5 +244,22 @@ public class ClientesAplicablesController implements IFxController, ILoader {
         public void setSeleccionado(boolean seleccionado) {
             this.seleccionado.set(seleccionado);
         }
+    }
+
+
+    @Override
+    public void cleanup() {
+        promocion = null;
+
+        if (data != null) {
+            data.clear();
+        }
+    }
+
+    @FXML
+    private void cerrarVentana() {
+        cleanup();
+        Stage stage = (Stage) tablaClientes.getScene().getWindow();
+        stage.close();
     }
 }//class

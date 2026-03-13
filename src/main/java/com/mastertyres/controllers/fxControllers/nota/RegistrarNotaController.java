@@ -4,10 +4,12 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
@@ -37,11 +39,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.mastertyres.common.utils.MensajesAlert.*;
-
-
 @Component
-public class RegistrarNotaController implements IFxController, ILoader {
+public class RegistrarNotaController implements IFxController, ILoader{
     @FXML
     private AnchorPane root;
     @FXML
@@ -161,14 +160,20 @@ public class RegistrarNotaController implements IFxController, ILoader {
     private void registrar() {
 
         if (notaUtils.toFloatSafe(txtAdeudo.getText()) > nota.getTotal()) {
-            mostrarWarning("Cantidad incorrecta", "",
-                    "La cantidad 'POR PAGAR' ( " + txtAdeudo.getText() + " ) excede el total de la nota ( " + nota.getTotal() + " ). Ingrese una cantidad valida.");
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Monto excedido",
+                    "La cantidad 'POR PAGAR' (" + txtAdeudo.getText() + ") excede el total de la nota (" + nota.getTotal() + "). Por favor, ingrese una cantidad válida."
+            );
             return;
         }
 
         if (notaUtils.toFloatSafe(txtSaldoAfavor.getText()) > nota.getTotal()) {
-            mostrarWarning("Cantidad incorrecta", "",
-                    "La cantidad 'A FAVOR' ( " + txtSaldoAfavor.getText() + " ) excede el total de la nota ( " + nota.getTotal() + " ). Ingrese una cantidad valida.");
+            MensajesAlert.mostrarWarning(
+                    "Advertencia",
+                    "Monto excedido",
+                    "La cantidad 'A FAVOR' (" + txtSaldoAfavor.getText() + ") excede el total de la nota (" + nota.getTotal() + "). Por favor, ingrese una cantidad válida."
+            );
             return;
         }
 
@@ -354,8 +359,11 @@ public class RegistrarNotaController implements IFxController, ILoader {
                 }, (resultado) -> {
 
 
-                    mostrarInformacion("Nota registrada", "", "La nota se registro correctamente");
-
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Nota registrada",
+                            "La nota ha sido registrada en el sistema correctamente."
+                    );
                     cancelar(null);
                     if (onRegistroCompleto != null) {
                         onRegistroCompleto.run();
@@ -364,41 +372,31 @@ public class RegistrarNotaController implements IFxController, ILoader {
                 }, (ex) -> {
 
                     if (ex instanceof NotaException) {
-                        mostrarError("No fue posible registrar la nota", "", "" + ex.getMessage());
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al registrar",
+                                "No fue posible registrar la nota",
+                                ex.getMessage(),
+                                ex
+                        );
                     } else if (ex instanceof InventarioException) {
-                        mostrarError("No fue posible registrar la nota", "", "Ocurrio un error al actualizar el stock del inventrio ");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error de inventario",
+                                "Fallo al actualizar existencias",
+                                "Ocurrió un error al intentar actualizar el stock del inventario.",
+                                ex
+                        );
                     } else {
                         ex.printStackTrace();
-                        mostrarError("Error interno",
-                                "",
-                                "Ocurrio un error inesperado al intentar guardar los cambios. Vuelva a intentarlo mas tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error interno",
+                                "Error inesperado en el sistema",
+                                "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
 
                 }, null
         );
-
-
-
-
-            /*
-
-
-
-
-        } catch (InventarioException ie) {
-            mostrarError("No fue posible registrar la nota", "", "Ocurrio un error al actualizar el stock del inventrio ");
-            ie.printStackTrace();
-        } catch (NotaException ne) {
-            mostrarError("No fue posible registrar la nota", "", "" + ne.getMessage());
-            ne.printStackTrace();
-        } catch (Exception e) {
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
-            e.printStackTrace();
-        }
-
-             */
-
-
     }//registrar
 
     //establece reglas habilitar boton o regex

@@ -4,6 +4,7 @@ package com.mastertyres.controllers.fxControllers.AdministrarMarcasModelosCatego
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.ModeloException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
@@ -30,11 +31,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
-
 @Component
-public class EditarModeloController implements IFxController, ILoader {
+public class EditarModeloController implements IFxController, ILoader, ICleanable {
 
     @FXML
     private AnchorPane rootPane;
@@ -143,6 +141,7 @@ public class EditarModeloController implements IFxController, ILoader {
     @FXML
     private void cerrarVentana() {
         limpiarCamposVehiculo();
+        cleanup();
         Stage stage = (Stage) txtModelo.getScene().getWindow();
         stage.close();
     }
@@ -152,8 +151,8 @@ public class EditarModeloController implements IFxController, ILoader {
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
-                "¿Desea guardar los cambios en este Modelo?",
-                "Se actualizarán el nombre del modelo seleccionada.",
+                "Guardar cambios",
+                "¿Está seguro de que desea guardar los cambios en este modelo? Se actualizará el nombre del modelo seleccionado.",
                 "Sí, guardar",
                 "Cancelar"
         );
@@ -173,20 +172,30 @@ public class EditarModeloController implements IFxController, ILoader {
 
                     }, (resultado) -> {
 
-                        mostrarInformacion("Modelo actualizada", "", "El modelo se actualizó correctamente.");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Modelo actualizado",
+                                "El modelo ha sido actualizado en el sistema correctamente."
+                        );
                         cerrarVentana();
                     }, (ex) -> {
 
                         if (ex instanceof ModeloException) {
-                            mostrarError("Error al actualizar",
-                                    "Ocurrio un problema al guardar los cambios",
-                                    ""+ex.getMessage());
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al actualizar",
+                                    "Problema al guardar los cambios",
+                                    "Ocurrió un problema al intentar guardar los cambios del modelo: " + ex.getMessage(),
+                                    ex
+                            );
 
                         } else {
                             cerrarVentana();
-                            mostrarError("Error interno",
-                                    "Error inesperado",
-                                    "Ocurrio un error al intentar guardar la marca y modelo(s) proporsonados");
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error interno",
+                                    "Error inesperado en el sistema",
+                                    "Ocurrió un error inesperado al intentar guardar la marca y los modelos proporcionados.",
+                                    ex
+                            );
 
                         }
 
@@ -197,5 +206,18 @@ public class EditarModeloController implements IFxController, ILoader {
 
     }//GuardarCambios
 
+    @Override
+    public void cleanup() {
+
+        // 2. Nullificar objetos seleccionados
+        modeloSeleccionada = null;
+        detalleCategoriaSeleccionado = null;
+
+
+        // 4. Limpiar campo de texto
+        if (txtModelo != null) {
+            txtModelo.clear();
+        }
+    }
 
 }//class

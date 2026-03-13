@@ -2,12 +2,11 @@ package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.NotaException;
-import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoader;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.historial.HistorialController;
@@ -53,10 +52,9 @@ import java.util.concurrent.CancellationException;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
 import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
-import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class NotaController implements IVentanaPrincipal, IFxController, ILoader {
+public class NotaController implements IVentanaPrincipal, IFxController, ILoader, ICleanable, IRestaurableDatos {
     @FXML
     private AnchorPane ventanaNotas;
     @FXML
@@ -322,11 +320,20 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                 }, (ex) -> {
 
                     if (ex instanceof NotaException) {
-                        mostrarWarning("Error de busqueda", "Ocurrio un problema al mostrar las notas", "" + ex.getMessage());
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo al mostrar registros",
+                                "Ocurrió un problema al intentar mostrar las notas.",
+                                ex
+                        );
                     } else {
                         ex.printStackTrace();
-                        ex.getMessage();
-                        mostrarError("Error interno", "", "Ocurrio un problema al mostrar las notas");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo al mostrar registros",
+                                "Ocurrió un problema técnico al intentar recuperar la información de las notas.",
+                                ex
+                        );
                     }
 
                 }, null
@@ -606,9 +613,13 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
     private void eliminarNota(Integer notaId, String numNota) {
 
-        boolean eliminar = mostrarConfirmacion("Eliminar nota",
-                "¿Estas apunto de eliminar la nota " + numNota + " esta accion no se podra deshacer",
-                "¿Desea continuar?", "Eliminar", "Cancelar");
+        boolean eliminar = MensajesAlert.mostrarConfirmacion(
+                "Confirmar eliminación",
+                "Eliminar nota",
+                "¿Está seguro de que desea eliminar la nota " + numNota + "? Esta acción no se puede deshacer.",
+                "Eliminar",
+                "Cancelar"
+        );
 
         if (eliminar) {
 
@@ -620,10 +631,19 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                         return null;
                     }, (resultado) -> {
                         cargarNota();
-                        mostrarInformacion("Nota eliminada", "", "La nota se elimino correctamente");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Nota eliminada",
+                                "La nota ha sido eliminada del sistema correctamente."
+                        );
                     }, (excepcion) -> {
                         excepcion.printStackTrace();
-                        mostrarError("Error al eliminar", "", "No fue posible eliminar la nota. Intente de nuevo mas tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al eliminar",
+                                "Fallo en la eliminación",
+                                "No fue posible eliminar la nota seleccionada. Por favor, intente de nuevo más tarde.",
+                                excepcion
+                        );
                     }, null
             );
 
@@ -704,34 +724,46 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                         return null;
                     },
                     (resultado) -> {
-                        mostrarInformacion("Nota creada", "", "Se generó el documento exitosamente");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Nota creada",
+                                "El documento de la nota se ha generado exitosamente."
+                        );
                     },
                     (excepcion) -> {
                         if (excepcion instanceof IOException) {
-                            mostrarError("Error al generar archivo",
-                                    "El archivo no pudo crearse o está siendo usado por otro programa.",
-                                    "Cierra otros programas e inténtalo de nuevo.");
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al generar archivo",
+                                    "Fallo de acceso al archivo",
+                                    "El archivo no pudo crearse o está siendo usado por otro programa. Por favor, cierre otras aplicaciones e inténtelo de nuevo.",
+                                    excepcion
+                            );
                         } else if (excepcion instanceof InterruptedException || excepcion instanceof CancellationException) {
-                            mostrarWarning("Operación cancelada",
-                                    "",
-                                    "La impresión del documento fue cancelada por el usuario.");
+                            MensajesAlert.mostrarWarning(
+                                    "Operación cancelada",
+                                    "Acción interrumpida",
+                                    "La impresión del documento fue cancelada por el usuario."
+                            );
                         } else {
                             excepcion.printStackTrace();
-                            mostrarWarning("Operacion cancelada", "", "La impresion del documento fue cancelada");
+                            MensajesAlert.mostrarWarning(
+                                    "Operación cancelada",
+                                    "Acción interrumpida",
+                                    "La impresión del documento ha sido cancelada."
+                            );
                         }
-
                     }, null
             );
 
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError(
+            MensajesAlert.mostrarExcepcion(
                     "Error inesperado",
-                    "",
-                    "Ocurrió un problema al preparar la nota."
+                    "Fallo al preparar nota",
+                    "Se produjo una excepción técnica al intentar preparar la nota para su visualización.",
+                    e
             );
-
         }
 
     }//imprimir
@@ -763,9 +795,13 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
 
         } catch (Exception e) {
-            mostrarError("Error inesperado", "", "Ocurrió un problema al realizar la operación.");
             e.printStackTrace();
-
+            MensajesAlert.mostrarExcepcion(
+                    "Error inesperado",
+                    "Se produjo una excepción durante la operación",
+                    "Ocurrió un problema técnico al intentar realizar la operación solicitada.",
+                    e
+            );
         }
 
 
@@ -785,7 +821,12 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarError("Error al cargar la vista", "", "Ocurrio un problema al cargar la vista. Vuelve a intentarlo mas tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de carga",
+                    "No se pudo inicializar la interfaz",
+                    "Ocurrió un problema al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
         }
 
     }
@@ -823,7 +864,11 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                 }
 
                 if (arrayTotal.length > 2) {
-                    mostrarWarning("Valores invalidos.", "", "Solo se permiten dos valores separados por una coma.");
+                    MensajesAlert.mostrarWarning(
+                            "Advertencia",
+                            "Valores inválidos",
+                            "Por favor, ingrese únicamente dos valores numéricos separados por una coma."
+                    );
                     return;
                 }
 
@@ -843,7 +888,11 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
 
                 } catch (NumberFormatException e) {
-                    mostrarWarning("Valores invalidos", "", "Ingrese un rango de valores numericos separados por una coma (,) ej. 0,0.");
+                    MensajesAlert.mostrarWarning(
+                            "Datos incorrectos",
+                            "Formato de rango no válido",
+                            "Debe ingresar un rango de valores numéricos válidos separados por una coma (ej. 0,0)."
+                    );
                     return;
                 }
             }
@@ -862,7 +911,11 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
         if (esFecha) {
             // VALIDACIÓN 1: Fecha de inicio nula
             if (dpBuscar.getValue() == null) {
-                mostrarWarning("Fecha requerida", null, "Por favor seleccione la fecha inicial.");
+                MensajesAlert.mostrarWarning(
+                        "Datos incompletos",
+                        "Fecha no seleccionada",
+                        "Por favor, seleccione la fecha inicial para realizar la búsqueda."
+                );
                 return;
             }
 
@@ -871,17 +924,23 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
             if (chkRangoNota.isSelected()) {
                 // VALIDACIÓN 2: Fecha final nula en rango
                 if (dpBuscarFin.getValue() == null) {
-                    mostrarWarning("Rango incompleto", null, "Ha activado búsqueda por rango, seleccione la fecha final.");
+                    MensajesAlert.mostrarWarning(
+                            "Datos incompletos",
+                            "Fecha final faltante",
+                            "Ha activado la búsqueda por rango; por favor, seleccione la fecha final."
+                    );
                     return;
                 }
 
-                // VALIDACIÓN 3: Orden de fechas (Inicio no puede ser mayor a Fin)
+                // VALIDACIÓN 3: Orden de fechas
                 if (dpBuscar.getValue().isAfter(dpBuscarFin.getValue())) {
-                    // Invertimos o avisamos. Aquí avisaremos:
-                    mostrarWarning("Rango inválido", "Fecha incoherente", "La fecha de inicio no puede ser posterior a la fecha final.");
+                    MensajesAlert.mostrarWarning(
+                            "Advertencia",
+                            "Rango de fechas no válido",
+                            "La fecha de inicio no puede ser posterior a la fecha final."
+                    );
                     return;
                 }
-
                 busqueda2 = dpBuscarFin.getValue().toString();
             }
         } else {
@@ -896,6 +955,61 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
         ConfigurarNuevoPaginadorBusqueda(seleccion.toLowerCase(), busqueda, busqueda2);
 
     }//accionBuscar
+
+    @Override
+    public void cleanup() {
+        // 1.  Detener PauseTransition
+        if (delayQuery != null) {
+            delayQuery.stop();
+        }
+
+        // 3. Nullificar objetos seleccionados
+        notaSeleccionada = null;
+        cardSeleccionada = null;
+
+        // 4. Limpiar contenedor
+        if (contenedorNotas != null) {
+            contenedorNotas.getChildren().clear();
+        }
+    }
+
+    @Override
+    public void restaurarEstadoInicial() {
+        // 1. Resetear búsqueda
+        if (txtBuscar != null) {
+            txtBuscar.clear();
+        }
+
+        // 2. Resetear ChoiceBox
+        if (atributoBusquedaNota != null) {
+            atributoBusquedaNota.setValue("Sin Filtro");
+        }
+
+        // 3. Limpiar DatePickers
+        if (dpBuscar != null) {
+            dpBuscar.setValue(null);
+        }
+        if (dpBuscarFin != null) {
+            dpBuscarFin.setValue(null);
+        }
+
+        // 4. Resetear CheckBox
+        if (chkRangoNota != null) {
+            chkRangoNota.setSelected(false);
+        }
+
+        // 5. Resetear variables de estado
+        filtroActual = "sin filtro";
+        textoBusquedaActual = "";
+        textoBusquedaActual2 = "";
+        modoBusqueda = false;
+        esFecha = false;
+        esRangoActual = false;
+
+        // 6. Recargar datos
+        PaginadorNotas.setCurrentPageIndex(0);
+        cargarPagina(0);
+    }
 
 
 }//class

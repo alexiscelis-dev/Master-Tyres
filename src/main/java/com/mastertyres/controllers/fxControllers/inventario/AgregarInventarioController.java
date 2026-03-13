@@ -1,8 +1,10 @@
 package com.mastertyres.controllers.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
@@ -27,11 +29,9 @@ import java.io.File;
 
 import static com.mastertyres.common.utils.InventarioUtils.generarIdentificador;
 import static com.mastertyres.common.utils.InventarioUtils.indicesChoiceBox;
-import static com.mastertyres.common.utils.MensajesAlert.*;
-
 
 @Component
-public class AgregarInventarioController implements IVentanaPrincipal, IFxController, ILoader {
+public class AgregarInventarioController implements IVentanaPrincipal, IFxController, ILoader{
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -312,19 +312,39 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                     return null;
                 },
                 (resultado) -> {
-                    mostrarInformacion("Elemento agregado", "", "Elemento agregado al inventario correctamente.");
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Elemento agregado",
+                            "El elemento ha sido registrado en el inventario correctamente."
+                    );
                     clean();
 
                 }, (ex) -> {
                     if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
+                        // Se recomienda mantener el printStackTrace para depuración interna
                         ex.printStackTrace();
-                        mostrarError("Operacion cancelada", "", "La acción fue cancelada por el usuario. ");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Operación cancelada",
+                                "Acción interrumpida",
+                                "La acción fue cancelada por el usuario o por el sistema.",
+                                ex
+                        );
                     } else if (ex instanceof InventarioException) {
                         ex.printStackTrace();
-                        mostrarError("Error al agregar al inventario", "", "" + ex.getMessage());
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error de inventario",
+                                "Problema al agregar al inventario",
+                                "Se produjo un error al intentar registrar el elemento: " + ex.getMessage(),
+                                ex
+                        );
                     } else {
                         ex.printStackTrace();
-                        mostrarError("Error inesperado", "", "No se pudo guardar el inventario, vuelva a intentarlo más tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Se produjo una excepción durante la operación",
+                                "Ocurrió un error inesperado al intentar guardar la información en el inventario. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
                 }, null
         );
@@ -528,6 +548,5 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         );
 
     }//configurarValidaciones
-
 
 }//class

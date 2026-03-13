@@ -1,5 +1,6 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
@@ -14,7 +15,6 @@ import com.mastertyres.promociones.model.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
-import jakarta.persistence.Tuple;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -45,7 +45,7 @@ import java.util.List;
 import static javafx.collections.FXCollections.observableList;
 
 @Component
-public class EditarPromocionController implements IFxController, ILoader {
+public class EditarPromocionVehiculoController implements IFxController, ILoader, ICleanable {
 
     @FXML
     private TextField txtNombre;
@@ -493,39 +493,32 @@ public class EditarPromocionController implements IFxController, ILoader {
         }
     }
 
-    // Acción de cancelar -> cerrar ventana
-    @FXML
-    private void cerrarVentana() {
-        Stage stage = (Stage) txtNombre.getScene().getWindow();
-        stage.close();
-    }
-
     // Acción para guardar cambios
     @FXML
     private void actualizarPromocion() {
 
         if (promocionSeleccionada == null) {
-            MensajesAlert.mostrarError(
-                    "Error",
-                    "No hay promoción seleccionada",
-                    "Debe seleccionar una promoción antes de modificarla."
+            MensajesAlert.mostrarWarning(
+                    "Sin selección",
+                    "Ninguna promoción seleccionada",
+                    "Debe seleccionar una promoción de la lista antes de intentar modificarla."
             );
             return;
         }
 
         if (vehiculosPromocionList == null || vehiculosPromocionList.isEmpty()) {
             MensajesAlert.mostrarWarning(
-                    "Validación",
+                    "Datos incompletos",
                     "Vehículos requeridos",
-                    "Debe asignar al menos un vehículo."
+                    "Debe asignar al menos un vehículo a la promoción para continuar."
             );
             return;
         }
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
-                "¿Desea guardar los cambios?",
-                "",
+                "Guardar cambios",
+                "¿Está seguro de que desea guardar los cambios realizados en el registro?",
                 "Sí, guardar",
                 "Cancelar"
         );
@@ -559,9 +552,9 @@ public class EditarPromocionController implements IFxController, ILoader {
                 (resultado) -> {
 
                     MensajesAlert.mostrarInformacion(
-                            "Promoción actualizada",
-                            "",
-                            "La promoción se actualizó correctamente."
+                            "Operación completada",
+                            "Registro actualizado",
+                            "Los cambios en la información de la promoción se han guardado correctamente."
                     );
 
                     cerrarVentana();
@@ -569,136 +562,34 @@ public class EditarPromocionController implements IFxController, ILoader {
                 },
                 (ex) -> {
 
-                    MensajesAlert.mostrarError(
-                            "Error al actualizar",
-                            "",
-                            ex.getMessage() != null
-                                    ? ex.getMessage()
-                                    : "Error inesperado al actualizar."
+                    MensajesAlert.mostrarExcepcionThrowable(
+                            "Error de actualización",
+                            "No se pudo completar la operación",
+                            "Ocurrió un error al intentar guardar la información.",
+                            ex
                     );
 
                 },
                 null
         );
     }
-//    @FXML
-//    private void actualizarPromocion() {
-//        if (promocionSeleccionada == null) {
-//            MensajesAlert.mostrarError(
-//                    "Error",
-//                    "No hay promoción seleccionada",
-//                    "Debe seleccionar una promoción antes de poder modificarla."
-//            );
-//            return;
-//        }
-//
-//        //  Validaciones básicas
-//        if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
-//            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El nombre de la promoción no puede estar vacío.");
-//            return;
-//        }
-//
-//        if (txtDescripcion.getText() == null || txtDescripcion.getText().trim().isEmpty()) {
-//            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "La descipcion de la promoción no puede estar vacío.");
-//            return;
-//        }
-//
-//        try {
-//            Float.parseFloat(txtPrecio.getText());
-//        } catch (NumberFormatException e) {
-//            MensajesAlert.mostrarError("Error de formato", "Precio inválido", "Ingrese un valor numérico válido para el precio.");
-//            return;
-//        }
-//
-//        if (dateInicio.getValue() == null || dateFin.getValue() == null) {
-//            MensajesAlert.mostrarWarning("Validación", "Fechas requeridas", "Debe ingresar la fecha de inicio y de fin.");
-//            return;
-//        }
-//
-//        if (dateInicio.getValue().isAfter(dateFin.getValue())) {
-//            MensajesAlert.mostrarError("Error en fechas", "Fechas inválidas", "La fecha de inicio no puede ser mayor a la fecha de fin.");
-//            return;
-//        }
-//
-//        if (txtTipoDescuento.getValue() == null) {
-//            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar un tipo de descuento.");
-//            return;
-//        }
-//
-//        if (vehiculosPromocionList == null || vehiculosPromocionList.isEmpty()) {
-//            MensajesAlert.mostrarWarning("Validación", "Vehículos requeridos", "Debe asignar al menos un vehículo a la promoción.");
-//            return;
-//        }
-//
-//        //  Confirmación antes de actualizar
-//        boolean confirmar = MensajesAlert.mostrarConfirmacion(
-//                "Confirmar actualización",
-//                "¿Desea guardar los cambios en la promoción?",
-//                "Se actualizarán los datos de la promoción seleccionada.",
-//                "Sí, guardar",
-//                "Cancelar"
-//        );
-//
-//        if (!confirmar) {
-//            return; // Usuario canceló
-//        }
-//
-//        taskService.runTask(
-//                loadingOverlayController,
-//                () -> {
-//
-//                    //  Actualizar datos generales
-//                    promocionSeleccionada.setNombre(txtNombre.getText().trim());
-//                    promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
-//                    promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
-//                    promocionSeleccionada.setTipoDescuento(txtTipoDescuento.getValue());
-//                    promocionSeleccionada.setPorcentaje((int) porcentajeDescuento.getValue());
-//                    promocionSeleccionada.setFechaInicio(dateInicio.getValue().toString());
-//                    promocionSeleccionada.setFechaFin(dateFin.getValue().toString());
-//                    promocionSeleccionada.setImg(txtRutaImagen.getText());
-//                    promocionSeleccionada.setUpdated_at(LocalDateTime.now());
-//
-//                    //  Guardar cambios en la promoción
-//                    promocionService.guardarPromocion(promocionSeleccionada);
-//
-//
-//                    //  1. Eliminar todos los vehículos de esa promo en BD
-//                    vehiculoPromocionService.eliminarPorPromocionId(promocionSeleccionada.getPromocionId());
-//
-//                    //  2. Guardar de nuevo los que están en la tabla
-//                    for (VehiculoPromocion vp : vehiculosPromocionList) {
-//                        vp.setVehiculoPromocionID(null); //  Forzar INSERT
-//                        vp.setPromocion(promocionSeleccionada);
-//                        vehiculoPromocionService.guardarVehiculosAplicables(vp);
-//                    }
-//
-//                    return null;
-//                }, (resultado) -> {
-//
-//
-//                    MensajesAlert.mostrarInformacion("Promoción actualizada", "", "La promoción se actualizó correctamente.");
-//                    cerrarVentana();
-//
-//                }, (ex) -> {
-//
-//                    if (ex instanceof PromocionException) {
-//                        MensajesAlert.mostrarError(
-//                                "Error al actualizar",
-//                                "Ocurrio un problema al guardar los cambios",
-//                                "" + ex.getMessage()
-//                        );
-//                    } else {
-//                        MensajesAlert.mostrarError(
-//                                "Error interno",
-//                                "",
-//                                "Ocurrio un error inesperado al actualizar los cambios. Vuelve a intentarlo mas tarde");
-//                    }
-//
-//                }, null
-//
-//        );
-//
-//
-//    }//actualizarPromocion
+
+    @Override
+    public void cleanup() {
+        promocionSeleccionada = null;
+
+        if (vehiculosPromocionList != null) {
+            vehiculosPromocionList.clear();
+        }
+
+    }
+
+    // Acción de cancelar -> cerrar ventana
+    @FXML
+    private void cerrarVentana() {
+        cleanup();
+        Stage stage = (Stage) txtNombre.getScene().getWindow();
+        stage.close();
+    }
 
 }//class

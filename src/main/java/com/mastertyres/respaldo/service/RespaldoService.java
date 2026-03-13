@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -58,8 +59,8 @@ public class RespaldoService implements IRespaldoService {
                 carpeta.mkdirs();
 
 
-                /*
-                Despues se quitara de comentarios por ahora se necesita asi para ver los respaldos que vamos haciendo
+
+                //Despues se quitara de comentarios por ahora se necesita asi para ver los respaldos que vamos haciendo
                 try {
                     Files.setAttribute(carpeta.toPath(), "dos:hidden", true);
 
@@ -67,7 +68,7 @@ public class RespaldoService implements IRespaldoService {
                     e.printStackTrace();
                 }
 
-                 */
+
 
             }
 

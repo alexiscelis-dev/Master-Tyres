@@ -1,16 +1,14 @@
 package com.mastertyres.controllers.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
-import com.mastertyres.common.interfaces.ICleanable;
-import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -51,11 +49,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.mastertyres.common.utils.MensajesAlert.*;
-
 @NoArgsConstructor
 @Component
-public class InventarioController implements IVentanaPrincipal, IFxController, ILoader{
+public class InventarioController implements IVentanaPrincipal, IFxController, ILoader, ICleanable, IRestaurableDatos {
 
     @FXML
     private AnchorPane rootPane;
@@ -194,7 +190,12 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
 
 
                                     } catch (IOException ex) {
-                                        mostrarError("Error de carga", "", "Ocurrio un error al ");
+                                        MensajesAlert.mostrarExcepcion(
+                                                "Error de carga",
+                                                "No se pudo inicializar la vista",
+                                                "Ocurrió un error inesperado al intentar cargar los componentes de la interfaz.",
+                                                ex
+                                        );
                                     }
 
                                 }
@@ -205,7 +206,13 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
 
                                     String mensaje = "¿Estas seguro que quieres eliminar el siguiente elemento? \n\n " + elementoEliminar;
 
-                                    boolean eliminar = mostrarConfirmacion("Eliminar llanta", mensaje, "Esta accion no se podra deshacer", "Eliminar", "Cancelar");
+                                    boolean eliminar = MensajesAlert.mostrarConfirmacion(
+                                            "Confirmar eliminación",
+                                            "Eliminar elemento",
+                                            "¿Está seguro de que desea eliminar este registro? Esta acción no se podrá deshacer.",
+                                            "Eliminar",
+                                            "Cancelar"
+                                    );
 
                                     if (eliminar) {
 
@@ -220,22 +227,44 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                                 }, (resultado) -> {
                                                     //cargarInventario();
                                                     resetBusqueda();
-                                                    mostrarInformacion("Elemento eliminado", "", "Elemento eliminado exitosamente");
+                                                    MensajesAlert.mostrarInformacion(
+                                                            "Operación completada",
+                                                            "Elemento eliminado",
+                                                            "El elemento ha sido eliminado del inventario exitosamente."
+                                                    );
 
                                                 }, (ex) -> {
 
                                                     if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
-                                                        mostrarError("Operacion cancelada", "", "La accion fue cancelada por el usuario");
+                                                        MensajesAlert.mostrarWarning(
+                                                                "Operación cancelada",
+                                                                "Acción interrumpida",
+                                                                "La acción fue cancelada por el usuario o el sistema."
+                                                        );
                                                     } else if (ex.getCause() instanceof InventarioException) {
-                                                        mostrarError("Error al eliminar", "", "" + ex.getCause().getMessage());
+                                                        MensajesAlert.mostrarExcepcionThrowable(
+                                                                "Error al eliminar",
+                                                                "Problema con el inventario",
+                                                                "No se pudo completar la eliminación: ",
+                                                                ex
+                                                        );
                                                     } else {
-                                                        mostrarError("Error al eliminar", "", "Ocurrio un error inesperado, intente de nuevo mas tarde.");
+                                                        MensajesAlert.mostrarExcepcionThrowable(
+                                                                "Error inesperado",
+                                                                "Fallo en la operación",
+                                                                "Ocurrió un error inesperado al intentar eliminar el registro. Intente de nuevo más tarde.",
+                                                                ex
+                                                        );
                                                     }
                                                 }, null
                                         );
 
                                     } else
-                                        mostrarInformacion("Accion cancelada", "", "Accion cancelada");
+                                        MensajesAlert.mostrarInformacion(
+                                                "Información",
+                                                "Acción cancelada",
+                                                "La operación ha sido cancelada correctamente."
+                                        );
 
                                 }
                                 case "Editar" -> {
@@ -259,7 +288,12 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                         resetBusqueda();
 
                                     } catch (IOException ex) {
-                                        mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Intente de nuevo mas tarde.");
+                                        MensajesAlert.mostrarExcepcion(
+                                                "Error de visualización",
+                                                "Fallo al cargar registros",
+                                                "No se pudieron cargar los datos en la tabla. Por favor, inténtalo de nuevo más tarde.",
+                                                ex
+                                        );
                                         ex.printStackTrace();
                                     }
                                 }
@@ -548,7 +582,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
 
                     // Validación: Si faltan fechas en el rango
                     if (fechaInicio == null || fechaFin == null) {
-                        mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para el rango.");
+                        MensajesAlert.mostrarWarning(
+                                "Datos incompletos",
+                                "Rango de fechas no válido",
+                                "Por favor, seleccione tanto la fecha inicial como la final para establecer el rango correctamente."
+                        );
                         // Cargamos lista normal por defecto para no dejar la vista rota
                         paginaFiltrada = inventarioService.listarInventarioPaginado(activo, 0, INVENTARIOS_POR_PAGINA);
                     } else {
@@ -564,7 +602,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                 // 2. Búsqueda por FECHA ÚNICA
                 else {
                     if (fechaInicio == null) {
-                        mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                        MensajesAlert.mostrarWarning(
+                                "Datos incompletos",
+                                "Fecha no seleccionada",
+                                "Por favor, seleccione una fecha en el calendario antes de continuar."
+                        );
                         paginaFiltrada = inventarioService.listarInventarioPaginado(activo, 0, INVENTARIOS_POR_PAGINA);
                     } else {
                         paginaFiltrada = inventarioService.buscarPorFechaPaginado(activo, fechaInicio, 0, INVENTARIOS_POR_PAGINA);
@@ -574,7 +616,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
             }
 
             default -> {
-                mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+                MensajesAlert.mostrarWarning(
+                        "Información no válida",
+                        "Criterio de búsqueda incorrecto",
+                        "Asegúrese de realizar la búsqueda utilizando el campo correspondiente."
+                );
             }
         }
 
@@ -650,7 +696,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
 
                         // Validación: Si faltan fechas en el rango
                         if (fechaInicio == null || fechaFin == null) {
-                            mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para el rango.");
+                            MensajesAlert.mostrarWarning(
+                                    "Datos incompletos",
+                                    "Rango de fechas no válido",
+                                    "Por favor, seleccione tanto la fecha inicial como la final para establecer el rango correctamente."
+                            );
                             // Cargamos lista normal por defecto para no dejar la vista rota
                             paginaInventario = inventarioService.listarInventarioPaginado(activo, indicePagina, INVENTARIOS_POR_PAGINA);
                         } else {
@@ -666,7 +716,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                     // 2. Búsqueda por FECHA ÚNICA
                     else {
                         if (fechaInicio == null) {
-                            mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                            MensajesAlert.mostrarWarning(
+                                    "Datos incompletos",
+                                    "Fecha no seleccionada",
+                                    "Por favor, seleccione una fecha en el calendario antes de continuar."
+                            );
                             paginaInventario = inventarioService.listarInventarioPaginado(activo, indicePagina, INVENTARIOS_POR_PAGINA);
                         } else {
                             paginaInventario = inventarioService.buscarPorFechaPaginado(activo, fechaInicio, indicePagina, INVENTARIOS_POR_PAGINA);
@@ -675,7 +729,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                 }
 
                 default -> {
-                    mostrarWarning("Informacion no valida", "", "Asegurese de buscar por el campo correspondiente.");
+                    MensajesAlert.mostrarWarning(
+                            "Información no válida",
+                            "Criterio de búsqueda incorrecto",
+                            "Asegúrese de realizar la búsqueda utilizando el campo correspondiente."
+                    );
                 }
             }//switch
         } else {
@@ -798,7 +856,12 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
             paginadorInventarios.setCurrentPageIndex(0);
 
         } catch (Exception e) {
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de visualización",
+                    "Fallo al cargar registros",
+                    "No se pudieron cargar los datos en la tabla. Por favor, inténtalo de nuevo más tarde.",
+                    e
+            );
         }
 
 
@@ -857,12 +920,20 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
         if (esFecha) {
             // VALIDACIÓN DE FECHAS (Sin usar .toString() prematuro)
             if (dpInventarioInicio.getValue() == null) {
-                mostrarWarning("Campo requerido", "Fecha inicial vacía", "Por favor seleccione una fecha.");
+                MensajesAlert.mostrarWarning(
+                        "Datos incompletos",
+                        "Fecha no seleccionada",
+                        "Por favor, seleccione una fecha en el calendario antes de continuar."
+                );
                 return;
             }
 
             if (chkRangoInventario.isSelected() && dpInventarioFin.getValue() == null) {
-                mostrarWarning("Campo requerido", "Fecha final vacía", "Por favor seleccione la fecha final para el rango.");
+                MensajesAlert.mostrarWarning(
+                        "Datos incompletos",
+                        "Rango de fechas no válido",
+                        "Por favor, seleccione tanto la fecha inicial como la final para establecer el rango correctamente."
+                );
                 return;
             }
 
@@ -878,6 +949,51 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
             }
             buscarInventario(seleccion.toLowerCase(), texto);
         }
+    }
+
+    @Override
+    public void cleanup() {
+        // 1.  Detener animación (previene fuga de CPU)
+        if (delayQuery != null) {
+            delayQuery.stop();
+        }
+
+    }
+
+    @Override
+    public void restaurarEstadoInicial() {
+        // 1. Limpiar campos de búsqueda
+        if (buscarInventarioBuscador != null) {
+            buscarInventarioBuscador.clear();
+        }
+
+        // 2. Resetear ChoiceBox de filtros
+        if (atributoBusquedaInventario != null) {
+            atributoBusquedaInventario.setValue(null);
+        }
+
+        // 3. Limpiar DatePickers
+        if (dpInventarioInicio != null) {
+            dpInventarioInicio.setValue(null);
+        }
+        if (dpInventarioFin != null) {
+            dpInventarioFin.setValue(null);
+        }
+
+        // 4. Resetear CheckBox
+        if (chkRangoInventario != null) {
+            chkRangoInventario.setSelected(false);
+        }
+
+        // 5. Resetear variables de estado
+        terminoBusquedaActual = "";
+        modoBusqueda = false;
+
+        // 6. Ocultar DatePickers
+        actualizarVisibilidaddeDatePicker(false);
+
+        // 7. Recargar datos sin filtros
+        cargarDatosInventario();
     }
 
 

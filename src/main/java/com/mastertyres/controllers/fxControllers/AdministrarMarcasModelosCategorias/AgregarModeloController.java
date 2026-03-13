@@ -3,6 +3,7 @@ package com.mastertyres.controllers.fxControllers.AdministrarMarcasModelosCatego
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.ModeloException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
@@ -35,10 +36,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
 @Component
-public class AgregarModeloController implements IFxController, ILoader {
+public class AgregarModeloController implements IFxController, ILoader, ICleanable {
 
     @Autowired
     private MarcaService marcaService;
@@ -222,7 +222,11 @@ public class AgregarModeloController implements IFxController, ILoader {
         Categoria categoria = choiceCategoria.getValue();
 
         if (modeloNombre.isEmpty() || categoria == null) {
-            mostrarError("Error", "Campos Vacíos", "Debes ingresar un modelo y seleccionar una categoría.");
+            MensajesAlert.mostrarWarning(
+                    "Datos incompletos",
+                    "Campos obligatorios vacíos",
+                    "Debe ingresar un modelo y seleccionar una categoría antes de continuar."
+            );
             return;
         }
 
@@ -233,8 +237,11 @@ public class AgregarModeloController implements IFxController, ILoader {
         );
 
         if (existe) {
-            mostrarError("Duplicado", "Modelo y Categoría repetidos",
-                    "Ya existe este modelo con la misma categoría en la tabla.");
+            MensajesAlert.mostrarWarning(
+                    "Registro duplicado",
+                    "Modelo y categoría ya registrados",
+                    "Ya existe este modelo asociado a la misma categoría en la tabla."
+            );
             return;
         }
 
@@ -258,9 +265,9 @@ public class AgregarModeloController implements IFxController, ILoader {
     private void GuardarCambios() {
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
-                "Confirmar Agregar",
-                "¿Desea agregar este Modelo?",
-                "Se agregara los modelo de la tabla a esta marca.",
+                "Confirmar registro",
+                "Agregar modelo",
+                "¿Está seguro de que desea agregar este modelo? Se agregarán los modelos de la tabla a la marca seleccionada.",
                 "Sí, agregar",
                 "Cancelar"
         );
@@ -293,39 +300,35 @@ public class AgregarModeloController implements IFxController, ILoader {
                         return null;
                     }, (resultado) -> {
 
-                        MensajesAlert.mostrarInformacion("Éxito", "Modelo agregado", "El modelo se agrego correctamente.");
+                        MensajesAlert.mostrarInformacion(
+                                "Operación completada",
+                                "Modelo agregado",
+                                "El modelo ha sido registrado en el sistema correctamente."
+                        );
                         cerrarVentana();
 
 
                     }, (ex) -> {
 
                         if(ex instanceof ModeloException){
-                            mostrarError("No se pudo guardar", "Ocurrio un problema al intentar guardar alguno(s) de los modelos", "" + ex.getMessage());
-
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error al guardar",
+                                    "Problema con el registro de modelos",
+                                    "Ocurrió un problema al intentar guardar alguno de los modelos proporcionados: " + ex.getMessage(),
+                                    ex
+                            );
                         } else {
-                            mostrarError("Error interno",
-                                    "Error inesperado",
-                                    "Ocurrio un error al intentar guardar la marca y modelo(s) proporsonados");
+                            MensajesAlert.mostrarExcepcionThrowable(
+                                    "Error interno",
+                                    "Error inesperado en el sistema",
+                                    "Ocurrió un error inesperado al intentar guardar la marca y los modelos proporcionados.",
+                                    ex
+                            );
                             cerrarVentana();
                         }
 
                     }, null
             );
-
-            //      try {
-
-
-/*
-            } catch (Exception e) {
-                MensajesAlert.mostrarError(
-                        "Error al agregar",
-                        "No se pudo agregar el modelo",
-                        "Detalles: " + e.getMessage()
-                );
-                e.printStackTrace();
-            }
-
- */
         }
 
 
@@ -342,8 +345,38 @@ public class AgregarModeloController implements IFxController, ILoader {
     @FXML
     private void cerrarVentana() {
         limpiarCamposVehiculo();
+        cleanup();
         Stage stage = (Stage) txtModelo.getScene().getWindow();
         stage.close();
+    }
+
+    @Override
+    public void cleanup() {
+        // 1. Limpiar colecciones (CRÍTICO - son 3 listas)
+        if (listaVehiculos != null) {
+            listaVehiculos.clear();
+        }
+        if (listaExistentes != null) {
+            listaExistentes.clear();
+        }
+        if (listaNuevos != null) {
+            listaNuevos.clear();
+        }
+
+        // 2. Limpiar tabla
+        if (tablaVehiculos != null) {
+            tablaVehiculos.getItems().clear();
+            tablaVehiculos.setItems(null);
+        }
+
+        // 4. Nullificar objetos seleccionados
+        marcaSeleccionada = null;
+
+        // 6. Limpiar campo de texto
+        if (txtModelo != null) {
+            txtModelo.clear();
+        }
+
     }
 
 }//class

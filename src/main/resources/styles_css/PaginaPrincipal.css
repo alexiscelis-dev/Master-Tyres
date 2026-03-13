@@ -11,6 +11,24 @@
      -fx-blend-mode: screen;
 }
 
+.btn-icono {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+}
+
+.btn-icono:hover {
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+}
+
+.btn-icono:pressed {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
 .icono-menu:hover {
     -fx-opacity: 1.0;
     -fx-scale-x: 1.2;

@@ -3,13 +3,11 @@ package com.mastertyres.controllers.fxControllers.vehiculo;
 
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.common.exeptions.VehiculoException;
-import com.mastertyres.common.interfaces.ICleanable;
-import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoader;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -52,11 +50,9 @@ import java.util.List;
 
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
-import static com.mastertyres.common.utils.MensajesAlert.*;
-
 
 @Component
-public class VehiculoController implements IVentanaPrincipal, IFxController, ILoader {
+public class VehiculoController implements IVentanaPrincipal, IFxController, ILoader, ICleanable, IRestaurableDatos {
 
     @FXML
     private AnchorPane rootPane;
@@ -229,11 +225,13 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                             " " + vehiculoSeleccionado.getNombreModelo() + " " + vehiculoSeleccionado.getAnio();
 
 
-                                    boolean eliminar = mostrarConfirmacion("Eliminar vehiculo",
-                                            "¿Estas seguro que quieres eliminar el siguiente vehiculo? \n\n" + vehiculoEliminar,
-                                            "Esta accion no se podra deshacer",
+                                    boolean eliminar = MensajesAlert.mostrarConfirmacion(
+                                            "Confirmar eliminación",
+                                            "Eliminar vehículo",
+                                            "¿Está seguro de que desea eliminar este vehículo? Esta acción no se puede deshacer.",
                                             "Eliminar",
-                                            "Cancelar");
+                                            "Cancelar"
+                                    );
 
                                     if (eliminar) {
                                         taskService.runTask(
@@ -244,23 +242,42 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                                 },
                                                 (resultado) -> {
                                                     cargarVehiculos(); //metodo que cargar los datos en la tabla
-                                                    mostrarInformacion("Vehiculo eliminado", "", "El vehiculo se elimino exitosamente.");
+                                                    MensajesAlert.mostrarInformacion(
+                                                            "Operación completada",
+                                                            "Vehículo eliminado",
+                                                            "El vehículo ha sido eliminado del sistema exitosamente."
+                                                    );
                                                 },
                                                 (ex) -> {
                                                     if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
-                                                        mostrarWarning("Operación cancelada",
-                                                                "",
-                                                                "La accion fue cancelada por el usuario.");
+                                                        MensajesAlert.mostrarWarning(
+                                                                "Operación cancelada",
+                                                                "Acción interrumpida",
+                                                                "La acción fue cancelada por el usuario."
+                                                        );
                                                     } else if (ex.getCause() instanceof VehiculoException) {
-                                                        mostrarError("Error al eliminar vehiculo", "", "" + ex);
-
+                                                        MensajesAlert.mostrarExcepcion(
+                                                                "Error al eliminar",
+                                                                "Fallo en la eliminación del vehículo",
+                                                                "No se pudo completar la operación debido a un error de validación.",
+                                                                (Exception) ex.getCause()
+                                                        );
                                                     } else {
-                                                        mostrarError("Error al eliminar vehiculo", "", "No se pudo eliminar el vehiculo seleccionado");
+                                                        MensajesAlert.mostrarExcepcionThrowable(
+                                                                "Error inesperado",
+                                                                "Fallo al eliminar vehículo",
+                                                                "Ocurrió un error inesperado al intentar eliminar el vehículo seleccionado.",
+                                                                ex
+                                                        );
                                                     }
                                                 }, null
                                         );
                                     } else {
-                                        mostrarInformacion("Accion cancelada", "", "Accion cancelada");
+                                        MensajesAlert.mostrarInformacion(
+                                                "Información",
+                                                "Operación cancelada",
+                                                "La acción ha sido cancelada correctamente."
+                                        );
                                     }
 
                                 }//case eliminar
@@ -286,7 +303,12 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         stage.showAndWait();
                                         cargarVehiculos();
                                     } catch (IOException ex) {
-                                        mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                                        MensajesAlert.mostrarExcepcion(
+                                                "Error de carga",
+                                                "No se pudo inicializar la interfaz",
+                                                "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                                                ex
+                                        );
                                     }
                                 }
 
@@ -305,7 +327,12 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         stage.initModality(Modality.APPLICATION_MODAL);
                                         stage.showAndWait();
                                     } catch (IOException ex) {
-                                        mostrarError("Error de carga", "", "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
+                                        MensajesAlert.mostrarExcepcion(
+                                                "Error de carga",
+                                                "No se pudo inicializar la interfaz",
+                                                "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                                                ex
+                                        );
                                     }
                                 }
 
@@ -593,8 +620,11 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                             paginaVehiculo = vehiculoService.buscarPorAnioRango(activo, anioInicio, anioFin, indicePagina, VEHICULO_POR_PAGINA);
 
                         } else {
-                            mostrarWarning("Formato incorrecto", "Formato no válido para año",
-                                    "Use yyyy o yyyy,yyyy para rango de años.");
+                            MensajesAlert.mostrarWarning(
+                                    "Advertencia",
+                                    "Formato de año no válido",
+                                    "Por favor, use el formato yyyy o yyyy,yyyy para establecer un rango de años."
+                            );
                         }
                     }
 
@@ -613,162 +643,14 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                             paginaVehiculo = vehiculoService.buscarPorKilometrosRango(activo, kmInicio, kmFin, indicePagina, VEHICULO_POR_PAGINA);
 
                         } else {
-                            mostrarWarning("Formato incorrecto", "Formato no válido para kilometraje",
-                                    "Use 10000 o 0,50000 para rango de kilómetros.");
+                            MensajesAlert.mostrarWarning(
+                                    "Advertencia",
+                                    "Formato de kilometraje no válido",
+                                    "Por favor, use el formato 10000 o 0,50000 para establecer un rango de kilómetros."
+                            );
                         }
                     }
 
-                    // ==== 🔹 ÚLTIMO SERVICIO (dd-MM-yyyy o rango) ====
-//                    case "ultimo servicio" -> {
-//                        boolean consultar = false;
-//                        //forma dd-mm-yyyy
-//                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-//                            String fecha = busqueda;
-//                            String fechaConsulta = "";
-//
-//
-//                            try {
-//                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//
-//                                LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-//
-//                                fechaConsulta = fechaLD.format(formatterConsulta);
-//
-//                                consultar = true;
-//
-//                            } catch (DateTimeParseException e) {
-//                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-//                                consultar = false;
-//
-//                            }
-//                            if (consultar) {
-//
-//                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginado(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
-//
-//                            }
-//
-//                            // forma dd-mm-yyyy,dd-mm-yyyy
-//                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-//                            String[] fecha = busqueda.split(",");
-//                            String consultaInicio = "", consultaFinal = "";
-//
-//                            try {
-//                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//
-//                                LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-//                                LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-//
-//                                //ordenar fecha mayor al inicio para hacer la consulta
-//                                if (fecha1.isAfter(fecha2)) {
-//                                    LocalDate aux = fecha1;
-//                                    fecha1 = fecha2;
-//                                    fecha2 = aux;
-//
-//                                }
-//                                consultaInicio = fecha1.format(formatterConsulta);
-//                                consultaFinal = fecha2.format(formatterConsulta);
-//
-//                                consultar = true;
-//
-//                            } catch (DateTimeParseException e) {
-//                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-//                                consultar = false;
-//                            }
-//
-//                            if (consultar) {
-//                                paginaVehiculo = vehiculoService.buscarVehiculoPorUltimoServicioPaginadoRango(StatusVehiculo.ACTIVE.toString(), consultaInicio, consultaFinal, indicePagina, VEHICULO_POR_PAGINA);
-//                            }
-//
-//                        } else {
-//                            List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-//                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-//                            mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-//                                    " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
-//
-//                        }
-//                    }
-//
-//
-//                    case "fecha registro" -> {
-//                        boolean consultar = false;
-//
-//                        if (busqueda.matches("\\d{2}-\\d{2}-\\d{4}")) {
-//                            String fecha = busqueda;
-//                            LocalDate fechaConsulta = null;
-//
-//
-//                            try {
-//                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//
-//                                LocalDate fechaLD = LocalDate.parse(fecha, formatterEntrada);
-//                                fechaConsulta = LocalDate.parse(fechaLD.format(formatterConsulta));
-//
-//                                consultar = true;
-//
-//
-//
-//                            } catch (DateTimeParseException e) {
-//                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-//                                consultar = false;
-//
-//                            }
-//
-//                            if (consultar) {
-//
-//                                paginaVehiculo = vehiculoService.buscarPorFechaRegistro(StatusVehiculo.ACTIVE.toString(), fechaConsulta, indicePagina, VEHICULO_POR_PAGINA);
-//
-//
-//                            }
-//
-//                        } else if (busqueda.matches("\\d{2}-\\d{2}-\\d{4},\\d{2}-\\d{2}-\\d{4}")) {
-//
-//                            String[] fecha = busqueda.split(",");
-//                            String consultaInicio = "", consultaFinal = "";
-//
-//
-//                            try {
-//                                DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//                                DateTimeFormatter formatterConsulta = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//
-//                                LocalDate fecha1 = LocalDate.parse(fecha[0], formatterEntrada);
-//                                LocalDate fecha2 = LocalDate.parse(fecha[1], formatterEntrada);
-//
-//                                //ordenar fecha mayor al inicio para hacer la consulta
-//                                if (fecha1.isAfter(fecha2)) {
-//                                    LocalDate aux = fecha1;
-//                                    fecha1 = fecha2;
-//                                    fecha2 = aux;
-//                                }
-//
-//                                consultaInicio = fecha1.format(formatterConsulta);
-//                                consultaFinal = fecha2.format(formatterConsulta);
-//
-//                                consultar = true;
-//
-//                            } catch (DateTimeParseException e) {
-//                                mostrarWarning("Fecha no valida", "", "La fecha ingresada no es valida vuelva a intentarlo");
-//                                consultar = false;
-//                            }
-//
-//                            if (consultar) {
-//                                paginaVehiculo = vehiculoService.buscarPorFechaRegistroRango(StatusVehiculo.ACTIVE.toString(), LocalDate.parse(consultaInicio), LocalDate.parse(consultaFinal), indicePagina, VEHICULO_POR_PAGINA);
-//                            }
-//
-//
-//                        } else {
-//                            List<VehiculoDTO> vehiculoVacio = new ArrayList<>();
-//                            tablaVehiculos.setItems(FXCollections.observableList(vehiculoVacio));
-//                            mostrarWarning("Formato incorrecto", "Favor de ingresar un formato correcto", "Por ejemplo dd-mm-yyyy o bien" +
-//                                    " dd-mm-yyyy,dd-mm-yyyy si desea buscar por un rango de fechas");
-//
-//                        }
-//
-//                    }
-
-                    // ====  ÚLTIMO SERVICIO (dd-MM-yyyy o rango) ====
                     case "fecha registro" -> {
                         LocalDate fechaInicio = dpVehiculoInicio.getValue();
 
@@ -777,7 +659,11 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                             LocalDate fechaFin = dpVehiculoFin.getValue();
 
                             if (fechaInicio == null || fechaFin == null) {
-                                mostrarWarning("Fechas incompletas", "Rango no válido", "Por favor, seleccione ambas fechas para realizar la búsqueda por rango.");
+                                MensajesAlert.mostrarWarning(
+                                        "Datos incompletos",
+                                        "Rango de fechas no válido",
+                                        "Por favor, seleccione ambas fechas para realizar la búsqueda por rango correctamente."
+                                );
                                 paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
 
 
@@ -809,7 +695,11 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                         } else {
                             // LÓGICA DE FECHA ÚNICA
                             if (fechaInicio == null) {
-                                mostrarWarning("Fecha no seleccionada", "Campo vacío", "Por favor, seleccione una fecha en el calendario.");
+                                MensajesAlert.mostrarWarning(
+                                        "Datos incompletos",
+                                        "Fecha no seleccionada",
+                                        "Por favor, seleccione una fecha en el calendario para continuar."
+                                );
                                 paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
 
 
@@ -837,7 +727,11 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                         if (chkRangoFechas.isSelected()) {
                             LocalDate fechaFin = dpVehiculoFin.getValue();
                             if (fechaInicio == null || fechaFin == null) {
-                                mostrarWarning("Fechas incompletas", "Rango no válido", "Seleccione ambas fechas para el último servicio.");
+                                MensajesAlert.mostrarWarning(
+                                        "Datos incompletos",
+                                        "Rango de fechas no válido",
+                                        "Por favor, seleccione ambas fechas para establecer el rango del último servicio correctamente."
+                                );
                                 paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
 
 
@@ -861,7 +755,11 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                     StatusVehiculo.ACTIVE.toString(), fechaInicio, fechaFin, indicePagina, VEHICULO_POR_PAGINA);
                         } else {
                             if (fechaInicio == null) {
-                                mostrarWarning("Fecha no seleccionada", "", "Seleccione una fecha de último servicio.");
+                                MensajesAlert.mostrarWarning(
+                                        "Datos incompletos",
+                                        "Fecha de servicio obligatoria",
+                                        "Por favor, seleccione la fecha del último servicio antes de continuar."
+                                );
                                 paginaVehiculo = vehiculoService.listarVehiculosPaginado(StatusVehiculo.ACTIVE.toString(), indicePagina, VEHICULO_POR_PAGINA);
 
 
@@ -879,7 +777,11 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                         }
                     }
 
-                    default -> mostrarWarning("Búsqueda no válida", "", "Seleccione un campo de búsqueda correcto.");
+                    default -> MensajesAlert.mostrarWarning(
+                            "Advertencia",
+                            "Criterio de búsqueda incorrecto",
+                            "Por favor, seleccione un campo de búsqueda válido de la lista."
+                    );
                 }
                 int totalPaginas = paginaVehiculo.getTotalPages();
                 paginadorVehiculos.setPageCount(Math.max(totalPaginas, 1));
@@ -889,7 +791,12 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             }
 
         } catch (Exception e) {
-            mostrarError("Error en búsqueda", "Ocurrió un error al buscar los vehículos.", e.getMessage());
+            MensajesAlert.mostrarExcepcion(
+                    "Error del sistema",
+                    "Fallo al realizar la búsqueda",
+                    "Ocurrió un error inesperado al intentar buscar los vehículos: " + e.getMessage(),
+                    e
+            );
             e.printStackTrace();
         }
 
@@ -1045,7 +952,12 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             paginadorVehiculos.setCurrentPageIndex(0);
 
         } catch (Exception e) {
-            mostrarError("Error al mostrar datos", "", "No se pudieron cargar los datos. Por favor, inténtalo de nuevo más tarde.");
+            MensajesAlert.mostrarExcepcion(
+                    "Error de visualización",
+                    "No se pudieron cargar los registros",
+                    "No se pudieron cargar los datos solicitados. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
         }
 
 
@@ -1102,8 +1014,11 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                 paginaFiltrada = vehiculoService.buscarPorAnioRango(activo, anioInicio, anioFin, 0, VEHICULO_POR_PAGINA);
 
                             } else {
-                                mostrarWarning("Formato incorrecto", "Formato no válido para año",
-                                        "Use yyyy o yyyy,yyyy para rango de años.");
+                                MensajesAlert.mostrarWarning(
+                                        "Advertencia",
+                                        "Formato de año no válido",
+                                        "Por favor, utilice el formato yyyy o yyyy,yyyy para definir un rango de años."
+                                );
                             }
                         }
 
@@ -1222,10 +1137,19 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
 
                 }, (ex) -> {
 
-                    if (ex instanceof VehiculoException){
-                        mostrarWarning("Error de busqueda","",""+ex.getMessage());
-                    }else{
-                        mostrarError("Error interno","","Ocurrio un error al cargar los vehiculos.");
+                    if (ex instanceof VehiculoException) {
+                        MensajesAlert.mostrarWarning(
+                                "Advertencia",
+                                "Problema en la búsqueda",
+                                ex.getMessage()
+                        );
+                    } else {
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo al cargar vehículos",
+                                "Ocurrió un error inesperado al intentar cargar la información de los vehículos.",
+                                ex
+                        );
                     }
 
                 }, null
@@ -1299,16 +1223,22 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             LocalDate inicio = dpVehiculoInicio.getValue();
 
             if (inicio == null) {
-                mostrarWarning("Campo requerido", "Fecha inicial vacía",
-                        "Por favor, seleccione la fecha para realizar la búsqueda.");
+                MensajesAlert.mostrarWarning(
+                        "Datos incompletos",
+                        "Fecha de inicio obligatoria",
+                        "Por favor, seleccione la fecha inicial para realizar la búsqueda."
+                );
                 return;
             }
 
             // 3. VALIDACIÓN DE RANGO (Si el checkbox está marcado)
             if (chkRangoFechas.isSelected()) {
                 if (dpVehiculoFin.getValue() == null) {
-                    mostrarWarning("Campo requerido", "Fecha final vacía",
-                            "Ha activado la búsqueda por rango. Por favor, seleccione la fecha final.");
+                    MensajesAlert.mostrarWarning(
+                            "Datos incompletos",
+                            "Fecha final faltante",
+                            "Ha activado la búsqueda por rango. Por favor, seleccione la fecha final para procesar la solicitud."
+                    );
                     return;
                 }
             }
@@ -1330,5 +1260,54 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
         }
     }
 
+    @Override
+    public void cleanup() {
+        // 1. Detener ambos PauseTransitions
+        if (delayQuery != null) {
+            delayQuery.stop();
+        }
+
+        if (pauseTransition != null) {
+            pauseTransition.stop();
+        }
+
+        // 3. Limpiar lista
+        if (todosLosVehiculos != null) {
+            todosLosVehiculos.clear();
+        }
+    }
+
+    @Override
+    public void restaurarEstadoInicial() {
+        // 1. Resetear búsqueda
+        if (buscarVehiculoBuscador != null) {
+            buscarVehiculoBuscador.clear();
+        }
+
+        // 2. Resetear ChoiceBox
+        if (atributoBusquedaVehiculos != null) {
+            atributoBusquedaVehiculos.setValue(null);
+        }
+
+        // 3. Limpiar DatePickers
+        if (dpVehiculoInicio != null) {
+            dpVehiculoInicio.setValue(null);
+        }
+        if (dpVehiculoFin != null) {
+            dpVehiculoFin.setValue(null);
+        }
+
+        // 4. Resetear CheckBox
+        if (chkRangoFechas != null) {
+            chkRangoFechas.setSelected(false);
+        }
+
+        // 5. Resetear variables de estado
+        modoBusqueda = false;
+        terminoBusquedaActual = "";
+
+        // 6. Recargar datos
+        cargarDatosVehiculo();
+    }
 
 }//clase

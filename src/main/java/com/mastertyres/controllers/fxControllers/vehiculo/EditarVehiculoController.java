@@ -3,6 +3,7 @@ package com.mastertyres.controllers.fxControllers.vehiculo;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.VehiculoException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
@@ -33,10 +34,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-
 @Component
-public class EditarVehiculoController implements IFxController, ILoader {
+public class EditarVehiculoController implements IFxController, ILoader, ICleanable {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -403,33 +402,45 @@ public class EditarVehiculoController implements IFxController, ILoader {
 
     private void actualizarVehiculo() {
         if (vehiculo == null) {
-            mostrarError(
-                    "Error",
-                    "No hay vehiculo seleccionado",
-                    "Debe seleccionar un vehiculo antes de poder modificarlo."
+            MensajesAlert.mostrarWarning(
+                    "Sin selección",
+                    "Vehículo no seleccionado",
+                    "Debe seleccionar un vehículo de la lista antes de poder modificarlo."
             );
             return;
         }
 
         if (txtColor.getText() == null || txtColor.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "El color del vehiculo no puede estar vacío.");
+            MensajesAlert.mostrarWarning(
+                    "Datos incompletos",
+                    "Color del vehículo obligatorio",
+                    "El campo de color del vehículo no puede estar vacío."
+            );
             return;
         }
 
         if (choiceMarca.getValue() == null) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar una marca.");
+            MensajesAlert.mostrarWarning(
+                    "Datos incompletos",
+                    "Marca no seleccionada",
+                    "Debe seleccionar una marca para el vehículo antes de continuar."
+            );
             return;
         }
 
         if (choiceModelo.getValue() == null) {
-            MensajesAlert.mostrarWarning("Validación", "Campo requerido", "Debe seleccionar un modelo.");
+            MensajesAlert.mostrarWarning(
+                    "Datos incompletos",
+                    "Modelo no seleccionado",
+                    "Debe seleccionar un modelo para el vehículo antes de continuar."
+            );
             return;
         }
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
                 "Confirmar actualización",
-                "¿Desea guardar los cambios en este vehiculo?",
-                "Se actualizarán los datos del vehiculo seleccionado.",
+                "Guardar cambios",
+                "¿Está seguro de que desea guardar los cambios en este vehículo? Se actualizarán los datos del registro seleccionado.",
                 "Sí, guardar",
                 "Cancelar"
         );
@@ -488,21 +499,29 @@ public class EditarVehiculoController implements IFxController, ILoader {
 
                 }, (resultado) -> {
 
-                    MensajesAlert.mostrarInformacion("Vehículo actualizado",
-                            "",
-                            "El vehículo se actualizó correctamente.");
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Vehículo actualizado",
+                            "Los cambios en la información del vehículo se han guardado correctamente."
+                    );
                     cerrarVentana();
 
                 }, (ex) -> {
 
                     if (ex instanceof VehiculoException) {
-                        mostrarError("Error al actualizar",
-                                "Ocurrio un problema al guardar los cambios",
-                                "" + ex.getMessage());
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al actualizar",
+                                "Problema al guardar cambios",
+                                "Ocurrió un problema al intentar guardar los cambios del vehículo",
+                                ex
+                        );
                     } else {
-                        mostrarError("Error interno",
-                                "",
-                                "Ocurrio un error inesperado al intentar guardar los cambios. Vuelva a intentarlo mas tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Se produjo una excepción durante la operación",
+                                "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
 
                 }, null
@@ -511,8 +530,22 @@ public class EditarVehiculoController implements IFxController, ILoader {
 
     }
 
+    @Override
+    public void cleanup() {
+        vehiculo = null;
+
+        if (modeloPorCategoriaId != null) {
+            modeloPorCategoriaId.clear();
+        }
+
+        if (modelos != null) {
+            modelos.clear();
+        }
+    }
+
     @FXML
     private void cerrarVentana() {
+        cleanup();
         Stage stage = (Stage) btnCambiar.getScene().getWindow();
         stage.close();
     }

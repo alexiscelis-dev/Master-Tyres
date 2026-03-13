@@ -7,8 +7,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class TitleBarController {
 
     @FXML

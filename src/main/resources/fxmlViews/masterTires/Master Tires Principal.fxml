@@ -209,9 +209,10 @@
         <Pane id="panelMenu" fx:id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0"
               style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0"
               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+
         <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0"
                     style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="0.0">
+                    AnchorPane.topAnchor="10.0">
             <children>
                 <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="200.0"
                       AnchorPane.rightAnchor="25.0">
@@ -230,9 +231,9 @@
                 </HBox>
                 <ImageView fx:id="LogoPrincipal" fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0"
                            pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0"
-                           AnchorPane.topAnchor="15.0">
+                           AnchorPane.topAnchor="17.0">
                     <image>
-                        <Image url="@../../icons/Master Tyres Logo (Fondo Blanco).png"/>
+                        <Image url="@../../icons/Master Tyres Logo (Fondo Blanco) 6.png"/>
                     </image>
                 </ImageView>
                 <Label fx:id="cambiarPaginaEtiqueta" layoutX="380.0" layoutY="56.0" text="INICIO" textFill="WHITE"
@@ -241,13 +242,23 @@
                         <Font name="Roboto Bold" size="28.0"/>
                     </font>
                 </Label>
-                <ImageView fx:id="irAtras" fitHeight="46.0" fitWidth="36.0" layoutX="346.0" layoutY="33.0"
-                           onMouseClicked="#irAtras" pickOnBounds="true" preserveRatio="true" styleClass="icono-menu"
-                           AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
-                    <image>
-                        <Image url="@../../icons/arrow-left-s-line.png"/>
-                    </image>
-                </ImageView>
+                <Button fx:id="btnAtras"
+                        onMouseClicked="#irAtras"
+                        styleClass="btn-icono"
+                        AnchorPane.leftAnchor="360.0"
+                        AnchorPane.topAnchor="38.0">
+
+                    <graphic>
+                        <ImageView fitHeight="46"
+                                   fitWidth="36"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../../icons/arrow-left-s-line.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+
+                </Button>
             </children>
         </AnchorPane>
 

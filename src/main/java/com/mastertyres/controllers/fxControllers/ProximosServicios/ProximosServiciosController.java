@@ -32,12 +32,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
-
-
 @Component
-public class ProximosServiciosController implements IFxController, ILoader {
+public class ProximosServiciosController implements IFxController, ILoader,  ICleanable {
 
 
     @FXML
@@ -198,19 +194,28 @@ public class ProximosServiciosController implements IFxController, ILoader {
                     limpiarDetalleVehiculo();
                     cargarServicios();
 
-                    mostrarInformacion("Aviso enviado",
-                            "Aviso enviado con exito",
-                            "Presione enviar en cada una de las ventanas de su navegador para completar la operacion.");
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Aviso enviado con éxito",
+                            "Por favor, presione enviar en cada una de las ventanas abiertas en su navegador para completar la operación."
+                    );
 
                 }, (ex) -> {
 
-                    if (ex instanceof VehiculoException){
-                        mostrarError("Error al enviar aviso", "No se pudo enviar el aviso ", "" + ex.getMessage());
-
-                    }else {
-                        mostrarError("Error interno",
-                                "",
-                                "Ocurrio un error inesperaro al mandar aviso. Vuelve a intentarlo mas tarde.");
+                    if (ex instanceof VehiculoException) {
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al enviar aviso",
+                                "No se pudo enviar el aviso",
+                                ex.getMessage(),
+                                ex
+                        );
+                    } else {
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo al mandar aviso",
+                                "Ocurrió un error inesperado al intentar mandar el aviso. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
 
                 }, null
@@ -291,9 +296,9 @@ public class ProximosServiciosController implements IFxController, ILoader {
     private void ActualizarServicio(ActionEvent actionEvent) {
 
         boolean confirmar = MensajesAlert.mostrarConfirmacion(
-                "Confirmar actualizacion.",
-                "¿Desea marcar como servicio realizado?",
-                "Se modificara el ultimo servicio del vehiculo seleccionado a la fecha de hoy.",
+                "Confirmar actualización",
+                "Servicio realizado",
+                "¿Está seguro de que desea marcar este servicio como realizado? Se modificará la fecha del último servicio del vehículo seleccionado a la fecha actual.",
                 "Sí, actualizar",
                 "Cancelar"
         );
@@ -313,11 +318,19 @@ public class ProximosServiciosController implements IFxController, ILoader {
                     cargarServicios();
                 }, (ex) -> {
                     if (ex instanceof VehiculoException) {
-                        mostrarError("Ocurrio un error", "No se pudo marcar como 'servicio realizado' ", "" + ex.getMessage());
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al actualizar",
+                                "No se pudo marcar como servicio realizado",
+                                ex.getMessage(),
+                                ex
+                        );
                     } else {
-                        mostrarError("Error interno",
-                                "No se pudo marcar como 'servicio realizado' ",
-                                "Ocurrio un error inesperado. Vuelve a intentarlo mas tarde.");
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Fallo en la operación",
+                                "Ocurrió un error inesperado. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
                     }
 
                 }, null
@@ -388,4 +401,14 @@ public class ProximosServiciosController implements IFxController, ILoader {
         });
 
     }
+
+    @Override
+    public void cleanup() {
+        vehiculoSeleccion = null;
+
+        if (contenedorServicios != null) {
+            contenedorServicios.getChildren().clear();
+        }
+    }
+
 }//class

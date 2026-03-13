@@ -11,6 +11,7 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.components.fxComponents.LoadingComponentController;
@@ -45,10 +46,9 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.*;
 
-import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoader {
+public class AgregarVehiculoController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
 
     @Autowired
     private MarcaService marcaService;
@@ -695,12 +695,20 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
         Cliente clienteSeleccionado = tablaClientes.getSelectionModel().getSelectedItem();
         if (clienteSeleccionado == null) {
-            mostrarWarning("Cliente no seleccionado", "", "Por favor selecciona un cliente.");
+            MensajesAlert.mostrarWarning(
+                    "Sin selección",
+                    "Cliente no seleccionado",
+                    "Por favor, seleccione un cliente de la lista antes de continuar."
+            );
             return;
         }
 
         if (listaVehiculos.isEmpty()) {
-            mostrarWarning("Sin vehículos", "", "Agrega al menos un vehículo antes de guardar.");
+            MensajesAlert.mostrarWarning(
+                    "Datos incompletos",
+                    "Vehículos requeridos",
+                    "Por favor, agregue al menos un vehículo antes de proceder a guardar la información."
+            );
             return;
         }
 
@@ -723,9 +731,10 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
             String key = placas + "|" + numSerie;
 
             if (!placasSerieSet.add(key)) {
-                mostrarWarning(
-                        "Vehículos repetidos", "",
-                        "Hay vehículos con placas o número de serie repetidos en la lista."
+                MensajesAlert.mostrarWarning(
+                        "Advertencia",
+                        "Vehículos duplicados",
+                        "Se han detectado vehículos con placas o números de serie repetidos en la lista. Por favor, verifique los datos."
                 );
                 return;
             }
@@ -739,7 +748,11 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
                     return null;
 
                 }, (resultado) -> {
-                    mostrarInformacion("Éxito", "", "Vehículos guardados correctamente.");
+                    MensajesAlert.mostrarInformacion(
+                            "Operación completada",
+                            "Registro exitoso",
+                            "Los vehículos han sido guardados en el sistema correctamente."
+                    );
                     listaVehiculos.clear();
                     limpiarCamposVehiculo();
                     tablaClientes.getSelectionModel().clearSelection();
@@ -747,12 +760,20 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
                 }, (ex) -> {
 
                     if (ex instanceof VehiculoException) {
-                        mostrarWarning("No se pudo guardar", "Ocurrio un problema al guardar el/los vehiclos", ex.getMessage());
+                        MensajesAlert.mostrarExcepcionThrowable(
+                                "Error al guardar",
+                                "Problema con el registro de vehículos",
+                                "Ocurrió un problema al intentar guardar los vehículos: " + ex.getMessage(),
+                                ex
+                        );
 
                     } else {
-                        mostrarError("Error interno",
+                        MensajesAlert.mostrarExcepcionThrowable(
                                 "Error inesperado",
-                                "Ocurrio un error al intentar registrar el/los vehiculos");
+                                "Fallo en el registro",
+                                "Ocurrió un error inesperado al intentar registrar los vehículos en el sistema.",
+                                ex
+                        );
                     }
 
                 }, null
@@ -765,6 +786,18 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
         ventanaPrincipalController.irAtras();
 
+    }
+
+    @Override
+    public void cleanup() {
+
+        if (listaVehiculos != null) {
+            listaVehiculos.clear();
+        }
+
+        if (modeloPorCategoriaId != null) {
+            modeloPorCategoriaId.clear();
+        }
     }
 
 }//class
