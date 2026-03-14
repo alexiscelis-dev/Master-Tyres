@@ -6,8 +6,6 @@ import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.historial.HistorialController;
 import com.mastertyres.controllers.fxControllers.imprimirNota.ImprimirNotaController;
@@ -52,6 +50,8 @@ import java.util.concurrent.CancellationException;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
 import static com.mastertyres.common.utils.GenerarPDF.generarPDF;
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
 public class NotaController implements IVentanaPrincipal, IFxController, ILoader, ICleanable, IRestaurableDatos {
@@ -170,13 +170,13 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
     @Override
     public void configuraciones() {
 
-        MenuContextSetting.disableMenu(ventanaNotas);
+        disableMenu(ventanaNotas);
 
         atributoBusquedaNota.setValue("Sin Filtro");
 
-        notaUtils.descripcionComponent(btnBuscar,"Buscar");
-        notaUtils.descripcionComponent(atributoBusquedaNota,"Filtrar búsqueda");
-        notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
+        notaUtils.descripcionComponent(btnBuscar, "Buscar");
+        notaUtils.descripcionComponent(atributoBusquedaNota, "Filtrar búsqueda");
+        notaUtils.descripcionComponent(btnRefrescar, "Refrescar");
 
     }//configuraciones
 
@@ -191,11 +191,9 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
             switch (newValue.toString()) {
 
-                case "Adeudo" ->
-                    filtroActual = "Adeudo";
+                case "Adeudo" -> filtroActual = "Adeudo";
 
-                case "Saldo a favor" ->
-                    filtroActual = "Saldo a favor";
+                case "Saldo a favor" -> filtroActual = "Saldo a favor";
 
 
             }//switch
@@ -320,15 +318,13 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                 }, (ex) -> {
 
                     if (ex instanceof NotaException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
-                                "Error inesperado",
-                                "Fallo al mostrar registros",
+                        mostrarError(
+                                "Error de carga",
                                 "Ocurrió un problema al intentar mostrar las notas.",
-                                ex
-                        );
+                                "" + ex.getMessage());
                     } else {
                         ex.printStackTrace();
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Fallo al mostrar registros",
                                 "Ocurrió un problema técnico al intentar recuperar la información de las notas.",
@@ -384,12 +380,12 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
     private VBox crearCardNota(NotaDTO nota) {
 
         VBox card = new VBox();
-        String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
-        String estiloAzul = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #87CEEB; -fx-border-radius: 10; -fx-background-radius: 10;";
-        String estiloRojo = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FC0000; -fx-border-radius: 10; -fx-background-radius: 10;";
-        String estiloAmarillo = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FFDF00; -fx-border-radius: 10; -fx-background-radius: 10;";
-        String estiloAnaranjado = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FF4000; -fx-border-radius: 10; -fx-background-radius: 10;";
-        String estiloSeleccionado = "-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #1A1A1A;";
+        final String estiloVerde = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10;";
+        final String estiloAzul = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #87CEEB; -fx-border-radius: 10; -fx-background-radius: 10;";
+        final String estiloRojo = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FC0000; -fx-border-radius: 10; -fx-background-radius: 10;";
+        final String estiloAmarillo = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FFDF00; -fx-border-radius: 10; -fx-background-radius: 10;";
+        final String estiloAnaranjado = "-fx-background-color: #1A1A1A; -fx-padding: 10; -fx-border-color: #FF4000; -fx-border-radius: 10; -fx-background-radius: 10;";
+        final String estiloSeleccionado = "-fx-background-color: #8EB83D; -fx-padding: 10; -fx-border-color: #8EB83D; -fx-border-radius: 10; -fx-background-radius: 10; -fx-text-fill: #1A1A1A;";
 
         String estiloPorDefecto = "";
 
@@ -613,7 +609,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
     private void eliminarNota(Integer notaId, String numNota) {
 
-        boolean eliminar = MensajesAlert.mostrarConfirmacion(
+        boolean eliminar = mostrarConfirmacion(
                 "Confirmar eliminación",
                 "Eliminar nota",
                 "¿Está seguro de que desea eliminar la nota " + numNota + "? Esta acción no se puede deshacer.",
@@ -631,14 +627,14 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                         return null;
                     }, (resultado) -> {
                         cargarNota();
-                        MensajesAlert.mostrarInformacion(
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Nota eliminada",
                                 "La nota ha sido eliminada del sistema correctamente."
                         );
                     }, (excepcion) -> {
-                        excepcion.printStackTrace();
-                        MensajesAlert.mostrarExcepcionThrowable(
+
+                        mostrarExcepcionThrowable(
                                 "Error al eliminar",
                                 "Fallo en la eliminación",
                                 "No fue posible eliminar la nota seleccionada. Por favor, intente de nuevo más tarde.",
@@ -724,7 +720,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                         return null;
                     },
                     (resultado) -> {
-                        MensajesAlert.mostrarInformacion(
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Nota creada",
                                 "El documento de la nota se ha generado exitosamente."
@@ -732,21 +728,21 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                     },
                     (excepcion) -> {
                         if (excepcion instanceof IOException) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            mostrarError(
                                     "Error al generar archivo",
                                     "Fallo de acceso al archivo",
-                                    "El archivo no pudo crearse o está siendo usado por otro programa. Por favor, cierre otras aplicaciones e inténtelo de nuevo.",
-                                    excepcion
+                                    "El archivo no pudo crearse o está siendo usado por otro programa. Por favor, cierre otras aplicaciones e inténtelo de nuevo."
+
                             );
                         } else if (excepcion instanceof InterruptedException || excepcion instanceof CancellationException) {
-                            MensajesAlert.mostrarWarning(
+                            mostrarWarning(
                                     "Operación cancelada",
                                     "Acción interrumpida",
                                     "La impresión del documento fue cancelada por el usuario."
                             );
                         } else {
                             excepcion.printStackTrace();
-                            MensajesAlert.mostrarWarning(
+                            mostrarWarning(
                                     "Operación cancelada",
                                     "Acción interrumpida",
                                     "La impresión del documento ha sido cancelada."
@@ -758,7 +754,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
         } catch (Exception e) {
             e.printStackTrace();
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error inesperado",
                     "Fallo al preparar nota",
                     "Se produjo una excepción técnica al intentar preparar la nota para su visualización.",
@@ -795,8 +791,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
 
         } catch (Exception e) {
-            e.printStackTrace();
-            MensajesAlert.mostrarExcepcion(
+
+            mostrarExcepcion(
                     "Error inesperado",
                     "Se produjo una excepción durante la operación",
                     "Ocurrió un problema técnico al intentar realizar la operación solicitada.",
@@ -820,8 +816,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
 
         } catch (Exception e) {
-            e.printStackTrace();
-            MensajesAlert.mostrarExcepcion(
+
+           mostrarExcepcion(
                     "Error de carga",
                     "No se pudo inicializar la interfaz",
                     "Ocurrió un problema al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -864,7 +860,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                 }
 
                 if (arrayTotal.length > 2) {
-                    MensajesAlert.mostrarWarning(
+
+                   mostrarWarning(
                             "Advertencia",
                             "Valores inválidos",
                             "Por favor, ingrese únicamente dos valores numéricos separados por una coma."
@@ -888,7 +885,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
 
                 } catch (NumberFormatException e) {
-                    MensajesAlert.mostrarWarning(
+
+                    mostrarWarning(
                             "Datos incorrectos",
                             "Formato de rango no válido",
                             "Debe ingresar un rango de valores numéricos válidos separados por una coma (ej. 0,0)."
@@ -901,9 +899,6 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
         }//if-total
 
 
-
-
-
         String busqueda = "";
         String busqueda2 = "";
         boolean esFecha = seleccion.equals("Fecha de emicion") || seleccion.equals("Fecha de vencimiento");
@@ -911,7 +906,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
         if (esFecha) {
             // VALIDACIÓN 1: Fecha de inicio nula
             if (dpBuscar.getValue() == null) {
-                MensajesAlert.mostrarWarning(
+
+                mostrarWarning(
                         "Datos incompletos",
                         "Fecha no seleccionada",
                         "Por favor, seleccione la fecha inicial para realizar la búsqueda."
@@ -924,7 +920,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
             if (chkRangoNota.isSelected()) {
                 // VALIDACIÓN 2: Fecha final nula en rango
                 if (dpBuscarFin.getValue() == null) {
-                    MensajesAlert.mostrarWarning(
+
+                    mostrarWarning(
                             "Datos incompletos",
                             "Fecha final faltante",
                             "Ha activado la búsqueda por rango; por favor, seleccione la fecha final."
@@ -934,7 +931,8 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
 
                 // VALIDACIÓN 3: Orden de fechas
                 if (dpBuscar.getValue().isAfter(dpBuscarFin.getValue())) {
-                    MensajesAlert.mostrarWarning(
+
+                    mostrarWarning(
                             "Advertencia",
                             "Rango de fechas no válido",
                             "La fecha de inicio no puede ser posterior a la fecha final."

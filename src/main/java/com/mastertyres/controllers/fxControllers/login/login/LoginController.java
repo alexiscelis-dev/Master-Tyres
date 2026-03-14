@@ -7,7 +7,6 @@ import com.mastertyres.common.exeptions.UserException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.login.recuperarPassword.RecuperarPasswordController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -28,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -42,6 +42,7 @@ import java.time.format.DateTimeFormatter;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
 public class LoginController implements IFxController {
@@ -99,7 +100,7 @@ public class LoginController implements IFxController {
         txtPasswordVisible.textProperty().bindBidirectional(pfPassword.textProperty());
         txtPasswordVisible.setVisible(false);
 
-        MenuContextSetting.disableMenu(rootPane);
+      disableMenu(rootPane);
     }//configuraciones
 
     @Override
@@ -209,8 +210,7 @@ public class LoginController implements IFxController {
             ventanaLogin.show();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            e.getMessage();
+
             mostrarError("Error de carga",
                     "",
                     "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
@@ -248,11 +248,19 @@ public class LoginController implements IFxController {
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.setScene(new Scene(root));
+
+            // Ventana padre
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+
+            // Hace la ventana modal
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setTitle("Recuperar contraseña");
+
             stage.show();
 
 
         }catch (Exception e){
-            e.printStackTrace();
+
             mostrarError("Error de cargar",
                     "",
                     "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");

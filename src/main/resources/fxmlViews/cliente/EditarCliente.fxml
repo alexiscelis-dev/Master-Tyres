@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="641.0" prefWidth="602.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.cliente.EditarClienteController">
+<AnchorPane fx:id="rootPane" prefHeight="641.0" prefWidth="602.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.cliente.EditarClienteController">
 
 
     <ScrollPane prefHeight="641.0" prefWidth="602.0" fitToHeight="false" fitToWidth="true" pannable="true">

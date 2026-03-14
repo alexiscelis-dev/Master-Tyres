@@ -9,7 +9,6 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.common.utils.SessionManager;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.respaldo.model.Respaldo;
@@ -333,7 +332,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                         supabaseAuthService.actualizarPassword(userSession.getAuthId(), pfNuevaContrasena.getText().trim());
                         supabaseService.actualizarPassword(userSession.getAuthId(), userSession, pfNuevaContrasena.getText().trim());
 
-                        User supabaseUser = supabaseService.findUsuarioById(userSession.getAuthId(), SessionManager.getAccessToken());
+                        User supabaseUser = supabaseService.findUsuarioById(userSession.getAuthId());
 
                         User localUser = userService.findUserById(userSession.getUsuarioId());
 
@@ -408,7 +407,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
 
 
-                      User supabaseUser = supabaseService.findUsuarioById(userSession.getAuthId(), SessionManager.getAccessToken());
+                      User supabaseUser = supabaseService.findUsuarioById(userSession.getAuthId());
 
                       User localUser = userService.findUserById(userSession.getUsuarioId());
 
@@ -492,7 +491,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     userSession.setFotoPerfil(txtRutaImg.getText().trim());
 
                     supabaseService.actualizarFotoPerfil(userSession.getAuthId(),userSession);
-                    User supabaseUser =  supabaseService.findUsuarioById(userSession.getAuthId(),SessionManager.getAccessToken());
+                    User supabaseUser =  supabaseService.findUsuarioById(userSession.getAuthId());
                     User localUser = userService.findUserById(userSession.getUsuarioId());
 
                     localUser.setAuthId(supabaseUser.getAuthId());
@@ -542,7 +541,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     userSession.setFotoPerfil(null);
 
                     supabaseService.actualizarFotoPerfil(userSession.getAuthId(),userSession);
-                    User supabaseUser =  supabaseService.findUsuarioById(userSession.getAuthId(),SessionManager.getAccessToken());
+                    User supabaseUser =  supabaseService.findUsuarioById(userSession.getAuthId());
                     User localUser = userService.findUserById(userSession.getUsuarioId());
 
                     localUser.setAuthId(supabaseUser.getAuthId());

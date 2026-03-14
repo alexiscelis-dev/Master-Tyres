@@ -6,13 +6,13 @@ import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -50,7 +50,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import com.mastertyres.common.interfaces.*;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
@@ -208,15 +209,16 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
             stage.showAndWait();
             cargarPromociones();
+
         } catch (IOException ex) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "No se pudo cargar la vista",
                     "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
                     ex
             );
         }
-    }
+    }//AbrirClientesAplicables
 
     private void mostrarPromociones(List<Promocion> promociones) {
         contenedorPromociones.getChildren().clear();
@@ -381,7 +383,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                MensajesAlert.mostrarExcepcion(
+                mostrarExcepcion(
                         "Error de carga",
                         "No se pudo cargar la vista",
                         "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
@@ -396,6 +398,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
                 EditarPromocionClienteController controller = loader.getController();
                 controller.setPromocion(promocionSeleccionada);
+                controller.setInitializeLoading(loadingOverlayController);
 
                 Stage stage = new Stage(StageStyle.UTILITY);
                 stage.setTitle("Editar Promoción");
@@ -408,7 +411,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                MensajesAlert.mostrarExcepcion(
+                mostrarExcepcion(
                         "Error de carga",
                         "No se pudo cargar la vista",
                         "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
@@ -434,7 +437,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 stage.showAndWait();
                 cargarPromociones();
             } catch (IOException ex) {
-                MensajesAlert.mostrarExcepcion(
+                mostrarExcepcion(
                         "Error de carga",
                         "No se pudo cargar la vista",
                         "Ocurrió un error al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
@@ -474,6 +477,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             ListaVehiculosPromocion.setVisible(true);
             ListaVehiculosPromocion.setManaged(true);
             cargarVehiculosPromocion(p.getPromocionId());
+
         }else if (p.getTipoPromocion().equals(TipoPromocion.CLIENTE.toString())){
             lblTituloVehiculos.setVisible(false);
             lblTituloVehiculos.setManaged(false);
@@ -498,7 +502,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     }
 
     private String formatearFecha(String fecha) {
-        if (fecha == null || fecha.isBlank()) return "N/A";
+        if (fecha == null || fecha.isBlank()) return "N/D";
 
         try {
             LocalDate f = LocalDate.parse(fecha);  // yyyy-MM-dd
@@ -509,10 +513,11 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     }
 
     private void eliminarPromocion() {
+
         if (promocionSeleccionada != null) {
 
             //  Confirmación antes de actualizar
-            boolean confirmar = MensajesAlert.mostrarConfirmacion(
+            boolean confirmar = mostrarConfirmacion(
                     "Confirmar eliminación",
                     "Eliminar promoción",
                     "¿Está seguro de que desea eliminar esta promoción? Esta acción no se puede deshacer.",
@@ -532,7 +537,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                         }, (resultado) ->{
                             cargarPromociones(); // Recargamos la lista para reflejar cambios
                             limpiarDetallePromocion(); // Opcional: limpiar labels después
-                            MensajesAlert.mostrarInformacion(
+                            mostrarInformacion(
                                     "Operación completada",
                                     "Promoción eliminada",
                                     "La promoción ha sido eliminada del sistema exitosamente."
@@ -540,14 +545,15 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                         }, (ex) ->{
 
                             if( ex instanceof PromocionException){
-                                MensajesAlert.mostrarExcepcionThrowable(
+
+                                mostrarError(
                                         "Error al eliminar",
-                                        "Problema con la eliminación de la promoción",
-                                        "Ocurrió un error al intentar eliminar la promoción seleccionada: " + ex.getMessage(),
-                                        ex
+                                        "Ocurrió un error al intentar eliminar la promoción seleccionada:" ,
+                                        "" + ex.getMessage()
                                 );
+
                             }else {
-                                MensajesAlert.mostrarExcepcionThrowable(
+                                mostrarExcepcionThrowable(
                                         "Error inesperado",
                                         "Se produjo una excepción durante la operación",
                                         "Ocurrió un error inesperado al intentar eliminar la promoción. Por favor, inténtelo de nuevo más tarde.",

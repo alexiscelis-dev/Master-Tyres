@@ -51,5 +51,11 @@ public class UserService implements IUserService{
         userRepository.updateNextCheck(usuarioId,fecha);
     }
 
+    @Transactional
+    @Override
+    public void actualizarUpdateAt(Integer userId, String updateAt) {
+        userRepository.actualizarUpdateAt(userId,updateAt);
+    }
+
 
 }//class

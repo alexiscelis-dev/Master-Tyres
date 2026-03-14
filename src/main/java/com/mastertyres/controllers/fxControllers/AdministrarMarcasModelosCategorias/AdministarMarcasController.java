@@ -9,10 +9,9 @@ import com.mastertyres.common.interfaces.IRestaurableDatos;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -41,6 +40,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 //import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 
@@ -134,7 +136,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
 
         validacionesModeloBtn();
 
-        MenuContextSetting.disableMenu(rootPane);
+      disableMenu(rootPane);
 
         colMarca.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getMarca().getNombreMarca()));
@@ -256,7 +258,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
 
             configurarPaginador();
         } catch (IOException ex) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error del sistema",
                     "Fallo en la visualización",
                     "No fue posible cargar los componentes de la vista seleccionada.",
@@ -308,8 +310,9 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
 
             configurarPaginador();
             Actualizar(null);
+
         } catch (IOException ex) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error del sistema",
                     "Fallo en la visualización",
                     "No fue posible cargar los componentes de la vista seleccionada.",
@@ -344,7 +347,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
             configurarPaginador();
             Actualizar(null);
         } catch (IOException ex) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error del sistema",
                     "Fallo en la visualización",
                     "No fue posible cargar los componentes de la vista seleccionada.",
@@ -377,7 +380,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
             Actualizar(null);
         } catch (IOException ex) {
             ex.printStackTrace();
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error del sistema",
                     "Fallo en la visualización",
                     "No fue posible cargar los componentes de la vista seleccionada.",
@@ -391,7 +394,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
         Modelo modeloSeleccionada = TablaVehiculoMarca.getSelectionModel().getSelectedItem().getModelo();
 
         if (modeloSeleccionada == null) {
-            MensajesAlert.mostrarWarning(
+           mostrarWarning(
                     "Advertencia",
                     "Sin selección",
                     "Debe seleccionar un modelo de la lista antes de intentar eliminarlo."
@@ -401,7 +404,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
 
         // Evitar eliminar el modelo genérico
         if (modeloSeleccionada.getModeloId() == 1) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Operación no permitida",
                     "No es posible eliminar el modelo genérico del sistema."
@@ -432,7 +435,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
                         return null;
                     }, (resultado) -> {
 
-                        MensajesAlert.mostrarInformacion(
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Modelo eliminado",
                                 "El modelo ha sido eliminado del sistema correctamente."
@@ -450,14 +453,13 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
                     }, (ex) -> {
 
                         if (ex.getCause() instanceof ModeloException) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            mostrarError(
                                     "Error al eliminar modelo",
                                     "Se produjo un problema con el modelo",
-                                    ex.getMessage(),
-                                    ex
-                            );
+                                    "" + ex.getMessage() );
+
                         } else if (ex.getCause() instanceof Exception) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                           mostrarExcepcionThrowable(
                                     "Error inesperado",
                                     "No se pudo completar la operación",
                                     "Ocurrió un error inesperado al intentar eliminar el modelo seleccionado.",
@@ -476,7 +478,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
 
 
         if (marcaSeleccionada == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Sin selección",
                     "Debe seleccionar una marca de la lista antes de intentar eliminarla."
@@ -486,7 +488,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
 
         // Evitar eliminar el modelo genérico
         if (marcaSeleccionada.getMarcaId() == 1) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Operación no permitida",
                     "No es posible eliminar la marca genérica del sistema."
@@ -520,7 +522,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
                         return null;
 
                     }, (resultado) -> {
-                        MensajesAlert.mostrarInformacion(
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Marca eliminada",
                                 "La marca ha sido eliminada del sistema correctamente."

@@ -6,13 +6,13 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.PromocionException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IRestaurableDatos;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -36,11 +36,12 @@ import javafx.util.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import com.mastertyres.common.interfaces.*;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoader,  ICleanable, IRestaurableDatos {
@@ -172,13 +173,6 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
         });
 
-//        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
-//
-//
-//            if (nuevoValor != null && !nuevoValor.isEmpty())
-//                tipoDescuento(nuevoValor.toLowerCase());
-//
-//        });
 
 
         porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
@@ -389,7 +383,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
             if (!empty() && validarFecha(fechaInicio.getValue(), fechaFin.getValue())) {
                 insertarPromocion();
             } else if (empty()) {
-                MensajesAlert.mostrarWarning(
+                mostrarWarning(
                         "Datos incompletos",
                         "Campo obligatorio vacío",
                         "Por favor, complete todos los campos obligatorios antes de continuar."
@@ -408,7 +402,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
         // 2. Validar clientes
         if (clientesAgregados.getItems().isEmpty()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Cliente requerido",
                     "Debe agregar al menos un cliente a la promoción antes de continuar."
@@ -447,7 +441,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
                     return null;
                 }, (resultado) -> {
-                    MensajesAlert.mostrarInformacion(
+                   mostrarInformacion(
                             "Operación completada",
                             "Promoción registrada",
                             "La promoción ha sido registrada en el sistema exitosamente."
@@ -457,14 +451,12 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
                 }, (ex) -> {
 
                     if (ex instanceof PromocionException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarError(
                                 "Error al crear promoción",
                                 "No se pudo completar la operación",
-                                ex.getMessage(),
-                                ex
-                        );
+                                "" + ex.getMessage());
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Se produjo una excepción durante la operación",
                                 "Ocurrió un error inesperado al intentar crear la promoción. Por favor, inténtelo de nuevo más tarde.",
@@ -600,7 +592,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
             fechaValida = true;
 
         } else if (fechaFinLD.isBefore(fechaInicioLD)) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Rango de fechas no válido",
                     "La fecha de fin no puede ser anterior a la fecha de inicio. Por favor, intente de nuevo."
@@ -609,7 +601,7 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
 
         } else if (fechaFinLD.equals(fechaInicioLD)) {
 
-            fechaValida = MensajesAlert.mostrarConfirmacion(
+            fechaValida = mostrarConfirmacion(
                     "Confirmar fechas",
                     "Fechas de inicio y fin idénticas",
                     "Ha ingresado la misma fecha para el inicio y el fin de la promoción. ¿Desea continuar?",

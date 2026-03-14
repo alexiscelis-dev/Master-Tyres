@@ -31,6 +31,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.*;
+
 @Component
 public class EditarModeloController implements IFxController, ILoader, ICleanable {
 
@@ -159,6 +161,8 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
 
         if (confirmar) {
 
+            rootPane.setDisable(true);
+
             taskService.runTask(
                     loadingOverlayController,
                     () -> {
@@ -171,8 +175,9 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
                         return null;
 
                     }, (resultado) -> {
+                        rootPane.setDisable(false);
 
-                        MensajesAlert.mostrarInformacion(
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Modelo actualizado",
                                 "El modelo ha sido actualizado en el sistema correctamente."
@@ -181,21 +186,22 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
                     }, (ex) -> {
 
                         if (ex instanceof ModeloException) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            rootPane.setDisable(false);
+                            mostrarError(
                                     "Error al actualizar",
                                     "Problema al guardar los cambios",
-                                    "Ocurrió un problema al intentar guardar los cambios del modelo: " + ex.getMessage(),
-                                    ex
-                            );
+                                    "" + ex.getMessage());
 
                         } else {
-                            cerrarVentana();
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            rootPane.setDisable(false);
+
+                            mostrarExcepcionThrowable(
                                     "Error interno",
                                     "Error inesperado en el sistema",
                                     "Ocurrió un error inesperado al intentar guardar la marca y los modelos proporcionados.",
                                     ex
                             );
+                            cerrarVentana();
 
                         }
 

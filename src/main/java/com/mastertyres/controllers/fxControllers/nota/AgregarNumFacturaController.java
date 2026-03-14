@@ -1,9 +1,6 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.nota.service.NotaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+
+import static com.mastertyres.common.utils.MensajesAlert.mostrarExcepcion;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
+import static com.mastertyres.common.utils.RegexTools.aplicarNumFactura;
 
 @Component
 public class AgregarNumFacturaController implements IFxController {
@@ -42,9 +44,9 @@ public class AgregarNumFacturaController implements IFxController {
     @Override
     public void configuraciones(){
 
-        MenuContextSetting.disableMenu(root);
+        disableMenu(root);
 
-        RegexTools.aplicarNumFactura(txtNumFactura);
+        aplicarNumFactura(txtNumFactura);
         btnAgregar.disableProperty().bind(
                 txtNumFactura.textProperty().isEmpty()
                         .or(txtNumFactura.textProperty().isNull())
@@ -71,7 +73,7 @@ public class AgregarNumFacturaController implements IFxController {
           notaService.actualizarNumFactura(txtNumFactura.getText(),getNotaId());
 
           notaService.actualizarUpdatedAtNota(getNotaId(),LocalDateTime.now().toString());
-          MensajesAlert.mostrarInformacion(
+          mostrarInformacion(
                   "Operación completada",
                   "Número de factura registrado",
                   "El número de factura ha sido agregado y los cambios se guardaron correctamente."
@@ -80,7 +82,7 @@ public class AgregarNumFacturaController implements IFxController {
       }catch (Exception e){
           e.printStackTrace();
 
-          MensajesAlert.mostrarExcepcion(
+          mostrarExcepcion(
                   "Error inesperado",
                   "Se produjo una excepción durante la operación",
                   "Ocurrió un problema al intentar realizar la operación solicitada.",

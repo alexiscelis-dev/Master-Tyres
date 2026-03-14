@@ -1,13 +1,9 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.exeptions.NotaException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
@@ -24,6 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
+import static com.mastertyres.common.utils.RegexTools.aplicarNumerosDecimal;
 
 @Component
 public class EditarSaldoController implements IFxController, ILoader {
@@ -65,8 +65,8 @@ public class EditarSaldoController implements IFxController, ILoader {
     @Override
     public void configuraciones(){
 
-        MenuContextSetting.disableMenu(root);
-        RegexTools.aplicarNumerosDecimal(txtSaldo);
+       disableMenu(root);
+       aplicarNumerosDecimal(txtSaldo);
 
         btnActualizar.disableProperty().bind(
                 txtSaldo.textProperty().isNull()
@@ -120,7 +120,7 @@ public class EditarSaldoController implements IFxController, ILoader {
 
                 },(resultado) ->{
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Saldo actualizado",
                             "El saldo se ha actualizado correctamente. Puede consultar más detalles en la nota '+' de Detalles del cliente."
@@ -130,14 +130,14 @@ public class EditarSaldoController implements IFxController, ILoader {
                 },(ex) ->{
 
                     if (ex instanceof NotaException){
-                        MensajesAlert.mostrarExcepcionThrowable(
+
+                        mostrarError(
                                 "Error al actualizar",
-                                "Problema al guardar los cambios",
-                                "Ocurrió un problema técnico al intentar guardar los cambios: " + ex.getMessage(),
-                                ex
-                        );
+                                "Ocurrió un problema técnico al intentar guardar los cambios:",
+                                "" + ex.getMessage());
+
                     }else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Fallo al guardar cambios",
                                 "Ocurrió un error inesperado al intentar guardar los cambios en el sistema. Por favor, inténtelo de nuevo más tarde.",

@@ -5,11 +5,9 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -17,6 +15,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,9 +24,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
+
 @Component
 public class EditarClienteController implements IFxController, ILoader{
 
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TextField txtNombreEmpresa;
     @FXML
@@ -89,6 +93,7 @@ public class EditarClienteController implements IFxController, ILoader{
 
     @Override
     public void configuraciones() {
+        disableMenu(rootPane);
 
     }//configuraciones
 
@@ -274,7 +279,7 @@ public class EditarClienteController implements IFxController, ILoader{
 
         );
 
-    }//initialize
+    }
 
     private void ObtenerFechaCumpleaños(String rfc) {
         String texto = rfc.toUpperCase();
@@ -350,7 +355,7 @@ public class EditarClienteController implements IFxController, ILoader{
     private void actualizarCliente() {
 
         if (cliente == null) {
-            MensajesAlert.mostrarError(
+            mostrarError(
                     "Error",
                     "Sin selección",
                     "Debe seleccionar un cliente de la lista antes de poder modificarlo."
@@ -359,7 +364,7 @@ public class EditarClienteController implements IFxController, ILoader{
         }
 
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar actualización",
                 "Guardar cambios",
                 "¿Está seguro de que desea guardar los cambios en este cliente? Se actualizarán los datos del registro seleccionado.",
@@ -404,7 +409,12 @@ public class EditarClienteController implements IFxController, ILoader{
                 }
                 cliente.setUpdated_at(LocalDateTime.now().toString());
 
+                rootPane.setDisable(true);
+
                 taskService.runTask(
+
+
+
                         loadingOverlayController,
                         () -> {
                             //  Guardar cambios en la promoción
@@ -414,8 +424,9 @@ public class EditarClienteController implements IFxController, ILoader{
                             return null;
 
                         }, (resultado) -> {
+                            rootPane.setDisable(true);
 
-                            MensajesAlert.mostrarInformacion(
+                            mostrarInformacion(
                                     "Operación completada",
                                     "Registro actualizado",
                                     "Los cambios en la información del cliente se han guardado correctamente."
@@ -423,16 +434,15 @@ public class EditarClienteController implements IFxController, ILoader{
                             cerrarVentana();
 
                         }, (ex) -> {
+                            rootPane.setDisable(false);
 
                             if (ex instanceof ClienteException) {
-                                MensajesAlert.mostrarExcepcionThrowable(
+                                mostrarError(
                                         "Error al actualizar",
-                                        "Problema con la actualización",
-                                        "Ocurrió un problema al intentar guardar los cambios del cliente: " + ex.getMessage(),
-                                        ex
-                                );
+                                        "Ocurrió un problema al intentar guardar los cambios del cliente:",
+                                        " " + ex.getMessage());
                             } else {
-                                MensajesAlert.mostrarExcepcionThrowable(
+                                mostrarExcepcionThrowable(
                                         "Error inesperado",
                                         "Fallo en el sistema",
                                         "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",

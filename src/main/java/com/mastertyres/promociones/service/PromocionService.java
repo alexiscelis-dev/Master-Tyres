@@ -59,10 +59,10 @@ public class PromocionService implements IPromocionService {
     @Transactional
     @Override
     public void desactivarPromocion(Integer id) {
-      int filasAfectadas =  promocionRepository.desactivarPromocion(id);
-      if (filasAfectadas == 0){
-          throw new RuntimeException("La promocion no existe o ya fue eliminada previamente");
-      }
+        int filasAfectadas = promocionRepository.desactivarPromocion(id);
+        if (filasAfectadas == 0) {
+            throw new RuntimeException("La promocion no existe o ya fue eliminada previamente");
+        }
     }
 
 /*
@@ -144,11 +144,9 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
-    public void actualizarPromocionConVehiculos(
-            Promocion promocion,
-            List<VehiculoPromocion> nuevosVehiculos
-    ) {
+    public void actualizarPromocionConVehiculos(Promocion promocion, List<VehiculoPromocion> nuevosVehiculos) {
 
+        promocionValidator.validarGuardar(promocion);
         promocionRepository.save(promocion);
 
         repoVehiculo.eliminarPorPromocionId(promocion.getPromocionId());
@@ -161,20 +159,16 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
-    public void actualizarPromocionConClientes(
-            Promocion promocion,
-            List<Cliente> nuevosClientes
-    ) {
+    public void actualizarPromocionConClientes(Promocion promocion, List<Cliente> nuevosClientes) {
 
-        // 1️⃣ Guardar / actualizar promoción
+        promocionValidator.validarGuardar(promocion);
+        // 1️ Guardar / actualizar promoción
         promocionRepository.save(promocion);
 
-        // 2️⃣ Eliminar relaciones actuales
-        clientePromocionRepository.deleteByPromocionPromocionId(
-                promocion.getPromocionId()
-        );
+        // 2️ Eliminar relaciones actuales
+        clientePromocionRepository.deleteByPromocionPromocionId(promocion.getPromocionId());
 
-        // 3️⃣ Insertar nuevas relaciones
+        // 3️ Insertar nuevas relaciones
         for (Cliente cliente : nuevosClientes) {
 
             ClientesPromocion relacion = new ClientesPromocion();
@@ -184,7 +178,7 @@ public class PromocionService implements IPromocionService {
 
             clientePromocionRepository.save(relacion);
         }
-    }
+    }//actualizarPromocionConClientes
 
 
     //Cada minuto
@@ -205,11 +199,7 @@ public class PromocionService implements IPromocionService {
                 StatusPromocion.ACTIVE.toString()
         );
 
-        System.out.println("Promociones vencidas actualizadas: " + filas);
     }
 
 
-
-
-
-}//PromocionService
+}//class

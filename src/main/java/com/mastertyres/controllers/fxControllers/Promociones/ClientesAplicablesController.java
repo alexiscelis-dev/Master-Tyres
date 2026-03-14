@@ -9,11 +9,9 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ClipboardUtil;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.common.utils.MensajesAlert;
-//import com.mastertyres.components.fxComponents.LoadingComponentController;
 import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.promociones.model.TipoPromocion;
+import com.mastertyres.promociones.service.PromocionService;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,6 +28,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mastertyres.common.utils.MensajesAlert.mostrarExcepcionThrowable;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
 
 @Component
 public class ClientesAplicablesController implements IFxController, ILoader, ICleanable {
@@ -187,15 +188,15 @@ public class ClientesAplicablesController implements IFxController, ILoader, ICl
                         }
                     }
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Ventanas de WhatsApp abiertas",
                             "Se han abierto las pestañas de WhatsApp en su navegador. Por favor, revise cada una y presione enviar para finalizar el proceso."
                     );
 
                 }, (ex) -> {
-                    ex.printStackTrace();
-                    MensajesAlert.mostrarExcepcionThrowable(
+
+                    mostrarExcepcionThrowable(
                             "Error al enviar",
                             "Fallo en la generación de enlaces",
                             "No se pudieron generar los enlaces de WhatsApp debido a un error técnico.",

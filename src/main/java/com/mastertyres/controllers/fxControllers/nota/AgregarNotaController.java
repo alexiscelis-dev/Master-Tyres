@@ -1,12 +1,9 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.inventario.model.Inventario;
@@ -31,6 +28,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static com.mastertyres.common.utils.FechaUtils.mostrarFechayHora;
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
+import static com.mastertyres.common.utils.RegexTools.*;
 
 @Component
 public class AgregarNotaController extends BaseNota implements IFxController, ILoader {
@@ -93,31 +93,19 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         mostrarFechayHora(txtDia, txtMes, txtAnio, txtHoraEntrega);
 
         //deshabilita los menu del clic derecho en los campos de texto
-        MenuContextSetting.disableMenu(rootPane);
+        disableMenu(rootPane);
 
         //validaciones Regex
         //RegexTools.aplicarNumerosDecimalNota(txtTotal);
-        RegexTools.aplicar24Horas(txtHoraEntrega);
-        RegexTools.aplicar6Enteros(txtNumNota);
-        RegexTools.aplicar2Enteros(txtDia);
-        RegexTools.aplicar2Enteros(txtMes);
-        RegexTools.aplicar4Enteros(txtAnio);
-        RegexTools.aplicar4Enteros(txtAnioVehiculo);
-        RegexTools.aplicarNumeroEntero(txtKms);
+        aplicar24Horas(txtHoraEntrega);
+        aplicar6Enteros(txtNumNota);
+       aplicar2Enteros(txtDia);
+        aplicar2Enteros(txtMes);
+        aplicar4Enteros(txtAnio);
+        aplicar4Enteros(txtAnioVehiculo);
+        aplicarNumeroEntero(txtKms);
 
-//        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
-//        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
-//        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
-//        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
-//        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
-//        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
-//        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
-//        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
-//        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
-//        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
-//        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
-//        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
-//        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
+
 
         RegexTools.aplicarNumeroEnteroConLimite(txtAlineacionCantidad,  6);
         RegexTools.aplicarNumeroEnteroConLimite(txtBalanceoCantidad,    6);
@@ -133,36 +121,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         RegexTools.aplicarNumeroEnteroConLimite(txtOtrosCantidad,       6);
         RegexTools.aplicarNumeroEnteroConLimite(txtOtrosCantidad2,      6);
 
-//        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
-//        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
-//        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
-//        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
-//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
-//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
-//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
-//        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
-//        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
+
 
         // Decimales con límite de BD
         RegexTools.aplicarNumerosDecimalNotaConLimite(txtTotal,              14);
@@ -364,7 +323,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
 
         } catch (Exception e) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "No se pudo inicializar la interfaz",
                     "Ocurrió un problema al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -396,7 +355,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
 
         } catch (Exception e) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "No se pudo inicializar la interfaz",
                     "Ocurrió un problema al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -410,17 +369,6 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
     protected void llenarNota(Cliente cliente) {
         if (cliente != null) {
 
-            /*
-
-            notaUtils.campoFormatter(cliente.getNombre() + " " +
-                            (cliente.getApellido() != null ? cliente.getApellido() : "") + " " +
-                            (cliente.getSegundoApellido() != null ? cliente.getSegundoApellido() : ""),
-                    txtNombre,
-                    CampoNota.NOMBRE
-
-            );
-
-             */
 
             txtNombre.setText(
                     cliente.getNombre() + " " +
@@ -438,23 +386,6 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
             txtCorreo.setText(cliente.getCorreo() != null ? cliente.getCorreo() : "");
 
-            /*
-            notaUtils.campoFormatter(
-                    cliente.getRfc() != null ? cliente.getRfc() : "",
-                    txtRfc,
-                    CampoNota.RFC
-
-            );
-
-             */
-
-            /*
-            notaUtils.campoFormatter(
-                    cliente.getCorreo() != null ? cliente.getCorreo() : "",
-                    txtCorreo
-            );
-
-             */
             habilitarCampo();
 
         }
@@ -519,33 +450,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
 
     }//llenarNota
 
-    /*
-    private void habilitar(boolean habilitar, String opcion) {
 
-        switch (opcion) {
-            case "CLIENTE" -> {
-                txtMarca.setEditable(habilitar);
-                txtModelo.setEditable(habilitar);
-                txtAnioVehiculo.setEditable(habilitar);
-                txtKms.setEditable(habilitar);
-                txtPlacas.setEditable(habilitar);
-                txtRfc.setEditable(habilitar);
-                txtNombre.setEditable(habilitar);
-                txtDireccion.setEditable(habilitar);
-                txtDireccion2.setEditable(habilitar);
-                txtCorreo.setEditable(habilitar);
-
-            }
-            case "INVENTARIO" -> {
-                txtLlantas.setEditable(habilitar);
-                txtLlantasCantidad.setEditable(habilitar);
-            }
-
-        }//switch
-
-    }//habilitar
-
-     */
 
     private void habilitarCampo() {
 
@@ -579,7 +484,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         boolean error = false;
 
         if (cRegistro == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Cliente y vehículo no asociados",
                     "Debe asociar un cliente y un vehículo antes de proceder a guardar la nota."
@@ -590,7 +495,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         }
 
         if (txtNumNota.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Número de nota obligatorio",
                     "El número de nota es obligatorio. Por favor, ingrese un valor válido antes de continuar."
@@ -602,7 +507,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         }
 
         if (txtTotal.getText().isBlank()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Monto total obligatorio",
                     "El total de la nota es obligatorio. Por favor, ingrese un valor antes de continuar."
@@ -613,7 +518,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
         }
 
         if (notaUtils.toFloatSafe(txtTotal.getText()) == 0) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Monto inválido",
                     "El total de la nota no puede ser cero. Por favor, agregue al menos un concepto o monto válido."
@@ -773,7 +678,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
                 stage.showAndWait();
 
             } catch (Exception e) {
-                MensajesAlert.mostrarExcepcion(
+                mostrarExcepcion(
                         "Error de carga",
                         "No se pudo inicializar la interfaz",
                         "Ocurrió un problema al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -893,7 +798,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
     private void eliminarInventario() {
 
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar eliminación",
                 "Desvincular llanta",
                 "¿Está seguro de que desea desvincular la llanta seleccionada de la nota?\nEsto no eliminará la llanta del inventario, solo su relación con esta nota.",
@@ -919,7 +824,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
     private void eliminarCliente() {
 
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar eliminación",
                 "Desvincular cliente y vehículo",
                 "¿Está seguro de que desea desvincular al cliente y el vehículo de esta nota?\nEsta acción no eliminará sus registros del sistema.",

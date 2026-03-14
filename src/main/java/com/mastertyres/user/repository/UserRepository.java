@@ -39,6 +39,10 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query(UPDATE_USER + " " +"u.nextCheck = :fecha WHERE u.usuarioId = :usuarioId")
     void updateNextCheck(@Param("usuarioId")Integer usuarioId,@Param("fecha") String fecha);
 
+    @Modifying
+    @Query(UPDATE_USER + " " +"u.updatedAt = :updateAt WHERE u.usuarioId = :userId")
+    void  actualizarUpdateAt(@Param("userId")Integer userId,@Param("updateAt")String updateAt);
+
 
 
 }//interface

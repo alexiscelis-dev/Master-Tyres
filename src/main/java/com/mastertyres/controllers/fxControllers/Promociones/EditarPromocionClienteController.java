@@ -6,10 +6,13 @@ import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.FechaUtils;
-import com.mastertyres.common.utils.MensajesAlert;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.promociones.model.Promocion;
 import com.mastertyres.promociones.model.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
@@ -23,6 +26,7 @@ import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,42 +39,68 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.*;
+
 
 @Component
-public class EditarPromocionClienteController implements  IFxController, ICleanable {
-
+public class EditarPromocionClienteController implements IFxController, ILoader, ICleanable {
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TextField txtNombre;
-    @FXML private TextArea txtDescripcion;
-    @FXML private TextField txtPrecio;
-    @FXML private TextField precioConDescuento;
+    @FXML
+    private TextArea txtDescripcion;
+    @FXML
+    private TextField txtPrecio;
+    @FXML
+    private TextField precioConDescuento;
     //@FXML private ChoiceBox<String> txtTipoDescuento;
 
-    @FXML private Slider porcentajeDescuento;
-    @FXML private Label porcentaje; //  el Label donde mostramos el valor
-    @FXML private DatePicker dateInicio;
-    @FXML private DatePicker dateFin;
-    @FXML private TextField txtRutaImagen;
-    @FXML private Button btnSeleccionarImagen;
-    @FXML private Button btnCambiar;
+    @FXML
+    private Slider porcentajeDescuento;
+    @FXML
+    private Label porcentaje; //  el Label donde mostramos el valor
+    @FXML
+    private DatePicker dateInicio;
+    @FXML
+    private DatePicker dateFin;
+    @FXML
+    private TextField txtRutaImagen;
+    @FXML
+    private Button btnSeleccionarImagen;
+    @FXML
+    private Button btnCambiar;
     private Promocion promocionSeleccionada;
 
 
-    @FXML private TableView<Cliente> Tabla_Clientes;
-    @FXML private ListView<Cliente> ClientesAgregados;
-    @FXML private TableColumn<Cliente, Boolean> colSeleccionCliente;
-    @FXML private TextField txtBuscador;
-    @FXML private TableColumn<Cliente, String> colNombre;
-    @FXML private TableColumn<Cliente, String> colRFC;
-    @FXML private TableColumn<Cliente, String> colCumpleanos;
-    @FXML private TableColumn<Cliente, String> colFechaRegistro;
-    @FXML private TableColumn<Cliente, String> colNombreEmpresa;
-    @FXML private TableColumn<Cliente, String> colTipoCliente;
-    @FXML private TableColumn<Cliente, String> colHobbie;
-    @FXML private Button btnBuscar;
+    @FXML
+    private TableView<Cliente> Tabla_Clientes;
+    @FXML
+    private ListView<Cliente> ClientesAgregados;
+    @FXML
+    private TableColumn<Cliente, Boolean> colSeleccionCliente;
+    @FXML
+    private TextField txtBuscador;
+    @FXML
+    private TableColumn<Cliente, String> colNombre;
+    @FXML
+    private TableColumn<Cliente, String> colRFC;
+    @FXML
+    private TableColumn<Cliente, String> colCumpleanos;
+    @FXML
+    private TableColumn<Cliente, String> colFechaRegistro;
+    @FXML
+    private TableColumn<Cliente, String> colNombreEmpresa;
+    @FXML
+    private TableColumn<Cliente, String> colTipoCliente;
+    @FXML
+    private TableColumn<Cliente, String> colHobbie;
+    @FXML
+    private Button btnBuscar;
 
     private static final int CLIENTES_POR_PAGINA = 20;
-    @FXML private Pagination PaginadorClientes;
+    @FXML
+    private Pagination PaginadorClientes;
     private String terminoBusquedaActual = "";
     private String terminoBusqueda = "";
     private boolean modoBusqueda = false;
@@ -87,11 +117,14 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
 
     @Autowired
     private PromocionService promocionService;
+    @Autowired
+    private TaskService taskService;
 
     //Validaciones:
     private BooleanProperty precioValido = new SimpleBooleanProperty(true);
     private BooleanProperty nombreValido = new SimpleBooleanProperty(true);
     private BooleanProperty descripcionValido = new SimpleBooleanProperty(true);
+    private LoadingComponentController loadingOverlayController;
 
 
     // Inicializa el controlador
@@ -101,14 +134,11 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
         listeners();
         configurarColumnas();
         configurarPaginador();
-        ClientesParticipantesInitialize();
+
 
     }//initialize
 
 
-    private void ClientesParticipantesInitialize() {
-
-    }
 
     /* ================= TABLA ================= */
 
@@ -286,7 +316,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
 
 
     @Override
-    public void configuraciones(){
+    public void configuraciones() {
 
         //txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
 
@@ -320,7 +350,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
         btnSeleccionarImagen.setOnAction(e -> seleccionarImagen());
 
         //Actualizar valores
-        btnCambiar.setOnAction(event -> cambiarPromocion() );
+        btnCambiar.setOnAction(event -> cambiarPromocion());
 
         btnBuscar.setOnAction(event -> buscarClientes());
 
@@ -341,6 +371,11 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
         });
 
     }//listeners
+
+    @Override
+    public void setInitializeLoading(LoadingComponentController loading) {
+
+    }
 
     private void calcularPrecioConDescuento() {
         String precioTexto = txtPrecio.getText();
@@ -365,7 +400,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
     /* ================= HELPERS ================= */
 
     private String valorONull(String valor) {
-        return (valor == null || valor.isBlank()) ? "N/A" : valor;
+        return (valor == null || valor.isBlank()) ? "N/D" : valor;
     }
 
     private String nombreCompleto(Cliente c) {
@@ -375,7 +410,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
 
         String full = String.join(" ", n, a1, a2).trim();
 
-        return full.isBlank() ? "N/A" : full;
+        return full.isBlank() ? "N/D" : full;
     }
 
     private void configurarValidaciones() {
@@ -457,7 +492,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
             fechaValida = true;
 
         } else if (fechaFinLD.isBefore(fechaInicioLD)) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Rango de fechas no válido",
                     "La fecha de fin no puede ser anterior a la fecha de inicio. Por favor, intente de nuevo."
@@ -466,7 +501,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
 
         } else if (fechaFinLD.equals(fechaInicioLD)) {
 
-            fechaValida = MensajesAlert.mostrarConfirmacion(
+            fechaValida = mostrarConfirmacion(
                     "Confirmar rango",
                     "Fechas de inicio y fin idénticas",
                     "Ha ingresado la misma fecha para el inicio y el fin de la promoción. ¿Desea continuar con esta configuración?",
@@ -542,8 +577,8 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
             Tabla_Clientes.refresh();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            MensajesAlert.mostrarExcepcion(
+
+            mostrarExcepcion(
                     "Error de carga",
                     "Fallo al cargar registros",
                     "Ocurrió un problema técnico al intentar cargar los clientes de la promoción.",
@@ -572,7 +607,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
     private void cambiarPromocion() {
 
         if (promocionSeleccionada == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Sin selección",
                     "Ninguna promoción seleccionada",
                     "Debe seleccionar una promoción de la lista antes de intentar modificarla."
@@ -580,16 +615,10 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
             return;
         }
 
-        // Validar que haya al menos un cliente seleccionado
-        MensajesAlert.mostrarWarning(
-                "Datos incompletos",
-                "Asignación de clientes obligatoria",
-                "Debe asignar al menos un cliente a la promoción antes de continuar."
-        );
 
         //  Validaciones básicas
         if (txtNombre.getText() == null || txtNombre.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Nombre de promoción obligatorio",
                     "El campo del nombre de la promoción no puede estar vacío."
@@ -598,7 +627,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
         }
 
         if (txtDescripcion.getText() == null || txtDescripcion.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Descripción obligatoria",
                     "La descripción de la promoción no puede estar vacía."
@@ -609,7 +638,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
         try {
             Float.parseFloat(txtPrecio.getText());
         } catch (NumberFormatException e) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Formato de precio incorrecto",
                     "Por favor, ingrese un valor numérico válido para el precio."
@@ -618,7 +647,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
         }
 
         if (dateInicio.getValue() == null || dateFin.getValue() == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Fechas requeridas",
                     "Debe ingresar tanto la fecha de inicio como la de fin para continuar."
@@ -627,7 +656,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
         }
 
         if (dateInicio.getValue().isAfter(dateFin.getValue())) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Rango de fechas no válido",
                     "La fecha de inicio no puede ser posterior a la fecha de fin."
@@ -635,7 +664,7 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
             return;
         }
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar actualización",
                 "Guardar cambios en la promoción",
                 "¿Está seguro de que desea guardar los cambios? Se actualizarán los datos de la promoción seleccionada.",
@@ -647,44 +676,66 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
             return; // Usuario canceló
         }
 
-        try {
-            //  Actualizar datos generales
-            promocionSeleccionada.setNombre(txtNombre.getText().trim());
-            promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
-            promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
-            promocionSeleccionada.setTipoDescuento(TipoDescuento.PORCENTAJE.toString());
-            promocionSeleccionada.setPorcentaje((int) porcentajeDescuento.getValue());
-            promocionSeleccionada.setFechaInicio(dateInicio.getValue().toString());
-            promocionSeleccionada.setFechaFin(dateFin.getValue().toString());
-            promocionSeleccionada.setImg(txtRutaImagen.getText());
-            promocionSeleccionada.setUpdated_at(LocalDateTime.now());
+        rootPane.setDisable(true);
 
-            promocionService.actualizarPromocionConClientes(
-                    promocionSeleccionada,
-                    new ArrayList<>(clientesSeleccionados)
-            );
+        //      try {
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
+
+                    //  Actualizar datos generales
+                    promocionSeleccionada.setNombre(txtNombre.getText().trim());
+                    promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
+                    promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
+                    promocionSeleccionada.setTipoDescuento(TipoDescuento.PORCENTAJE.toString());
+                    promocionSeleccionada.setPorcentaje((int) porcentajeDescuento.getValue());
+                    promocionSeleccionada.setFechaInicio(dateInicio.getValue().toString());
+                    promocionSeleccionada.setFechaFin(dateFin.getValue().toString());
+                    promocionSeleccionada.setImg(txtRutaImagen.getText());
+                    promocionSeleccionada.setUpdated_at(LocalDateTime.now());
+
+                    promocionService.actualizarPromocionConClientes(promocionSeleccionada, new ArrayList<>(clientesSeleccionados));
+
+                    return null;
+                }, (resultado) -> {
+                    rootPane.setDisable(false);
 
 
-            MensajesAlert.mostrarInformacion(
-                    "Operación completada",
-                    "Promoción actualizada",
-                    "La información de la promoción se ha actualizado correctamente en el sistema."
-            );
+                    mostrarInformacion(
+                            "Operación completada",
+                            "Promoción actualizada",
+                            "La información de la promoción se ha actualizado correctamente en el sistema.");
+                    cerrarVentana();
 
-            cerrarVentana();
+                }, (ex) -> {
+                    rootPane.setDisable(false);
 
-        } catch (Exception e) {
+                    if (ex  instanceof PromocionException){
 
-            MensajesAlert.mostrarExcepcion(
-                    "Error al actualizar",
-                    "No se pudieron guardar los cambios",
-                    "Ocurrió un problema técnico al intentar actualizar la promoción: " + e.getMessage(),
-                    e
-            );
+                        mostrarExcepcionThrowable(
+                                "Error al actualizar",
+                                "Problema al guardar cambios",
+                                "Ocurrió un problema al intentar guardar los cambios de la promoción.",
+                                ex
+                        );
 
-            e.printStackTrace();
-        }
-    }
+                    } else {
+
+                        mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Se produjo una excepción durante la operación",
+                                "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
+                    }
+
+
+                }, null
+        );
+
+
+
+    }//cambiarPromocion
 
     @Override
     public void cleanup() {
@@ -703,4 +754,5 @@ public class EditarPromocionClienteController implements  IFxController, ICleana
         stage.close();
     }
 
-}
+
+}//class

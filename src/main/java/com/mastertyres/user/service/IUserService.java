@@ -16,4 +16,6 @@ public interface IUserService {
 
    void updateNextCheck(Integer usuarioId, String fecha);
 
+   void actualizarUpdateAt(Integer userId, String updateAt);
+
 }//interface

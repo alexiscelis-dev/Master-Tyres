@@ -143,8 +143,8 @@
 
                                             <children>
 
-                                                <PasswordField visible="true" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="pfNuevaContrasena" promptText="••••••••" styleClass="field-input"/>
-                                                <TextField fx:id="txtNuevaContrasenaVisible" visible="false" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0"  styleClass="field-input">
+                                                <PasswordField  visible="true" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="pfNuevaContrasena" promptText="••••••••" styleClass="field-input"/>
+                                                <TextField fx:id="txtNuevaContrasenaVisible" visible="false" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0" promptText="••••••••"  styleClass="field-input">
 
                                                 </TextField>
 
@@ -318,12 +318,17 @@
                                 <VBox spacing="16" maxWidth="440">
                                     <HBox spacing="30">
                                         <VBox spacing="4">
-                                            <Label text="Correo:" styleClass="field-label"/>
-                                            <Label text="soporte@tuapp.com" styleClass="info-value"/>
+                                            <Label text="Nombre de la app:" styleClass="field-label"/>
+                                            <Label text="Master Tires App" styleClass="info-value"/>
                                         </VBox>
                                         <VBox spacing="4">
                                             <Label text="Versión de la app:" styleClass="field-label"/>
-                                            <Label fx:id="lblVersion" text="v1.0.0" styleClass="info-value"/>
+                                            <Label  text="v1.0.0" styleClass="info-value"/>
+                                        </VBox>
+
+                                        <VBox spacing="4">
+                                            <Label text="Desarrollado por:" styleClass="field-label"/>
+                                            <Label  text="Cireon" styleClass="info-value"/>
                                         </VBox>
                                     </HBox>
                                 </VBox>

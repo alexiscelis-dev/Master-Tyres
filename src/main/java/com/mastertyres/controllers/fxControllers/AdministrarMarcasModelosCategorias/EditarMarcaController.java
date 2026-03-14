@@ -5,7 +5,6 @@ import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
@@ -14,16 +13,20 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class EditarMarcaController implements IFxController, ILoader, ICleanable {
 
     @FXML
+    private AnchorPane rootPane;
+    @FXML
     private Button btnAgregar;
-
     @FXML
     private TextField txtMarca;
 
@@ -101,7 +104,7 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
     private void GuardarCambios() {
 
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar actualización",
                 "Guardar cambios",
                 "¿Está seguro de que desea guardar los cambios en esta marca? Se actualizará el nombre de la marca seleccionada.",
@@ -111,6 +114,8 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
 
         if (confirmar) {
 
+            rootPane.setDisable(true);
+
             taskService.runTask(
                     loadingOverlayController,
                     ()->{
@@ -119,7 +124,9 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
                         return null;
 
                     }, (resultado)->{
-                        MensajesAlert.mostrarInformacion(
+                        rootPane.setDisable(false);
+
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Registro actualizado",
                                 "La información de la marca ha sido actualizada en el sistema correctamente."
@@ -127,16 +134,16 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
                         cerrarVentana();
 
             },(ex) ->{
+                        rootPane.setDisable(false);
 
                         if (ex instanceof MarcaException) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            mostrarError(
                                     "Error al actualizar",
                                     "Problema con el registro de la marca",
-                                    "Ocurrió un problema al intentar guardar los cambios de la marca: " + ex.getMessage(),
-                                    ex
-                            );
+                                    "" + ex.getMessage());
                         } else {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            rootPane.setDisable(false);
+                            mostrarExcepcionThrowable(
                                     "Error inesperado",
                                     "No se pudo completar la operación",
                                     "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",

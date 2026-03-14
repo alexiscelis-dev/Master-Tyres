@@ -1,13 +1,10 @@
 package com.mastertyres.controllers.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -32,6 +29,8 @@ import java.time.LocalDateTime;
 
 import static com.mastertyres.common.utils.InventarioUtils.generarIdentificador;
 import static com.mastertyres.common.utils.InventarioUtils.indicesChoiceBox;
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
 public class EditarInventarioController implements IFxController, ILoader {
@@ -131,7 +130,7 @@ public class EditarInventarioController implements IFxController, ILoader {
         }));
 
 
-        MenuContextSetting.disableMenu(rootPane); //Desabilita el menu en los componentes
+        disableMenu(rootPane); //Desabilita el menu en los componentes
         indicesChoiceBox(cbIndiceVelocidad, cbIndiceCarga, choiceAncho, choicePerfil, choiceRin); //Agrega la lista de indices de carga y velocidad
 
 
@@ -229,26 +228,13 @@ public class EditarInventarioController implements IFxController, ILoader {
 
         File file = new File(txtImg.getText());
 
-//        if (file.exists()) {
-//            Image image = new Image(file.toURI().toString());
-//            ImageView imageView = new ImageView(image);
-//            imageView.setFitHeight(200);
-//            imageView.setFitWidth(200);
-//            imageView.setPreserveRatio(true);
-//            vBoxImg.getChildren().clear();
-//            vBoxImg.getChildren().add(imageView);
+
         Image image;
         if (!imagenPath.isBlank() && new File(imagenPath).exists()) {
             image = new Image(new File(imagenPath).toURI().toString());
         } else {
             image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
-//            Image image = new Image(getClass().getResource("/icons/imagenPorDefecto.jpg").toExternalForm());
-//            ImageView imageView = new ImageView(image);
-//            imageView.setFitHeight(200);
-//            imageView.setFitWidth(200);
-//            imageView.setPreserveRatio(true);
-//            vBoxImg.getChildren().clear();
-//            vBoxImg.getChildren().add(imageView);
+
         }
 
         ImageView imageView = new ImageView(image);
@@ -367,7 +353,7 @@ public class EditarInventarioController implements IFxController, ILoader {
 
     private void actualizarInventario() {
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar actualización",
                 "Guardar cambios",
                 "¿Está seguro de que desea guardar los cambios seleccionados? Se actualizarán los datos del registro de inventario.",
@@ -407,6 +393,7 @@ public class EditarInventarioController implements IFxController, ILoader {
         else if (Integer.parseInt(txtStock.getText()) > 0)
             inventario.setActive(StatusInventario.ACTIVE.toString());
 
+        rootPane.setDisable(true);
 
         taskService.runTask(
                 loadingOverlayController,
@@ -418,9 +405,9 @@ public class EditarInventarioController implements IFxController, ILoader {
                     return null;
                 },
                 (resultado) -> {
+                    rootPane.setDisable(true);
 
-
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Inventario actualizado",
                             "Los datos del inventario se han actualizado correctamente en el sistema."
@@ -430,21 +417,23 @@ public class EditarInventarioController implements IFxController, ILoader {
 
                 },
                 (ex) -> {
+                    rootPane.setDisable(false);
+
                     if (ex.getCause() instanceof InventarioException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                      mostrarError(
                                 "Error al actualizar",
-                                "Problema con el registro del inventario",
                                 "Ocurrió un problema al intentar actualizar los datos. ",
-                                ex
-                        );
+                                "" + ex.getMessage());
+
                     } else if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
-                        MensajesAlert.mostrarWarning(
+                        mostrarWarning(
                                 "Operación cancelada",
                                 "Acción interrumpida",
                                 "La acción fue cancelada por el usuario."
                         );
+
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Fallo en el sistema",
                                 "Ocurrió un error inesperado y no fue posible actualizar el inventario. Por favor, inténtelo de nuevo más tarde.",
