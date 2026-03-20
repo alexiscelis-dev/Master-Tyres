@@ -52,6 +52,13 @@ public class PromocionService implements IPromocionService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<Promocion> obtenerPromocionesPendientes() {
+        String hoy = LocalDate.now().toString();
+        return promocionRepository.findPromocionesPendientes(hoy);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<Promocion> buscarPromociones(String texto) {
         return promocionRepository.buscarPromocionesActivas(hoy, texto);
     }

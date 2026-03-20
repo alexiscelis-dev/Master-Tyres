@@ -387,7 +387,6 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         }
     }//onCambiarContrasena
 
-
     @FXML
     private void onCambiarNombreUsuario() {
 
@@ -431,8 +430,9 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                   },(resultado) ->{
 
                       lblNombreUsuarioActual.setText(userSession.getUsername());
-                      String texto = userSession.getUsername();
-                      ventanaPrincipalController.setCambiarPaginaEtiqueta(new Label(texto));
+                      ventanaPrincipalController.refreshUserInfo(userSession);
+//                      String texto = userSession.getUsername();
+//                      ventanaPrincipalController.setCambiarPaginaEtiqueta(new Label(texto));
 
 
                       mostrarInformacion("Usuario actualizado", "", "El nombre de usuario se actualizó exitosamente.");
@@ -515,7 +515,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                 },(resultado)->{
 
                     mostrarInformacion("Foto actualizada","","La foto se actualizó exitosamente.");
-
+                    ventanaPrincipalController.refreshUserInfo(userSession);
 
                 },(ex)->{
 
@@ -568,7 +568,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     txtRutaImg.setText("");
 
                     mostrarInformacion("Foto eliminada","","La foto se elimino exitosamente.");
-
+                    ventanaPrincipalController.refreshUserInfo(userSession);
 
                 },(ex)->{
 
@@ -587,18 +587,6 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     }//onEliminar
 
-
-    // ──────────────────────────────────────
-    // MODELO INTERNO
-    // ──────────────────────────────────────
-
-    /**
-     * Representa un ítem del menú de navegación.
-     *
-     * @param icono   Emoji o texto corto usado como ícono
-     * @param nombre  Texto visible en el árbol
-     * @param panelId fx:id del panel FXML a mostrar (null para secciones padre)
-     */
     public record NavItem(String icono, String nombre, String panelId) {
         @Override
         public String toString() {

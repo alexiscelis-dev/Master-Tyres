@@ -1,4 +1,4 @@
-package com.mastertyres.controllers.fxControllers.nota;
+package com.mastertyres.controllers.fxControllers.historial;
 
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
