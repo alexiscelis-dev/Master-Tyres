@@ -242,7 +242,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             stage.showAndWait();
             cargarPromociones();
         } catch (IOException ex) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "No se pudo inicializar la interfaz",
                     "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",

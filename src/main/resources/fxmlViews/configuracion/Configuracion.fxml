@@ -57,6 +57,10 @@
                             <VBox fx:id="panelVerPerfil" styleClass="detail-panel" visible="false" spacing="20">
                                 <Label text="Ver Perfil" styleClass="panel-title"/>
                                 <Separator/>
+                                
+
+
+
                                 <HBox spacing="24" alignment="CENTER_LEFT">
                                     <VBox alignment="CENTER" spacing="8">
                                         <ImageView fx:id="avatarImageView" fitWidth="90" fitHeight="90"

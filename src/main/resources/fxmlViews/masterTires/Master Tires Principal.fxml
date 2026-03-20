@@ -206,19 +206,7 @@
                         </StackPane>
                     </children>
                 </HBox>
-<!--                <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="466.0" AnchorPane.rightAnchor="25.0">-->
-<!--                    <children>-->
-<!--                        <Label fx:id="lblUsuario" nodeOrientation="RIGHT_TO_LEFT" prefHeight="18.0" prefWidth="382.0" styleClass="label-tarjeta" text="Administrador" />-->
-<!--                        <ImageView fx:id="imgPerfil" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="usuario-turno">-->
-<!--                            <image>-->
-<!--                                <Image url="@../../icons/user.png" />-->
-<!--                            </image>-->
-<!--                            <HBox.margin>-->
-<!--                                <Insets left="15.0" />-->
-<!--                            </HBox.margin>-->
-<!--                        </ImageView>-->
-<!--                    </children>-->
-<!--                </HBox>-->
+
                 <ImageView fx:id="LogoPrincipal" fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0"
                            pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0"
                            AnchorPane.topAnchor="17.0">

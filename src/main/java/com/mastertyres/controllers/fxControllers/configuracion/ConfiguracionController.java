@@ -31,6 +31,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,6 +175,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     private TextField txtRutaImg;
     @FXML
     private ImageView avatarPreview;
+    @FXML private StackPane profileContainer;
+    @FXML private Circle profileCircle;
 
 
     // Almacenamiento
@@ -876,6 +879,10 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
 
     }//verPerfil
+
+
+
+
 
     private void mostarPanelCambiarFoto(){
         User user =  userService.findUserById(userSession.getUsuarioId());
