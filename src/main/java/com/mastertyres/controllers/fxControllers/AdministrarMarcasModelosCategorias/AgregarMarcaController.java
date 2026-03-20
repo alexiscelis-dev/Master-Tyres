@@ -11,11 +11,10 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.detalleCategoria.model.DetalleCategoria;
-import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.detalleCategoria.model.DetalleCategoria;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -40,6 +39,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 //import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 //import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
@@ -120,7 +122,7 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
     @Override
     public void configuraciones() {
 
-        MenuContextSetting.disableMenu(rootPane);
+        disableMenu(rootPane);
 
         tablaVehiculos.setItems(listaVehiculos);
 
@@ -166,7 +168,7 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
         Categoria categoria = choiceCategoria.getValue();
 
         if (modelo.isEmpty() || categoria == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Campos obligatorios vacíos",
                     "Debe ingresar un modelo y seleccionar una categoría antes de continuar."
@@ -181,7 +183,7 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
         );
 
         if (existe) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Registro duplicado",
                     "Modelo y categoría ya registrados",
                     "Ya existe este modelo asociado a la misma categoría en la tabla."
@@ -227,6 +229,7 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
         );
 
         if (confirmar) {
+            taskService.disable(rootPane);
 
             taskService.runTask(
                     loadngOverlayController,
@@ -256,10 +259,11 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
 
                     },
                     (resultado) -> {
+                        taskService.enable(rootPane);
 
                         limpiarCamposVehiculo();
 
-                        MensajesAlert.mostrarInformacion(
+                      mostrarInformacion(
                                 "Operación completada",
                                 "Guardado exitoso",
                                 "La marca y el modelo o modelos han sido registrados correctamente en el sistema."
@@ -267,34 +271,31 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
                         cerrarVentana(null);
 
                     }, (ex) -> {
-
+                        taskService.enable(rootPane);
 
 
                         if (ex instanceof MarcaException) {
 
-                            MensajesAlert.mostrarExcepcionThrowable(
-                                    "Error al guardar",
-                                    "Problema con el registro de la marca",
+                            mostrarError(
+                                    "Error al guardar 'Marcas'",
                                     "Ocurrió un problema al intentar guardar la información de la marca en el sistema.",
-                                    ex
-                            );
+                                    ""+ex.getMessage());
 
                         } else if (ex instanceof ModeloException) {
-                            MensajesAlert.mostrarExcepcionThrowable(
-                                    "Error al guardar",
-                                    "Problema con el registro de modelos",
+                            mostrarError(
+                                    "Error al guardar 'Modelos'",
                                     "Ocurrió un problema al intentar guardar alguno de los modelos proporcionados.",
-                                    ex
-                            );
+                                    "" + ex.getMessage());
 
                         } else {
-                            cerrarVentana(null);
-                            MensajesAlert.mostrarExcepcionThrowable(
+
+                            mostrarExcepcionThrowable(
                                     "Error interno",
                                     "Error inesperado en el sistema",
                                     "Ocurrió un error inesperado al intentar guardar la marca y los modelos proporcionados.",
                                     ex
                             );
+                            cerrarVentana(null);
                         }
 
 

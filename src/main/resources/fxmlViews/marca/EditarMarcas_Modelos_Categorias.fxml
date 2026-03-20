@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;"
-            stylesheets="/styles_css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12"
+            stylesheets="/styles-css/PromocionesStyles.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.controllers.fxControllers.AdministrarMarcasModelosCategorias.AdministarMarcasController">
     <AnchorPane layoutY="110.0" prefHeight="696.0" prefWidth="1186.0" AnchorPane.leftAnchor="50.0"
@@ -103,7 +103,7 @@
                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2"
                                       GridPane.rowIndex="8">
                                     <children>
-                                        <Button fx:id="BtnEliminarModelo" onAction="#EliminarModelo" disable="true"
+                                        <Button fx:id="btnEliminarModelo" onAction="#EliminarModelo" disable="true"
                                                 minHeight="54.0" minWidth="120.0" mnemonicParsing="false"
                                                 prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion"
                                                 text="Eliminar Modelo" textAlignment="CENTER" wrapText="true">
@@ -111,7 +111,7 @@
                                                 <Insets left="15.0" right="20.0" top="20.0"/>
                                             </HBox.margin>
                                         </Button>
-                                        <Button fx:id="BtnAgregarModelo" disable="true" minHeight="54.0"
+                                        <Button fx:id="btnAgregarModelo" disable="true" minHeight="54.0"
                                                 minWidth="120.0" mnemonicParsing="false" onAction="#AgregarModelo"
                                                 prefHeight="54.0" prefWidth="120.0" styleClass="boton-accion"
                                                 text="Agregar Modelo" textAlignment="CENTER" wrapText="true">
@@ -119,7 +119,7 @@
                                                 <Insets left="15.0" right="20.0" top="20.0"/>
                                             </HBox.margin>
                                         </Button>
-                                        <Button fx:id="BtnEditarModelo" disable="true" minHeight="54.0" minWidth="120.0"
+                                        <Button fx:id="btnEditarModelo" disable="true" minHeight="54.0" minWidth="120.0"
                                                 mnemonicParsing="false" onAction="#EditarModelo" prefHeight="54.0"
                                                 prefWidth="120.0" styleClass="boton-accion" text="Editar Modelo"
                                                 textAlignment="CENTER" wrapText="true">

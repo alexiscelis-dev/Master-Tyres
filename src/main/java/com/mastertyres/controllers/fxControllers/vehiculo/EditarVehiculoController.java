@@ -7,11 +7,10 @@ import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
-import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -33,6 +32,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class EditarVehiculoController implements IFxController, ILoader, ICleanable {
@@ -291,10 +292,7 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
         // Listener para filtrar modelos según la marca seleccionada
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
             if (newMarca != null) {
-//                List<Modelo> modelosFiltrados = modelos.stream()
-//                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
-//                        .toList();
-//                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+
                 modelosPorNombre.clear();
                 modelos.stream()
                         .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
@@ -335,13 +333,7 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
                 choiceCategoria.setItems(FXCollections.observableArrayList(categoriasPorId.values()));
                 choiceCategoria.getSelectionModel().clearSelection();
 
-//                List<Categoria> categoriasFiltradas =
-//                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
-//                                marcaSeleccionada.getMarcaId(),
-//                                newModelo.getModeloId()
-//                        );
-//
-//                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
+
 
             } else {
                 choiceCategoria.getItems().clear();
@@ -402,7 +394,7 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
 
     private void actualizarVehiculo() {
         if (vehiculo == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Sin selección",
                     "Vehículo no seleccionado",
                     "Debe seleccionar un vehículo de la lista antes de poder modificarlo."
@@ -411,7 +403,7 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
         }
 
         if (txtColor.getText() == null || txtColor.getText().trim().isEmpty()) {
-            MensajesAlert.mostrarWarning(
+           mostrarWarning(
                     "Datos incompletos",
                     "Color del vehículo obligatorio",
                     "El campo de color del vehículo no puede estar vacío."
@@ -420,7 +412,7 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
         }
 
         if (choiceMarca.getValue() == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Marca no seleccionada",
                     "Debe seleccionar una marca para el vehículo antes de continuar."
@@ -429,7 +421,7 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
         }
 
         if (choiceModelo.getValue() == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Modelo no seleccionado",
                     "Debe seleccionar un modelo para el vehículo antes de continuar."
@@ -437,7 +429,7 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
             return;
         }
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar actualización",
                 "Guardar cambios",
                 "¿Está seguro de que desea guardar los cambios en este vehículo? Se actualizarán los datos del registro seleccionado.",
@@ -452,6 +444,9 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
         if (!confirmar) {
             return; // Usuario canceló
         }
+
+        taskService.disable(rootPane);
+
 
         taskService.runTask(
                 loadingOverlayController,
@@ -478,7 +473,6 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
                     vehiculo.setVehiculoId(this.vehiculo.getId());
                     vehiculo.setMarca(choiceMarca.getValue());
                     vehiculo.setModelo(obtenerModeloSeleccionado());
-                    //vehiculo.setModelo(choiceModelo.getValue());
                     vehiculo.setCategoria(choiceCategoria.getValue());
                     vehiculo.setAnio(spinnerAnio.getValue());
                     vehiculo.setKilometros(Integer.parseInt(txtKilometros.getText()));
@@ -498,25 +492,29 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
                     return null;
 
                 }, (resultado) -> {
+                    taskService.enable(rootPane);
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Vehículo actualizado",
                             "Los cambios en la información del vehículo se han guardado correctamente."
                     );
                     cerrarVentana();
 
+
                 }, (ex) -> {
+                    taskService.enable(rootPane);
 
                     if (ex instanceof VehiculoException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+
+                        mostrarError(
                                 "Error al actualizar",
-                                "Problema al guardar cambios",
-                                "Ocurrió un problema al intentar guardar los cambios del vehículo",
-                                ex
-                        );
+                                "Ocurrió un problema al intentar guardar los cambios del vehículo.",
+                                "" + ex.getMessage());
+
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Se produjo una excepción durante la operación",
                                 "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
@@ -551,4 +549,4 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
     }
 
 
-}
+}//class

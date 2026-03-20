@@ -1,12 +1,12 @@
 package com.mastertyres.controllers.fxControllers.historial;
 
-import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.exeptions.NotaException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
@@ -23,7 +23,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -39,6 +38,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarExcepcionThrowable;
+
 @Component
 public class HistorialController extends BaseNota implements IFxController, ILoader, ICleanable {
 
@@ -49,7 +51,7 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
     @FXML
     private VBox detallePromocion;
     @FXML
-    private ImageView ivZoom;
+    private Button btnZoom;
     @FXML
     private ChoiceBox<String> choiceLimite;
     @FXML
@@ -96,7 +98,7 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
 
         MenuContextSetting.disableMenu(rootPane);
         choiceLimite.setValue("Sin Filtro");
-        ivZoom.setVisible(false);
+        btnZoom.setVisible(false);
 
         notaUtils.descripcionComponent(btnBuscar,"Buscar");
         notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
@@ -110,7 +112,7 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
 
         btnBuscar.setOnAction(event -> cargarNota());
 
-        ivZoom.setOnMouseClicked(event -> {
+        btnZoom.setOnMouseClicked(event -> {
             if (notaVentana != null)
                 zoomDetalles(notaVentana);
 
@@ -129,11 +131,11 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
     private void zoom() {
 
         detallePromocion.setOnMouseEntered(event -> {
-            ivZoom.setVisible(true);
+            btnZoom.setVisible(true);
         });
 
         detallePromocion.setOnMouseExited(event -> {
-            ivZoom.setVisible(false);
+            btnZoom.setVisible(false);
         });
     }//zoom
 
@@ -166,7 +168,7 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                 }, (ex) -> {
 
                     if (ex.getCause() instanceof Exception) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                       mostrarExcepcionThrowable(
                                 "Error de carga",
                                 "No se pudo inicializar la interfaz",
                                 "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -211,14 +213,13 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                     mostrarNotas(historial);
                 }, (ex) -> {
                     if (ex instanceof NotaException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarError(
                                 "Error de carga",
-                                "Problema con el historial de notas",
                                 "Se produjo un error de validación al intentar recuperar los registros del historial.",
-                                ex
-                        );
+                                ""+ex.getMessage());
+
                     } else if (ex instanceof Exception) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Fallo al cargar registros",
                                 "Ocurrió un problema inesperado al intentar cargar los datos del historial. Por favor, inténtelo de nuevo más tarde.",
@@ -226,7 +227,6 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                         );
                     }
 
-                    ex.printStackTrace();
                 }, null
         );
 
@@ -313,14 +313,14 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                     llenarNota((NotaDTO) notaPreview);
                 }, (ex) -> {
                     if (ex instanceof NotaException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarError(
                                 "Error de carga",
-                                "Problema con los detalles de la nota",
                                 "No fue posible acceder a la información detallada de la nota seleccionada.",
-                                ex
+                                "" + ex.getMessage()
                         );
+
                     } else if (ex instanceof Exception) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "No se pudieron cargar los detalles",
                                 "Ocurrió un error inesperado al intentar cargar los detalles de la nota. Por favor, inténtelo de nuevo más tarde.",

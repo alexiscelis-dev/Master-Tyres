@@ -7,7 +7,6 @@ import com.mastertyres.common.exeptions.UserException;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.login.recuperarPassword.RecuperarPasswordController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -28,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -42,6 +42,7 @@ import java.time.format.DateTimeFormatter;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
 public class LoginController implements IFxController {
@@ -99,7 +100,7 @@ public class LoginController implements IFxController {
         txtPasswordVisible.textProperty().bindBidirectional(pfPassword.textProperty());
         txtPasswordVisible.setVisible(false);
 
-        MenuContextSetting.disableMenu(rootPane);
+      disableMenu(rootPane);
     }//configuraciones
 
     @Override
@@ -119,26 +120,19 @@ public class LoginController implements IFxController {
             mostrarWarning("Campos vacios", "", "Ingrese la contraseña");
             return;
         }
-
-        //Asegura que tanto el campo invisible de contraseña como el visible tengan la misma informacion
-        if (pfPassword.getText().isEmpty() && !txtPasswordVisible.getText().isEmpty()) {
-            pfPassword.setText(txtPasswordVisible.getText());
-        } else if (!pfPassword.getText().isEmpty() && txtPasswordVisible.getText().isEmpty()) {
-            txtPasswordVisible.setText(pfPassword.getText());
-        }
-
+        
 
         taskService.runTask(
                 loadingOverlayController,
                 () -> {
 
-                    User user = userService.findByEmail(txtCorreo.getText().trim());
+                    User userAutenticar = userService.findByEmail(txtCorreo.getText().trim());
 
-                    if (user != null) { //Se encontro en la base de datos local
+                    if (userAutenticar != null) { //Se encontro en la base de datos local
 
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-                        String fechaStr = user.getNextCheck();
+                        String fechaStr = userAutenticar.getNextCheck();
 
                         LocalDateTime fechaHora = LocalDateTime.parse(fechaStr, formatter);
                         LocalDate fecha = fechaHora.toLocalDate();
@@ -149,14 +143,14 @@ public class LoginController implements IFxController {
                             supabaseService.supabaseLogin(txtCorreo.getText().trim(), pfPassword.getText().trim());
 
                         } else { //Se autentifica localmente
-                            boolean autenticado = localAuthService.authenticate(user, pfPassword.getText().trim());
+                            boolean autenticado = localAuthService.authenticate(userAutenticar, pfPassword.getText().trim());
 
                             if (!autenticado) {
                                 throw new UserException("Usuario o contraseña incorrectos");
                             }
                         }
 
-                    } else { // Se autentifica con supabase
+                    } else { // Se autentifica con supabase si userAutenticar es null
 
                         supabaseService.supabaseLogin(txtCorreo.getText().trim(), pfPassword.getText().trim());
 
@@ -209,8 +203,7 @@ public class LoginController implements IFxController {
             ventanaLogin.show();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            e.getMessage();
+
             mostrarError("Error de carga",
                     "",
                     "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
@@ -246,13 +239,21 @@ public class LoginController implements IFxController {
             RecuperarPasswordController controller = loader.getController();
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setScene(new Scene(root));
+
+            // Ventana padre
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+
+            // Hace la ventana modal
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.setTitle("Recuperar contraseña");
+
             stage.show();
 
 
         }catch (Exception e){
-            e.printStackTrace();
+
             mostrarError("Error de cargar",
                     "",
                     "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");

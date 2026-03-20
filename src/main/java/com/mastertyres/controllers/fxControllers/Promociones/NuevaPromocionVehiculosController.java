@@ -9,10 +9,9 @@ import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -47,6 +46,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenuDatePicker;
+
 @Component
 public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
     @FXML
@@ -67,7 +70,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     private Button btnRegistrar;
     @FXML
     private Button btnLimpiar;
-//    @FXML
+    //    @FXML
 //    private ChoiceBox<String> tipoDescuento;
     @FXML
     private TextField nombrePromocion;
@@ -166,8 +169,8 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
                 btn.setOnAction(e -> {
 
                     VehiculoPromocion vp = getTableView().getItems().get(getIndex());
-                    String mensaje = vp.getMarca().getNombreMarca() + " " + vp.getModelo().getNombreModelo()  + " " + vp.getAnnio();
-                            showLabel(mensaje, "eliminado");
+                    String mensaje = vp.getMarca().getNombreMarca() + " " + vp.getModelo().getNombreModelo() + " " + vp.getAnnio();
+                    showLabel(mensaje, "eliminado");
                     vehiculos.remove(vp);
 
                 });
@@ -192,8 +195,8 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
             }
         });
 
-        MenuContextSetting.disableMenu(rootPane);
-        MenuContextSetting.disableMenuDatePicker(rootPane);
+        disableMenu(rootPane);
+        disableMenuDatePicker(rootPane);
 
         tableVehiculosParticipantes.setItems(vehiculos);
 
@@ -254,22 +257,11 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
             calcularPrecioConDescuento();
         });
 
-//        tipoDescuento.getSelectionModel().selectedItemProperty().addListener((observable, valorAnterior, nuevoValor) -> {
-//
-//
-//            if (nuevoValor != null && !nuevoValor.isEmpty())
-//                tipoDescuento(nuevoValor.toLowerCase());
-//
-//        });
+
 
     }//listeners
 
-//    private void cargarPorcentaje() {
-//        List<String> tiposDescuentos = new ArrayList<>();
-//        tiposDescuentos.add(TipoDescuento.PORCENTAJE.toString());
-//        tiposDescuentos.add(TipoDescuento.OTRO.toString());
-//        tipoDescuento.setItems(FXCollections.observableList(tiposDescuentos));
-//    }
+
 
     private void clean() {
         nombrePromocion.setText("");
@@ -310,38 +302,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
         }
     }//obtenerPorcentaje
 
-//    private void tipoDescuento(String tipo) {
-//
-//        switch (tipo) {
-//
-//            case "porcentaje" -> {
-//                precioSinDescuento.setDisable(false);
-//                porcentajeDescuento.setDisable(false);
-//                LocalDate fecha = LocalDate.now();
-//                fechaInicio.setValue(fecha);
-//                fechaFin.setValue(fecha);
-//                fechaFin.setDisable(false);
-//                fechaInicio.setDisable(false);
-//                btnImagen.setDisable(false);
-//                textFieldImg.setDisable(false);
-//
-//
-//            }
-//            case "otro" -> {
-//                precioSinDescuento.setDisable(false);
-//                porcentajeDescuento.setDisable(false);
-//                LocalDate fecha = LocalDate.now();
-//                fechaInicio.setValue(fecha);
-//                fechaFin.setValue(fecha);
-//                fechaFin.setDisable(false);
-//                fechaInicio.setDisable(false);
-//                btnImagen.setDisable(false);
-//                textFieldImg.setDisable(false);
-//
-//            }
-//        }//switch
-//
-//    }
+
 
     private void calcularPrecioConDescuento() {
         String precioTexto = precioSinDescuento.getText();
@@ -448,7 +409,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
     private boolean empty() {
         boolean empty = false;
-        if (nombrePromocion.getText() == null || descripcion.getText() == null ||  precioSinDescuento.getText() == null ||
+        if (nombrePromocion.getText() == null || descripcion.getText() == null || precioSinDescuento.getText() == null ||
                 fechaInicio.getValue() == null || fechaFin.getValue() == null || choiceMarca.getValue() == null || choiceModelo.getValue() == null ||
                 nombrePromocion.getText().isEmpty() || descripcion.getText().isEmpty() || precioSinDescuento.getText().isEmpty()
                 || tableVehiculosParticipantes.getItems() == null)
@@ -469,7 +430,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
             fechaValida = true;
 
         } else if (fechaFinLD.isBefore(fechaInicioLD)) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Rango de fechas no válido",
                     "La fecha de fin no puede ser anterior a la fecha de inicio. Por favor, intente de nuevo."
@@ -527,7 +488,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
             vehiculo.setModelo(modelo);
             vehiculo.setAnnio(anio);
 
-            if (choiceMarca != null && choiceModelo != null && choiceAnio != null && !vehiculos.contains(vehiculo)){
+            if (choiceMarca != null && choiceModelo != null && choiceAnio != null && !vehiculos.contains(vehiculo)) {
                 vehiculos.add(vehiculo);
 
                 showLabel(mensaje, "agregado");
@@ -555,39 +516,10 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
                             .TipoPromocion(TipoPromocion.VEHICULO.toString())
                             .build();
 
-                    //promocionService.guardarPromocion(promocion);
-
-//                    if (promocion.getPromocionId() == null) {
-//                        //     mostrarError("Error", "", "Error al insertar promocion");
-//                        throw new PromocionException("Error interno: No se pudo recuperar la promocion creada");
-//                    }
 
 
                     ObservableList<VehiculoPromocion> vehiculos = tableVehiculosParticipantes.getItems();
 
-//                    for (VehiculoPromocion vehiculoPromocionSeleccionado : vehiculos) {
-//
-//                        Integer marcaId = vehiculoPromocionSeleccionado.getMarca().getMarcaId();
-//                        Integer modeloId = vehiculoPromocionSeleccionado.getModelo().getModeloId();
-//                        Integer anio = vehiculoPromocionSeleccionado.getAnnio();
-//
-//                        Marca marca = new Marca();
-//                        marca.setMarcaId(marcaId);
-//
-//                        Modelo modelo = new Modelo();
-//                        modelo.setModeloId(modeloId);
-//
-//                        VehiculoPromocion vehiculosCompatibles = VehiculoPromocion.builder()
-//                                .marca(marca)
-//                                .modelo(modelo)
-//                                //.promocion(promocion)
-//                                .annio(anio)
-//                                .build();
-//                        //vehiculoPromocionService.guardarVehiculosAplicables(vehiculosCompatibles);
-//
-//                    }//for
-
-                    //System.out.println(vehiculos);
 
                     promocionService.crearPromocionConVehiculos(promocion, vehiculos);
 
@@ -607,14 +539,14 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
                 }, (ex) -> {
                     if (ex instanceof PromocionException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                       mostrarError(
                                 "Error al guardar",
-                                "Problema con el registro de promoción",
-                                "Ocurrió un problema al intentar guardar la promoción: " + ex.getMessage(),
-                                ex
+                                "Ocurrió un problema al intentar guardar la promoción:",
+                                "" + ex.getMessage()
                         );
+
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Se produjo una excepción durante la operación",
                                 "Ocurrió un error inesperado al intentar registrar la promoción.",
@@ -638,7 +570,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
             //ventanaPrincipalController.irAtras();
 
         } else if (empty())
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Campos obligatorios vacíos",
                     "Por favor, complete cada uno de los campos solicitados antes de continuar."
@@ -674,10 +606,10 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
     }//seleccionarImg
 
-    private void showLabel(String mensaje, String accion){
-        statusLabel.setText(mensaje +  " " + accion);
+    private void showLabel(String mensaje, String accion) {
+        statusLabel.setText(mensaje + " " + accion);
 
-        if (pauseTransition != null){
+        if (pauseTransition != null) {
             pauseTransition.stop();
         }
         pauseTransition = new PauseTransition(Duration.seconds(2.5));

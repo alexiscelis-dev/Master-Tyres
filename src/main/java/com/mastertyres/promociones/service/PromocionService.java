@@ -1,7 +1,7 @@
 package com.mastertyres.promociones.service;
 
-import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
-import com.mastertyres.ClientesPromocion.repository.ClientePromocionRepository;
+import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.repository.ClientePromocionRepository;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.promociones.domain.PromocionValidator;
@@ -37,7 +37,7 @@ public class PromocionService implements IPromocionService {
 
     private final VehiculoPromocionRepository repoVehiculo;
 
-
+    @Autowired
     public PromocionService(PromocionesRepository promocionRepository, VehiculoPromocionRepository vehiculoPromocionRepository, ClientePromocionRepository clientePromocionRepository) {
         this.promocionRepository = promocionRepository;
         this.repoVehiculo = vehiculoPromocionRepository;
@@ -66,35 +66,12 @@ public class PromocionService implements IPromocionService {
     @Transactional
     @Override
     public void desactivarPromocion(Integer id) {
-      int filasAfectadas =  promocionRepository.desactivarPromocion(id);
-      if (filasAfectadas == 0){
-          throw new RuntimeException("La promocion no existe o ya fue eliminada previamente");
-      }
+        int filasAfectadas = promocionRepository.desactivarPromocion(id);
+        if (filasAfectadas == 0) {
+            throw new RuntimeException("La promocion no existe o ya fue eliminada previamente");
+        }
     }
 
-/*
-    @Transactional(readOnly = true)
-    @Override
-    public List<Marca> listarMarcas() {
-        return promocionRepository.listarMarcas();
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Modelo> listarModelos() {
-        return promocionRepository.listarModelos();
-    }
-
-
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Categoria> listarCategorias() {
-        return promocionRepository.listarCategorias();
-    }
-
-
- */
 
     @Transactional
     @Override
@@ -113,6 +90,7 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
+    @Override
     public void crearPromocionConVehiculos(Promocion promocion, List<VehiculoPromocion> vehiculos) {
 
         promocionValidator.validarGuardar(promocion);
@@ -131,6 +109,7 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
+    @Override
     public void crearPromocionConClientes(Promocion promocion, List<Integer> clientesIds) {
         promocionValidator.validarGuardar(promocion);
 
@@ -151,11 +130,10 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
-    public void actualizarPromocionConVehiculos(
-            Promocion promocion,
-            List<VehiculoPromocion> nuevosVehiculos
-    ) {
+    @Override
+    public void actualizarPromocionConVehiculos(Promocion promocion, List<VehiculoPromocion> nuevosVehiculos) {
 
+        promocionValidator.validarGuardar(promocion);
         promocionRepository.save(promocion);
 
         repoVehiculo.eliminarPorPromocionId(promocion.getPromocionId());
@@ -168,20 +146,17 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
-    public void actualizarPromocionConClientes(
-            Promocion promocion,
-            List<Cliente> nuevosClientes
-    ) {
+    @Override
+    public void actualizarPromocionConClientes(Promocion promocion, List<Cliente> nuevosClientes) {
 
-        // 1️⃣ Guardar / actualizar promoción
+        promocionValidator.validarGuardar(promocion);
+        // 1️ Guardar / actualizar promoción
         promocionRepository.save(promocion);
 
-        // 2️⃣ Eliminar relaciones actuales
-        clientePromocionRepository.deleteByPromocionPromocionId(
-                promocion.getPromocionId()
-        );
+        // 2️ Eliminar relaciones actuales
+        clientePromocionRepository.deleteByPromocionPromocionId(promocion.getPromocionId());
 
-        // 3️⃣ Insertar nuevas relaciones
+        // 3️ Insertar nuevas relaciones
         for (Cliente cliente : nuevosClientes) {
 
             ClientesPromocion relacion = new ClientesPromocion();
@@ -191,7 +166,7 @@ public class PromocionService implements IPromocionService {
 
             clientePromocionRepository.save(relacion);
         }
-    }
+    }//actualizarPromocionConClientes
 
 
     //Cada minuto
@@ -202,6 +177,7 @@ public class PromocionService implements IPromocionService {
 
     @Scheduled(cron = "0 0 0 * * ?", zone = "America/Mexico_City")//Cada dia
     @Transactional
+    @Override
     public void actualizarPromocionesVencidas() {
 
         String hoy = LocalDate.now().toString();
@@ -212,11 +188,7 @@ public class PromocionService implements IPromocionService {
                 StatusPromocion.ACTIVE.toString()
         );
 
-        System.out.println("Promociones vencidas actualizadas: " + filas);
     }
 
 
-
-
-
-}//PromocionService
+}//class

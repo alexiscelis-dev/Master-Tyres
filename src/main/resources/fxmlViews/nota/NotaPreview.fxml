@@ -8,12 +8,13 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="rootPane" maxHeight="700" maxWidth="970" minHeight="700" minWidth="960" prefHeight="700"
-            prefWidth="970.0" stylesheets="@../../styles_css/NotaPreview.css" translateX="100.0" translateY="0.0"
+            prefWidth="970.0" stylesheets="@../../styles-css/NotaPreview.css" translateX="100.0" translateY="0.0"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.controllers.fxControllers.historial.NotaPreviewController">
 
 
     <children>
+
         <!-- StackPane centra el ScrollPane dentro del AnchorPane -->
         <StackPane fx:id="stackImprimir" alignment="CENTER" layoutY="-37.0" prefHeight="945.0" prefWidth="700.0"
                    translateX="-10" translateY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -1588,5 +1589,8 @@
 
             </ScrollPane>
         </StackPane>
+
+
     </children>
+
 </AnchorPane>

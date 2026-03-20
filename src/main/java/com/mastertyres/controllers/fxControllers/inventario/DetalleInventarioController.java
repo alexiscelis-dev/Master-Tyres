@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class DetalleInventarioController  {
+
     @FXML private Label txtCodBarras;
     @FXML private Label txtDot;
     @FXML private Label txtMarca;

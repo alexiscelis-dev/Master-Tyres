@@ -2,12 +2,12 @@ package com.mastertyres.controllers.fxControllers.ProximosServicios;
 
 
 import com.mastertyres.common.exeptions.VehiculoException;
+import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
@@ -26,11 +26,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
-import com.mastertyres.common.interfaces.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
 public class ProximosServiciosController implements IFxController, ILoader,  ICleanable {
@@ -113,7 +115,7 @@ public class ProximosServiciosController implements IFxController, ILoader,  ICl
 
     @Override
     public void configuraciones() {
-        MenuContextSetting.disableMenu(ventanaProximosServicios);
+        disableMenu(ventanaProximosServicios);
         notaUtils.descripcionComponent(btnBuscar,"Buscar");
         notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
     }//configuraciones
@@ -194,7 +196,7 @@ public class ProximosServiciosController implements IFxController, ILoader,  ICl
                     limpiarDetalleVehiculo();
                     cargarServicios();
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Aviso enviado con éxito",
                             "Por favor, presione enviar en cada una de las ventanas abiertas en su navegador para completar la operación."
@@ -203,14 +205,12 @@ public class ProximosServiciosController implements IFxController, ILoader,  ICl
                 }, (ex) -> {
 
                     if (ex instanceof VehiculoException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarError(
                                 "Error al enviar aviso",
-                                "No se pudo enviar el aviso",
-                                ex.getMessage(),
-                                ex
-                        );
+                                "No se pudo enviar el aviso" ,
+                                        "" + ex.getMessage());
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Fallo al mandar aviso",
                                 "Ocurrió un error inesperado al intentar mandar el aviso. Por favor, inténtelo de nuevo más tarde.",
@@ -318,14 +318,14 @@ public class ProximosServiciosController implements IFxController, ILoader,  ICl
                     cargarServicios();
                 }, (ex) -> {
                     if (ex instanceof VehiculoException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error al actualizar",
                                 "No se pudo marcar como servicio realizado",
                                 ex.getMessage(),
                                 ex
                         );
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Fallo en la operación",
                                 "Ocurrió un error inesperado. Por favor, inténtelo de nuevo más tarde.",

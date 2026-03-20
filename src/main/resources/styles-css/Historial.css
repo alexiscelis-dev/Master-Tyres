@@ -314,6 +314,9 @@
 
 .zoom{
 -fx-cursor: hand;
+-fx-background-color:transparent;
+-fx-border-color: transparent;
+-fx-background-insets: 0;
 }
 
 .zoom:hover {

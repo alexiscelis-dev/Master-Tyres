@@ -45,4 +45,4 @@ public class CategoriaService implements ICategoriaService {
     public Page<Categoria> buscarCategoriasPorNombre(String filtro, Pageable pageable) {
         return categoriaRepository.buscarCategoriasPorNombre(filtro, pageable);
     }
-}
+}//class

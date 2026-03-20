@@ -4,12 +4,10 @@ import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.common.exeptions.NotaException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
@@ -38,6 +36,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class RegistrarNotaController implements IFxController, ILoader{
@@ -160,7 +160,7 @@ public class RegistrarNotaController implements IFxController, ILoader{
     private void registrar() {
 
         if (notaUtils.toFloatSafe(txtAdeudo.getText()) > nota.getTotal()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Monto excedido",
                     "La cantidad 'POR PAGAR' (" + txtAdeudo.getText() + ") excede el total de la nota (" + nota.getTotal() + "). Por favor, ingrese una cantidad válida."
@@ -169,7 +169,7 @@ public class RegistrarNotaController implements IFxController, ILoader{
         }
 
         if (notaUtils.toFloatSafe(txtSaldoAfavor.getText()) > nota.getTotal()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Monto excedido",
                     "La cantidad 'A FAVOR' (" + txtSaldoAfavor.getText() + ") excede el total de la nota (" + nota.getTotal() + "). Por favor, ingrese una cantidad válida."
@@ -341,7 +341,7 @@ public class RegistrarNotaController implements IFxController, ILoader{
                             .placasNota(nota.getPlacasNota())
                             .build();
 
-                    //     try {
+
 
                     notaService.guardarNota(nuevaNota, notaDetalle, clienteDetalle);
 
@@ -352,14 +352,14 @@ public class RegistrarNotaController implements IFxController, ILoader{
                         inventarioService.actualizarStock(nota.getInventarioId(), llantaRegistrar.getStock() - nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
                         inventarioService.actualizarUptatedAt(LocalDateTime.now().toString(), nota.getInventarioId());
                     }
-                    Thread.sleep(2000);
+
                     return null;
 
 
                 }, (resultado) -> {
 
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Nota registrada",
                             "La nota ha sido registrada en el sistema correctamente."
@@ -372,22 +372,20 @@ public class RegistrarNotaController implements IFxController, ILoader{
                 }, (ex) -> {
 
                     if (ex instanceof NotaException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarError(
                                 "Error al registrar",
                                 "No fue posible registrar la nota",
-                                ex.getMessage(),
-                                ex
-                        );
+                                "" + ex.getMessage());
+
                     } else if (ex instanceof InventarioException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarError(
                                 "Error de inventario",
-                                "Fallo al actualizar existencias",
                                 "Ocurrió un error al intentar actualizar el stock del inventario.",
-                                ex
-                        );
+                                "" + ex.getMessage());
+
                     } else {
-                        ex.printStackTrace();
-                        MensajesAlert.mostrarExcepcionThrowable(
+
+                        mostrarExcepcionThrowable(
                                 "Error interno",
                                 "Error inesperado en el sistema",
                                 "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",

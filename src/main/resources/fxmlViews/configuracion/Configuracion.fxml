@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
-            style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css"
+            style="-fx-background-color: #080808;" stylesheets="/styles-css/PaginaPrincipal.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.controllers.fxControllers.configuracion.ConfiguracionController">
 
@@ -18,7 +18,7 @@
 
         <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0"
                     style="-fx-background-color: #080808;" styleClass="clientes-panel"
-                    stylesheets="/styles_css/ConfiguracionStyle.css" AnchorPane.bottomAnchor="0.0"
+                    stylesheets="/styles-css/ConfiguracionStyle.css" AnchorPane.bottomAnchor="0.0"
                     AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0"
                     xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
 
@@ -57,6 +57,10 @@
                             <VBox fx:id="panelVerPerfil" styleClass="detail-panel" visible="false" spacing="20">
                                 <Label text="Ver Perfil" styleClass="panel-title"/>
                                 <Separator/>
+                                
+
+
+
                                 <HBox spacing="24" alignment="CENTER_LEFT">
                                     <VBox alignment="CENTER" spacing="8">
                                         <ImageView fx:id="avatarImageView" fitWidth="90" fitHeight="90"
@@ -67,10 +71,8 @@
                                     <VBox spacing="6">
                                         <Label fx:id="lblNombreCompleto" text="Nombre de usuario"
                                                styleClass="profile-name"/>
-                                        <Label fx:id="lblCorreo" text="correo@ejemplo.com"
-                                               styleClass="profile-email"/>
-                                        <Label fx:id="lblRol" text="Rol: Administrador"
-                                               styleClass="profile-role"/>
+                                        <Label fx:id="lblRol" text="" style="-fx-text-fill:#8EB83D; -fx-text-size: 12px;"/>
+
                                     </VBox>
                                 </HBox>
                                 <Separator/>
@@ -143,8 +145,8 @@
 
                                             <children>
 
-                                                <PasswordField visible="true" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="pfNuevaContrasena" promptText="••••••••" styleClass="field-input"/>
-                                                <TextField fx:id="txtNuevaContrasenaVisible" visible="false" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0"  styleClass="field-input">
+                                                <PasswordField  visible="true" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0" fx:id="pfNuevaContrasena" promptText="••••••••" styleClass="field-input"/>
+                                                <TextField fx:id="txtNuevaContrasenaVisible" visible="false" prefWidth="400" GridPane.columnIndex="0" GridPane.rowIndex="0" promptText="••••••••"  styleClass="field-input">
 
                                                 </TextField>
 
@@ -318,15 +320,51 @@
                                 <VBox spacing="16" maxWidth="440">
                                     <HBox spacing="30">
                                         <VBox spacing="4">
-                                            <Label text="Correo:" styleClass="field-label"/>
-                                            <Label text="soporte@tuapp.com" styleClass="info-value"/>
+                                            <Label text="Nombre de la app:"  styleClass="info-value"/>
+                                            <Label text="Nombre de la empresa"  styleClass="info-value"/>
+                                            <Label text="Versión de la app:"  styleClass="info-value"/>
+                                            <Label text="Build:"  styleClass="info-value"/>
+                                            <Label text="Ultima actualización:"  styleClass="info-value"/>
+
                                         </VBox>
                                         <VBox spacing="4">
-                                            <Label text="Versión de la app:" styleClass="field-label"/>
-                                            <Label fx:id="lblVersion" text="v1.0.0" styleClass="info-value"/>
+                                            <Label fx:id="lblNombreApp" styleClass="field-label"/>
+                                            <Label fx:id="lblNombreEmpresa" styleClass="field-label"/>
+                                            <Label fx:id="lblVersionApp"  styleClass="field-label"/>
+                                            <Label fx:id="lblBuild"  styleClass="field-label"/>
+                                            <Label fx:id="lblUltimaActualizacion"  styleClass="field-label"/>
+
                                         </VBox>
+
                                     </HBox>
                                 </VBox>
+                                <Separator prefWidth="400" styleClass="linea" style=" -fx-background-color: #444; -fx-pref-height: 1;"/>
+
+                                <Label style=" -fx-text-fill: #777;-fx-font-size: 11px;"
+                                       fx:id="lblDerechosReservados" />
+                            </VBox>
+
+                            <!-- Generar Logs Respaldo -->
+                            <VBox fx:id="panelAdmin" styleClass="detail-panel" visible="false" spacing="20">
+
+                                <Label text="Administrador" styleClass="panel-title"/>
+
+                                <VBox spacing="10">
+
+                                    <HBox spacing="10">
+                                        <Label prefWidth="80" text="Fecha inicio:"/>
+                                        <DatePicker prefWidth="150" fx:id="dpFechaInicio"/>
+
+                                        <Label prefWidth="80" text="Fecha fin:"/>
+                                        <DatePicker prefWidth="150" fx:id="dpFechaFin"/>
+                                    </HBox>
+
+
+                                </VBox>
+
+                                <Button fx:id="btnGenerarLogs" onAction="#generarLogs" text="Generar logs"
+                                        styleClass="btn-primary"/>
+
                             </VBox>
 
                         </StackPane>
@@ -345,6 +383,10 @@
                         <!-- FIN SIDEBAR DERECHA -->
 
                     </HBox>
+
+
+
+
                 </center>
 
 

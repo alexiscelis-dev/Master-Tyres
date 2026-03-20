@@ -2,6 +2,8 @@ package com.mastertyres.respaldo.service;
 
 import com.mastertyres.respaldo.model.Respaldo;
 
+import java.util.List;
+
 public interface IRespaldoService {
 
     boolean generarRespaldo();
@@ -13,6 +15,8 @@ public interface IRespaldoService {
     Respaldo ObtenerUltimoRespaldo();
 
     void actualizarTipoRespaldo(Integer respaldoId, String tipoRespaldo);
+
+    List<Respaldo> listarRespaldos(String fechaInicio, String fechaFin);
 
 
 

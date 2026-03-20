@@ -3,8 +3,12 @@ package com.mastertyres.user.service;
 import com.mastertyres.user.model.User;
 import com.mastertyres.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
 @Service
 public class UserService implements IUserService{
 
@@ -49,6 +53,20 @@ public class UserService implements IUserService{
     @Override
     public void updateNextCheck(Integer usuarioId, String fecha) {
         userRepository.updateNextCheck(usuarioId,fecha);
+    }
+
+    @Transactional
+    @Override
+    public void actualizarUpdateAt(Integer userId, String updateAt) {
+        userRepository.actualizarUpdateAt(userId,updateAt);
+    }
+
+    @Scheduled(cron = "0 0 0 */3 * ?", zone = "America/Mexico_City")//Cada dia
+    @Transactional
+    @Override
+    public void actualizarNextCheckAutomatico() {
+        String fecha = LocalDateTime.now().plusDays(3).toString();
+        userRepository.actualizarNextCheckAutomatico(fecha); //Cada 3 dias
     }
 
 

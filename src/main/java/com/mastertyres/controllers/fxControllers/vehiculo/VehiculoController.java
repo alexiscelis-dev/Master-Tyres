@@ -8,7 +8,6 @@ import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
@@ -50,6 +49,8 @@ import java.util.List;
 
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateada;
 import static com.mastertyres.common.utils.FechaUtils.getFechaFormateadaSegundos;
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
 public class VehiculoController implements IVentanaPrincipal, IFxController, ILoader, ICleanable, IRestaurableDatos {
@@ -177,7 +178,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
     @Override
     public void configuraciones() {
 
-        MenuContextSetting.disableMenu(rootPane);
+        disableMenu(rootPane);
         notaUtils.descripcionComponent(btnBuscar,"Buscar");
         notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
         notaUtils.descripcionComponent(atributoBusquedaVehiculos,"Filtrar búsqueda");
@@ -198,7 +199,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
                     listaOpciones.getStylesheets().add(
-                            getClass().getResource("/styles_css/Lista.css").toExternalForm()
+                            getClass().getResource("/styles-css/Lista.css").toExternalForm()
                     );
                     Popup listViewPopup = new Popup();
                     listViewPopup.getContent().add(listaOpciones);
@@ -242,7 +243,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                                 },
                                                 (resultado) -> {
                                                     cargarVehiculos(); //metodo que cargar los datos en la tabla
-                                                    MensajesAlert.mostrarInformacion(
+                                                    mostrarInformacion(
                                                             "Operación completada",
                                                             "Vehículo eliminado",
                                                             "El vehículo ha sido eliminado del sistema exitosamente."
@@ -250,20 +251,20 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                                 },
                                                 (ex) -> {
                                                     if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
-                                                        MensajesAlert.mostrarWarning(
+                                                        mostrarWarning(
                                                                 "Operación cancelada",
                                                                 "Acción interrumpida",
                                                                 "La acción fue cancelada por el usuario."
                                                         );
                                                     } else if (ex.getCause() instanceof VehiculoException) {
-                                                        MensajesAlert.mostrarExcepcion(
+                                                        mostrarExcepcion(
                                                                 "Error al eliminar",
                                                                 "Fallo en la eliminación del vehículo",
                                                                 "No se pudo completar la operación debido a un error de validación.",
                                                                 (Exception) ex.getCause()
                                                         );
                                                     } else {
-                                                        MensajesAlert.mostrarExcepcionThrowable(
+                                                        mostrarExcepcionThrowable(
                                                                 "Error inesperado",
                                                                 "Fallo al eliminar vehículo",
                                                                 "Ocurrió un error inesperado al intentar eliminar el vehículo seleccionado.",
@@ -273,7 +274,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                                 }, null
                                         );
                                     } else {
-                                        MensajesAlert.mostrarInformacion(
+                                        mostrarInformacion(
                                                 "Información",
                                                 "Operación cancelada",
                                                 "La acción ha sido cancelada correctamente."
@@ -292,7 +293,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         controller.setVehiculo(vehiculoSeleccionado);
                                         controller.setInitializeLoading(loadingOverlayController);
 
-                                        Stage stage = new Stage(StageStyle.UTILITY);
+                                        Stage stage = new Stage(StageStyle.UNDECORATED);
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
                                         stage.setResizable(false);
@@ -303,7 +304,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         stage.showAndWait();
                                         cargarVehiculos();
                                     } catch (IOException ex) {
-                                        MensajesAlert.mostrarExcepcion(
+                                        mostrarExcepcion(
                                                 "Error de carga",
                                                 "No se pudo inicializar la interfaz",
                                                 "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -321,13 +322,13 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         detalleVehiculo controller = loader.getController();
                                         controller.setVehiculo(vehiculoSeleccionado);
 
-                                        Stage stage = new Stage(StageStyle.UTILITY);
+                                        Stage stage = new Stage(StageStyle.UNDECORATED);
                                         stage.setTitle("Informacion Vehiculo");
                                         stage.setScene(new Scene(root));
                                         stage.initModality(Modality.APPLICATION_MODAL);
                                         stage.showAndWait();
                                     } catch (IOException ex) {
-                                        MensajesAlert.mostrarExcepcion(
+                                        mostrarExcepcion(
                                                 "Error de carga",
                                                 "No se pudo inicializar la interfaz",
                                                 "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -620,7 +621,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                             paginaVehiculo = vehiculoService.buscarPorAnioRango(activo, anioInicio, anioFin, indicePagina, VEHICULO_POR_PAGINA);
 
                         } else {
-                            MensajesAlert.mostrarWarning(
+                            mostrarWarning(
                                     "Advertencia",
                                     "Formato de año no válido",
                                     "Por favor, use el formato yyyy o yyyy,yyyy para establecer un rango de años."
@@ -643,7 +644,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                             paginaVehiculo = vehiculoService.buscarPorKilometrosRango(activo, kmInicio, kmFin, indicePagina, VEHICULO_POR_PAGINA);
 
                         } else {
-                            MensajesAlert.mostrarWarning(
+                            mostrarWarning(
                                     "Advertencia",
                                     "Formato de kilometraje no válido",
                                     "Por favor, use el formato 10000 o 0,50000 para establecer un rango de kilómetros."
@@ -659,7 +660,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                             LocalDate fechaFin = dpVehiculoFin.getValue();
 
                             if (fechaInicio == null || fechaFin == null) {
-                                MensajesAlert.mostrarWarning(
+                                mostrarWarning(
                                         "Datos incompletos",
                                         "Rango de fechas no válido",
                                         "Por favor, seleccione ambas fechas para realizar la búsqueda por rango correctamente."
@@ -695,7 +696,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                         } else {
                             // LÓGICA DE FECHA ÚNICA
                             if (fechaInicio == null) {
-                                MensajesAlert.mostrarWarning(
+                                mostrarWarning(
                                         "Datos incompletos",
                                         "Fecha no seleccionada",
                                         "Por favor, seleccione una fecha en el calendario para continuar."
@@ -727,7 +728,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                         if (chkRangoFechas.isSelected()) {
                             LocalDate fechaFin = dpVehiculoFin.getValue();
                             if (fechaInicio == null || fechaFin == null) {
-                                MensajesAlert.mostrarWarning(
+                                mostrarWarning(
                                         "Datos incompletos",
                                         "Rango de fechas no válido",
                                         "Por favor, seleccione ambas fechas para establecer el rango del último servicio correctamente."
@@ -755,7 +756,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                     StatusVehiculo.ACTIVE.toString(), fechaInicio, fechaFin, indicePagina, VEHICULO_POR_PAGINA);
                         } else {
                             if (fechaInicio == null) {
-                                MensajesAlert.mostrarWarning(
+                                mostrarWarning(
                                         "Datos incompletos",
                                         "Fecha de servicio obligatoria",
                                         "Por favor, seleccione la fecha del último servicio antes de continuar."
@@ -777,7 +778,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                         }
                     }
 
-                    default -> MensajesAlert.mostrarWarning(
+                    default -> mostrarWarning(
                             "Advertencia",
                             "Criterio de búsqueda incorrecto",
                             "Por favor, seleccione un campo de búsqueda válido de la lista."
@@ -791,13 +792,13 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             }
 
         } catch (Exception e) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error del sistema",
                     "Fallo al realizar la búsqueda",
                     "Ocurrió un error inesperado al intentar buscar los vehículos: " + e.getMessage(),
                     e
             );
-            e.printStackTrace();
+
         }
 
         tablaVehiculos.setItems(FXCollections.observableArrayList(paginaVehiculo.getContent()));
@@ -859,7 +860,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                 if (empty) {
                     setText(null);
                 } else {
-                    setText(item == null ? "N/A" : item.toString());
+                    setText(item == null ? "N/D" : item.toString());
                 }
             }
         });
@@ -886,7 +887,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                 if (empty) {
                     setText(null);
                 } else {
-                    setText(item == null ? "N/A" : item.toString());
+                    setText(item == null ? "N/D" : item.toString());
                 }
             }
         });
@@ -895,7 +896,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             String fechaStr = data.getValue().getUltimoServicio();
 
             if (fechaStr == null || fechaStr.isBlank()) {
-                return new SimpleStringProperty("N/A");
+                return new SimpleStringProperty("N/D");
             }
 
             DateTimeFormatter input = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -909,7 +910,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             String fechaStr = data.getValue().getFechaRegistro();
 
             if (fechaStr == null || fechaStr.isBlank()) {
-                return new SimpleStringProperty("N/A");
+                return new SimpleStringProperty("N/D");
             }
 
             try {
@@ -920,7 +921,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                         fecha.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                 );
             } catch (Exception e) {
-                return new SimpleStringProperty("N/A");
+                return new SimpleStringProperty("N/D");
             }
         });
 
@@ -928,7 +929,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
     }//cargarVehiculos
 
     private String valorONull(String valor) {
-        return (valor == null || valor.isBlank()) ? "N/A" : valor;
+        return (valor == null || valor.isBlank()) ? "N/D" : valor;
     }
 
     private String nombreCompleto(String n, String a1, String a2) {
@@ -937,7 +938,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
         a2 = (a2 == null ? "" : a2.trim());
 
         String full = (n + " " + a1 + " " + a2).trim();
-        return full.isBlank() ? "N/A" : full;
+        return full.isBlank() ? "N/D" : full;
     }
 
     private void cargarDatosVehiculo() {
@@ -952,7 +953,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             paginadorVehiculos.setCurrentPageIndex(0);
 
         } catch (Exception e) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de visualización",
                     "No se pudieron cargar los registros",
                     "No se pudieron cargar los datos solicitados. Por favor, inténtelo de nuevo más tarde.",
@@ -1014,7 +1015,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                 paginaFiltrada = vehiculoService.buscarPorAnioRango(activo, anioInicio, anioFin, 0, VEHICULO_POR_PAGINA);
 
                             } else {
-                                MensajesAlert.mostrarWarning(
+                                mostrarWarning(
                                         "Advertencia",
                                         "Formato de año no válido",
                                         "Por favor, utilice el formato yyyy o yyyy,yyyy para definir un rango de años."
@@ -1138,7 +1139,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                 }, (ex) -> {
 
                     if (ex instanceof VehiculoException) {
-                        MensajesAlert.mostrarWarning(
+                        mostrarWarning(
                                 "Advertencia",
                                 "Problema en la búsqueda",
                                 ex.getMessage()
@@ -1223,7 +1224,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             LocalDate inicio = dpVehiculoInicio.getValue();
 
             if (inicio == null) {
-                MensajesAlert.mostrarWarning(
+                mostrarWarning(
                         "Datos incompletos",
                         "Fecha de inicio obligatoria",
                         "Por favor, seleccione la fecha inicial para realizar la búsqueda."
@@ -1234,7 +1235,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
             // 3. VALIDACIÓN DE RANGO (Si el checkbox está marcado)
             if (chkRangoFechas.isSelected()) {
                 if (dpVehiculoFin.getValue() == null) {
-                    MensajesAlert.mostrarWarning(
+                    mostrarWarning(
                             "Datos incompletos",
                             "Fecha final faltante",
                             "Ha activado la búsqueda por rango. Por favor, seleccione la fecha final para procesar la solicitud."

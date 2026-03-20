@@ -4,15 +4,12 @@ import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.NotaException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
+import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.nota.model.*;
@@ -41,6 +38,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
 public class EditarNotaController extends BaseNota implements IFxController, ILoader{
@@ -111,10 +111,9 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         operacionesCampos();
 
         //deshabilita los menu del clic derecho en los campos de texto
-        MenuContextSetting.disableMenu(rootPane);
+        disableMenu(rootPane);
 
         //validaciones Regex
-        //RegexTools.aplicarNumerosDecimalNota(txtTotal);
         RegexTools.aplicar24Horas(txtHoraEntrega);
         RegexTools.aplicar6Enteros(txtNumNota);
         RegexTools.aplicar2Enteros(txtDia);
@@ -123,19 +122,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         RegexTools.aplicar4Enteros(txtAnioVehiculo);
         RegexTools.aplicarNumeroEntero(txtKms);
 
-//        RegexTools.aplicarNumeroEntero(txtAlineacionCantidad);
-//        RegexTools.aplicarNumeroEntero(txtBalanceoCantidad);
-//        RegexTools.aplicarNumeroEntero(txtLlantasCantidad);
-//        RegexTools.aplicarNumeroEntero(txtAmorDelCantidad);
-//        RegexTools.aplicarNumeroEntero(txtAmorTrasCantidad);
-//        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad);
-//        RegexTools.aplicarNumeroEntero(txtSuspensionCantidad2);
-//        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad);
-//        RegexTools.aplicarNumeroEntero(txtMecanicaCantidad2);
-//        RegexTools.aplicarNumeroEntero(txtFrenosCantidad);
-//        RegexTools.aplicarNumeroEntero(txtFrenosCantidad2);
-//        RegexTools.aplicarNumeroEntero(txtOtrosCantidad);
-//        RegexTools.aplicarNumeroEntero(txtOtrosCantidad2);
+
 
         RegexTools.aplicarNumeroEnteroConLimite(txtAlineacionCantidad,  6);
         RegexTools.aplicarNumeroEnteroConLimite(txtBalanceoCantidad,    6);
@@ -183,36 +170,6 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         RegexTools.aplicarNumerosDecimalNotaConLimite(txtSubTotalMecanica,   14);
         RegexTools.aplicarNumerosDecimalNotaConLimite(txtSubTotalOtros,      14);
 
-//        RegexTools.aplicarNumerosDecimalNota(txtAlineacionUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtBalanceoUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtLlantasUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtAmorDelUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionUnitario2);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaUnitario2);
-//        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtFrenosUnitario2);
-//        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario);
-//        RegexTools.aplicarNumerosDecimalNota(txtOtrosUnitario2);
-//        RegexTools.aplicarNumerosDecimalNota(txtAlineacionTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtBalanceoTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtLlantasTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtAmorDelTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtAmorTrasTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtSuspensionTotal2);
-//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalFrenos);
-//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalMecanica);
-//        RegexTools.aplicarNumerosDecimalNota(txtSubTotalOtros);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtMecanicaTotal2);
-//        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtFrenosTotal2);
-//        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal);
-//        RegexTools.aplicarNumerosDecimalNota(txtOtrosTotal2);
 
         // Campos de texto libre — solo límite de BD
         RegexTools.aplicarMaxLength(txtObservaciones,  106);
@@ -238,6 +195,8 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         notaUtils.descripcionComponent(btnAgregarNumFactura,"Agregar numero de factura");
         notaUtils.descripcionComponent(btnActualizarDatos,"Actualizar datos cliente");
         notaUtils.descripcionComponent(btnGuardar,"Guardar cambios");
+        notaUtils.descripcionComponent(txtHoraEntrega, "Clic derecho para modificar.");
+        notaUtils.descripcionComponent(spPorcentajeGas, "Clic derecho para modificar.");
 
 
     }//configuraciones
@@ -512,7 +471,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             controller.setAdeudo(notaAdeudo);
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Actualizar Adeudo");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -522,13 +481,13 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             actualizarDatosCliente(notaAdeudo);
 
         } catch (Exception e) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                 "Error de carga",
                 "No se pudo inicializar la vista",
                 "Ocurrió un problema al intentar cargar la interfaz. Por favor, inténtelo de nuevo más tarde.",
                 e
             );
-            e.printStackTrace();
+
 
         }
 
@@ -598,19 +557,23 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
                         txtPlacas.setText(vehiculo.getPlacas() != null ? vehiculo.getPlacas() : "");
 
 
-                        MensajesAlert.mostrarInformacion(
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Registro actualizado",
                                 "Los campos de información se han actualizado correctamente en el sistema."
                         );
                     }, (excepcion) -> {
-                        excepcion.printStackTrace();
-                        MensajesAlert.mostrarExcepcionThrowable(
-                                "Error inesperado",
-                                "Fallo en la actualización",
-                                "Ocurrió un problema al intentar actualizar los datos. Por favor, intente nuevamente más tarde.",
-                                excepcion
-                        );
+
+                            mostrarExcepcionThrowable(
+                                    "Error inesperado",
+                                    "Fallo en la actualización",
+                                    "Ocurrió un problema al intentar actualizar los datos. Por favor, intente nuevamente más tarde.",
+                                    excepcion
+                            );
+
+
+
+
                     }, null
             );
 
@@ -637,7 +600,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             controller.setSaldoFavor(notaClienteDet);
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Actualizar Saldo");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -649,7 +612,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
 
         } catch (Exception e) {
             e.printStackTrace();
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "Fallo al cargar la interfaz",
                     "Ocurrió un problema al cargar la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -669,7 +632,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             NotaDetallesController controller = loader.getController();
             controller.setNotaDetalles(notaDetalles);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Nota Detalles");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -680,7 +643,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
 
         } catch (Exception e) {
             e.printStackTrace();
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "Error al inicializar componentes",
                     "Ocurrió un problema técnico al intentar cargar la vista solicitada.",
@@ -692,7 +655,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
 
     private void actualizarNota(NotaDTO notaActualizar) {
 
-        boolean guardar = MensajesAlert.mostrarConfirmacion(
+        boolean guardar = mostrarConfirmacion(
                 "Confirmar actualización",
                 "Guardar cambios",
                 "¿Está seguro de que desea guardar los cambios realizados en el registro?",
@@ -825,7 +788,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
                         notaService.actualizarNota(notaRegistrar, ndRegistrar, detalleCliente);
                         return null;
                     }, (resultado) -> {
-                        MensajesAlert.mostrarInformacion(
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Nota actualizada",
                                 "Los cambios en la nota se han guardado correctamente en el sistema."
@@ -835,14 +798,13 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
                         excepcion.printStackTrace();
 
                         if (excepcion.getCause() instanceof NotaException) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            mostrarError(
                                     "Error al guardar",
-                                    "No se pudieron guardar los cambios",
                                     "Se produjo un error al intentar guardar la información en la base de datos.",
-                                    excepcion
-                            );
+                                    "" + excepcion.getMessage());
+
                         } else {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            mostrarExcepcionThrowable(
                                     "Error inesperado",
                                     "Fallo al actualizar nota",
                                     "Ocurrió un problema interno al intentar actualizar la nota. Por favor, intente nuevamente más tarde.",
@@ -868,7 +830,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             AgregarNumFacturaController controller = loader.getController();
             controller.setNumFactura(notaEditar.getNotaId(), notaEditar.getNumFactura());
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Agregar Numero de Factura");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -878,13 +840,13 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             actualizarDatosCliente(notaEditar);
 
         } catch (Exception e) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "No se pudo cargar la vista",
                     "Ocurrió un problema técnico al intentar cargar la interfaz.",
                     e
             );
-            e.printStackTrace();
+
 
         }
 

@@ -1,15 +1,12 @@
 package com.mastertyres.controllers.fxControllers.inventario;
 
 import com.mastertyres.common.exeptions.InventarioException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
-import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.service.TaskService;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
+import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.inventario.model.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import javafx.beans.property.BooleanProperty;
@@ -29,6 +26,8 @@ import java.io.File;
 
 import static com.mastertyres.common.utils.InventarioUtils.generarIdentificador;
 import static com.mastertyres.common.utils.InventarioUtils.indicesChoiceBox;
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
 public class AgregarInventarioController implements IVentanaPrincipal, IFxController, ILoader{
@@ -195,7 +194,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
         });
 
 
-        MenuContextSetting.disableMenu(rootPane); //Quita el menu contextual del clic derecho
+        disableMenu(rootPane); //Quita el menu contextual del clic derecho
 
         indicesChoiceBox(cbIndiceVelocidad, cbIndiceCarga, choiceAncho, choicePerfil, choiceRin);
 
@@ -312,7 +311,7 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                     return null;
                 },
                 (resultado) -> {
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Elemento agregado",
                             "El elemento ha sido registrado en el inventario correctamente."
@@ -322,24 +321,21 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                 }, (ex) -> {
                     if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         // Se recomienda mantener el printStackTrace para depuración interna
-                        ex.printStackTrace();
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Operación cancelada",
                                 "Acción interrumpida",
                                 "La acción fue cancelada por el usuario o por el sistema.",
                                 ex
                         );
                     } else if (ex instanceof InventarioException) {
-                        ex.printStackTrace();
-                        MensajesAlert.mostrarExcepcionThrowable(
+
+                        mostrarError(
                                 "Error de inventario",
                                 "Problema al agregar al inventario",
-                                "Se produjo un error al intentar registrar el elemento: " + ex.getMessage(),
-                                ex
-                        );
+                                "" + ex.getMessage());
                     } else {
-                        ex.printStackTrace();
-                        MensajesAlert.mostrarExcepcionThrowable(
+
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Se produjo una excepción durante la operación",
                                 "Ocurrió un error inesperado al intentar guardar la información en el inventario. Por favor, inténtelo de nuevo más tarde.",
@@ -359,28 +355,30 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
     private boolean empty() {
         boolean empty = false;
 
+        final String STYLE_RED = "-fx-border-color:red; -fx-border-width:2px;";
+
 
         if (txtMarca.getText().isEmpty()) {
-            txtMarca.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            txtMarca.setStyle(STYLE_RED);
             empty = true;
         }
         if (txtMarca.getText().isEmpty()) {
-            txtMarca.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            txtMarca.setStyle(STYLE_RED);
             empty = true;
         }
 
         if (txtModelo.getText().isEmpty()) {
-            txtModelo.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            txtModelo.setStyle(STYLE_RED);
             empty = true;
         }
 
 
         if (txtPrecioC.getText().isEmpty()) {
-            txtPrecioC.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            txtPrecioC.setStyle(STYLE_RED);
             empty = true;
         }
         if (txtPrecioV.getText().isEmpty()) {
-            txtPrecioV.setStyle("-fx-border-color:red; -fx-border-width:2px;");
+            txtPrecioV.setStyle(STYLE_RED);
             empty = true;
         }
 
