@@ -29,18 +29,20 @@
                         </graphic>
                     </Button>
 
-               <Button fx:id="btnRefrescar" mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion" text="">
-                   <graphic>
-                       <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
-                           <image>
-                               <Image url="@/icons/refresh.png" />
-                           </image>
-                       </ImageView>
-                   </graphic>
-               </Button>
-               <padding>
-                  <Insets bottom="20.0" right="20.0" top="20.0" />
-               </padding>
+
+                   <Button fx:id="btnRefrescar" mnemonicParsing="false" onAction="#actualizar" prefHeight="25.0" prefWidth="33.0" styleClass="boton-accion" text="">
+                       <graphic>
+                           <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                               <image>
+                                   <Image url="@/icons/refresh.png" />
+                               </image>
+                           </ImageView>
+                       </graphic>
+                   </Button>
+
+                    <padding>
+                      <Insets bottom="20.0" right="20.0" top="20.0" />
+                   </padding>
 
                 </HBox>
             </top>
@@ -105,14 +107,14 @@
                         </font></Label>
                             <Label fx:id="lblFechaFin" alignment="CENTER_RIGHT" styleClass="texto" textFill="#8eb83d" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-                            <Label fx:id="lblTituloVehiculos" styleClass="titulo" text="Vehiculos Aplicables:" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+                            <Label fx:id="lblTituloVehiculos" styleClass="titulo" text="Vehiculos Aplicables:" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                                 <font><Font name="System Bold" size="14.0" /></font>
                             </Label>
-                            <Label fx:id="lblTituloClientes" managed="false" styleClass="titulo" text="Clientes Aplicables:" textAlignment="CENTER" textFill="WHITE" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+                            <Label fx:id="lblTituloClientes" managed="false" styleClass="titulo" text="Clientes Aplicables:" textAlignment="CENTER" textFill="WHITE" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                                 <font><Font name="System Bold" size="14.0" /></font>
                             </Label>
-                            <ListView fx:id="ListaVehiculosPromocion" styleClass="ListaVehiculos" GridPane.columnSpan="2" GridPane.rowIndex="8" />
-                            <ListView fx:id="ListaClientesPromocion" managed="false" styleClass="ListaVehiculos" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+                            <ListView fx:id="ListaVehiculosPromocion" styleClass="ListaVehiculos" GridPane.columnSpan="2" GridPane.rowIndex="10" />
+                            <ListView fx:id="ListaClientesPromocion" managed="false" styleClass="ListaVehiculos" visible="false" GridPane.columnSpan="2" GridPane.rowIndex="10" />
                           <Button fx:id="btnClientesPromocion" disable="true" onAction="#AbrirClientesAplicables" prefHeight="70.0" prefWidth="120.0" styleClass="boton-accion" text=" Clientes Aplicables" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowSpan="2">
                         <font>
                            <Font size="10.0" />
@@ -122,7 +124,7 @@
                         <font>
                            <Font size="10.0" />
                         </font></Button>
-                     <Button fx:id="btnEliminarPromocion" disable="true" mnemonicParsing="false" prefHeight="70.0" prefWidth="120.0" styleClass="boton-accion" text="Eliminar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.rowSpan="2">
+                     <Button fx:id="btnEliminarPromocion" disable="true" mnemonicParsing="false" prefHeight="70.0" prefWidth="120.0" styleClass="boton-accion" text="Eliminar Promocion" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="10" GridPane.rowSpan="2">
                         <font>
                            <Font size="10.0" />
                         </font></Button>
@@ -134,6 +136,11 @@
                         <font>
                            <Font size="10.0" />
                         </font></Button>
+      
+                          <Button fx:id="btnPromocionePendientes" mnemonicParsing="false" prefHeight="70.0" prefWidth="120.0" styleClass="boton-accion" text="Promociones Pendientes" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.rowSpan="2">
+                        <font>
+                           <Font size="10.0" /> </font>
+                     </Button>
 
                             <columnConstraints>
                                 <ColumnConstraints minWidth="-Infinity" prefWidth="160.0" />
@@ -148,6 +155,8 @@
                                 <RowConstraints minHeight="30.0" />
                                 <RowConstraints minHeight="30.0" />
                                 <RowConstraints minHeight="30.0" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" />
                                 <RowConstraints minHeight="30.0" valignment="CENTER" />
                         <RowConstraints minHeight="100.0" prefHeight="30.0" valignment="CENTER" />
                         <RowConstraints />

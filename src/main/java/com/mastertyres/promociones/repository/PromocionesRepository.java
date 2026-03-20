@@ -30,6 +30,14 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
     List<Promocion> findPromocionesActivas(@Param("hoy") String hoy);
 
     @QueryHints(@QueryHint(name = "org.hibernate.annotations.QueryHints.READ_ONLY", value = "true"))
+    @Query(SELECT_FROM_PROMOCION + " " +
+            "WHERE p.active = 'ACTIVE' " +
+            "AND (p.fechaInicio IS NULL OR p.fechaInicio >= :hoy) " +
+            "AND (p.fechaFin IS NULL OR p.fechaFin >= :hoy)")
+    List<Promocion> findPromocionesPendientes(@Param("hoy") String hoy);
+
+
+    @QueryHints(@QueryHint(name = "org.hibernate.annotations.QueryHints.READ_ONLY", value = "true"))
     @Query("SELECT DISTINCT p FROM Promocion p " +
             "LEFT JOIN VehiculoPromocion vp ON vp.promocion = p " +
             "LEFT JOIN Marca m ON vp.marca = m " +
