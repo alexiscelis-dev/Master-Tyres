@@ -422,6 +422,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         btnAgregarVehiculo.disableProperty().bind(
                 choiceMarca.valueProperty().isNull()
                         .or(choiceModelo.valueProperty().isNull())
+                        .or(choiceCategoria.valueProperty().isNull())
                         .or(txtColor.textProperty().isEmpty())
                         .or(spinnerAnio.valueProperty().isNull())
                         .or(serieValido.not())

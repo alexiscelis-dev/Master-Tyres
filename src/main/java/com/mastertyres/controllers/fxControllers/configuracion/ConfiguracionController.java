@@ -458,7 +458,6 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         }
     }//onCambiarContrasena
 
-
     @FXML
     private void onCambiarNombreUsuario() {
 
@@ -500,9 +499,10 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
                     }, (resultado) -> {
 
-                        lblNombreUsuarioActual.setText(userSession.getUsername());
-                        String texto = userSession.getUsername();
-                        ventanaPrincipalController.setCambiarPaginaEtiqueta(new Label(texto));
+                      lblNombreUsuarioActual.setText(userSession.getUsername());
+                      ventanaPrincipalController.refreshUserInfo(userSession);
+//                      String texto = userSession.getUsername();
+//                      ventanaPrincipalController.setCambiarPaginaEtiqueta(new Label(texto));
 
 
                         mostrarInformacion("Usuario actualizado", "", "El nombre de usuario se actualizó exitosamente.");
@@ -584,8 +584,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     return null;
                 }, (resultado) -> {
 
-                    mostrarInformacion("Foto actualizada", "", "La foto se actualizó exitosamente.");
-
+                    mostrarInformacion("Foto actualizada","","La foto se actualizó exitosamente.");
+                    ventanaPrincipalController.refreshUserInfo(userSession);
 
                 }, (ex) -> {
 
@@ -608,7 +608,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
         taskService.runTask(
                 loadingComponentController,
-                () -> {
+                ()->{
                     userSession.setFotoPerfil(null);
 
                     supabaseService.actualizarFotoPerfil(userSession.getAuthId(), userSession);
@@ -637,8 +637,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     avatarPreview.setImage(image);
                     txtRutaImg.setText("");
 
-                    mostrarInformacion("Foto eliminada", "", "La foto se elimino exitosamente.");
-
+                    mostrarInformacion("Foto eliminada","","La foto se elimino exitosamente.");
+                    ventanaPrincipalController.refreshUserInfo(userSession);
 
                 }, (ex) -> {
 
@@ -657,18 +657,6 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     }//onEliminar
 
-
-    // ──────────────────────────────────────
-    // MODELO INTERNO
-    // ──────────────────────────────────────
-
-    /**
-     * Representa un ítem del menú de navegación.
-     *
-     * @param icono   Emoji o texto corto usado como ícono
-     * @param nombre  Texto visible en el árbol
-     * @param panelId fx:id del panel FXML a mostrar (null para secciones padre)
-     */
     public record NavItem(String icono, String nombre, String panelId) {
         @Override
         public String toString() {
@@ -707,9 +695,9 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
 
         txtNuevoNombreUsuario.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (txtNuevoNombreUsuario.getText().length() > 40) {
-                txtNuevoNombreUsuario.setText(oldValue);
-            }
+           if (txtNuevoNombreUsuario.getText().length() > 40){
+               txtNuevoNombreUsuario.setText(oldValue);
+           }
         });
 
         btnGenerarLogs.disableProperty().bind(dpFechaInicio.valueProperty().isNull()
@@ -889,25 +877,25 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     }//verPerfil
 
-    private void mostarPanelCambiarFoto() {
-        User user = userService.findUserById(userSession.getUsuarioId());
+    private void mostarPanelCambiarFoto(){
+        User user =  userService.findUserById(userSession.getUsuarioId());
 
 
         String imgRuta = user.getFotoPerfil();
 
-        if (imgRuta != null) {
+        if (imgRuta != null){
 
             File file = new File(imgRuta);
 
             if (file != null && file.exists()) {
                 Image image = new Image(file.toURI().toString());
                 avatarPreview.setImage(image);
-            } else {
+            }else {
                 Image image = new Image("/icons/user.png");
                 avatarPreview.setImage(image);
             }
 
-        } else {
+        }else {
             Image image = new Image("/icons/user.png");
             avatarPreview.setImage(image);
         }

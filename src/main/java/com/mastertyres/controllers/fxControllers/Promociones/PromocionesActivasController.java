@@ -80,6 +80,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
     @FXML private ListView<String> ListaClientesPromocion;
     @FXML private Button btnRefrescar;
     @FXML private Button btnBuscar;
+    @FXML private Button btnPromocionePendientes;
 
     private VentanaPrincipalController ventanaPrincipalController;
 
@@ -150,6 +151,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
         btnEditarPromocion.setOnAction(event -> abrirVentanaEditarPromocion());
 
+        btnPromocionePendientes.setOnAction(event -> AbrirPromocionesPendientes());
+
         btnEliminarPromocion.setOnAction(event -> eliminarPromocion());
 
     }
@@ -219,6 +222,35 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             );
         }
     }//AbrirClientesAplicables
+
+    @FXML
+    private void AbrirPromocionesPendientes() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlViews/promocion/PromocionesPendientes.fxml"));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent root = loader.load();
+
+            PromocionesPendientes controller = loader.getController();
+
+            controller.setInitializeLoading(loadingOverlayController);
+
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setTitle("Promociones Pendientes");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.showAndWait();
+            cargarPromociones();
+        } catch (IOException ex) {
+            MensajesAlert.mostrarExcepcion(
+                    "Error de carga",
+                    "No se pudo inicializar la interfaz",
+                    "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                    ex
+            );
+            ex.printStackTrace();
+        }
+    }
 
     private void mostrarPromociones(List<Promocion> promociones) {
         contenedorPromociones.getChildren().clear();

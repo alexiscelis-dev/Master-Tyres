@@ -1,28 +1,30 @@
 /* ===== TITLE BAR ===== */
 
-/* Botón genérico */
 .title-bar-btn {
     -fx-background-color: transparent;
     -fx-cursor: hand;
-    -fx-background-radius: 4px;
+    -fx-background-radius: 4;
 }
 
-/* Hover minimizar y maximizar */
+.title-bar-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-background-radius: 4;
+    -fx-padding: 8 14 8 14;
+}
+
 .title-bar-btn:hover {
-    -fx-background-color: rgba(142, 184, 61, 0.20);
+    -fx-background-color: derive(#8EB83D, -60%);
 }
 
-/* Hover cerrar */
+.title-bar-btn:pressed {
+    -fx-background-color: derive(#8EB83D, -40%);
+}
+
 .title-bar-btn-close:hover {
     -fx-background-color: #c0392b;
-}
-
-/* Pressed - feedback visual al click */
-.title-bar-btn:pressed {
-    -fx-background-color: rgba(142, 184, 61, 0.38);
 }
 
 .title-bar-btn-close:pressed {
     -fx-background-color: #922b21;
 }
-
