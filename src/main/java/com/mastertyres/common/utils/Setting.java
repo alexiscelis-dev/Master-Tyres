@@ -17,21 +17,19 @@ public class Setting {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.setTitle(titulo);
-        stage.setResizable(resizable);
+        stage.setResizable(false); // siempre false
 
-        if (maximized) {
-            Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-            stage.setX(bounds.getMinX());
-            stage.setY(bounds.getMinY());
-            stage.setWidth(bounds.getWidth());
-            stage.setHeight(bounds.getHeight());
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        stage.setX(bounds.getMinX());
+        stage.setY(bounds.getMinY());
+        stage.setWidth(bounds.getWidth());
+        stage.setHeight(bounds.getHeight());
 
-        } else {
-            stage.setWidth(width);
-            stage.setHeight(height);
-            stage.setMinWidth(width);
-            stage.setMinHeight(height);
-        }
+        // Evitar que se pueda mover o redimensionar
+        stage.setMinWidth(bounds.getWidth());
+        stage.setMinHeight(bounds.getHeight());
+        stage.setMaxWidth(bounds.getWidth());
+        stage.setMaxHeight(bounds.getHeight());
 
         stage.show();
     }
