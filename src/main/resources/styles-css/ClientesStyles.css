@@ -4,11 +4,6 @@
     -fx-padding: 15px;
 }
 
-.label, .button, .choice-box, .text-field {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
 
 /* Espaciado vertical */
 .vbox {
@@ -16,6 +11,7 @@
 }
 
 /* Estilo del buscador */
+
 .buscador {
     -fx-background-color: #1A1A1A;
     -fx-text-fill: #F2F2F2;
@@ -31,11 +27,14 @@
 }
 
 
+
 /* Label del filtro */
+/*
 .label {
     -fx-text-fill: #BBBBBB;
     -fx-font-weight: bold;
 }
+*/
 
 /* Tabla */
 .table-view {
@@ -98,6 +97,7 @@
     -fx-spacing: 15;
 }
 
+/*
 .seccion-titulo {
     -fx-text-fill: white;
     -fx-font-size: 20px;
@@ -107,39 +107,7 @@
     -fx-text-alignment: center;
 }
 
-.buscador {
-    -fx-background-color: #2A2A2A;
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: #BBBBBB;
-    -fx-border-color: #444;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-padding: 6 10;
-}
-.buscador2 {
-    -fx-background-color: #080808;
-    -fx-text-fill: white;
-    -fx-prompt-text-fill: #BBBBBB;
-    -fx-border-color: #444;
-    -fx-border-radius: 5;
-    -fx-background-radius: 5;
-    -fx-padding: 6 10;
-}
-
-.boton-accion {
-    -fx-background-color: #8EB83D;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-padding: 8 20;
-    -fx-cursor: hand;
-}
-
-.boton-accion:hover {
-    -fx-background-color: #AEE83A;
-}
-
-
+*/
 
 /*
 DatePicker
@@ -305,11 +273,13 @@ SpinnerAnnio
     -fx-max-width: infinity;
     -fx-text-alignment: center;
 }
+/*
 .label, .button, .choice-box, .text-field {
     -fx-text-fill:white;
     -fx-font-weight:bold;
 
 }
+*/
 .buscador-img {
     -fx-background-color: #2A2A2A;
     -fx-text-fill: black;
