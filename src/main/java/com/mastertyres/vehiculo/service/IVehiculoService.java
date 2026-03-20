@@ -1,6 +1,7 @@
 package com.mastertyres.vehiculo.service;
 
 
+import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.vehiculo.model.Vehiculo;
 import com.mastertyres.vehiculo.model.VehiculoDTO;
@@ -49,6 +50,10 @@ public interface IVehiculoService {
     List<VehiculoDTO> buscadorVehiculo(String status, String busqueda);
 
     Vehiculo buscarVehiculoPorId(Integer vehiculoId, String status);
+
+    Vehiculo VehiculoSinDTO(Integer id);
+
+    List<Categoria> listarCategoriasPorMarcaYModelo(String active, Integer marcaId, Integer modeloId);
 
 
 //Metodos editar

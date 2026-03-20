@@ -36,7 +36,7 @@ public class detalleVehiculo {
 
     public void setVehiculo(VehiculoDTO vehiculoSeleccionado){
 
-        Vehiculo v = vehiculoService.Vehiculo_SinDTO(vehiculoSeleccionado.getId());
+        Vehiculo v = vehiculoService.VehiculoSinDTO(vehiculoSeleccionado.getId());
 
         txtMarca.setText(txtMarca.getText() + " " + valorONull(vehiculoSeleccionado.getNombreMarca()));
         txtModelo.setText(txtModelo.getText() + " " + valorONull(vehiculoSeleccionado.getNombreModelo()));

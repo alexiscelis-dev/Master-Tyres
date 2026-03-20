@@ -5,7 +5,6 @@
     -fx-background-color: transparent;
     -fx-cursor: hand;
     -fx-background-radius: 4px;
-    -fx-transition: -fx-background-color 0.15s;
 }
 
 /* Hover minimizar y maximizar */
@@ -26,3 +25,4 @@
 .title-bar-btn-close:pressed {
     -fx-background-color: #922b21;
 }
+

@@ -229,6 +229,7 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
         );
 
         if (confirmar) {
+            taskService.disable(rootPane);
 
             taskService.runTask(
                     loadngOverlayController,
@@ -258,6 +259,7 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
 
                     },
                     (resultado) -> {
+                        taskService.enable(rootPane);
 
                         limpiarCamposVehiculo();
 
@@ -269,7 +271,7 @@ public class AgregarMarcaController implements IVentanaPrincipal, IFxController,
                         cerrarVentana(null);
 
                     }, (ex) -> {
-
+                        taskService.enable(rootPane);
 
 
                         if (ex instanceof MarcaException) {

@@ -199,7 +199,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
                     listaOpciones.getStylesheets().add(
-                            getClass().getResource("/styles_css/Lista.css").toExternalForm()
+                            getClass().getResource("/styles-css/Lista.css").toExternalForm()
                     );
                     Popup listViewPopup = new Popup();
                     listViewPopup.getContent().add(listaOpciones);
@@ -293,7 +293,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         controller.setVehiculo(vehiculoSeleccionado);
                                         controller.setInitializeLoading(loadingOverlayController);
 
-                                        Stage stage = new Stage(StageStyle.UTILITY);
+                                        Stage stage = new Stage(StageStyle.UNDECORATED);
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
                                         stage.setResizable(false);
@@ -322,7 +322,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                         detalleVehiculo controller = loader.getController();
                                         controller.setVehiculo(vehiculoSeleccionado);
 
-                                        Stage stage = new Stage(StageStyle.UTILITY);
+                                        Stage stage = new Stage(StageStyle.UNDECORATED);
                                         stage.setTitle("Informacion Vehiculo");
                                         stage.setScene(new Scene(root));
                                         stage.initModality(Modality.APPLICATION_MODAL);

@@ -773,7 +773,7 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
             DarPlazoController controller = loader.getController();
             controller.setNota(notaId);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Dar plazo a nota");
             stage.setScene(new Scene(root));
             stage.setResizable(false);

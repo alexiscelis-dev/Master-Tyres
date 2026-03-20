@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="rootPane" prefHeight="383.0" prefWidth="835.0" styleClass="root"
-            stylesheets="/styles_css/stylesLogin.css" xmlns="http://javafx.com/javafx/17.0.12"
+            stylesheets="/styles-css/stylesLogin.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.login.login.LoginController">
 
     <children>
@@ -103,7 +103,7 @@
                     AnchorPane.topAnchor="0.0"/>
 
         <fx:include
-                source="/fxmlComponentes/Components/TitleBar/TitleBarComponent.fxml"
+                source="/fxmlComponentes/Components/TitleBar/tittleBar/TitleBarComponent.fxml"
                 AnchorPane.topAnchor="0.0"
                 AnchorPane.leftAnchor="0.0"
                 AnchorPane.rightAnchor="0.0"/>

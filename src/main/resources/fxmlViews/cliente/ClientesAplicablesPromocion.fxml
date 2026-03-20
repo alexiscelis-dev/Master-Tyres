@@ -5,10 +5,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.Promociones.ClientesAplicablesController">
+<AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles-css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.Promociones.ClientesAplicablesController">
 
     <children>
-        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="600" spacing="10" styleClass="secciones">
+
+
+        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="600" spacing="10" styleClass="secciones"
+
+              AnchorPane.topAnchor="20.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+        >
 
             <padding>
                 <Insets bottom="20" left="20" right="20" top="20" />
@@ -53,5 +59,10 @@
                 <Button onAction="#cerrarVentana" prefWidth="150" styleClass="boton-accion" text="Cerrar" />
             </HBox>
         </VBox>
+
+        <fx:include source="/fxmlComponentes/Components/TitleBar/modalTittleBar/TittleBarModalComponent.fxml"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"/>
     </children>
 </AnchorPane>

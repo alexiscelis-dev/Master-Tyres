@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RespaldoRepository extends JpaRepository<Respaldo, Integer> {
 
@@ -26,5 +28,9 @@ public interface RespaldoRepository extends JpaRepository<Respaldo, Integer> {
     @Modifying
     @Query(UPDATE_RESPALDO + " " + "r.tipoRespaldo = :tipoRespaldo WHERE r.respaldoId = :respaldoId")
     void actualizarTipoRespaldo(@Param("respaldoId") Integer respaldoId, @Param("tipoRespaldo") String tipoRespaldo);
+
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query(SELECT_RESPALDO + " WHERE r.createdAt BETWEEN :fechaInicio AND :fechaFin ORDER BY r.createdAt DESC")
+    List<Respaldo> listarRespaldos(@Param("fechaInicio") String fechaInicio, @Param("fechaFin")String fechaFin);
 
 }//interface

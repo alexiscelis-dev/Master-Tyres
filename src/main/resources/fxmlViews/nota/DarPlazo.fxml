@@ -6,60 +6,77 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
-            stylesheets="/styles_css/ActualizarAdeudo.css" xmlns="http://javafx.com/javafx/17.0.12"
+            stylesheets="/styles-css/ActualizarAdeudo.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.controllers.fxControllers.nota.DarPlazoController">
 
+    <children>
 
-    <VBox alignment="TOP_CENTER" layoutY="1.0" prefHeight="500.0" prefWidth="600.0">
-        <Label styleClass="titulo" text="Dar nuevo plazo de pago ">
-            <VBox.margin>
-                <Insets bottom="60.0" top="20.0"/>
-            </VBox.margin>
+        <StackPane alignment="TOP_CENTER" prefHeight="500.0" prefWidth="600.0" AnchorPane.topAnchor="60.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 
-
-        </Label>
-
-
-        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="500.0">
-
-            <VBox>
-                <Label fx:id="lblAdeudo" text="Ingrese una nueva fecha de pago" textFill="#8eb83d">
+            <VBox alignment="TOP_CENTER" layoutY="1.0" prefHeight="500.0" prefWidth="600.0">
+                <Label styleClass="titulo" text="Dar nuevo plazo de pago "
+                       AnchorPane.topAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                >
                     <VBox.margin>
-                        <Insets bottom="20"/>
+                        <Insets bottom="60.0" top="20.0"/>
                     </VBox.margin>
-                    <font>
-                        <Font name="Arial Bold" size="14.0"/>
-                    </font>
+
 
                 </Label>
 
-                <HBox fx:id="hbAdeudo" alignment="CENTER" spacing="20" visible="true">
+
+                <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="500.0">
+
+                    <VBox>
+                        <Label fx:id="lblAdeudo" text="Ingrese una nueva fecha de pago" textFill="#8eb83d">
+                            <VBox.margin>
+                                <Insets bottom="20"/>
+                            </VBox.margin>
+                            <font>
+                                <Font name="Arial Bold" size="14.0"/>
+                            </font>
+
+                        </Label>
+
+                        <HBox fx:id="hbAdeudo" alignment="CENTER" spacing="20" visible="true">
 
 
-                    <DatePicker fx:id="dpFecha" editable="false" prefHeight="26.0" prefWidth="200.0"
-                                promptText="Fecha de vencimiento" styleClass="date-picker">
+                            <DatePicker fx:id="dpFecha" editable="false" prefHeight="26.0" prefWidth="200.0"
+                                        promptText="Fecha de vencimiento" styleClass="date-picker">
 
-                    </DatePicker>
+                            </DatePicker>
 
+                        </HBox>
+
+
+                    </VBox>
+
+
+                    <VBox.margin>
+                        <Insets top="10.0"/>
+                    </VBox.margin>
+
+                </VBox>
+
+
+                <HBox alignment="BOTTOM_CENTER" prefHeight="100" prefWidth="600.0" spacing="20">
+                    <Button fx:id="btnActualizar" disable="true" styleClass="boton-accion" text="Actualizar"/>
+                    <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar"/>
                 </HBox>
-
 
             </VBox>
 
 
-            <VBox.margin>
-                <Insets top="10.0"/>
-            </VBox.margin>
-
-        </VBox>
+        </StackPane>
 
 
-        <HBox alignment="BOTTOM_CENTER" prefHeight="100" prefWidth="600.0" spacing="20">
-            <Button fx:id="btnActualizar" disable="true" styleClass="boton-accion" text="Actualizar"/>
-            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar"/>
-        </HBox>
+        <fx:include source="/fxmlComponentes/Components/TitleBar/modalTittleBar/TittleBarModalComponent.fxml"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"/>
+    </children>
 
-    </VBox>
 
 </AnchorPane>

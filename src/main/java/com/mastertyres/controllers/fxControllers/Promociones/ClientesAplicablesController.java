@@ -1,6 +1,6 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
-import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
+import com.mastertyres.clientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.ICleanable;

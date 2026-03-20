@@ -85,12 +85,13 @@ public class RecuperarPasswordController implements ILoader, IFxController {
 
     private void enviarCorreo(){
 
-        rootPane.setDisable(true);
+        taskService.disable(rootPane);
 
 
         taskService.runTask(
                 loadingOverlayController,
                 ()->{
+                    Thread.sleep(6000);
 
 
                 User supabaseUser =  supabaseService.findUsuarioByCorreo(txtCorreoRecuperacion.getText().trim());
@@ -122,11 +123,16 @@ public class RecuperarPasswordController implements ILoader, IFxController {
                 emailService.enviarCorreoRecuperarPassword(supabaseUser.getCorreo(),asunto,mensaje);
 
 
+
+
                }
+
+
 
                     return null;
                 },(resultado)->{
-                    rootPane.setDisable(false);
+                    taskService.enable(rootPane);
+
 
                     close(null);
 
@@ -141,6 +147,8 @@ public class RecuperarPasswordController implements ILoader, IFxController {
 
 
                 },(ex) ->{
+                    taskService.enable(rootPane);
+
                     if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException){
                         mostrarError("Accion cancelada","","Accion cancelada por el usuario");
 

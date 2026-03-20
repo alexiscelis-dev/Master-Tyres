@@ -1,7 +1,6 @@
 package com.mastertyres.promociones.repository;
 
 import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.model.StatusPromocion;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,6 +16,7 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
 
     final String UPDATE_PROMOCION = "UPDATE Promocion p SET";
     final String SELECT_FROM_PROMOCION = "SELECT p FROM Promocion p";
+    final String SELECT_DISCTINCT_PROMOCION = "SELECT DISTINCT p FROM Promocion p";
 
     @Modifying
     @Query(UPDATE_PROMOCION + " " + "p.active = 'INACTIVE' WHERE p.promocionId = :id")
@@ -30,7 +30,7 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
     List<Promocion> findPromocionesActivas(@Param("hoy") String hoy);
 
     @QueryHints(@QueryHint(name = "org.hibernate.annotations.QueryHints.READ_ONLY", value = "true"))
-    @Query("SELECT DISTINCT p FROM Promocion p " +
+    @Query(SELECT_DISCTINCT_PROMOCION + " " +
             "LEFT JOIN VehiculoPromocion vp ON vp.promocion = p " +
             "LEFT JOIN Marca m ON vp.marca = m " +
             "LEFT JOIN Modelo mo ON vp.modelo = mo " +
@@ -56,12 +56,7 @@ public interface PromocionesRepository extends JpaRepository<Promocion, Integer>
 
     @Modifying
     @Transactional
-    @Query("""
-    UPDATE Promocion p
-    SET p.active = :estadoDelete
-    WHERE p.fechaFin < :fechaActual
-    AND p.active = :estadoActive
-""")
+    @Query(UPDATE_PROMOCION + " " + "p.active = :estadoDelete WHERE p.fechaFin < :fechaActual AND p.active = :estadoActive")
     int marcarPromocionesVencidas(
             @Param("fechaActual") String fechaActual,
             @Param("estadoDelete") String estadoDelete,

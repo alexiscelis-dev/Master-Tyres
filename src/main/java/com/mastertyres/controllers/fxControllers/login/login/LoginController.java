@@ -120,26 +120,19 @@ public class LoginController implements IFxController {
             mostrarWarning("Campos vacios", "", "Ingrese la contraseña");
             return;
         }
-
-        //Asegura que tanto el campo invisible de contraseña como el visible tengan la misma informacion
-        if (pfPassword.getText().isEmpty() && !txtPasswordVisible.getText().isEmpty()) {
-            pfPassword.setText(txtPasswordVisible.getText());
-        } else if (!pfPassword.getText().isEmpty() && txtPasswordVisible.getText().isEmpty()) {
-            txtPasswordVisible.setText(pfPassword.getText());
-        }
-
+        
 
         taskService.runTask(
                 loadingOverlayController,
                 () -> {
 
-                    User user = userService.findByEmail(txtCorreo.getText().trim());
+                    User userAutenticar = userService.findByEmail(txtCorreo.getText().trim());
 
-                    if (user != null) { //Se encontro en la base de datos local
+                    if (userAutenticar != null) { //Se encontro en la base de datos local
 
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-                        String fechaStr = user.getNextCheck();
+                        String fechaStr = userAutenticar.getNextCheck();
 
                         LocalDateTime fechaHora = LocalDateTime.parse(fechaStr, formatter);
                         LocalDate fecha = fechaHora.toLocalDate();
@@ -150,14 +143,14 @@ public class LoginController implements IFxController {
                             supabaseService.supabaseLogin(txtCorreo.getText().trim(), pfPassword.getText().trim());
 
                         } else { //Se autentifica localmente
-                            boolean autenticado = localAuthService.authenticate(user, pfPassword.getText().trim());
+                            boolean autenticado = localAuthService.authenticate(userAutenticar, pfPassword.getText().trim());
 
                             if (!autenticado) {
                                 throw new UserException("Usuario o contraseña incorrectos");
                             }
                         }
 
-                    } else { // Se autentifica con supabase
+                    } else { // Se autentifica con supabase si userAutenticar es null
 
                         supabaseService.supabaseLogin(txtCorreo.getText().trim(), pfPassword.getText().trim());
 
@@ -246,7 +239,7 @@ public class LoginController implements IFxController {
             RecuperarPasswordController controller = loader.getController();
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setScene(new Scene(root));
 
             // Ventana padre

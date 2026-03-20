@@ -161,7 +161,7 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
 
         if (confirmar) {
 
-            rootPane.setDisable(true);
+            taskService.disable(rootPane);
 
             taskService.runTask(
                     loadingOverlayController,
@@ -175,7 +175,7 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
                         return null;
 
                     }, (resultado) -> {
-                        rootPane.setDisable(false);
+                        taskService.enable(rootPane);
 
                         mostrarInformacion(
                                 "Operación completada",
@@ -184,16 +184,17 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
                         );
                         cerrarVentana();
                     }, (ex) -> {
+                        taskService.enable(rootPane);
+
 
                         if (ex instanceof ModeloException) {
-                            rootPane.setDisable(false);
+
                             mostrarError(
                                     "Error al actualizar",
                                     "Problema al guardar los cambios",
                                     "" + ex.getMessage());
 
                         } else {
-                            rootPane.setDisable(false);
 
                             mostrarExcepcionThrowable(
                                     "Error interno",

@@ -3,113 +3,123 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="rootPane" prefHeight="641.0" prefWidth="602.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.cliente.EditarClienteController">
+<AnchorPane fx:id="rootPane" prefHeight="641.0" prefWidth="602.0" style="-fx-background-color: #080808;" stylesheets="/styles-css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.cliente.EditarClienteController">
 
+    <children>
 
-    <ScrollPane prefHeight="641.0" prefWidth="602.0" fitToHeight="false" fitToWidth="true" pannable="true">
+        <ScrollPane fitToHeight="false" fitToWidth="true" pannable="true" prefHeight="641.0" prefWidth="602.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
 
+            <VBox alignment="CENTER" prefHeight="620.0" prefWidth="600" spacing="10" styleClass="secciones">
 
-        <VBox alignment="CENTER" prefHeight="620.0" prefWidth="600" spacing="10" styleClass="secciones">
+                <padding>
+                    <Insets bottom="20" left="20" right="20" top="20" />
+                </padding>
 
-            <padding>
-                <Insets bottom="20" left="20" right="20" top="20" />
-            </padding>
+                <Label styleClass="seccion-titulo" text="Editar Cliente">
+               <font>
+                  <Font size="18.0" />
+               </font></Label>
 
-            <Label styleClass="seccion-titulo" text="Editar Cliente" />
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" prefWidth="150.0" />
+                        <ColumnConstraints prefWidth="300.0" />
+                        <ColumnConstraints />
+                    </columnConstraints>
 
-            <GridPane hgap="10" vgap="10">
-                <columnConstraints>
-                    <ColumnConstraints halignment="RIGHT" prefWidth="150.0" />
-                    <ColumnConstraints prefWidth="300.0" />
-                    <ColumnConstraints />
-                </columnConstraints>
+                    <!-- Nombre Empresa -->
+                    <Label text="Nombre de empresa:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="txtNombreEmpresa" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                <!-- Nombre Empresa -->
-                <Label text="Nombre de empresa:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField fx:id="txtNombreEmpresa" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <!-- Nombre -->
+                    <Label text="*Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="txtNombre" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <!-- Nombre -->
-                <Label text="*Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <TextField fx:id="txtNombre" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <!-- Primer Apellido -->
+                    <Label text="*Primer Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <TextField fx:id="txtApellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                <!-- Primer Apellido -->
-                <Label text="*Primer Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <TextField fx:id="txtApellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <!-- Segundo Apellido -->
+                    <Label text="Segundo Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <TextField fx:id="txtSegundoApellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                <!-- Segundo Apellido -->
-                <Label text="Segundo Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <TextField fx:id="txtSegundoApellido" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <!-- Teléfono -->
+                    <Label text="*Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <TextField fx:id="txtTelefono" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-                <!-- Teléfono -->
-                <Label text="*Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <TextField fx:id="txtTelefono" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    <!-- Hobbie -->
+                    <Label text="Hobbie:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <TextField fx:id="txtHobbie" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-                <!-- Hobbie -->
-                <Label text="Hobbie:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                <TextField fx:id="txtHobbie" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                    <!-- RFC -->
+                    <Label text="RFC:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <TextField fx:id="txtRfc" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-                <!-- RFC -->
-                <Label text="RFC:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                <TextField fx:id="txtRfc" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                    <!-- Domicilio -->
+                    <Label text="Domicilio:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                    <TextField fx:id="txtDomicilio" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
-                <!-- Domicilio -->
-                <Label text="Domicilio:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                <TextField fx:id="txtDomicilio" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                    <!-- Estado -->
+                    <Label text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                    <TextField fx:id="txtEstado" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 
-                <!-- Estado -->
-                <Label text="Estado:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                <TextField fx:id="txtEstado" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                    <!-- Ciudad -->
+                    <Label text="Ciudad:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                    <TextField fx:id="txtCiudad" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 
-                <!-- Ciudad -->
-                <Label text="Ciudad:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-                <TextField fx:id="txtCiudad" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-
-                <!-- Correo -->
-                <Label text="Correo:" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-                <TextField fx:id="txtCorreo" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-
-
-                <!-- Género -->
-                <Label text="*Género:" GridPane.columnIndex="0" GridPane.rowIndex="11" />
-                <ChoiceBox fx:id="choiceGenero" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-
-                <!-- Tipo Cliente -->
-                <Label text="*Tipo Cliente:" GridPane.columnIndex="0" GridPane.rowIndex="12" />
-                <ChoiceBox fx:id="choiceTipoCliente" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-
-                <!-- Fecha Cumpleaños -->
-                <Label text="Cumpleaños:" GridPane.columnIndex="0" GridPane.rowIndex="13" />
-                <DatePicker fx:id="dateCumpleanos" editable="false" styleClass="date-picker" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-
-                <!-- Botones -->
-                <HBox alignment="CENTER" spacing="20" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="14">
-                    <Button fx:id="btnCambiar" onAction="#actualizarCliente" styleClass="boton-accion" text="Actualizar" />
-                    <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar" />
-                </HBox>
-
-                <rowConstraints>
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints prefHeight="60.0" />
-                    <RowConstraints prefHeight="60.0" valignment="CENTER" />
-               <RowConstraints />
-                </rowConstraints>
-            </GridPane>
+                    <!-- Correo -->
+                    <Label text="Correo:" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                    <TextField fx:id="txtCorreo" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 
 
-        </VBox>
+                    <!-- Género -->
+                    <Label text="*Género:" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+                    <ChoiceBox fx:id="choiceGenero" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+
+                    <!-- Tipo Cliente -->
+                    <Label text="*Tipo Cliente:" GridPane.columnIndex="0" GridPane.rowIndex="12" />
+                    <ChoiceBox fx:id="choiceTipoCliente" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+
+                    <!-- Fecha Cumpleaños -->
+                    <Label text="Cumpleaños:" GridPane.columnIndex="0" GridPane.rowIndex="13" />
+                    <DatePicker fx:id="dateCumpleanos" editable="false" styleClass="date-picker" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+
+                    <!-- Botones -->
+                    <HBox alignment="CENTER" spacing="20" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="14">
+                        <Button fx:id="btnCambiar" onAction="#actualizarCliente" styleClass="boton-accion" text="Actualizar" />
+                        <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cancelar" />
+                    </HBox>
+
+                    <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints prefHeight="60.0" />
+                        <RowConstraints prefHeight="60.0" valignment="CENTER" />
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
 
 
-    </ScrollPane>
+            </VBox>
+
+
+        </ScrollPane>
+
+        <fx:include source="/fxmlComponentes/Components/TitleBar/modalTittleBar/TittleBarModalComponent.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+
+    </children>
+
+
 </AnchorPane>

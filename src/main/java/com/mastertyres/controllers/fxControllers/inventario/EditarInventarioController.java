@@ -393,7 +393,8 @@ public class EditarInventarioController implements IFxController, ILoader {
         else if (Integer.parseInt(txtStock.getText()) > 0)
             inventario.setActive(StatusInventario.ACTIVE.toString());
 
-        rootPane.setDisable(true);
+
+        taskService.disable(rootPane);
 
         taskService.runTask(
                 loadingOverlayController,
@@ -405,7 +406,7 @@ public class EditarInventarioController implements IFxController, ILoader {
                     return null;
                 },
                 (resultado) -> {
-                    rootPane.setDisable(true);
+                   taskService.enable(rootPane);
 
                     mostrarInformacion(
                             "Operación completada",
@@ -417,7 +418,7 @@ public class EditarInventarioController implements IFxController, ILoader {
 
                 },
                 (ex) -> {
-                    rootPane.setDisable(false);
+                  taskService.enable(rootPane);
 
                     if (ex.getCause() instanceof InventarioException) {
                       mostrarError(

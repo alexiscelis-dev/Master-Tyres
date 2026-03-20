@@ -178,15 +178,17 @@ public class VehiculoService implements IVehiculoService {
         return vehiculoRepository.existeVehiculoPorPlacasONumeroSerie(placas, numSerie);
     }
 
-    @Override
+
     @Transactional(readOnly = true)
+    @Override
     public List<VehiculoDTO> listarVehiculos(String vehiculoStatus) {
         return vehiculoRepository.listarVehiculos(vehiculoStatus);
     }
 
 
     @Transactional(readOnly = true)
-    public Vehiculo Vehiculo_SinDTO(Integer id) {
+    @Override
+    public Vehiculo VehiculoSinDTO(Integer id) {
         return vehiculoRepository.VehiculoSinDTO(id);
     }
 
@@ -294,6 +296,7 @@ public class VehiculoService implements IVehiculoService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<Categoria> listarCategoriasPorMarcaYModelo(String active, Integer marcaId, Integer modeloId) {
         List<Vehiculo> vehiculos = vehiculoRepository.listarVehiculosPorMarcaYModelo(active, marcaId, modeloId);
 
@@ -487,7 +490,5 @@ public class VehiculoService implements IVehiculoService {
     public Vehiculo buscarVehiculoPorId(Integer vehiculoId, String status) {
         return vehiculoRepository.buscarVehiculoPorId(vehiculoId,status);
     }
-
-
 
 }//clase

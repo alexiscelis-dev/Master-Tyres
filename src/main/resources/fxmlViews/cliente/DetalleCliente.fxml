@@ -5,10 +5,20 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="742.0" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.cliente.DetalleCliente">
+<AnchorPane prefHeight="641" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles-css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.cliente.DetalleCliente">
 
     <children>
-        <VBox alignment="CENTER" prefHeight="714.0" prefWidth="600" spacing="10" styleClass="secciones">
+
+        <ScrollPane  hbarPolicy="NEVER" fx:id="scrollPane" style="-fx-background-color: #080808;"
+                     AnchorPane.topAnchor="20.0"
+                     AnchorPane.leftAnchor="0.0"
+                     AnchorPane.rightAnchor="0.0"
+                     AnchorPane.bottomAnchor="0.0"
+        >
+
+
+
+        <VBox alignment="CENTER" prefHeight="641" prefWidth="600" spacing="10" styleClass="secciones">
 
             <padding>
                 <Insets bottom="20" left="20" right="20" top="20" />
@@ -138,5 +148,11 @@
                 <Button onAction="#cerrarVentana" styleClass="boton-accion" text="Cerrar" />
             </HBox>
         </VBox>
+        </ScrollPane>
+
+        <fx:include source="/fxmlComponentes/Components/TitleBar/modalTittleBar/TittleBarModalComponent.fxml"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"/>
     </children>
 </AnchorPane>

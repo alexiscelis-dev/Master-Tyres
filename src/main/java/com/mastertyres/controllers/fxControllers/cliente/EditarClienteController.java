@@ -409,7 +409,7 @@ public class EditarClienteController implements IFxController, ILoader{
                 }
                 cliente.setUpdated_at(LocalDateTime.now().toString());
 
-                rootPane.setDisable(true);
+                taskService.disable(rootPane);
 
                 taskService.runTask(
 
@@ -424,7 +424,7 @@ public class EditarClienteController implements IFxController, ILoader{
                             return null;
 
                         }, (resultado) -> {
-                            rootPane.setDisable(true);
+                            taskService.enable(rootPane);
 
                             mostrarInformacion(
                                     "Operación completada",
@@ -434,7 +434,8 @@ public class EditarClienteController implements IFxController, ILoader{
                             cerrarVentana();
 
                         }, (ex) -> {
-                            rootPane.setDisable(false);
+                            taskService.enable(rootPane);
+
 
                             if (ex instanceof ClienteException) {
                                 mostrarError(

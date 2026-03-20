@@ -8,7 +8,6 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
@@ -353,14 +352,14 @@ public class RegistrarNotaController implements IFxController, ILoader{
                         inventarioService.actualizarStock(nota.getInventarioId(), llantaRegistrar.getStock() - nota.getLlantaCantidad(), StatusInventario.ACTIVE.toString());
                         inventarioService.actualizarUptatedAt(LocalDateTime.now().toString(), nota.getInventarioId());
                     }
-                    Thread.sleep(2000);
+
                     return null;
 
 
                 }, (resultado) -> {
 
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Nota registrada",
                             "La nota ha sido registrada en el sistema correctamente."

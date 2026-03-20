@@ -322,7 +322,7 @@ public class VentanaPrincipalController implements ILoader, IFxController {
                     "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
                     e
             );
-            e.printStackTrace();
+
             return null;
         }
     }

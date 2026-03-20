@@ -16,7 +16,7 @@
                AnchorPane.leftAnchor="0.0"
                AnchorPane.rightAnchor="0.0"
                style="-fx-background-color: #080808;"
-               stylesheets="/styles_css/Titlebar styles.css">
+               stylesheets="/styles-css/Titlebar styles.css">
 
         <HBox alignment="CENTER_RIGHT" spacing="0">
 
@@ -26,7 +26,7 @@
                        styleClass="title-bar-btn"
                        style="-fx-padding: 8 14 8 14;">
                 <ImageView fitHeight="12.0" fitWidth="12.0"
-                           pickOnBounds="true" preserveRatio="true">
+                           pickOnBounds="true" preserveRatio="true" mouseTransparent="true">
                     <image>
                         <Image url="@/icons/ventana_principal/minimize.png"/>
                     </image>

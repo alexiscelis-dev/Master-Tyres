@@ -208,7 +208,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
                     listaOpciones.getStylesheets().add(
-                            getClass().getResource("/styles_css/Lista.css").toExternalForm()
+                            getClass().getResource("/styles-css/Lista.css").toExternalForm()
                     );
 
                     Popup listViewPopup = new Popup();
@@ -293,7 +293,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         controller.editarCliente(clienteSeleccionado); // pasa el cliente actual
                                         controller.setInitializeLoading(loadingOverlayController);
 
-                                        Stage stage = new Stage(StageStyle.UTILITY);
+                                        Stage stage = new Stage(StageStyle.UNDECORATED);
                                         stage.setTitle("Editar Cliente");
                                         stage.setScene(new Scene(root));
                                         stage.setResizable(false);
@@ -323,7 +323,7 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                         DetalleCliente controller = loader.getController();
                                         controller.informacionCliente(clienteSeleccionado); // pasa el cliente actual
 
-                                        Stage stage = new Stage(StageStyle.UTILITY);
+                                        Stage stage = new Stage(StageStyle.UNDECORATED);
                                         stage.setTitle("Informacion Cliente");
                                         stage.setScene(new Scene(root));
                                         stage.initModality(Modality.APPLICATION_MODAL);

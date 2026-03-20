@@ -18,4 +18,6 @@ public interface IUserService {
 
    void actualizarUpdateAt(Integer userId, String updateAt);
 
+   void actualizarNextCheckAutomatico();
+
 }//interface

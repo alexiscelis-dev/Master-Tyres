@@ -12,7 +12,6 @@ import com.mastertyres.inventario.model.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
 import com.mastertyres.vehiculo.model.StatusVehiculo;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -106,6 +105,8 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
     private Button btnRefrescar;
     @FXML
     private Button btnBuscar;
+    @FXML
+    private Pagination paginadorInventarios;
 
 
     private PauseTransition delayQuery = new PauseTransition(Duration.millis(300)); //evita que se ejecuta una query cada vez que el usuario
@@ -118,12 +119,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
     @Autowired
     private NotaUtils notaUtils;
 
-    @FXML
-    private Pagination paginadorInventarios;
     private static final int INVENTARIOS_POR_PAGINA = 20;
     private List<Inventario> todosLosInventarios;
     private String terminoBusquedaActual = "";
     private boolean modoBusqueda = false;
+    private PauseTransition pauseTransition;
 
 
     @FXML
@@ -159,7 +159,7 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                     listaOpciones.setPrefSize(200, 150);
                     listaOpciones.getStyleClass().add("popup-table");
                     listaOpciones.getStylesheets().add(
-                            getClass().getResource("/styles_css/Lista.css").toExternalForm()
+                            getClass().getResource("/styles-css/Lista.css").toExternalForm()
                     );
 
                     Popup listViewPopup = new Popup();
@@ -184,7 +184,7 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                         detalleInventario.InformacionInventario(seleccionado);
 
 
-                                        Stage stage = new Stage(StageStyle.UTILITY);
+                                        Stage stage = new Stage(StageStyle.UNDECORATED);
                                         stage.setTitle("Informacion del inventario");
                                         stage.setScene(new Scene(root));
                                         stage.showAndWait();
@@ -284,7 +284,7 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                         }
                                         controller.editarInventario(seleccionado);
 
-                                        Stage stage = new Stage(StageStyle.UTILITY);
+                                        Stage stage = new Stage(StageStyle.UNDECORATED);
                                         stage.setTitle("Editar inventario");
                                         stage.setResizable(false);
                                         stage.setScene(new Scene(root));
@@ -328,15 +328,15 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                             statusLabel.setVisible(true);
                                             statusLabel.setText("Texto copiado");
 
-                                            new Thread(() -> {
-
-                                                try {
-                                                    Thread.sleep(2500);
-                                                } catch (Exception exception) {
-                                                    exception.printStackTrace();
-                                                }
-                                                Platform.runLater(() -> statusLabel.setText(""));
-                                            }).start();
+                                            if (pauseTransition != null) {
+                                                pauseTransition.stop();
+                                            }
+                                            pauseTransition = new PauseTransition(Duration.seconds(2.5));
+                                            pauseTransition.setOnFinished(e1 -> {
+                                                statusLabel.setText("");
+                                                statusLabel.setVisible(false);
+                                            });
+                                            pauseTransition.play();
 
                                         }
 
@@ -364,14 +364,16 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
                                     statusLabel.setVisible(true);
                                     statusLabel.setText("Fila copiada");
 
-                                    new Thread(() -> {
-                                        try {
-                                            Thread.sleep(2500);
-                                        } catch (Exception exception) {
-                                            exception.printStackTrace();
-                                        }
-                                        Platform.runLater(() -> statusLabel.setText(""));
-                                    }).start();
+                                    if (pauseTransition != null) {
+                                        pauseTransition.stop();
+                                    }
+                                    pauseTransition = new PauseTransition(Duration.seconds(2.5));
+                                    pauseTransition.setOnFinished(e1 -> {
+                                                statusLabel.setText("");
+                                                statusLabel.setVisible(false);
+                                            }
+                                    );
+                                    pauseTransition.play();
 
 
                                 }
@@ -953,6 +955,10 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
         // 1.  Detener animación (previene fuga de CPU)
         if (delayQuery != null) {
             delayQuery.stop();
+        }
+
+        if (pauseTransition != null) {
+            pauseTransition.stop();
         }
 
     }

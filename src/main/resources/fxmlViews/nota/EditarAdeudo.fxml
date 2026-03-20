@@ -5,65 +5,85 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ActualizarAdeudo.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.nota.EditarAdeudoController">
+<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
+            stylesheets="/styles-css/ActualizarAdeudo.css" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mastertyres.controllers.fxControllers.nota.EditarAdeudoController">
+
+    <children>
 
 
-    <VBox alignment="TOP_CENTER" layoutY="1.0" prefHeight="500.0" prefWidth="600.0">
-        <Label styleClass="titulo" text="Actualizar adeudo ">
-            <VBox.margin>
-                <Insets bottom="60.0" top="20.0" />
-            </VBox.margin>
+
+        <VBox alignment="TOP_CENTER"  prefHeight="500.0" prefWidth="600.0">
+            <Label styleClass="titulo" text="Actualizar adeudo ">
+                <VBox.margin>
+                    <Insets bottom="60.0" top="50.0"/>
+                </VBox.margin>
 
 
-        </Label>
+            </Label>
 
 
-        <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="600.0">
+            <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="100" prefWidth="600.0">
 
-            <VBox>
-                <Label fx:id="lblAdeudo" text="Adeudo" textFill="#8eb83d">
-                    <VBox.margin>
-                        <Insets bottom="20" />
-                    </VBox.margin>
-                    <font>
-                        <Font name="Arial Bold" size="14.0" />
-                    </font>
+                <VBox>
+                    <Label fx:id="lblAdeudo" text="Adeudo" textFill="#8eb83d">
+                        <VBox.margin>
+                            <Insets bottom="20"/>
+                        </VBox.margin>
+                        <font>
+                            <Font name="Arial Bold" size="14.0"/>
+                        </font>
 
-                </Label>
+                    </Label>
 
-                <HBox fx:id="hbAdeudo" alignment="CENTER_LEFT" spacing="20" visible="true">
-
-
-                    <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="250.0" promptText="Ingrese el nuevo monto del adeudo" styleClass="buscador">
-
-                    </TextField>
+                    <HBox fx:id="hbAdeudo" alignment="CENTER_LEFT" spacing="20" visible="true">
 
 
-                    <DatePicker fx:id="dpFecha" editable="false" prefHeight="26.0" prefWidth="165.0" promptText="Fecha de vencimiento" styleClass="date-picker">
+                        <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="250.0"
+                                   promptText="Ingrese el nuevo monto del adeudo" styleClass="buscador">
 
-                    </DatePicker>
+                        </TextField>
 
-                </HBox>
-                <StackPane alignment="CENTER" prefHeight="50" prefWidth="200">
-                    <CheckBox fx:id="cbLiquidar" text="Liquidar adeudo" />
-                </StackPane>
 
+                        <DatePicker fx:id="dpFecha" editable="false" prefHeight="26.0" prefWidth="165.0"
+                                    promptText="Fecha de vencimiento" styleClass="date-picker">
+
+                        </DatePicker>
+
+                    </HBox>
+                    <StackPane alignment="CENTER" prefHeight="50" prefWidth="200">
+                        <CheckBox fx:id="cbLiquidar" text="Liquidar adeudo"/>
+                    </StackPane>
+
+
+                </VBox>
+
+
+                <VBox.margin>
+                    <Insets top="10.0"/>
+                </VBox.margin>
 
             </VBox>
 
 
-            <VBox.margin>
-                <Insets top="10.0" />
-            </VBox.margin>
+            <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
+                <Button fx:id="btnActualizar" disable="true" styleClass="boton-accion" text="Actualizar"/>
+                <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar"/>
+            </HBox>
 
         </VBox>
 
+        <fx:include source="/fxmlComponentes/Components/TitleBar/modalTittleBar/TittleBarModalComponent.fxml"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"/>
 
-        <HBox alignment="BOTTOM_CENTER" prefHeight="100" spacing="20">
-            <Button fx:id="btnActualizar" disable="true" styleClass="boton-accion" text="Actualizar" />
-            <Button fx:id="btnCancelar" onAction="#cancelar" styleClass="boton-accion" text="Cancelar" />
-        </HBox>
 
-    </VBox>
+    </children>
+
+
+
+
 
 </AnchorPane>

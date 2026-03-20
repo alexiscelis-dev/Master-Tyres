@@ -529,7 +529,8 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
 
         if (!confirmar) return;
 
-        rootPane.setDisable(true);
+        taskService.disable(rootPane);
+
 
         taskService.runTask(
                 loadingOverlayController,
@@ -553,8 +554,7 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
 
                 },
                 (resultado) -> {
-                    rootPane.setDisable(false);
-
+                    taskService.enable(rootPane);
 
                     mostrarInformacion(
                             "Operación completada",
@@ -567,7 +567,8 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
 
                 },
                 (ex) -> {
-                    rootPane.setDisable(false);
+                    taskService.enable(rootPane);
+
 
                     if (ex instanceof PromocionException){
                         mostrarError(

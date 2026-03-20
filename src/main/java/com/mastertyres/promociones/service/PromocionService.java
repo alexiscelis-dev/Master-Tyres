@@ -1,7 +1,7 @@
 package com.mastertyres.promociones.service;
 
-import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
-import com.mastertyres.ClientesPromocion.repository.ClientePromocionRepository;
+import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.repository.ClientePromocionRepository;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.promociones.domain.PromocionValidator;
@@ -37,7 +37,7 @@ public class PromocionService implements IPromocionService {
 
     private final VehiculoPromocionRepository repoVehiculo;
 
-
+    @Autowired
     public PromocionService(PromocionesRepository promocionRepository, VehiculoPromocionRepository vehiculoPromocionRepository, ClientePromocionRepository clientePromocionRepository) {
         this.promocionRepository = promocionRepository;
         this.repoVehiculo = vehiculoPromocionRepository;
@@ -65,29 +65,6 @@ public class PromocionService implements IPromocionService {
         }
     }
 
-/*
-    @Transactional(readOnly = true)
-    @Override
-    public List<Marca> listarMarcas() {
-        return promocionRepository.listarMarcas();
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Modelo> listarModelos() {
-        return promocionRepository.listarModelos();
-    }
-
-
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Categoria> listarCategorias() {
-        return promocionRepository.listarCategorias();
-    }
-
-
- */
 
     @Transactional
     @Override
@@ -106,6 +83,7 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
+    @Override
     public void crearPromocionConVehiculos(Promocion promocion, List<VehiculoPromocion> vehiculos) {
 
         promocionValidator.validarGuardar(promocion);
@@ -124,6 +102,7 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
+    @Override
     public void crearPromocionConClientes(Promocion promocion, List<Integer> clientesIds) {
         promocionValidator.validarGuardar(promocion);
 
@@ -144,6 +123,7 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
+    @Override
     public void actualizarPromocionConVehiculos(Promocion promocion, List<VehiculoPromocion> nuevosVehiculos) {
 
         promocionValidator.validarGuardar(promocion);
@@ -159,6 +139,7 @@ public class PromocionService implements IPromocionService {
     }
 
     @Transactional
+    @Override
     public void actualizarPromocionConClientes(Promocion promocion, List<Cliente> nuevosClientes) {
 
         promocionValidator.validarGuardar(promocion);
@@ -189,6 +170,7 @@ public class PromocionService implements IPromocionService {
 
     @Scheduled(cron = "0 0 0 * * ?", zone = "America/Mexico_City")//Cada dia
     @Transactional
+    @Override
     public void actualizarPromocionesVencidas() {
 
         String hoy = LocalDate.now().toString();

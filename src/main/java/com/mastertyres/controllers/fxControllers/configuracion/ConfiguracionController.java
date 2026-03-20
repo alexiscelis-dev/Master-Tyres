@@ -8,12 +8,14 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
+import com.mastertyres.common.utils.GenerarLogs;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.respaldo.model.Respaldo;
 import com.mastertyres.respaldo.service.RespaldoService;
 import com.mastertyres.security.SecurityPassword;
+import com.mastertyres.user.model.RolUser;
 import com.mastertyres.user.model.User;
 import com.mastertyres.user.service.UserService;
 import javafx.beans.property.BooleanProperty;
@@ -32,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +45,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -49,6 +53,17 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class ConfiguracionController implements IVentanaPrincipal, Initializable, IFxController, ILoader {
+
+    @Value("${app.name}")
+    private String appName;
+    @Value("${app.company}")
+    private String appCompany;
+    @Value("${app.version}")
+    private String appVersion;
+    @Value("${app.build}")
+    private String appBuild;
+    @Value("${app.ultima.actualizacion}")
+    private String appUltimaActualizacion;
 
     @Autowired
     private RespaldoService respaldoService;
@@ -85,11 +100,12 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     @FXML
     private VBox panelCambiarFoto;
     @FXML
+    private VBox panelAdmin;
+    @FXML
     private Label lblNombreCompleto;
     @FXML
-    private Label lblCorreo;
-    @FXML
     private Label lblRol;
+
     @FXML
     private Label lblUsernameInfo;
     @FXML
@@ -98,6 +114,16 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     private Label lblFechaRegistro;
     @FXML
     private ImageView avatarImageView;
+    @FXML
+    private Label lblNombreApp;
+    @FXML
+    private Label lblNombreEmpresa;
+    @FXML
+    private Label lblVersionApp;
+    @FXML
+    private Label lblBuild;
+    @FXML
+    private Label lblUltimaActualizacion;
 
     //Cambiar contraseña
     @FXML
@@ -162,10 +188,20 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     private Label lblTamanoRespaldo;
     @FXML
     private Label lblFechaUltimoRespaldo;
+    @FXML
+    private Label lblDerechosReservados;
 
     // Ayuda
     @FXML
     private VBox panelContacto;
+
+    //Administrador
+    @FXML
+    private DatePicker dpFechaInicio;
+    @FXML
+    private DatePicker dpFechaFin;
+    @FXML
+    private Button btnGenerarLogs;
 
 
     // FXML — TreeView
@@ -181,7 +217,6 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         registrarPaneles();
-        construirMenu();
         configurarSeleccion();
         configuraciones();
         listeners();
@@ -199,6 +234,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         panelMap.put("panelCrearRespaldo", panelCrearRespaldo);
         panelMap.put("panelFechaRespaldo", panelFechaRespaldo);
         panelMap.put("panelContacto", panelContacto);
+        panelMap.put("logsRespaldos", panelAdmin);
     }
 
     /**
@@ -215,6 +251,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                 hoja("🔒", "Cambiar contraseña", "panelCambiarContrasena"),
                 hoja("✏", "Cambiar nombre de usuario", "panelCambiarNombreUsuario"),
                 hoja("🖼", "Cambiar foto de perfil", "panelCambiarFoto")
+
         );
 
         // ── ALMACENAMIENTO ──
@@ -230,8 +267,22 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                 hoja("📬", "Informacion", "panelContacto")
         );
 
+        // ── Admin ──
+
+
+        if (esAdmin()) {
+            TreeItem<NavItem> secAdmin = seccion("👑", "Administrador");
+
+            secAdmin.getChildren().addAll(
+                    hoja("📊", "Logs respaldos", "logsRespaldos")
+            );
+
+            root.getChildren().add(secAdmin);
+        }
+
+
         root.getChildren().addAll(secPerfil, secAlmacenamiento, secAyuda);
-        menuTree.setRoot(root);
+
 
         // Personalizar celdas del árbol
         menuTree.setCellFactory(tv -> new TreeCell<>() {
@@ -247,6 +298,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                 }
             }
         });
+        menuTree.setRoot(root);
     }
 
     /**
@@ -268,6 +320,14 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
      */
 
     private void mostrarPanel(String panelId) {
+
+
+        if (panelId.equals("logsRespaldos") && !esAdmin()) {
+            mostrarError("Acceso denegado", "", "No tienes permisos para acceder");
+            return;
+        }
+
+
         panelMap.forEach((id, nodo) -> nodo.setVisible(false));
         Node target = panelMap.get(panelId);
         if (target != null) {
@@ -279,7 +339,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         } else {
             panelBienvenida.setVisible(true);
         }
-    }
+    }//mostrarPanel
 
 
     // HELPERS PARA CREAR ÍTEMS DEL ÁRBOL
@@ -297,20 +357,35 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
         if (panelId.equals("panelVerPerfil")) {
             verPerfil();
-            panelVerPerfil.setVisible(true);
+            //   panelVerPerfil.setVisible(true);
         } else if (panelId.equals("panelCambiarContrasena")) {
             panelCambiarContrasena.setVisible(true);
 
-
         } else if (panelId.equals("panelFechaRespaldo")) {
-            panelFechaRespaldo.setVisible(true);
+            //   panelFechaRespaldo.setVisible(true);
             mostrarUltimoRespaldo();
         } else if (panelId.equals("panelCambiarNombreUsuario")) {
             panelCambiarNombreUsuario.setVisible(true);
             lblNombreUsuarioActual.setText(userSession.getUsername());
         } else if (panelId.equals("panelCambiarFoto")) {
-            panelCambiarFoto.setVisible(true);
+            //  panelCambiarFoto.setVisible(true);
             mostarPanelCambiarFoto();
+        } else if (panelId.equals("panelContacto")) {
+            lblNombreApp.setText(appName);
+            lblNombreEmpresa.setText(appCompany);
+            lblVersionApp.setText(appVersion);
+            lblBuild.setText(appBuild);
+            lblUltimaActualizacion.setText(appUltimaActualizacion);
+            lblDerechosReservados.setText(appCompany + "© 2026 - Todos los derechos reservados");
+
+            panelContacto.setVisible(true);
+
+        } else if (panelId.equals("logsRespaldos")) {
+            if (esAdmin()) {
+                panelAdmin.setVisible(true);
+
+            }
+
         }
     }//mostrarPanel
 
@@ -348,13 +423,11 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                         localUser.setStatusLicencia(supabaseUser.getStatusLicencia());
 
                         userService.guardarUsuario(localUser);
-                        userService.updateNextCheck(userSession.getUsuarioId(),LocalDateTime.now().toString());
-
-
+                        userService.updateNextCheck(userSession.getUsuarioId(), LocalDateTime.now().toString());
 
 
                         return null;
-                    },(resultado) -> {
+                    }, (resultado) -> {
 
                         mostrarInformacion("Contraseña actualizada", "", "La contraseña se actualizó exitosamente");
                         pfContrasenaActual.clear();
@@ -366,20 +439,19 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                         lblContrasenaError2.setText("");
                         lblContrasenaError.setText("");
 
-                        
 
-                    },(ex)->{
+                    }, (ex) -> {
 
                         if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                             mostrarError("Accion cancelada", "", "Accion cancelada por el usuario");
                         } else if (ex instanceof UserException) {
-                          mostrarError("No se pudo guardar","Ocurrio un problema al guardar los cambios.",""+ex.getMessage());
-                        } else  {
-                            mostrarError("Error interno","","Ocurrio un error inesperado al guardar los cambios."+ex.getMessage());
+                            mostrarError("No se pudo guardar", "Ocurrio un problema al guardar los cambios.", "" + ex.getMessage());
+                        } else {
+                            mostrarError("Error interno", "", "Ocurrio un error inesperado al guardar los cambios." + ex.getMessage());
                             ex.printStackTrace();
                         }
 
-                    },null
+                    }, null
             );
 
             securityPassword.cambiarPassword(userSession, pfNuevaContrasena.getText());
@@ -390,68 +462,67 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     @FXML
     private void onCambiarNombreUsuario() {
 
-      boolean confirmar =
-              mostrarConfirmacion("Actualizar usuario","Se cambiara el nombre de usuario a '"+txtNuevoNombreUsuario.getText().trim()+"'.",
-                      "¿Desea continuar?",
-                      "Aceptar",
-                      "Cancelar");
+        boolean confirmar =
+                mostrarConfirmacion("Actualizar usuario", "Se cambiara el nombre de usuario a '" + txtNuevoNombreUsuario.getText().trim() + "'.",
+                        "¿Desea continuar?",
+                        "Aceptar",
+                        "Cancelar");
 
-      if (confirmar){
-          taskService.runTask(
-                  loadingComponentController,
-                  () -> {
+        if (confirmar) {
+            taskService.runTask(
+                    loadingComponentController,
+                    () -> {
 
-                      userSession.setUsername(txtNuevoNombreUsuario.getText().trim());
+                        userSession.setUsername(txtNuevoNombreUsuario.getText().trim());
 
-                      supabaseService.actualizarUsername(userSession.getAuthId(),userSession);
-
-
-
-                      User supabaseUser = supabaseService.findUsuarioById(userSession.getAuthId());
-
-                      User localUser = userService.findUserById(userSession.getUsuarioId());
-
-                      localUser.setAuthId(supabaseUser.getAuthId());
-                      localUser.setUsername(supabaseUser.getUsername());
-                      localUser.setCorreo(supabaseUser.getCorreo());
-                      localUser.setPassword(passwordEncoder.encode(supabaseUser.getPassword()));
-                      localUser.setNombre(supabaseUser.getNombre());
-                      localUser.setApellidos(supabaseUser.getApellidos());
-                      localUser.setFotoPerfil(supabaseUser.getFotoPerfil());
-                      localUser.setActive(supabaseUser.getActive());
-                      localUser.setRole(supabaseUser.getRole());
-                      localUser.setStatusLicencia(supabaseUser.getStatusLicencia());
-
-                      userService.guardarUsuario(localUser);
-                      userService.updateNextCheck(userSession.getUsuarioId(),LocalDateTime.now().toString());
-
-                      return null;
-
-                  },(resultado) ->{
-
-                      lblNombreUsuarioActual.setText(userSession.getUsername());
-                      String texto = userSession.getUsername();
-                      ventanaPrincipalController.setCambiarPaginaEtiqueta(new Label(texto));
+                        supabaseService.actualizarUsername(userSession.getAuthId(), userSession);
 
 
-                      mostrarInformacion("Usuario actualizado", "", "El nombre de usuario se actualizó exitosamente.");
-                  },(ex) ->{
+                        User supabaseUser = supabaseService.findUsuarioById(userSession.getAuthId());
 
-                      if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
-                          mostrarError("Accion cancelada", "", "Accion cancelada por el usuario");
-                      } else if (ex instanceof UserException) {
-                          mostrarError("No se pudo guardar","Ocurrio un problema al guardar los cambios.",""+ex.getMessage());
-                      } else if (ex instanceof IOException || ex instanceof NullPointerException) {
-                          mostrarWarning("Usuario actualizado","","El nombre de usuario se actualizó correctamente, pero no se pudo cargar en la interfaz. Reinicie la aplicación para ver los cambios.");
-                      } else  {
-                          mostrarError("Error interno","","Ocurrio un error inesperado al guardar los cambios."+ex.getMessage());
-                          ex.printStackTrace();
-                      }
+                        User localUser = userService.findUserById(userSession.getUsuarioId());
+
+                        localUser.setAuthId(supabaseUser.getAuthId());
+                        localUser.setUsername(supabaseUser.getUsername());
+                        localUser.setCorreo(supabaseUser.getCorreo());
+                        localUser.setPassword(passwordEncoder.encode(supabaseUser.getPassword()));
+                        localUser.setNombre(supabaseUser.getNombre());
+                        localUser.setApellidos(supabaseUser.getApellidos());
+                        localUser.setFotoPerfil(supabaseUser.getFotoPerfil());
+                        localUser.setActive(supabaseUser.getActive());
+                        localUser.setRole(supabaseUser.getRole());
+                        localUser.setStatusLicencia(supabaseUser.getStatusLicencia());
+
+                        userService.guardarUsuario(localUser);
+                        userService.updateNextCheck(userSession.getUsuarioId(), LocalDateTime.now().toString());
+
+                        return null;
+
+                    }, (resultado) -> {
+
+                        lblNombreUsuarioActual.setText(userSession.getUsername());
+                        String texto = userSession.getUsername();
+                        ventanaPrincipalController.setCambiarPaginaEtiqueta(new Label(texto));
 
 
-                  },null
-          );
-      }
+                        mostrarInformacion("Usuario actualizado", "", "El nombre de usuario se actualizó exitosamente.");
+                    }, (ex) -> {
+
+                        if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
+                            mostrarError("Accion cancelada", "", "Accion cancelada por el usuario");
+                        } else if (ex instanceof UserException) {
+                            mostrarError("No se pudo guardar", "Ocurrio un problema al guardar los cambios.", "" + ex.getMessage());
+                        } else if (ex instanceof IOException || ex instanceof NullPointerException) {
+                            mostrarWarning("Usuario actualizado", "", "El nombre de usuario se actualizó correctamente, pero no se pudo cargar en la interfaz. Reinicie la aplicación para ver los cambios.");
+                        } else {
+                            mostrarError("Error interno", "", "Ocurrio un error inesperado al guardar los cambios." + ex.getMessage());
+                            ex.printStackTrace();
+                        }
+
+
+                    }, null
+            );
+        }
 
 
     }//onCambiarNombreUsuario
@@ -478,7 +549,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         } else {
             Image image = new Image("/icons/user.png");
             avatarPreview.setImage(image);
-           txtRutaImg.setText("");
+            txtRutaImg.setText("");
         }
 
     }
@@ -487,11 +558,11 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     private void onGuardarFoto() {
         taskService.runTask(
                 loadingComponentController,
-                ()->{
+                () -> {
                     userSession.setFotoPerfil(txtRutaImg.getText().trim());
 
-                    supabaseService.actualizarFotoPerfil(userSession.getAuthId(),userSession);
-                    User supabaseUser =  supabaseService.findUsuarioById(userSession.getAuthId());
+                    supabaseService.actualizarFotoPerfil(userSession.getAuthId(), userSession);
+                    User supabaseUser = supabaseService.findUsuarioById(userSession.getAuthId());
                     User localUser = userService.findUserById(userSession.getUsuarioId());
 
                     localUser.setAuthId(supabaseUser.getAuthId());
@@ -507,41 +578,41 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     localUser.setStatusLicencia(supabaseUser.getStatusLicencia());
 
                     userService.guardarUsuario(localUser);
-                    userService.updateNextCheck(userSession.getUsuarioId(),LocalDateTime.now().toString());
+                    userService.updateNextCheck(userSession.getUsuarioId(), LocalDateTime.now().toString());
 
 
                     return null;
-                },(resultado)->{
+                }, (resultado) -> {
 
-                    mostrarInformacion("Foto actualizada","","La foto se actualizó exitosamente.");
+                    mostrarInformacion("Foto actualizada", "", "La foto se actualizó exitosamente.");
 
 
-                },(ex)->{
+                }, (ex) -> {
 
                     if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         mostrarError("Accion cancelada", "", "Accion cancelada por el usuario");
                     } else if (ex instanceof UserException) {
-                        mostrarError("No se pudo guardar","Ocurrio un problema al guardar los cambios.",""+ex.getMessage());
-                    } else  {
-                        mostrarError("Error interno","","Ocurrio un error inesperado al guardar los cambios."+ex.getMessage());
+                        mostrarError("No se pudo guardar", "Ocurrio un problema al guardar los cambios.", "" + ex.getMessage());
+                    } else {
+                        mostrarError("Error interno", "", "Ocurrio un error inesperado al guardar los cambios." + ex.getMessage());
                         ex.printStackTrace();
                     }
 
-                },null
+                }, null
         );
 
     }//onGuardarFoto
 
     @FXML
-    private void onEliminarFoto(Event event){
+    private void onEliminarFoto(Event event) {
 
         taskService.runTask(
                 loadingComponentController,
-                ()->{
+                () -> {
                     userSession.setFotoPerfil(null);
 
-                    supabaseService.actualizarFotoPerfil(userSession.getAuthId(),userSession);
-                    User supabaseUser =  supabaseService.findUsuarioById(userSession.getAuthId());
+                    supabaseService.actualizarFotoPerfil(userSession.getAuthId(), userSession);
+                    User supabaseUser = supabaseService.findUsuarioById(userSession.getAuthId());
                     User localUser = userService.findUserById(userSession.getUsuarioId());
 
                     localUser.setAuthId(supabaseUser.getAuthId());
@@ -556,31 +627,31 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     localUser.setStatusLicencia(supabaseUser.getStatusLicencia());
 
                     userService.guardarUsuario(localUser);
-                    userService.updateNextCheck(userSession.getUsuarioId(),LocalDateTime.now().toString());
+                    userService.updateNextCheck(userSession.getUsuarioId(), LocalDateTime.now().toString());
 
 
                     return null;
-                },(resultado)->{
+                }, (resultado) -> {
 
                     Image image = new Image("/icons/user.png");
                     avatarPreview.setImage(image);
                     txtRutaImg.setText("");
 
-                    mostrarInformacion("Foto eliminada","","La foto se elimino exitosamente.");
+                    mostrarInformacion("Foto eliminada", "", "La foto se elimino exitosamente.");
 
 
-                },(ex)->{
+                }, (ex) -> {
 
                     if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         mostrarError("Accion cancelada", "", "Accion cancelada por el usuario");
                     } else if (ex instanceof UserException) {
-                        mostrarError("No se pudo guardar","Ocurrio un problema al guardar los cambios.",""+ex.getMessage());
-                    } else  {
-                        mostrarError("Error interno","","Ocurrio un error inesperado al guardar los cambios."+ex.getMessage());
+                        mostrarError("No se pudo guardar", "Ocurrio un problema al guardar los cambios.", "" + ex.getMessage());
+                    } else {
+                        mostrarError("Error interno", "", "Ocurrio un error inesperado al guardar los cambios." + ex.getMessage());
                         ex.printStackTrace();
                     }
 
-                },null
+                }, null
         );
 
 
@@ -612,6 +683,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     @Override
     public void configuraciones() {
+
+
         MenuContextSetting.disableMenu(rootPane);
         txtContrasenaActualVisible.textProperty().bindBidirectional(pfContrasenaActual.textProperty());
         txtNuevaContrasenaVisible.textProperty().bindBidirectional(pfNuevaContrasena.textProperty());
@@ -634,12 +707,14 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
 
         txtNuevoNombreUsuario.textProperty().addListener((observable, oldValue, newValue) -> {
-           if (txtNuevoNombreUsuario.getText().length() > 40){
-               txtNuevoNombreUsuario.setText(oldValue);
-           }
+            if (txtNuevoNombreUsuario.getText().length() > 40) {
+                txtNuevoNombreUsuario.setText(oldValue);
+            }
         });
 
-    }
+        btnGenerarLogs.disableProperty().bind(dpFechaInicio.valueProperty().isNull()
+                .or(dpFechaFin.valueProperty().isNull()));
+    }//configuraciones
 
     @Override
     public void listeners() {
@@ -664,6 +739,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     public void setUser(User user) {
         this.userSession = user;
+        construirMenu();
     }
 
     @Override
@@ -728,7 +804,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
                         String fecha = dateTime.format(outputFormatter);
 
-                        lblFechaUltimoRespaldo.setText(fecha);
+                        lblFechaUltimoRespaldo.setText(fecha + " h");
 
                         long bytes = ultimoRespaldo.getTamanioBytes();
                         String texto;
@@ -765,9 +841,15 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     private void verPerfil() {
 
+        if (userSession != null && userSession.getRole() != null && userSession.getRole().equals(RolUser.ADMIN.toString())) {
+            lblRol.setText("Administrador");
+
+        } else {
+            lblRol.setText("Usuario");
+        }
+
+
         lblNombreCompleto.setText(userSession.getNombre() + " " + userSession.getApellidos());
-        lblCorreo.setText(userSession.getCorreo());
-        lblRol.setText(userSession.getRole());
         lblUsernameInfo.setText(userSession.getUsername());
         lblCorreoInfo.setText(userSession.getCorreo());
 
@@ -783,9 +865,12 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                 image = new Image(getClass().getResource("/icons/user.png").toExternalForm());
             }
 
+
         } else {
             image = new Image(getClass().getResource("/icons/user.png").toExternalForm());
+
         }
+        avatarImageView.setImage(image);
 
         DateTimeFormatter formatterIn = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter formatterOut = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -804,31 +889,28 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     }//verPerfil
 
-    private void mostarPanelCambiarFoto(){
-        User user =  userService.findUserById(userSession.getUsuarioId());
-
+    private void mostarPanelCambiarFoto() {
+        User user = userService.findUserById(userSession.getUsuarioId());
 
 
         String imgRuta = user.getFotoPerfil();
 
-        if (imgRuta != null){
+        if (imgRuta != null) {
 
             File file = new File(imgRuta);
 
-            if (file != null && file.exists()){
+            if (file != null && file.exists()) {
                 Image image = new Image(file.toURI().toString());
                 avatarPreview.setImage(image);
-            }else {
+            } else {
                 Image image = new Image("/icons/user.png");
                 avatarPreview.setImage(image);
             }
 
-        }else {
+        } else {
             Image image = new Image("/icons/user.png");
             avatarPreview.setImage(image);
         }
-
-
 
 
     }//mostarPanelCambiarFoto
@@ -877,6 +959,85 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
         }
     }//validarPassword
+
+    @FXML
+    private void generarLogs(ActionEvent event) {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Guardar logs");
+        fileChooser.setInitialFileName("Logs_respaldos");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Archivo de texto", "*.txt")
+        );
+
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file == null)
+            return;
+
+
+
+        String fechaInicio = dpFechaInicio.getValue() != null ? dpFechaInicio.getValue().toString() : null;
+        String fechaFin = dpFechaFin.getValue() != null ? dpFechaFin.getValue().toString() : null;
+
+
+        taskService.runTask(
+                loadingComponentController,
+                () -> {
+
+                    List<Respaldo> respaldos = respaldoService.listarRespaldos(fechaInicio, fechaFin);
+                    StringBuilder logContenido = new StringBuilder();
+
+                    for (Respaldo respaldo: respaldos){
+                        logContenido.append(respaldo.toString()).append("\n");
+                    }
+                    GenerarLogs.generarLogRespaldo(file,fechaInicio,fechaFin,logContenido.toString());
+
+                    return null;
+
+                }, (resultado) -> {
+
+                   mostrarInformacion(
+                            "Operación completada",
+                            "Logs generados",
+                            "Los logs se generaron correctamente."
+                    );
+
+                }, (ex) -> {
+
+                    if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException){
+                        mostrarError("Operación cancelada",
+                                "",
+                                "La operación fue cancelada por el usuario.");
+                    } else if (ex instanceof RespaldoException) {
+                        mostrarExcepcionThrowable(
+                                "Error al generar logs",
+                                "No se pudieron generar los logs.",
+                                "Ocurrió un problema al crear el archivo de logs de respaldos.",
+                                ex
+                        );
+                    }else {
+                        mostrarExcepcionThrowable(
+                                "Error interno",
+                                "Error inesperado en el sistema",
+                                "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
+                    }
+
+                }, null
+        );
+
+    }//generarLogs
+
+
+    private boolean esAdmin() {
+        boolean esAdmin = userSession != null &&
+                userSession.getRole() != null &&
+                userSession.getRole().equals(RolUser.ADMIN.toString());
+
+        return esAdmin;
+    }
 
 
 }//class

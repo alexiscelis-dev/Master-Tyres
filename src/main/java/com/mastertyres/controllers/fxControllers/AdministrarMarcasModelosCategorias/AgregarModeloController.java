@@ -124,6 +124,9 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
         listaExistentes.clear();
         listaNuevos.clear();
 
+        if (marcaSeleccionada == null || marcaSeleccionada.getMarcaId() == null)
+            return;
+
         List<DetalleCategoria> existentes = detalleCategoriaService.getByMarca(marcaSeleccionada.getMarcaId());
         listaExistentes.addAll(existentes);
         listaVehiculos.addAll(existentes);
@@ -166,7 +169,7 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
                 }
             }
         });
-    }
+    }//cargarVehiculos
 
     private void cargarOpciones() {
 
@@ -280,6 +283,8 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
                 return;
             }
 
+            taskService.disable(rootPane);
+
             taskService.runTask(
                     loadingOverlayController,
                     () -> {
@@ -300,6 +305,8 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
 
                         return null;
                     }, (resultado) -> {
+                        taskService.enable(rootPane);
+
 
                        mostrarInformacion(
                                 "Operación completada",
@@ -310,6 +317,8 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
 
 
                     }, (ex) -> {
+                        taskService.enable(rootPane);
+
 
                         if(ex instanceof ModeloException){
                            mostrarError(

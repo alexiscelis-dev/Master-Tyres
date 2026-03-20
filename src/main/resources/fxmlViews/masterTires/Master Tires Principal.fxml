@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="ventanaPrincipal" minHeight="600" minWidth="1344" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController">
+<AnchorPane id="ventanaPrincipal" minHeight="600" minWidth="1344" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles-css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController">
 
 
 
@@ -238,6 +238,6 @@
 
         <fx:include fx:id="loadingOverlay" source="/fxmlComponentes/Components/Loader/LoadingComponent.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
-        <fx:include source="/fxmlComponentes/Components/TitleBar/TitleBarComponent.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <fx:include source="/fxmlComponentes/Components/TitleBar/tittleBar/TitleBarComponent.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
     </children>
 </AnchorPane>

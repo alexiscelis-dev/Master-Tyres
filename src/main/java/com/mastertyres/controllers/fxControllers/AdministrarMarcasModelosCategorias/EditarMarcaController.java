@@ -114,7 +114,7 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
 
         if (confirmar) {
 
-            rootPane.setDisable(true);
+            taskService.disable(rootPane);
 
             taskService.runTask(
                     loadingOverlayController,
@@ -124,7 +124,7 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
                         return null;
 
                     }, (resultado)->{
-                        rootPane.setDisable(false);
+                        taskService.enable(rootPane);
 
                         mostrarInformacion(
                                 "Operación completada",
@@ -134,7 +134,8 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
                         cerrarVentana();
 
             },(ex) ->{
-                        rootPane.setDisable(false);
+                        taskService.enable(rootPane);
+
 
                         if (ex instanceof MarcaException) {
                             mostrarError(
@@ -142,7 +143,7 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
                                     "Problema con el registro de la marca",
                                     "" + ex.getMessage());
                         } else {
-                            rootPane.setDisable(false);
+
                             mostrarExcepcionThrowable(
                                     "Error inesperado",
                                     "No se pudo completar la operación",

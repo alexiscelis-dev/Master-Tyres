@@ -25,6 +25,7 @@ public class SupabaseAuthService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public SupabaseUserResponse authenticate(String email, String password) {
+        System.out.println("Autenticando con supabase");
 
         RestTemplate restTemplate = new RestTemplate();
 

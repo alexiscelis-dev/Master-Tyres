@@ -9,7 +9,6 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.controllers.fxControllers.nota.NotaPreviewController;
 import com.mastertyres.nota.model.BaseNota;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
@@ -23,7 +22,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -52,7 +50,7 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
     @FXML
     private VBox detallePromocion;
     @FXML
-    private ImageView ivZoom;
+    private Button btnZoom;
     @FXML
     private ChoiceBox<String> choiceLimite;
     @FXML
@@ -99,7 +97,7 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
 
         MenuContextSetting.disableMenu(rootPane);
         choiceLimite.setValue("Sin Filtro");
-        ivZoom.setVisible(false);
+        btnZoom.setVisible(false);
 
         notaUtils.descripcionComponent(btnBuscar,"Buscar");
         notaUtils.descripcionComponent(btnRefrescar,"Refrescar");
@@ -113,7 +111,7 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
 
         btnBuscar.setOnAction(event -> cargarNota());
 
-        ivZoom.setOnMouseClicked(event -> {
+        btnZoom.setOnMouseClicked(event -> {
             if (notaVentana != null)
                 zoomDetalles(notaVentana);
 
@@ -132,11 +130,11 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
     private void zoom() {
 
         detallePromocion.setOnMouseEntered(event -> {
-            ivZoom.setVisible(true);
+            btnZoom.setVisible(true);
         });
 
         detallePromocion.setOnMouseExited(event -> {
-            ivZoom.setVisible(false);
+            btnZoom.setVisible(false);
         });
     }//zoom
 

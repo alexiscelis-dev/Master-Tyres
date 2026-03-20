@@ -3,21 +3,26 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.text.Font?>
-<AnchorPane fx:id="rootPane" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles_css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.Promociones.EditarPromocionVehiculoController">
+<AnchorPane fx:id="rootPane" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;" stylesheets="/styles-css/ClientesStyles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.Promociones.EditarPromocionVehiculoController">
 
     <children>
         <HBox alignment="TOP_CENTER" spacing="20">
 
+
             <!-- FORMULARIO PROMOCION -->
             <VBox alignment="CENTER" prefHeight="500" prefWidth="600" spacing="10" styleClass="secciones">
+
 
                 <padding>
                     <Insets bottom="20" left="20" right="20" top="20" />
                 </padding>
 
-                <Label styleClass="seccion-titulo" text="Editar Promocion" />
+                <Label styleClass="seccion-titulo" text="Editar Promocion">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin></Label>
 
                 <GridPane hgap="10" vgap="10">
                     <columnConstraints>
@@ -31,7 +36,7 @@
 
                     <!-- Descripcion -->
                     <Label text="Descripcion:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <TextArea fx:id="txtDescripcion" prefHeight="45.0" prefWidth="348.0" styleClass="TextAreaDescripcion" GridPane.columnIndex="1" GridPane.rowIndex="1" >
+                    <TextArea fx:id="txtDescripcion" prefHeight="45.0" prefWidth="348.0" styleClass="TextAreaDescripcion" GridPane.columnIndex="1" GridPane.rowIndex="1">
                         <font>
                             <Font name="System Bold" size="12.0" />
                         </font></TextArea>
@@ -42,7 +47,7 @@
 
                     <!-- Tipo Descuento -->
                     <Label text="Precio con descuento:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <TextField fx:id="precioConDescuento" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="buscador" />
+                    <TextField fx:id="precioConDescuento" editable="false" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 <!--                    <ChoiceBox fx:id="txtTipoDescuento" styleClass="choicebox-mini" GridPane.columnIndex="1" GridPane.rowIndex="3" />-->
 
                     <!-- Porcentaje -->
@@ -89,11 +94,12 @@
 
             <!-- VEHÍCULOS PARTICIPANTES -->
             <VBox alignment="CENTER" minWidth="400.0" prefHeight="500.0" prefWidth="600.0" spacing="15.0" styleClass="secciones">
-                <padding>
-                    <Insets bottom="20" left="20" right="20" top="20" />
-                </padding>
 
-                <Label styleClass="seccion-titulo" text="Vehículos participantes" />
+
+                <Label styleClass="seccion-titulo" text="Vehículos participantes">
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin></Label>
 
                 <!-- ChoiceBoxes -->
                 <HBox alignment="TOP_CENTER" spacing="5">
@@ -117,6 +123,9 @@
             </VBox>
 
         </HBox>
+        <fx:include source="/fxmlComponentes/Components/TitleBar/modalTittleBar/TittleBarModalComponent.fxml" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
     </children>
+
+
 </AnchorPane>

@@ -67,15 +67,15 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
     @FXML
     private Button btnAgregarMarca;
     @FXML
-    private Button BtnEliminarModelo;
+    private Button btnEliminarModelo;
     @FXML
-    private Button BtnAgregarModelo;
+    private Button btnAgregarModelo;
     @FXML
     private Button btnEditarMarca;
     @FXML
     private Button EliminarMarca;
     @FXML
-    private Button BtnEditarModelo;
+    private Button btnEditarModelo;
 
     @FXML
     private Pagination PaginadorMarcas;
@@ -225,14 +225,16 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
     }
 
     private void validacionesModeloBtn() {
-        BtnEditarModelo.disableProperty().bind(
+        btnEditarModelo.disableProperty().bind(
                 javafx.beans.binding.Bindings.isEmpty(TablaVehiculoMarca.getSelectionModel().getSelectedItems())
         );
 
 
-        BtnEliminarModelo.disableProperty().bind(
+        btnEliminarModelo.disableProperty().bind(
                 javafx.beans.binding.Bindings.isEmpty(TablaVehiculoMarca.getSelectionModel().getSelectedItems())
         );
+
+
     }
 
     @FXML
@@ -246,7 +248,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
             controller.setInitializeLoading(loadingOverlayController);
 
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Agregar Marca");
             stage.setScene(new Scene(root));
 
@@ -273,7 +275,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
         marcaSeleccionada = m;
         btnEditarMarca.setDisable(false);
         EliminarMarca.setDisable(false);
-        BtnAgregarModelo.setDisable(false);
+        btnAgregarModelo.setDisable(false);
 
         lblNombre.setText(m.getNombreMarca());
         llenarTabla(m);
@@ -298,7 +300,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
             controller.setInitializeLoading(loadingOverlayController);
 
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Editar Marca");
             stage.setScene(new Scene(root));
 
@@ -333,7 +335,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
             controller.setModelos(TablaVehiculoMarca.getSelectionModel().getSelectedItem());
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Editar Modelo");
             stage.setScene(new Scene(root));
 
@@ -366,7 +368,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
             controller.setMarcaModelos(marcaSeleccionada);
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Agregar Modelo");
             stage.setScene(new Scene(root));
 
@@ -565,6 +567,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
         txtBuscar.setText("");
         marcaSeleccionada = null;
         btnEditarMarca.setDisable(true);
+        btnAgregarModelo.setDisable(true);
         EliminarMarca.setDisable(true);
         lblNombre.setText("");
         TablaVehiculoMarca.getItems().clear();
@@ -599,8 +602,8 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
         if (EliminarMarca != null) {
             EliminarMarca.setDisable(true);
         }
-        if (BtnAgregarModelo != null) {
-            BtnAgregarModelo.setDisable(true);
+        if (btnAgregarModelo != null) {
+            btnAgregarModelo.setDisable(true);
         }
 
         // 6. Recargar datos sin filtros (paginador inicial)

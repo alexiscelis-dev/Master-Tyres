@@ -445,7 +445,8 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
             return; // Usuario canceló
         }
 
-        rootPane.setDisable(true);
+        taskService.disable(rootPane);
+
 
         taskService.runTask(
                 loadingOverlayController,
@@ -491,7 +492,7 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
                     return null;
 
                 }, (resultado) -> {
-                    rootPane.setDisable(false);
+                    taskService.enable(rootPane);
 
                     mostrarInformacion(
                             "Operación completada",
@@ -502,7 +503,8 @@ public class EditarVehiculoController implements IFxController, ILoader, ICleana
 
 
                 }, (ex) -> {
-                    rootPane.setDisable(false);
+                    taskService.enable(rootPane);
+
                     if (ex instanceof VehiculoException) {
 
                         mostrarError(

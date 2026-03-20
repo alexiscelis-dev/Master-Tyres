@@ -1,7 +1,7 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
-import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
-import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
+import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.service.ClientePromocionService;
 import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
@@ -202,7 +202,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             controller.LlenarTabla(promocionSeleccionada);
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Clientes aplicables a la promoción");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -354,7 +354,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
             ).trim();
 
             ListaClientesPromocion.getItems().add(
-                    descripcion.isBlank() ? "N/A" : descripcion
+                    descripcion.isBlank() ? "N/D" : descripcion
             );
         }
     }
@@ -372,7 +372,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 controller.setPromocion(promocionSeleccionada);
                 controller.setInitializeLoading(loadingOverlayController);
 
-                Stage stage = new Stage(StageStyle.UTILITY);
+                Stage stage = new Stage(StageStyle.UNDECORATED);
                 stage.setTitle("Editar Promoción");
                 stage.setScene(new Scene(root));
                 stage.setMaximized(false);
@@ -400,7 +400,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
                 controller.setPromocion(promocionSeleccionada);
                 controller.setInitializeLoading(loadingOverlayController);
 
-                Stage stage = new Stage(StageStyle.UTILITY);
+                Stage stage = new Stage(StageStyle.UNDECORATED);
                 stage.setTitle("Editar Promoción");
                 stage.setScene(new Scene(root));
                 stage.setMaximized(false);
@@ -410,6 +410,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
                 stage.showAndWait();
                 cargarPromociones();
+
             } catch (IOException ex) {
                 mostrarExcepcion(
                         "Error de carga",

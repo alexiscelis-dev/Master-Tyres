@@ -195,6 +195,8 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
         notaUtils.descripcionComponent(btnAgregarNumFactura,"Agregar numero de factura");
         notaUtils.descripcionComponent(btnActualizarDatos,"Actualizar datos cliente");
         notaUtils.descripcionComponent(btnGuardar,"Guardar cambios");
+        notaUtils.descripcionComponent(txtHoraEntrega, "Clic derecho para modificar.");
+        notaUtils.descripcionComponent(spPorcentajeGas, "Clic derecho para modificar.");
 
 
     }//configuraciones
@@ -469,7 +471,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             controller.setAdeudo(notaAdeudo);
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Actualizar Adeudo");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -598,7 +600,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             controller.setSaldoFavor(notaClienteDet);
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Actualizar Saldo");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -630,7 +632,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             NotaDetallesController controller = loader.getController();
             controller.setNotaDetalles(notaDetalles);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Nota Detalles");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -828,7 +830,7 @@ public class EditarNotaController extends BaseNota implements IFxController, ILo
             AgregarNumFacturaController controller = loader.getController();
             controller.setNumFactura(notaEditar.getNotaId(), notaEditar.getNumFactura());
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Agregar Numero de Factura");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);

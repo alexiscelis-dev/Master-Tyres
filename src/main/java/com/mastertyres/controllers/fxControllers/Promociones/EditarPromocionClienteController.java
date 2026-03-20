@@ -1,8 +1,8 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
 
-import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
-import com.mastertyres.ClientesPromocion.service.ClientePromocionService;
+import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.service.ClientePromocionService;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.cliente.model.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
@@ -676,7 +676,8 @@ public class EditarPromocionClienteController implements IFxController, ILoader,
             return; // Usuario canceló
         }
 
-        rootPane.setDisable(true);
+        taskService.disable(rootPane);
+
 
         //      try {
         taskService.runTask(
@@ -698,7 +699,8 @@ public class EditarPromocionClienteController implements IFxController, ILoader,
 
                     return null;
                 }, (resultado) -> {
-                    rootPane.setDisable(false);
+
+                    taskService.enable(rootPane);
 
 
                     mostrarInformacion(
@@ -708,7 +710,8 @@ public class EditarPromocionClienteController implements IFxController, ILoader,
                     cerrarVentana();
 
                 }, (ex) -> {
-                    rootPane.setDisable(false);
+
+                    taskService.enable(rootPane);
 
                     if (ex  instanceof PromocionException){
 
