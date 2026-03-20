@@ -57,7 +57,7 @@
                             <VBox fx:id="panelVerPerfil" styleClass="detail-panel" visible="false" spacing="20">
                                 <Label text="Ver Perfil" styleClass="panel-title"/>
                                 <Separator/>
-                                
+
 
 
 
