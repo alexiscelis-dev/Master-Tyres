@@ -35,6 +35,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +70,9 @@ public class VentanaPrincipalController implements ILoader, IFxController {
     @FXML public Label cambiarPaginaEtiqueta;
     //@FXML private ImageView irAtras;
     @FXML private Button IrAtras;
-    @FXML private ImageView imgPerfil;
+    @FXML private StackPane profileContainer;
+    @FXML private Circle profileCircle;
+    //@FXML private ImageView imgPerfil;
     @FXML public LoadingComponentController loadingOverlayController;
     @FXML private Label lblUsuario;
 
@@ -109,6 +114,21 @@ public class VentanaPrincipalController implements ILoader, IFxController {
         verificarUltimoRespaldo();
 
     }//initialize
+
+    private void updateProfileCircle(String rutaImagen) {
+        Image imagen;
+
+        if (rutaImagen != null && !rutaImagen.isBlank()) {
+            File file = new File(rutaImagen);
+            imagen = file.exists()
+                    ? new Image(file.toURI().toString(), 54, 54, false, true)
+                    : new Image(getClass().getResource("/icons/user.png").toExternalForm(), 54, 54, false, true);
+        } else {
+            imagen = new Image(getClass().getResource("/icons/user.png").toExternalForm(), 54, 54, false, true);
+        }
+
+        profileCircle.setFill(new ImagePattern(imagen));
+    }
 
     private void verificarUltimoRespaldo() {
         taskService.runTask(
@@ -188,6 +208,12 @@ public class VentanaPrincipalController implements ILoader, IFxController {
                 },
                 null
         );
+    }
+
+    public void refreshUserInfo(User user) {
+        this.userSession = user;
+        lblUsuario.setText(user.getUsername());
+        updateProfileCircle(user.getFotoPerfil());
     }
 
     private void logOut(MouseEvent event, String archivoFXML) {
@@ -464,7 +490,8 @@ public class VentanaPrincipalController implements ILoader, IFxController {
             historialVistas.clear();
             historialNombreVistas.clear();
             lblUsuario.setText("");
-            imgPerfil.setImage(new Image(getClass().getResource("/icons/user.png").toExternalForm()));
+            //imgPerfil.setImage(new Image(getClass().getResource("/icons/user.png").toExternalForm()));
+            updateProfileCircle(null);
 
              logOut(event, "/fxmlViews/login/login/Login.fxml");
 
@@ -481,28 +508,8 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
     public void setUser(User user) {
         this.userSession = user;
-
-
-
         lblUsuario.setText(userSession.getUsername());
-
-        String rutaImagen = userSession.getFotoPerfil();
-
-        Image imagen;
-
-        if (rutaImagen != null && !rutaImagen.isBlank()) {
-            File file = new File(rutaImagen);
-            if (file.exists()) {
-                imagen = new Image(file.toURI().toString());
-            } else {
-                imagen = new Image(getClass().getResource("/icons/user.png").toExternalForm());
-            }
-        } else {
-            imagen = new Image(getClass().getResource("/icons/user.png").toExternalForm());
-        }
-
-        imgPerfil.setImage(imagen);
-
+        updateProfileCircle(userSession.getFotoPerfil());
     }
 
 

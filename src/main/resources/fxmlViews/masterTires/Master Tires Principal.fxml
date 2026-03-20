@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import javafx.scene.shape.Circle?>
 <AnchorPane id="ventanaPrincipal" minHeight="600" minWidth="1344" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles_css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController">
 
 
@@ -194,16 +195,30 @@
                 <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="466.0" AnchorPane.rightAnchor="25.0">
                     <children>
                         <Label fx:id="lblUsuario" nodeOrientation="RIGHT_TO_LEFT" prefHeight="18.0" prefWidth="382.0" styleClass="label-tarjeta" text="Administrador" />
-                        <ImageView fx:id="imgPerfil" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="usuario-turno">
-                            <image>
-                                <Image url="@../../icons/user.png" />
-                            </image>
+                        <StackPane fx:id="profileContainer" prefWidth="58.0" prefHeight="58.0">
+                            <Circle fx:id="profileCircle" radius="27.0"
+                                    stroke="#8EB83D" strokeWidth="2.5"
+                                    strokeType="OUTSIDE"
+                                    fill="WHITE"/>
                             <HBox.margin>
                                 <Insets left="15.0" />
                             </HBox.margin>
-                        </ImageView>
+                        </StackPane>
                     </children>
                 </HBox>
+<!--                <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="466.0" AnchorPane.rightAnchor="25.0">-->
+<!--                    <children>-->
+<!--                        <Label fx:id="lblUsuario" nodeOrientation="RIGHT_TO_LEFT" prefHeight="18.0" prefWidth="382.0" styleClass="label-tarjeta" text="Administrador" />-->
+<!--                        <ImageView fx:id="imgPerfil" fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" styleClass="usuario-turno">-->
+<!--                            <image>-->
+<!--                                <Image url="@../../icons/user.png" />-->
+<!--                            </image>-->
+<!--                            <HBox.margin>-->
+<!--                                <Insets left="15.0" />-->
+<!--                            </HBox.margin>-->
+<!--                        </ImageView>-->
+<!--                    </children>-->
+<!--                </HBox>-->
                 <ImageView fx:id="LogoPrincipal" fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0"
                            pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0"
                            AnchorPane.topAnchor="17.0">

@@ -24,14 +24,39 @@ public class TitleBarController {
     @FXML
     private void initialize() {
 
+        configurarBoton(btnMinimizar, false);
+        configurarBoton(btnMaximizar, false);
+        configurarBoton(btnCerrar, true);
+
         tittleBar.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
-                //System.out.println("TitleBar conectado a la escena");
                 tittleBar.setOnMousePressed(this::capturarPuntoArrastre);
                 tittleBar.setOnMouseDragged(this::arrastrarVentana);
             }
         });
+    }
 
+    private void configurarBoton(StackPane boton, boolean esCerrar) {
+
+        boton.setPrefWidth(46);
+        boton.setPrefHeight(35);
+        boton.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-background-radius: 4;");
+
+        String colorHover  = esCerrar ? "#c0392b" : "#2a3d12";
+        String colorPressed = esCerrar ? "#922b21" : "#1a2a0a";
+
+        boton.setOnMouseEntered(e ->
+                boton.setStyle("-fx-background-color: " + colorHover + "; -fx-cursor: hand; -fx-background-radius: 4;")
+        );
+        boton.setOnMouseExited(e ->
+                boton.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-background-radius: 4;")
+        );
+        boton.setOnMousePressed(e ->
+                boton.setStyle("-fx-background-color: " + colorPressed + "; -fx-cursor: hand; -fx-background-radius: 4;")
+        );
+        boton.setOnMouseReleased(e ->
+                boton.setStyle("-fx-background-color: " + colorHover + "; -fx-cursor: hand; -fx-background-radius: 4;")
+        );
     }
 
     @FXML
