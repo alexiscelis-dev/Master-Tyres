@@ -7,11 +7,10 @@ import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.detalleCategoria.model.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -35,6 +34,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 
 @Component
@@ -123,6 +124,9 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
         listaExistentes.clear();
         listaNuevos.clear();
 
+        if (marcaSeleccionada == null || marcaSeleccionada.getMarcaId() == null)
+            return;
+
         List<DetalleCategoria> existentes = detalleCategoriaService.getByMarca(marcaSeleccionada.getMarcaId());
         listaExistentes.addAll(existentes);
         listaVehiculos.addAll(existentes);
@@ -165,7 +169,7 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
                 }
             }
         });
-    }
+    }//cargarVehiculos
 
     private void cargarOpciones() {
 
@@ -222,7 +226,7 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
         Categoria categoria = choiceCategoria.getValue();
 
         if (modeloNombre.isEmpty() || categoria == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Campos obligatorios vacíos",
                     "Debe ingresar un modelo y seleccionar una categoría antes de continuar."
@@ -237,7 +241,7 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
         );
 
         if (existe) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Registro duplicado",
                     "Modelo y categoría ya registrados",
                     "Ya existe este modelo asociado a la misma categoría en la tabla."
@@ -264,7 +268,7 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
     @FXML
     private void GuardarCambios() {
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar registro",
                 "Agregar modelo",
                 "¿Está seguro de que desea agregar este modelo? Se agregarán los modelos de la tabla a la marca seleccionada.",
@@ -278,6 +282,8 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
                 cerrarVentana();
                 return;
             }
+
+            taskService.disable(rootPane);
 
             taskService.runTask(
                     loadingOverlayController,
@@ -299,8 +305,10 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
 
                         return null;
                     }, (resultado) -> {
+                        taskService.enable(rootPane);
 
-                        MensajesAlert.mostrarInformacion(
+
+                       mostrarInformacion(
                                 "Operación completada",
                                 "Modelo agregado",
                                 "El modelo ha sido registrado en el sistema correctamente."
@@ -309,16 +317,16 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
 
 
                     }, (ex) -> {
+                        taskService.enable(rootPane);
+
 
                         if(ex instanceof ModeloException){
-                            MensajesAlert.mostrarExcepcionThrowable(
+                           mostrarError(
                                     "Error al guardar",
-                                    "Problema con el registro de modelos",
-                                    "Ocurrió un problema al intentar guardar alguno de los modelos proporcionados: " + ex.getMessage(),
-                                    ex
-                            );
+                                    "Ocurrió un problema al intentar guardar alguno/s de los modelos proporcionados:",
+                                    "" + ex.getMessage());
                         } else {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                            mostrarExcepcionThrowable(
                                     "Error interno",
                                     "Error inesperado en el sistema",
                                     "Ocurrió un error inesperado al intentar guardar la marca y los modelos proporcionados.",

@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class RespaldoService implements IRespaldoService {
@@ -110,8 +111,6 @@ public class RespaldoService implements IRespaldoService {
             }
 
 
-            //     try {
-
             File archivoRespaldo = new File(ruta);
             long tamanioBytes = archivoRespaldo.length();
 
@@ -128,14 +127,6 @@ public class RespaldoService implements IRespaldoService {
             respaldoProxyService.guardarRespaldo(respaldo);
             supabaseStorage.crearRespaldo(archivoRespaldo, respaldo);
             return true;
-/*
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RespaldoException("No se pudo guardar el respaldo en la base de datos." + e.getMessage());
-
-            }
-
- */
 
 
         } catch (Exception e) {
@@ -186,6 +177,12 @@ public class RespaldoService implements IRespaldoService {
     @Override
     public void actualizarTipoRespaldo(Integer respaldoId, String tipoRespaldo) {
 
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Respaldo> listarRespaldos(String fechaInicio, String fechaFin) {
+        return respaldoRepository.listarRespaldos(fechaInicio, fechaFin);
     }
 
 

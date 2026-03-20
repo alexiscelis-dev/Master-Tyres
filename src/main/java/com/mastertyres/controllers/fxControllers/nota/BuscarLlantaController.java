@@ -1,6 +1,5 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
@@ -24,6 +23,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.mastertyres.common.utils.MensajesAlert.mostrarExcepcion;
 
 @Component
 public class BuscarLlantaController implements IFxController {
@@ -153,8 +154,8 @@ public class BuscarLlantaController implements IFxController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            MensajesAlert.mostrarExcepcion(
+
+            mostrarExcepcion(
                     "Error de visualización",
                     "Fallo al cargar registros",
                     "No se pudieron cargar los datos en la vista. Por favor, inténtelo de nuevo más tarde.",
@@ -172,7 +173,7 @@ public class BuscarLlantaController implements IFxController {
             List<Inventario> inventarios = inventarioService.first100Inventario(StatusInventario.ACTIVE.toString());
             tablaLlantas.getItems().setAll(FXCollections.observableList(inventarios));
         }catch (Exception e){
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de visualización",
                     "Fallo al cargar registros",
                     "No se pudieron cargar los datos en la tabla. Por favor, inténtelo de nuevo más tarde.",

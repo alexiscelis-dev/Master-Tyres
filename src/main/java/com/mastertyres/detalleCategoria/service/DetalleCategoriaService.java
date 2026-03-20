@@ -78,6 +78,7 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
     }
 
     @Transactional
+    @Override
     public DetalleCategoria guardarDetalleCategoria(DetalleCategoria detalle) {
 
         categoriaValidator.guardarValidator(detalle);

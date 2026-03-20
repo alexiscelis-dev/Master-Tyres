@@ -31,6 +31,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.mastertyres.common.utils.MensajesAlert.*;
+
 @Component
 public class EditarModeloController implements IFxController, ILoader, ICleanable {
 
@@ -159,6 +161,8 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
 
         if (confirmar) {
 
+            taskService.disable(rootPane);
+
             taskService.runTask(
                     loadingOverlayController,
                     () -> {
@@ -171,31 +175,34 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
                         return null;
 
                     }, (resultado) -> {
+                        taskService.enable(rootPane);
 
-                        MensajesAlert.mostrarInformacion(
+                        mostrarInformacion(
                                 "Operación completada",
                                 "Modelo actualizado",
                                 "El modelo ha sido actualizado en el sistema correctamente."
                         );
                         cerrarVentana();
                     }, (ex) -> {
+                        taskService.enable(rootPane);
+
 
                         if (ex instanceof ModeloException) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+
+                            mostrarError(
                                     "Error al actualizar",
                                     "Problema al guardar los cambios",
-                                    "Ocurrió un problema al intentar guardar los cambios del modelo: " + ex.getMessage(),
-                                    ex
-                            );
+                                    "" + ex.getMessage());
 
                         } else {
-                            cerrarVentana();
-                            MensajesAlert.mostrarExcepcionThrowable(
+
+                            mostrarExcepcionThrowable(
                                     "Error interno",
                                     "Error inesperado en el sistema",
                                     "Ocurrió un error inesperado al intentar guardar la marca y los modelos proporcionados.",
                                     ex
                             );
+                            cerrarVentana();
 
                         }
 

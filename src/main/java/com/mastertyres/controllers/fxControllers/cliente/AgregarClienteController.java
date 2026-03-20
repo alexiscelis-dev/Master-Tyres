@@ -12,12 +12,11 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.common.utils.RegexTools;
-import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -48,6 +47,8 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class AgregarClienteController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
@@ -704,16 +705,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
             }
         });
 
-//        choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
-//            if (newMarca != null) {
-//                List<Modelo> modelosFiltrados = modelos.stream()
-//                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
-//                        .toList();
-//                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
-//            } else {
-//                choiceModelo.getItems().clear();
-//            }
-//        });
 
         choiceModelo.getSelectionModel().selectedItemProperty().addListener((obs, oldModelo, newModelo) -> {
             Marca marcaSeleccionada = choiceMarca.getValue();
@@ -735,14 +726,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                 }
                 choiceCategoria.setItems(FXCollections.observableArrayList(categoriasPorId.values()));
                 choiceCategoria.getSelectionModel().clearSelection();
-//
-//                List<Categoria> categoriasFiltradas =
-//                        detalleCategoriaService.listarCategoriasPorMarcaYModelo(
-//                                marcaSeleccionada.getMarcaId(),
-//                                newModelo.getModeloId()
-//                        );
-//
-//                choiceCategoria.setItems(FXCollections.observableArrayList(categoriasFiltradas));
+
 
             } else {
                 choiceCategoria.getItems().clear();
@@ -769,7 +753,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     private void agregarVehiculo(ActionEvent event) {
 
         if (!serieValido.get() || !kilometrosValido.get() || !placasValido.get()) {
-            MensajesAlert.mostrarWarning(
+          mostrarWarning(
                     "Advertencia",
                     "Datos inválidos",
                     "Por favor, corrija los campos marcados en rojo antes de intentar agregar el vehículo."
@@ -833,9 +817,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
         spinnerAnio.setStyle(STILE);
 
 
-
-
-
     }
 
     private void LimpiarCamposClientes() {
@@ -874,7 +855,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
     private void GuardarCliente(ActionEvent event) {
 
         if (!rfcValido.get() || !telefonoValido.get()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Advertencia",
                     "Verificar información",
                     "Por favor, corrija los campos marcados en rojo antes de continuar con el guardado."
@@ -901,7 +882,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
             String key = placas + "|" + numSerie;
 
             if (!placasSerieSet.add(key)) {
-                MensajesAlert.mostrarWarning(
+                mostrarWarning(
                         "Advertencia",
                         "Vehículos duplicados",
                         "Se han detectado vehículos con placas o números de serie repetidos en la lista. Por favor, verifique los datos."
@@ -973,7 +954,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
 
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Registro exitoso",
                             "El cliente ha sido guardado en el sistema con éxito."
@@ -986,14 +967,12 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                 },(ex) ->{
 
                     if (ex instanceof ClienteException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarError(
                                 "Error al guardar",
-                                "Problema con el registro del cliente",
-                                "Ocurrió un problema al intentar guardar la información del cliente: " + ex.getMessage(),
-                                ex
-                        );
+                                "Ocurrió un problema al intentar guardar la información del cliente:",
+                                "" + ex.getMessage());
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error del sistema",
                                 "Error inesperado",
                                 "Ocurrió un error inesperado al intentar registrar el cliente en el sistema.",

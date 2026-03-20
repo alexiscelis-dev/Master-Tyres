@@ -2,8 +2,6 @@ package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.nota.model.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import javafx.event.ActionEvent;
@@ -17,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+
+import static com.mastertyres.common.utils.MensajesAlert.mostrarExcepcion;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarInformacion;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenuDatePicker;
 
 @Component
 public class DarPlazoController implements IFxController {
@@ -49,7 +51,7 @@ public class DarPlazoController implements IFxController {
     @Override
     public void configuraciones() {
 
-        MenuContextSetting.disableMenuDatePicker(root);
+       disableMenuDatePicker(root);
 
         dpFecha.setDayCellFactory(picker -> new DateCell() {
             @Override
@@ -99,7 +101,7 @@ public class DarPlazoController implements IFxController {
             notaService.actualilzarFechaVencimiento(fechaVencimiento,notaId, StatusNota.ACTIVE.toString());
             notaService.actualizarStatus(StatusNota.POR_PAGAR.toString(),notaId);
             status = StatusNota.POR_PAGAR.toString();
-            MensajesAlert.mostrarInformacion(
+           mostrarInformacion(
                     "Operación completada",
                     "Fecha de pago actualizada",
                     "La fecha límite de pago ha sido actualizada y los cambios se guardaron correctamente."
@@ -110,13 +112,13 @@ public class DarPlazoController implements IFxController {
         }catch (Exception e) {
              String status = StatusNota.VENCIDO.toString();
 
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error del sistema",
                     "Fallo al actualizar vencimiento",
                     "Ocurrió un problema técnico al intentar actualizar la fecha de vencimiento de la nota.",
                     e
             );
-            e.printStackTrace();
+
 
         }
     }//actualizar

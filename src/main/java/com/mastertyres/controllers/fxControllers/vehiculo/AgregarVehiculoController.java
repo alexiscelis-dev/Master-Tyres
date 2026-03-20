@@ -11,11 +11,9 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -45,6 +43,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.*;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 
 @Component
@@ -190,11 +191,11 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
     @Override
     public void configuraciones() {
 
-        MenuContextSetting.disableMenu(rootPane);
+        disableMenu(rootPane);
 
         //Deshabilitar mediante el nodo interno (textField Interno)
-        MenuContextSetting.disableMenu(spinnerAnio.getEditor());
-        MenuContextSetting.disableMenu(pickerUltimoServicio.getEditor());
+        disableMenu(spinnerAnio.getEditor());
+        disableMenu(pickerUltimoServicio.getEditor());
 
 
         int currentYear = Year.now().getValue();
@@ -521,10 +522,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         //  Listener para filtrar modelos según la marca seleccionada
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((obs, oldMarca, newMarca) -> {
             if (newMarca != null) {
-//                List<Modelo> modelosFiltrados = modelos.stream()
-//                        .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
-//                        .toList();
-//                choiceModelo.setItems(FXCollections.observableArrayList(modelosFiltrados));
+
                 modelosPorNombre.clear();
                 modelos.stream()
                         .filter(m -> m.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
@@ -696,7 +694,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
 
         Cliente clienteSeleccionado = tablaClientes.getSelectionModel().getSelectedItem();
         if (clienteSeleccionado == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Sin selección",
                     "Cliente no seleccionado",
                     "Por favor, seleccione un cliente de la lista antes de continuar."
@@ -705,7 +703,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
         }
 
         if (listaVehiculos.isEmpty()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Vehículos requeridos",
                     "Por favor, agregue al menos un vehículo antes de proceder a guardar la información."
@@ -732,7 +730,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
             String key = placas + "|" + numSerie;
 
             if (!placasSerieSet.add(key)) {
-                MensajesAlert.mostrarWarning(
+                mostrarWarning(
                         "Advertencia",
                         "Vehículos duplicados",
                         "Se han detectado vehículos con placas o números de serie repetidos en la lista. Por favor, verifique los datos."
@@ -749,7 +747,7 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
                     return null;
 
                 }, (resultado) -> {
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Registro exitoso",
                             "Los vehículos han sido guardados en el sistema correctamente."
@@ -761,15 +759,15 @@ public class AgregarVehiculoController implements IVentanaPrincipal, IFxControll
                 }, (ex) -> {
 
                     if (ex instanceof VehiculoException) {
-                        MensajesAlert.mostrarExcepcionThrowable(
+
+                        mostrarError(
                                 "Error al guardar",
                                 "Problema con el registro de vehículos",
-                                "Ocurrió un problema al intentar guardar los vehículos: " + ex.getMessage(),
-                                ex
-                        );
+                                "Ocurrió un problema al intentar guardar los vehículos: " + ex.getMessage()
+                     );
 
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Fallo en el registro",
                                 "Ocurrió un error inesperado al intentar registrar los vehículos en el sistema.",

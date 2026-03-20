@@ -1,7 +1,7 @@
-package com.mastertyres.ClientesPromocion.service;
+package com.mastertyres.clientesPromocion.service;
 
-import com.mastertyres.ClientesPromocion.model.ClientesPromocion;
-import com.mastertyres.ClientesPromocion.repository.ClientePromocionRepository;
+import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.repository.ClientePromocionRepository;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.promociones.model.Promocion;
 import org.springframework.beans.factory.annotation.Autowired;

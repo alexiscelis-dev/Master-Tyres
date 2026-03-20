@@ -1,7 +1,6 @@
-package com.mastertyres.ClientesPromocion.model;
+package com.mastertyres.clientesPromocion.model;
 
 import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.marca.model.Marca;
 import com.mastertyres.promociones.model.Promocion;
 import jakarta.persistence.*;
 import lombok.*;

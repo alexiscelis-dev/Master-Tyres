@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 //Para poder guardar en la tabla respaldos aun despues de que ocurre una exepcion es necesario guardar desde una transaccion difrente, por eso se necesesita crear la clase
 
@@ -48,6 +50,11 @@ public class RespaldoProxyService implements IRespaldoService {
     @Override
     public void actualizarTipoRespaldo(Integer respaldoId, String tipoRespaldo) {
         respaldoRepository.actualizarTipoRespaldo(respaldoId, tipoRespaldo);
+    }
+
+    @Override
+    public List<Respaldo> listarRespaldos(String fechaInicio, String fechaFin) {
+        return List.of();
     }
 
 }//class

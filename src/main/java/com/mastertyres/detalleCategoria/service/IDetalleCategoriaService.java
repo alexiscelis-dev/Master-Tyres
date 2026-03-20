@@ -30,5 +30,7 @@ public interface IDetalleCategoriaService {
 
     void eliminarPorMarca(Integer marcaId);
 
+    DetalleCategoria guardarDetalleCategoria(DetalleCategoria detalle);
+
 
 }
