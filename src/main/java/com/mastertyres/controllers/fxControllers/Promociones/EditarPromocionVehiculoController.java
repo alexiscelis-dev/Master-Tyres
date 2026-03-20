@@ -1,11 +1,13 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
+import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
+import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.model.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import com.mastertyres.modelo.model.Modelo;
@@ -26,27 +28,29 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import javafx.util.StringConverter;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import static com.mastertyres.common.utils.MensajesAlert.*;
 import static javafx.collections.FXCollections.observableList;
 
 @Component
 public class EditarPromocionVehiculoController implements IFxController, ILoader, ICleanable {
 
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TextField txtNombre;
     @FXML
@@ -168,7 +172,7 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
                 btn.hoverProperty().addListener((obs, wasHovered, isNowHovered) -> {
                     if (isNowHovered) {
                         btn.setStyle("-fx-scale-x: 1.1;\n" +
-                                "    -fx-scale-y: 1.1;");
+                                "-fx-scale-y: 1.1;");
                     } else {
                         btn.setStyle("-fx-background-color: red;");
                     }
@@ -498,7 +502,7 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
     private void actualizarPromocion() {
 
         if (promocionSeleccionada == null) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Sin selección",
                     "Ninguna promoción seleccionada",
                     "Debe seleccionar una promoción de la lista antes de intentar modificarla."
@@ -507,7 +511,7 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
         }
 
         if (vehiculosPromocionList == null || vehiculosPromocionList.isEmpty()) {
-            MensajesAlert.mostrarWarning(
+            mostrarWarning(
                     "Datos incompletos",
                     "Vehículos requeridos",
                     "Debe asignar al menos un vehículo a la promoción para continuar."
@@ -515,7 +519,7 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
             return;
         }
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar actualización",
                 "Guardar cambios",
                 "¿Está seguro de que desea guardar los cambios realizados en el registro?",
@@ -525,11 +529,14 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
 
         if (!confirmar) return;
 
+        taskService.disable(rootPane);
+
+
         taskService.runTask(
                 loadingOverlayController,
                 () -> {
 
-                    // 🔹 Actualizar datos generales
+                    //  Actualizar datos generales
                     promocionSeleccionada.setNombre(txtNombre.getText().trim());
                     promocionSeleccionada.setDescripcion(txtDescripcion.getText().trim());
                     promocionSeleccionada.setPrecio(Float.parseFloat(txtPrecio.getText().trim()));
@@ -540,34 +547,47 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
                     promocionSeleccionada.setImg(txtRutaImagen.getText());
                     promocionSeleccionada.setUpdated_at(LocalDateTime.now());
 
-                    // 🔥 UNA SOLA LLAMADA
-                    promocionService.actualizarPromocionConVehiculos(
-                            promocionSeleccionada,
-                            vehiculosPromocionList
-                    );
+                    //  UNA SOLA LLAMADA
+                    promocionService.actualizarPromocionConVehiculos(promocionSeleccionada, vehiculosPromocionList);
 
                     return null;
 
                 },
                 (resultado) -> {
+                    taskService.enable(rootPane);
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Registro actualizado",
                             "Los cambios en la información de la promoción se han guardado correctamente."
                     );
-
                     cerrarVentana();
+
+
 
                 },
                 (ex) -> {
+                    taskService.enable(rootPane);
 
-                    MensajesAlert.mostrarExcepcionThrowable(
-                            "Error de actualización",
-                            "No se pudo completar la operación",
-                            "Ocurrió un error al intentar guardar la información.",
-                            ex
-                    );
+
+                    if (ex instanceof PromocionException){
+                        mostrarError(
+                                "Error al actualizar",
+                                "Ocurrió un problema al intentar guardar los cambios de la promoción.",
+                                "" + ex.getMessage());
+
+                    } else  {
+
+                        mostrarExcepcionThrowable(
+                                "Error inesperado",
+                                "Se produjo una excepción durante la operación",
+                                "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
+
+                    }
+
+
 
                 },
                 null

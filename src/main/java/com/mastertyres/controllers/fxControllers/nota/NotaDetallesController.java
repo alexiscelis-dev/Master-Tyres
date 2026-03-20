@@ -62,9 +62,9 @@ public class NotaDetallesController {
     }//setNotaDetalles
 
     private void llenarNota() {
-        String strAdeudo = "N/A", strSaldo = "N/A", strStatus = "",
+        String strAdeudo = "N/D", strSaldo = "N/D", strStatus = "",
                 strNumFactura = "", strGenero = "", strTipoCliente = "",
-                generoComparar = "", fechaFormateadaVencimiento = "N/A";
+                generoComparar = "", fechaFormateadaVencimiento = "N/D";
 
         Cliente cliente = clienteService.buscarClientePorId(notaDetalles.getClienteId(), StatusCliente.ACTIVE.toString());
 

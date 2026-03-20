@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.canvas.Canvas?>
 
-<AnchorPane fx:id="rootPane" prefHeight="570.0" prefWidth="945.0" stylesheets="@../../styles_css/Nota.css"
+<AnchorPane fx:id="rootPane" prefHeight="570.0" prefWidth="945.0" stylesheets="@../../styles-css/Nota.css"
             translateX="100.0"
             translateY="80.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.controllers.fxControllers.nota.AgregarNotaController">

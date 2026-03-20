@@ -103,10 +103,6 @@ public class NotaService implements INotaService {
                         throw new NotaException("Valores invalidos. Solo se permiten dos valores separados por una coma.");
                     }
 
-
-                    System.out.println("arrayTotal[0] = " + arrayTotal[0].trim());;
-                    System.out.println("arrayTotal[1] = " + arrayTotal[1].trim());
-
                     try {
 
                         Double total1 = Double.parseDouble(arrayTotal[0].trim());
@@ -125,20 +121,6 @@ public class NotaService implements INotaService {
 
                 }
 
-                /*
-
-                try {
-                    Double total = Double.parseDouble(busqueda.trim());
-                    paginaFiltrada = buscarPorTotal(
-                            total, StatusNota.ACTIVE.toString(), IndicePagina, tamañoPagina
-                    );
-                } catch (NumberFormatException ex) {
-
-                    throw new NotaException("Valor inválido. Ingrese un valor numérico válido para el total. ");
-
-                }
-
-                 */
 
             }//case total
 
@@ -269,8 +251,7 @@ public class NotaService implements INotaService {
     @Override
     public Page<NotaDTO> buscarPorTotal(Double total1,Double total2, String active, int pagina, int tamanoPagina) {
         Pageable pageable = PageRequest.of(pagina, tamanoPagina, Sort.by("notaId").descending());
-        System.out.println("total1 = " + total1);
-        System.out.println("total2 = " + total2);
+
         return notaRepository.buscarPorTotal(total1, total2, active, pageable);
     }
 
@@ -335,7 +316,7 @@ public class NotaService implements INotaService {
     }
 
 
-    @Modifying
+
     @Transactional
     @Override
     public void actualizarAdeudo(float adeudo, String fechaVencimiento, Integer notaId) {
@@ -346,7 +327,7 @@ public class NotaService implements INotaService {
 
     }
 
-    @Modifying
+
     @Transactional
     @Override
     public void actualizarUpdatedAtNota(Integer notaId, String updatedAt) {

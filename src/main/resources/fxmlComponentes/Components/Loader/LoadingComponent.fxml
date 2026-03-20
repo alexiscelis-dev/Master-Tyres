@@ -13,6 +13,6 @@
             AnchorPane.bottomAnchor="0.0"
             AnchorPane.leftAnchor="0.0"
             AnchorPane.rightAnchor="0.0"
-            stylesheets="@../../../styles_css/Loading.css"/>
+            stylesheets="@../../../styles-css/Loading.css"/>
 
 </StackPane>

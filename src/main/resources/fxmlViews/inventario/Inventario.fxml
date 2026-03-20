@@ -10,7 +10,7 @@
 
 <AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
-            style="-fx-background-color: #080808;" stylesheets="/styles_css/Inventario.css"
+            style="-fx-background-color: #080808;" stylesheets="/styles-css/Inventario.css"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.controllers.fxControllers.inventario.InventarioController">
 
@@ -20,7 +20,7 @@
 
         <AnchorPane layoutX="14.0" layoutY="121.0" prefHeight="479.0" prefWidth="1152.0"
                     style="-fx-background-color: #080808;" styleClass="clientes-panel"
-                    stylesheets="/styles_css/Inventario.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0"
+                    stylesheets="/styles-css/Inventario.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0"
                     AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="121.0" xmlns="http://javafx.com/javafx/17.0.12"
                     xmlns:fx="http://javafx.com/fxml/1">
 

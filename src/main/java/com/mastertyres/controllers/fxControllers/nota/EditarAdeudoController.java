@@ -1,13 +1,9 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.exeptions.NotaException;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
-import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.nota.model.NotaDTO;
 import com.mastertyres.nota.model.StatusNota;
@@ -26,6 +22,11 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
+import static com.mastertyres.common.utils.MenuContextSetting.disableMenuDatePicker;
+import static com.mastertyres.common.utils.RegexTools.aplicarNumerosDecimal;
 
 @Component
 public class EditarAdeudoController implements IFxController, ILoader {
@@ -71,7 +72,7 @@ public class EditarAdeudoController implements IFxController, ILoader {
     @Override
     public void configuraciones() {
 
-        MenuContextSetting.disableMenuDatePicker(root);
+        disableMenuDatePicker(root);
 
         dpFecha.setDayCellFactory(picker -> new DateCell() {
             @Override
@@ -87,9 +88,9 @@ public class EditarAdeudoController implements IFxController, ILoader {
             }
         });
 
-        MenuContextSetting.disableMenu(root);
-        MenuContextSetting.disableMenuDatePicker(dpFecha);
-        RegexTools.aplicarNumerosDecimal(txtAdeudo);
+        disableMenu(root);
+        disableMenuDatePicker(dpFecha);
+        aplicarNumerosDecimal(txtAdeudo);
 
         BooleanBinding fechaInvalida = dpFecha.valueProperty().isNull().and(cbLiquidar.selectedProperty().not());
 
@@ -180,7 +181,7 @@ public class EditarAdeudoController implements IFxController, ILoader {
                 }, (resultado) -> {
 
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Adeudo actualizado",
                             "El monto del adeudo se actualizó correctamente. Puede consultar más detalles en la nota '(+)' de Detalles del cliente."
@@ -192,16 +193,14 @@ public class EditarAdeudoController implements IFxController, ILoader {
 
                     if (ex instanceof NotaException) {
 
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarError(
                                 "Error al actualizar",
-                                "Problema al guardar los cambios",
-                                "Ocurrió un problema técnico al intentar guardar la información: " + ex.getMessage(),
-                                ex
-                        );
+                                "Ocurrió un problema técnico al intentar guardar la información:",
+                                "" + ex.getMessage());
                         ex.getMessage();
                         close();
                     } else {
-                        MensajesAlert.mostrarExcepcionThrowable(
+                        mostrarExcepcionThrowable(
                                 "Error inesperado",
                                 "Fallo al guardar cambios",
                                 "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",

@@ -11,7 +11,7 @@
     <children>
 
 
-        <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
+        <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles-css/NuevaPromocion.css">
 
             <children>
 
@@ -331,7 +331,7 @@
 
 
 
-                <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../../styles_css/ClientesStyles.css">
+                <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../../styles-css/ClientesStyles.css">
 
                     <children>
 
@@ -377,7 +377,7 @@
 
         </VBox>
 
-        <VBox layoutX="600.0" layoutY="150.0" prefHeight="600.0" prefWidth="540.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
+        <VBox layoutX="600.0" layoutY="150.0" prefHeight="600.0" prefWidth="540.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles-css/NuevaPromocion.css">
 
             <padding>
                 <Insets bottom="15" left="20" right="20" top="20" />

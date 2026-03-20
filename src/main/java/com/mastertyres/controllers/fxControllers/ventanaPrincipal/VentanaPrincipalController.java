@@ -2,22 +2,14 @@ package com.mastertyres.controllers.fxControllers.ventanaPrincipal;
 
 import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.common.exeptions.RespaldoException;
-import com.mastertyres.common.interfaces.IRestaurableDatos;
-import com.mastertyres.common.interfaces.ICleanable;
-import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoader;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.common.interfaces.ILoader;
-import com.mastertyres.common.interfaces.ICleanable;
-import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ProximosServicios.ProximosServiciosController;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
-import com.mastertyres.respaldo.service.IRespaldoService;
 import com.mastertyres.controllers.fxControllers.configuracion.ConfiguracionController;
+import com.mastertyres.respaldo.service.IRespaldoService;
 import com.mastertyres.user.model.User;
 import com.mastertyres.user.service.UserService;
 import javafx.animation.TranslateTransition;
@@ -43,14 +35,15 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Stack;
+
+import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
 public class VentanaPrincipalController implements ILoader, IFxController {
@@ -136,7 +129,7 @@ public class VentanaPrincipalController implements ILoader, IFxController {
                 () -> respaldoService.ObtenerUltimoRespaldo(),
                 (respaldo) -> {
                     if (respaldo == null) {
-                        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+                        boolean confirmar = mostrarConfirmacion(
                                 "Sin respaldos registrados",
                                 "No se encontró ningún respaldo previo.",
                                 "Se recomienda crear un respaldo de seguridad. ¿Desea realizarlo ahora?",
@@ -156,7 +149,7 @@ public class VentanaPrincipalController implements ILoader, IFxController {
                         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                         String fechaFormateada = fechaRespaldo.format(formato);
 
-                        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+                        boolean confirmar = mostrarConfirmacion(
                                 "Respaldo pendiente",
                                 "Tu último respaldo fue el " + fechaFormateada + ".",
                                 "Han pasado " + diasTranscurridos + " días desde tu último respaldo. ¿Deseas realizar uno ahora?",
@@ -166,7 +159,7 @@ public class VentanaPrincipalController implements ILoader, IFxController {
                         if (confirmar) ejecutarRespaldo();
                     }
                 },
-                (ex) -> MensajesAlert.mostrarExcepcionThrowable(
+                (ex) -> mostrarExcepcionThrowable(
                         "Error al verificar respaldo",
                         "No se pudo verificar el estado del último respaldo",
                         "Ocurrió un error al consultar el historial de respaldos.",
@@ -183,23 +176,23 @@ public class VentanaPrincipalController implements ILoader, IFxController {
                     respaldoService.generarRespaldo();
                     return null;
                 },
-                (resultado) -> MensajesAlert.mostrarInformacion(
+                (resultado) -> mostrarInformacion(
                         "Respaldo creado",
                         "",
                         "El respaldo se creó exitosamente."
                 ),
                 (ex) -> {
                     if (ex instanceof RespaldoException) {
-                        MensajesAlert.mostrarError(
+                        mostrarError(
                                 "No se pudo crear el respaldo",
                                 "Ocurrió un problema al crear el respaldo",
                                 ex.getMessage()
                         );
                     } else if (ex instanceof InterruptedException ||
                             ex instanceof java.util.concurrent.CancellationException) {
-                        MensajesAlert.mostrarError("Acción cancelada", "", "Acción cancelada por el usuario.");
+                        mostrarError("Acción cancelada", "", "Acción cancelada por el usuario.");
                     } else {
-                        MensajesAlert.mostrarError(
+                        mostrarError(
                                 "Error interno",
                                 "",
                                 "Ocurrió un error inesperado al crear el respaldo. Vuelva a intentarlo más tarde."
@@ -240,13 +233,13 @@ public class VentanaPrincipalController implements ILoader, IFxController {
             ventanaLogin.show();
 
         } catch (IOException e) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "No se pudo inicializar la interfaz",
                     "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
                     e
             );
-            e.printStackTrace();
+
         }
     }//logOut
 
@@ -276,13 +269,13 @@ public class VentanaPrincipalController implements ILoader, IFxController {
             restaurarEstadoInicial();
 
         } catch (IOException e) {
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "No se pudo inicializar la interfaz",
                     "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
                     e
             );
-            e.printStackTrace();
+
         }
     }
 
@@ -349,13 +342,13 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
         } catch (IOException e) {
 
-            MensajesAlert.mostrarExcepcion(
+            mostrarExcepcion(
                     "Error de carga",
                     "No se pudo inicializar la interfaz",
                     "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
                     e
             );
-            e.printStackTrace();
+
             return null;
         }
     }
@@ -474,7 +467,7 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
         HBoxLogOut.setOnMouseClicked(event -> {
 
-            boolean logOut = MensajesAlert.mostrarConfirmacion(
+            boolean logOut = mostrarConfirmacion(
                     "Cerrar sesión",
                     "Se cerrará la sesión actual.",
                     "¿Desea continuar?",

@@ -7,7 +7,7 @@
 
 <AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #080808;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.Promociones.NuevaPromocionVehiculosController">
     <children>
-        <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
+        <VBox layoutX="100.0" layoutY="150.0" prefHeight="600.0" prefWidth="472.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles-css/NuevaPromocion.css">
             <children>
                 <HBox alignment="CENTER" prefHeight="33.0" prefWidth="460.0">
                     <children>
@@ -181,7 +181,7 @@
                 </HBox>
 
 
-                <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../../styles_css/ClientesStyles.css">
+                <HBox prefHeight="49.0" prefWidth="432.0" stylesheets="@../../styles-css/ClientesStyles.css">
                     <children>
                         <DatePicker fx:id="fechaInicio" editable="false" prefHeight="26.0" prefWidth="159.0" styleClass="date-picker">
                             <HBox.margin>
@@ -204,7 +204,7 @@
 
             </children>
         </VBox>
-        <VBox layoutX="600.0" layoutY="150.0" prefHeight="600.0" prefWidth="552.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles_css/NuevaPromocion.css">
+        <VBox layoutX="600.0" layoutY="150.0" prefHeight="600.0" prefWidth="552.0" style="-fx-background-color: #1A1A1A;" styleClass="formulario" stylesheets="@../../styles-css/NuevaPromocion.css">
             <children>
 
                 <VBox alignment="TOP_CENTER" minWidth="500.0" prefHeight="339.0" prefWidth="500.0" spacing="15.0" styleClass="secciones">

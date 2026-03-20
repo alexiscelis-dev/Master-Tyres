@@ -6,10 +6,11 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
-            stylesheets="/styles_css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12"
+            stylesheets="/styles-css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.nota.NotaDetallesController">
 
     <children>
+
         <VBox alignment="CENTER" prefHeight="600.0" prefWidth="600" spacing="10" styleClass="secciones">
 
             <padding>
@@ -122,5 +123,12 @@
                 <Button onAction="#cancelar" fx:id="btnCancelar" styleClass="boton-accion" text="Cerrar"/>
             </HBox>
         </VBox>
+
+        <fx:include source="/fxmlComponentes/Components/TitleBar/modalTittleBar/TittleBarModalComponent.fxml"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"/>
+
+
     </children>
 </AnchorPane>

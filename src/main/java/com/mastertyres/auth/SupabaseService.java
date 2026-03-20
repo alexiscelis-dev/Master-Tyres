@@ -1,7 +1,7 @@
 package com.mastertyres.auth;
 
 import com.mastertyres.common.exeptions.UserException;
-import com.mastertyres.common.utils.SessionManager;
+
 import com.mastertyres.user.model.User;
 import com.mastertyres.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class SupabaseService {
     private final RestTemplate restTemplate = new RestTemplate();
 
 
-    public User findUsuarioById(String authId, String accessToken) throws Exception {
+    public User findUsuarioById(String authId) throws Exception {
 
 
         String url = supabaseUrl + "/rest/v1/usuario?auth_id=eq." + authId;
@@ -48,7 +48,7 @@ public class SupabaseService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("apikey", apiKey);
-        //    headers.set("Authorization", "Bearer " + accessToken);
+
         headers.set("Authorization", "Bearer " + apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -68,6 +68,37 @@ public class SupabaseService {
 
     }//findUsuarioById
 
+
+    //Metodo que se utiliza para recuperar contraseña
+    public User findUsuarioByCorreo(String correo) throws Exception {
+
+
+        String url = supabaseUrl + "/rest/v1/usuario?correo=eq." + correo;
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("apikey", apiKey);
+
+        headers.set("Authorization", "Bearer " + apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+
+        ResponseEntity<User[]> response =
+                restTemplate.exchange(
+                        url,
+                        HttpMethod.GET,
+                        request,
+                        User[].class
+                );
+
+        User[] users = response.getBody();
+
+        return (users != null && users.length > 0) ? users[0] : null;
+
+    }//findUsuarioByCorreo
+
+
     public void actualizarPassword(String authId, User user, String password) {
         try {
             // Construye la URL con el filtro por auth_id
@@ -80,18 +111,6 @@ public class SupabaseService {
             body.put("contrasena", password);
             body.put("updated_at", user.getUpdatedAt());
 
-            /*
-            String body = """
-                    {
-                       "contrasena": "%s",                        
-                        "updated_at": "%s"
-                    }
-                    """.formatted(
-                    password,
-                    user.getUpdatedAt()
-            );
-
-             */
 
             // Crea el WebClient
             WebClient webClient = WebClient.builder()
@@ -109,8 +128,7 @@ public class SupabaseService {
                     .bodyToMono(String.class)
                     .block(); // bloqueamos hasta recibir respuesta
 
-            // Opcional: si quieres, puedes imprimir la respuesta
-            System.out.println("Respuesta Supabase: " + response);
+
 
         } catch (WebClientResponseException e) {
             e.printStackTrace();
@@ -120,9 +138,7 @@ public class SupabaseService {
             e.printStackTrace();
             throw new UserException("No se pudo conectar con el servidor. Verifique su conexión a internet.");
 
-        }
-
-        catch (ResourceAccessException e) {
+        } catch (ResourceAccessException e) {
             e.printStackTrace();
             throw new UserException("No se pudo conectar con el servidor. Verifique su conexión a internet.");
 
@@ -134,11 +150,10 @@ public class SupabaseService {
 
     public void supabaseLogin(String correo, String password) {
         SupabaseUserResponse supabaseUserAuth = supabaseAuthService.authenticate(correo, password);
-        SessionManager.setSession(supabaseUserAuth.getAccessToken(), supabaseUserAuth.getRefreshToken(), supabaseUserAuth.getUsuarioId());
         User userSupabaseJson = null;
 
         try {
-            userSupabaseJson = findUsuarioById(supabaseUserAuth.getUsuarioId(), supabaseUserAuth.getAccessToken());
+            userSupabaseJson = findUsuarioById(supabaseUserAuth.getUsuarioId());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -157,7 +172,7 @@ public class SupabaseService {
         User userInsert = userService.findUser(userSupabaseJson.getUsername(), userSupabaseJson.getCorreo());
 
 
-                User userActualizar = User.builder()
+        User userActualizar = User.builder()
                 .usuarioId(userInsert != null ? userInsert.getUsuarioId() : null)
                 .authId(userSupabaseJson.getAuthId())
                 .username(userSupabaseJson.getUsername())
@@ -191,18 +206,6 @@ public class SupabaseService {
             body.put("username", user.getUsername());
             body.put("updated_at", user.getUpdatedAt());
 
-            /*
-            String body = """
-                    {
-                        "username": "%s",                   
-                        "updated_at": "%s"
-                    }
-                    """.formatted(
-                    user.getUsername(),
-                    user.getUpdatedAt()
-            );
-
-             */
 
             // Crea el WebClient
             WebClient webClient = WebClient.builder()
@@ -221,16 +224,15 @@ public class SupabaseService {
                     .block(); // bloqueamos hasta recibir respuesta
 
 
-
         } catch (WebClientResponseException e) {
             e.printStackTrace();
             throw new UserException("No fue posible actualizar el nombre de usuario. Verifique los datos.");
 
-        }catch (WebClientRequestException e) {
+        } catch (WebClientRequestException e) {
             e.printStackTrace();
             throw new UserException("No se pudo conectar con el servidor. Verifique su conexión a internet.");
 
-        }catch (ResourceAccessException e) {
+        } catch (ResourceAccessException e) {
             e.printStackTrace();
             throw new UserException("No se pudo conectar con el servidor. Verifique su conexión a internet.");
 
@@ -268,7 +270,6 @@ public class SupabaseService {
                     .retrieve()
                     .bodyToMono(String.class)
                     .block(); // bloqueamos hasta recibir respuesta
-
 
 
         } catch (WebClientResponseException e) {
