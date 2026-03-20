@@ -203,7 +203,7 @@ public class LoginController implements IFxController {
             ventanaLogin.show();
 
         } catch (Exception e) {
-
+            e.printStackTrace();
             mostrarError("Error de carga",
                     "",
                     "Ocurrio un error al cargar la vista. Vuelva a intentarlo mas tarde.");
