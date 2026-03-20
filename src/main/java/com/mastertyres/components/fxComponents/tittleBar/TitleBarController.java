@@ -3,7 +3,10 @@ package com.mastertyres.components.fxComponents.tittleBar;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -12,8 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TitleBarController {
 
-    @FXML
-    private StackPane tittleBar;
+    @FXML private ImageView iconoMaximizar;
+    @FXML private AnchorPane tittleBar; // Cambiar StackPane por AnchorPane
     @FXML private StackPane btnMinimizar;
     @FXML private StackPane btnMaximizar;
     @FXML private StackPane btnCerrar;
@@ -21,13 +24,22 @@ public class TitleBarController {
     private double dragOffsetX;
     private double dragOffsetY;
 
+    private boolean maximizado = false;
+
+    private Image imgMaximizar;
+    private Image imgRestaurar;
+
+
+
     @FXML
     private void initialize() {
+
+        imgMaximizar = new Image(getClass().getResourceAsStream("/icons/ventana_principal/maximize.png"));
+        imgRestaurar = new Image(getClass().getResourceAsStream("/icons/ventana_principal/restaurar.png"));
 
         configurarBoton(btnMinimizar, false);
         configurarBoton(btnMaximizar, false);
         configurarBoton(btnCerrar, true);
-
         tittleBar.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 tittleBar.setOnMousePressed(this::capturarPuntoArrastre);
@@ -37,26 +49,24 @@ public class TitleBarController {
     }
 
     private void configurarBoton(StackPane boton, boolean esCerrar) {
+        // Forzar tamaños mínimos para que no colapsen en cambios de resolución
+        boton.setMinSize(46, 35);
+        boton.setPrefSize(46, 35);
 
-        boton.setPrefWidth(46);
-        boton.setPrefHeight(35);
-        boton.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-background-radius: 4;");
+        // Alineación explícita para que el ImageView no se mueva
+        boton.setAlignment(javafx.geometry.Pos.CENTER);
 
-        String colorHover  = esCerrar ? "#c0392b" : "#2a3d12";
-        String colorPressed = esCerrar ? "#922b21" : "#1a2a0a";
+        String baseStyle = "-fx-background-radius: 0; -fx-cursor: hand; "; // Radius 0 suele verse mejor en tittlebars
+        String colorNormal = "transparent";
+        String colorHover  = esCerrar ? "#e81123" : "#2a3d12"; // Rojo estándar de cierre
+        String colorPressed = esCerrar ? "#f1707a" : "#1a2a0a";
 
-        boton.setOnMouseEntered(e ->
-                boton.setStyle("-fx-background-color: " + colorHover + "; -fx-cursor: hand; -fx-background-radius: 4;")
-        );
-        boton.setOnMouseExited(e ->
-                boton.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-background-radius: 4;")
-        );
-        boton.setOnMousePressed(e ->
-                boton.setStyle("-fx-background-color: " + colorPressed + "; -fx-cursor: hand; -fx-background-radius: 4;")
-        );
-        boton.setOnMouseReleased(e ->
-                boton.setStyle("-fx-background-color: " + colorHover + "; -fx-cursor: hand; -fx-background-radius: 4;")
-        );
+        boton.setStyle("-fx-background-color: " + colorNormal + "; " + baseStyle);
+
+        boton.setOnMouseEntered(e -> boton.setStyle("-fx-background-color: " + colorHover + "; " + baseStyle));
+        boton.setOnMouseExited(e -> boton.setStyle("-fx-background-color: " + colorNormal + "; " + baseStyle));
+        boton.setOnMousePressed(e -> boton.setStyle("-fx-background-color: " + colorPressed + "; " + baseStyle));
+        boton.setOnMouseReleased(e -> boton.setStyle("-fx-background-color: " + colorHover + "; " + baseStyle));
     }
 
     @FXML
@@ -66,26 +76,16 @@ public class TitleBarController {
 
     @FXML
     private void maximizarRestaurar(MouseEvent event) {
-        Stage stage = obtenerStage(event);
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        //Stage stage = (Stage) btnMaximizar.getScene().getWindow();
 
-        // Detectar si está "maximizado" comparando tamaño actual con el de la pantalla
-        boolean estaMaximizado = stage.getWidth() == bounds.getWidth()
-                && stage.getHeight() == bounds.getHeight();
-
-        if (estaMaximizado) {
-            // Restaurar a tamaño normal centrado
-            double w = 1344, h = 600;
-            stage.setX(bounds.getMinX() + (bounds.getWidth() - w) / 2);
-            stage.setY(bounds.getMinY() + (bounds.getHeight() - h) / 2);
-            stage.setWidth(w);
-            stage.setHeight(h);
+        if (maximizado) {
+            //stage.setMaximized(false);
+            iconoMaximizar.setImage(imgMaximizar); // Cambia a ícono de maximizar
+            maximizado = false;
         } else {
-            // Maximizar respetando barra de tareas
-            stage.setX(bounds.getMinX());
-            stage.setY(bounds.getMinY());
-            stage.setWidth(bounds.getWidth());
-            stage.setHeight(bounds.getHeight());
+           // stage.setMaximized(true);
+            iconoMaximizar.setImage(imgRestaurar); // Cambia a ícono de restaurar
+            maximizado = true;
         }
     }
 

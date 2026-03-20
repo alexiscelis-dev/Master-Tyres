@@ -9,6 +9,10 @@ import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.controllers.fxControllers.configuracion.ConfiguracionController;
+import com.mastertyres.controllers.fxControllers.nota.AgregarNotaController;
+import com.mastertyres.controllers.fxControllers.nota.EditarNotaController;
+import com.mastertyres.controllers.fxControllers.nota.NotaController;
+import com.mastertyres.controllers.fxControllers.nota.NotaDetallesController;
 import com.mastertyres.respaldo.service.IRespaldoService;
 import com.mastertyres.user.model.User;
 import com.mastertyres.user.service.UserService;
@@ -16,11 +20,13 @@ import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -30,6 +36,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +106,8 @@ public class VentanaPrincipalController implements ILoader, IFxController {
     @Autowired
     private IRespaldoService respaldoService; // Agrega esta inyección
 
+    @FXML private ScrollPane scrollPanelMenu;
+
     @FXML
     public void initialize() {
 
@@ -107,6 +116,57 @@ public class VentanaPrincipalController implements ILoader, IFxController {
         verificarUltimoRespaldo();
 
     }//initialize
+
+    private void aplicarEscalaAlContenido(Parent contenido) {
+        final double ANCHO_REFERENCIA = 1004.0;
+        final double ALTO_REFERENCIA  = 600.0;
+
+        Scale scale = new Scale(1, 1, 0, 0);
+        contenido.getTransforms().add(scale);
+
+        // Wrap en Group para que el ScrollPane vea los bounds reales post-escala
+        Group group = new Group(contenido);
+        panelMenu.getChildren().clear();
+        panelMenu.getChildren().add(group);
+
+        Runnable recalcular = () -> {
+            double anchoPanel = scrollPanelMenu.getViewportBounds().getWidth();
+            double altoPanel  = scrollPanelMenu.getViewportBounds().getHeight();
+            if (anchoPanel <= 0 || altoPanel <= 0) return;
+
+            double scaleX = anchoPanel / ANCHO_REFERENCIA;
+            double scaleY = altoPanel  / ALTO_REFERENCIA;
+            double factor = Math.min(scaleX, scaleY);
+            factor = Math.min(factor, 1.25);
+            factor = Math.max(factor, 0.6);
+
+            scale.setX(factor);
+            scale.setY(factor);
+        };
+
+        scrollPanelMenu.viewportBoundsProperty().addListener((obs, o, n) -> recalcular.run());
+        recalcular.run();
+    }
+
+    private void recalcularEscala(Scale scale, Parent contenido, double anchoPanel, double altoPanel,
+                                  double anchoRef, double altoRef) {
+        if (anchoPanel <= 0 || altoPanel <= 0) return;
+
+        double scaleX = anchoPanel / anchoRef;
+        double scaleY = altoPanel / altoRef;
+
+        // Usar el menor para que quepa sin recortar, máximo 1.0 para no agrandar demasiado
+        double factor = Math.min(scaleX, scaleY);
+        factor = Math.min(factor, 1.25); // tope máximo
+        factor = Math.max(factor, 0.6);  // tope mínimo
+
+        scale.setX(factor);
+        scale.setY(factor);
+
+        // Ajustar el tamaño lógico del Pane para que el ScrollPane sepa cuándo poner scrollbars
+        panelMenu.setPrefWidth(anchoRef * factor);
+        panelMenu.setPrefHeight(altoRef * factor);
+    }
 
     private void updateProfileCircle(String rutaImagen) {
         Image imagen;
@@ -257,9 +317,10 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
             configurarControlador(controller);
 
-            // NUEVO: Limpiar el panel antes de agregar nuevo contenido
             panelMenu.getChildren().clear();
-            panelMenu.getChildren().add(contenido);
+
+            aplicarEscalaAlContenido(contenido); // él hace el add internamente
+
 
             AnchorPane.setTopAnchor(contenido, 0.0);
             AnchorPane.setBottomAnchor(contenido, 0.0);
@@ -289,6 +350,12 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
             viewContentSinHistorial(null, vistaAnterior, nombreAnterior);
             cambiarPaginaEtiqueta.setText(nombreAnterior);
+
+            // ← Inicializar datos si la vista lo requiere
+            if (controladorActual instanceof ConfiguracionController config) {
+                config.setUser(userSession);
+            }
+
         } else {
             viewContentSinHistorial(null, "/fxmlViews/masterTires/RegresarMenu.fxml", "INICIO");
             cambiarPaginaEtiqueta.setText("INICIO");
@@ -325,9 +392,9 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
             configurarControlador(controller);
 
-            // NUEVO: Limpiar completamente antes de agregar
             panelMenu.getChildren().clear();
-            panelMenu.getChildren().add(contenido);
+
+            aplicarEscalaAlContenido(contenido); // él hace el add internamente
 
             AnchorPane.setTopAnchor(contenido, 0.0);
             AnchorPane.setBottomAnchor(contenido, 0.0);
@@ -398,6 +465,8 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
             panelMenu.getChildren().clear();
             panelMenu.getChildren().add(contenido);
+
+            aplicarEscalaAlContenido(contenido);
 
             restaurarEstadoInicial();
 

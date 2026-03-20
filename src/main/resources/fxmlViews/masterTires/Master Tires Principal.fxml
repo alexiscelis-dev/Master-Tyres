@@ -184,9 +184,21 @@
         </AnchorPane>
 
 
-        <Pane id="panelMenu" fx:id="panelMenu" layoutX="339.0" prefHeight="600.0" prefWidth="1005.0"
-              style="-fx-background-color: #080808;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="339.0"
-              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+        <ScrollPane fx:id="scrollPanelMenu"
+                    hbarPolicy="AS_NEEDED"
+                    vbarPolicy="AS_NEEDED"
+                    fitToWidth="false"
+                    fitToHeight="false"
+                    style="-fx-background-color: transparent; -fx-background: transparent;"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="340.0"
+                    AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="10.0">
+            <content>
+                <Pane fx:id="panelMenu"
+                      style="-fx-background-color: #080808;"/>
+            </content>
+        </ScrollPane>
 
         <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0"
                     style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
