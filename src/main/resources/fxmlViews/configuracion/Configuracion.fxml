@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
+<?import javafx.scene.shape.Circle?>
 <AnchorPane fx:id="rootPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1344.0"
             style="-fx-background-color: #080808;" stylesheets="/styles-css/PaginaPrincipal.css"
@@ -57,16 +53,21 @@
                             <VBox fx:id="panelVerPerfil" styleClass="detail-panel" visible="false" spacing="20">
                                 <Label text="Ver Perfil" styleClass="panel-title"/>
                                 <Separator/>
-                                
-
 
 
                                 <HBox spacing="24" alignment="CENTER_LEFT">
                                     <VBox alignment="CENTER" spacing="8">
-                                        <ImageView fx:id="avatarImageView" fitWidth="90" fitHeight="90"
-                                                   styleClass="avatar-view" preserveRatio="true">
+
+                                        <StackPane>
+                                        <Circle radius="47" fill="#8EB83D"/>
+                                        <ImageView  fx:id="avatarImageView"
+                                                   fitWidth="90"
+                                                   fitHeight="90"
+                                                   preserveRatio="false"
+                                                   styleClass="avatar-view">
                                             <image><Image url="/icons/user.png" /></image>
                                         </ImageView>
+                                        </StackPane>
                                     </VBox>
                                     <VBox spacing="6">
                                         <Label fx:id="lblNombreCompleto" text="Nombre de usuario"
@@ -238,10 +239,17 @@
                                 <Separator/>
                                 <HBox spacing="24" alignment="CENTER_LEFT">
                                     <VBox alignment="CENTER" spacing="10">
+
+                                        <StackPane>
+                                        <Circle radius="57" fill="#8EB83D"/>
                                         <ImageView  fx:id="avatarPreview" fitWidth="110" fitHeight="110"
-                                                   styleClass="avatar-view" preserveRatio="true">
+                                                   styleClass="avatar-view" preserveRatio="false">
                                             <image><Image url="/icons/user.png"/></image>
                                         </ImageView>
+                                        </StackPane>
+                                    </VBox>
+                                    <VBox spacing="6">
+
                                         <HBox>
                                             <TextField editable="false"  fx:id="txtRutaImg" styleClass="buscador-img" promptText="Selecione una imagen" />
                                             <Button fx:id="btnSeleccionarFoto" text="..."

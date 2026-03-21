@@ -6,7 +6,7 @@
 <AnchorPane prefHeight="35.0" prefWidth="835.0" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             stylesheets="/styles-css/Titlebar styles.css"
-            fx:controller="com.mastertyres.components.fxComponents.tittleBar.TitleBarController">
+            fx:controller="com.mastertyres.components.fxComponents.tittleBarModalComponent.TittleBarModalController">
 
     <StackPane fx:id="tittleBarModal" style="-fx-background-color: #080808;"
                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"

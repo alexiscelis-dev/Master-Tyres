@@ -863,6 +863,14 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         }
         avatarImageView.setImage(image);
 
+
+        double radio = 45;
+
+        Circle circle = new Circle(radio,radio,radio);
+        avatarImageView.setClip(circle);
+
+
+
         DateTimeFormatter formatterIn = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter formatterOut = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -879,8 +887,6 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
 
     }//verPerfil
-
-
 
 
 
@@ -906,6 +912,11 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
             Image image = new Image("/icons/user.png");
             avatarPreview.setImage(image);
         }
+
+        double radio = 55;
+
+        Circle circle = new Circle(radio,radio,radio);
+        avatarPreview.setClip(circle);
 
 
     }//mostarPanelCambiarFoto

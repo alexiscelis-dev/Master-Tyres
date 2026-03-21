@@ -253,6 +253,7 @@ public class LoginController implements IFxController {
 
 
         }catch (Exception e){
+            e.printStackTrace();
 
             mostrarError("Error de cargar",
                     "",

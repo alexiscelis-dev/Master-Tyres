@@ -4,9 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<?import javafx.scene.shape.Circle?>
 <AnchorPane id="ventanaPrincipal" minHeight="600" minWidth="1344" prefHeight="600.0" prefWidth="1344.0" style="-fx-background-color: #080808;" stylesheets="/styles-css/PaginaPrincipal.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController">
 
 
@@ -28,7 +28,7 @@
                                 </ImageView>
                                 <Label contentDisplay="CENTER" styleClass="menu-label" text="Notas" textFill="WHITE">
                                     <font>
-                                        <Font name="Roboto" size="14.0" />
+                                        <Font name="Roboto Bold" size="14.0" />
                                     </font>
                                 </Label>
                             </children>
@@ -51,7 +51,7 @@
                                 </ImageView>
                                 <Label styleClass="menu-label" text="Clientes" textFill="WHITE">
                                     <font>
-                                        <Font name="Roboto" size="14.0" />
+                                        <Font name="Roboto Bold" size="14.0" />
                                     </font>
                                 </Label>
                             </children>
@@ -69,9 +69,9 @@
                                         <Insets left="25.0" right="15.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <Label contentDisplay="TOP" styleClass="menu-label" text="Vehiculos" textFill="WHITE">
+                                <Label contentDisplay="TOP" styleClass="menu-label" text="Vehículos" textFill="WHITE">
                                     <font>
-                                        <Font name="Roboto" size="14.0" />
+                                        <Font name="Roboto Bold" size="14.0" />
                                     </font>
                                 </Label>
                             </children>
@@ -89,9 +89,9 @@
                                         <Insets left="25.0" right="15.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <Label styleClass="menu-label" text="Proximos Servicios" textFill="WHITE">
+                                <Label styleClass="menu-label" text="Próximos servicios" textFill="WHITE">
                                     <font>
-                                        <Font name="Roboto" size="14.0" />
+                                        <Font name="Roboto Bold" size="14.0" />
                                     </font>
                                 </Label>
                             </children>
@@ -111,7 +111,7 @@
                                 </ImageView>
                                 <Label styleClass="menu-label" text="Promociones" textFill="WHITE">
                                     <font>
-                                        <Font size="14.0" />
+                                        <Font name="Roboto Bold" size="14.0" />
                                     </font>
                                 </Label>
                             </children>
@@ -126,12 +126,12 @@
                                         <Image url="@../../icons/ventana_principal/car-wheel.png" />
                                     </image>
                                     <HBox.margin>
-                                        <Insets left="20.0" right="15.0" />
+                                        <Insets left="20.0" right="10.0" />
                                     </HBox.margin>
                                 </ImageView>
-                                <Label styleClass="menu-label" text="Inventario Llantas" textFill="WHITE">
+                                <Label styleClass="menu-label" text="Inventario de llantas" textFill="WHITE">
                                     <font>
-                                        <Font size="14.0" />
+                                        <Font name="Roboto Bold" size="14.0" />
                                     </font>
                                 </Label>
                             </children>
@@ -146,7 +146,7 @@
                                         <Image url="@../../icons/ventana_principal/settings.png" />
                                     </image>
                                     <HBox.margin>
-                                        <Insets left="25.0" right="15.0" />
+                                        <Insets left="25.0" right="10.0" />
                                     </HBox.margin>
                                 </ImageView>
                                 <Label styleClass="menu-label" text="Configuraciones" textFill="WHITE" />
@@ -200,18 +200,13 @@
             </content>
         </ScrollPane>
 
-        <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0"
-                    style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="10.0">
+        <AnchorPane layoutX="123.0" layoutY="-1.0" prefHeight="100.0" prefWidth="1344.0" style="-fx-background-color: #1A1A1A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
             <children>
                 <HBox alignment="CENTER" layoutX="1130.0" layoutY="18.0" prefHeight="75.0" prefWidth="466.0" AnchorPane.rightAnchor="25.0">
                     <children>
                         <Label fx:id="lblUsuario" nodeOrientation="RIGHT_TO_LEFT" prefHeight="18.0" prefWidth="382.0" styleClass="label-tarjeta" text="Administrador" />
-                        <StackPane fx:id="profileContainer" prefWidth="58.0" prefHeight="58.0">
-                            <Circle fx:id="profileCircle" radius="27.0"
-                                    stroke="#8EB83D" strokeWidth="2.5"
-                                    strokeType="OUTSIDE"
-                                    fill="WHITE"/>
+                        <StackPane fx:id="profileContainer" prefHeight="58.0" prefWidth="58.0">
+                            <Circle fx:id="profileCircle" fill="WHITE" radius="27.0" stroke="#8EB83D" strokeType="OUTSIDE" strokeWidth="2.5" />
                             <HBox.margin>
                                 <Insets left="15.0" />
                             </HBox.margin>
@@ -219,11 +214,9 @@
                     </children>
                 </HBox>
 
-                <ImageView fx:id="LogoPrincipal" fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0"
-                           pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0"
-                           AnchorPane.topAnchor="17.0">
+                <ImageView fx:id="LogoPrincipal" fitHeight="85.0" fitWidth="225.0" layoutX="37.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="logo-image" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="17.0">
                     <image>
-                        <Image url="@../../icons/Master Tyres Logo (Fondo Blanco) 6.png"/>
+                        <Image url="@../../icons/Master Tyres Logo (Fondo Blanco) 6.png" />
                     </image>
                 </ImageView>
                 <Label fx:id="cambiarPaginaEtiqueta" layoutX="380.0" layoutY="56.0" text="INICIO" textFill="WHITE" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="405.0">
@@ -231,18 +224,12 @@
                         <Font name="Roboto Bold" size="28.0" />
                     </font>
                 </Label>
-                <Button fx:id="btnAtras"
-                        onMouseClicked="#irAtras"
-                        styleClass="btn-icono"
-                        AnchorPane.leftAnchor="360.0"
-                        AnchorPane.topAnchor="38.0">
+                <Button fx:id="btnAtras" onMouseClicked="#irAtras" styleClass="btn-icono" AnchorPane.leftAnchor="360.0" AnchorPane.topAnchor="38.0">
 
                     <graphic>
-                        <ImageView fitHeight="46"
-                                   fitWidth="36"
-                                   preserveRatio="true">
+                        <ImageView fitHeight="46" fitWidth="36" preserveRatio="true">
                             <image>
-                                <Image url="@../../icons/arrow-left-s-line.png"/>
+                                <Image url="@../../icons/arrow-left-s-line.png" />
                             </image>
                         </ImageView>
                     </graphic>
