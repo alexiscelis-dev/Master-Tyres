@@ -16,7 +16,7 @@ import java.util.Map;
 public class SupabaseAuthService {
     @Value("${supabase.url}")
     private String supabaseUrl;
-    @Value("${supabase.apikey}")
+    @Value("${supabase.api.key}")
     private String apiKey;
 
 
