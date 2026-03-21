@@ -27,7 +27,7 @@ public class SupabaseService {
     private String supabaseUrl;
 
 
-    @Value("${supabase.apikey}")
+    @Value("${supabase.api.key}")
     private String apiKey;
 
     @Autowired
