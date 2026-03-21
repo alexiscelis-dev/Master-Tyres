@@ -13,7 +13,7 @@
         <!--  ScrollPane que ocupa toda la pantalla -->
         <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER"
                     styleClass="scroll-paneBuscar" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="0"
-                    AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                    AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="60">
 
             <!--  VBox principal dentro del Scroll -->
             <content>
@@ -87,5 +87,11 @@
                 </VBox>
             </content>
         </ScrollPane>
+
+
+        <fx:include source="/fxmlComponentes/Components/TitleBar/modalTittleBar/TittleBarModalComponent.fxml"
+                    AnchorPane.topAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"/>
     </children>
 </AnchorPane>

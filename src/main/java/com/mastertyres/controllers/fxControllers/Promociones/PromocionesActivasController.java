@@ -167,8 +167,8 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         );
         ventanaPrincipalController.cambiarPaginaEtiqueta.setText("AGREGAR PROMOCION VEHICULOS");
 
-    }@FXML
-
+    }
+    @FXML
     private void agregarClientesPromociones(ActionEvent event) {
 
 
@@ -234,7 +234,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
             controller.setInitializeLoading(loadingOverlayController);
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setTitle("Promociones Pendientes");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);

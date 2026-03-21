@@ -49,6 +49,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Stack;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
@@ -367,6 +369,91 @@ public class VentanaPrincipalController implements ILoader, IFxController {
         irAtras();
     }
 
+
+    public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
+        // Creamos un future para obtener el controller cuando termine la tarea
+        CompletableFuture<Object> future = new CompletableFuture<>();
+
+        taskService.runTask(
+                loadingOverlayController,
+                () -> {
+                    // Carga en segundo plano
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
+                    loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+                    Parent contenido = loader.load();
+                    Object controller = loader.getController();
+
+                    // Retornamos ambos dentro del future
+                    future.complete(controller);
+
+                    // Retornamos algo para TaskService
+                    return new Object[]{contenido, controller};
+                },
+                (resultado) -> {
+                    // Esto se ejecuta en el hilo de la UI
+                    Object[] data = (Object[]) resultado;
+                    Parent contenido = (Parent) data[0];
+                    Object controller = data[1];
+
+                    // Limpiamos controlador previo
+                    limpiarControladorActual();
+
+                    // Guardamos historial
+                    if (vistaActual != null) historialVistas.push(vistaActual);
+                    if (NombreVistaActual != null) historialNombreVistas.push(NombreVistaActual);
+
+                    // Actualizamos la vista actual
+                    vistaActual = archivoFXML;
+                    NombreVistaActual = nombreVentana;
+                    controladorActual = controller;
+
+                    configurarControlador(controller);
+
+                    // Limpiamos y agregamos nuevo contenido
+                    panelMenu.getChildren().clear();
+                    panelMenu.getChildren().add(contenido);
+
+                    AnchorPane.setTopAnchor(contenido, 0.0);
+                    AnchorPane.setBottomAnchor(contenido, 0.0);
+                    AnchorPane.setLeftAnchor(contenido, 0.0);
+                    AnchorPane.setRightAnchor(contenido, 0.0);
+
+                    restaurarEstadoInicial();
+                    System.gc();
+
+                },
+                (ex) -> {
+                    // Manejo de errores
+                    mostrarExcepcionThrowable(
+                            "Error de carga",
+                            "No se pudo inicializar la interfaz",
+                            "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                            (ex instanceof Exception ? (Exception) ex : new Exception(ex))
+                    );
+
+                    // Completamos el future con null en caso de error
+                    future.complete(null);
+                },
+                null
+        );
+
+        try {
+            // Bloqueamos hasta que el controller esté listo
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            mostrarExcepcionThrowable(
+                    "Error de carga",
+                    "No se pudo inicializar la interfaz",
+                    "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
+            return null;
+        }
+    }
+
+
+
+    /*
     public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
         try {
             // NUEVO: Limpiar controlador anterior antes de cargar nuevo
@@ -420,6 +507,8 @@ public class VentanaPrincipalController implements ILoader, IFxController {
         }
     }
 
+     */
+
     private void limpiarControladorActual() {
         if (controladorActual != null && controladorActual instanceof ICleanable) {
             ((ICleanable) controladorActual).cleanup();
@@ -445,6 +534,11 @@ public class VentanaPrincipalController implements ILoader, IFxController {
         if (controller instanceof ProximosServiciosController) {
             ((ProximosServiciosController) controller).setHostServices(MasterTyresApplication.getAppHostServices());
         }
+
+        if (controller instanceof ConfiguracionController){
+            ((ConfiguracionController) controller).setUser(this.userSession);
+        }
+
     }
 
     public Pane getPanelMenu() {
@@ -529,7 +623,7 @@ public class VentanaPrincipalController implements ILoader, IFxController {
         HBoxConfiguracion.setOnMouseClicked(event -> {
             ConfiguracionController controller;
             controller = (ConfiguracionController) viewContent(event, "/fxmlViews/configuracion/Configuracion.fxml", "Configuracion");
-            controller.setUser(userSession);
+        //    controller.setUser(userSession);
             cambiarPaginaEtiqueta.setText("CONFIGURACION");
 
         });

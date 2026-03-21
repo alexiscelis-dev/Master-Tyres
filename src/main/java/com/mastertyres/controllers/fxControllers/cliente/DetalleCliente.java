@@ -2,8 +2,10 @@ package com.mastertyres.controllers.fxControllers.cliente;
 
 
 import com.mastertyres.cliente.model.Cliente;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +14,7 @@ import static com.mastertyres.common.utils.FechaUtils.formatearFechaHora;
 
 
 @Component
-public class DetalleCliente {
+public class DetalleCliente  {
 
     @FXML private Label txtNombreEmpresa;
     @FXML private Label txtNombre;
@@ -30,6 +32,9 @@ public class DetalleCliente {
     @FXML private Label txtFechaCumple;
     @FXML private Label txtFechaRegistro;
     @FXML private Label txtFechaActualizacion;
+    @FXML private ScrollPane scrollPane;
+
+
 
     public void informacionCliente(Cliente cliente) {
 
@@ -51,6 +56,12 @@ public class DetalleCliente {
         txtFechaCumple.setText("Fecha de cumpleaños: " + formatearFecha(cliente.getFechaCumple()));
         txtFechaRegistro.setText("Fecha de registro: " + formatearFechaHora(cliente.getCreated_at()));
         txtFechaActualizacion.setText("Fecha de última actualización: " + formatearFechaHora(cliente.getUpdated_at()));
+
+        Platform.runLater(() -> {
+            scrollPane.setVvalue(0);
+            scrollPane.setHvalue(0);
+        });
+
     }
 
     private String valorONull(String valor) {
