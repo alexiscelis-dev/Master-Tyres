@@ -9,10 +9,6 @@ import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.controllers.fxControllers.configuracion.ConfiguracionController;
-import com.mastertyres.controllers.fxControllers.nota.AgregarNotaController;
-import com.mastertyres.controllers.fxControllers.nota.EditarNotaController;
-import com.mastertyres.controllers.fxControllers.nota.NotaController;
-import com.mastertyres.controllers.fxControllers.nota.NotaDetallesController;
 import com.mastertyres.respaldo.service.IRespaldoService;
 import com.mastertyres.user.model.User;
 import com.mastertyres.user.service.UserService;
@@ -370,13 +366,75 @@ public class VentanaPrincipalController implements ILoader, IFxController {
     }
 
 
+
+    /*
+
+    public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
+        try {
+            // NUEVO: Limpiar controlador anterior antes de cargar nuevo
+            limpiarControladorActual();
+
+            if (vistaActual != null) {
+                historialVistas.push(vistaActual);
+            }
+            if (NombreVistaActual != null) {
+                historialNombreVistas.push(NombreVistaActual);
+            }
+
+            vistaActual = archivoFXML;
+            NombreVistaActual = nombreVentana;
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
+            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
+            Parent contenido = loader.load();
+            Object controller = loader.getController();
+
+            // NUEVO: Guardar referencia al controlador actual
+            controladorActual = controller;
+
+            configurarControlador(controller);
+
+            panelMenu.getChildren().clear();
+
+            aplicarEscalaAlContenido(contenido); // él hace el add internamente
+
+            AnchorPane.setTopAnchor(contenido, 0.0);
+            AnchorPane.setBottomAnchor(contenido, 0.0);
+            AnchorPane.setLeftAnchor(contenido, 0.0);
+            AnchorPane.setRightAnchor(contenido, 0.0);
+
+            restaurarEstadoInicial();
+
+            System.gc();
+
+            return controller;
+
+        } catch (IOException e) {
+
+            mostrarExcepcion(
+                    "Error de carga",
+                    "No se pudo inicializar la interfaz",
+                    "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
+                    e
+            );
+
+            return null;
+        }
+    }
+
+     */
+
+
+
     public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
         // Creamos un future para obtener el controller cuando termine la tarea
         CompletableFuture<Object> future = new CompletableFuture<>();
 
+
         taskService.runTask(
                 loadingOverlayController,
                 () -> {
+
                     // Carga en segundo plano
                     FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
                     loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
@@ -411,7 +469,9 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
                     // Limpiamos y agregamos nuevo contenido
                     panelMenu.getChildren().clear();
-                    panelMenu.getChildren().add(contenido);
+
+                    aplicarEscalaAlContenido(contenido);
+
 
                     AnchorPane.setTopAnchor(contenido, 0.0);
                     AnchorPane.setBottomAnchor(contenido, 0.0);
@@ -676,4 +736,5 @@ public class VentanaPrincipalController implements ILoader, IFxController {
     public void setCambiarPaginaEtiqueta(final Label cambiarPaginaEtiqueta) {
         this.cambiarPaginaEtiqueta = cambiarPaginaEtiqueta;
     }
+
 }//class
