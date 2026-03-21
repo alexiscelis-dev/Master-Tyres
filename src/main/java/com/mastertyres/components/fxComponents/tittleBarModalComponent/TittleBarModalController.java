@@ -5,11 +5,13 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TittleBarModalController {
 
     @FXML
-    private StackPane tittleBar;
+    private StackPane tittleBarModal;
     @FXML private StackPane btnCerrar;
 
     private double dragOffsetX;
@@ -18,15 +20,11 @@ public class TittleBarModalController {
     @FXML
     private void initialize() {
 
-        tittleBar.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
+        tittleBarModal.setOnMousePressed(this::capturarPuntoArrastre);
+        tittleBarModal.setOnMouseDragged(this::arrastrarVentana);
 
-                tittleBar.setOnMousePressed(this::capturarPuntoArrastre);
-                tittleBar.setOnMouseDragged(this::arrastrarVentana);
-            }
-        });
 
-    }
+    }//initialize
 
 
     @FXML
@@ -35,6 +33,9 @@ public class TittleBarModalController {
     }
 
     private void capturarPuntoArrastre(MouseEvent event) {
+
+        if (event.getTarget() == btnCerrar) return;
+
         dragOffsetX = event.getSceneX();
         dragOffsetY = event.getSceneY();
     }

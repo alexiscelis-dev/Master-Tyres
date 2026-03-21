@@ -115,14 +115,19 @@
     -fx-text-fill: black;
 }
 
-.buscador {
-    -fx-background-color: #1A1A1A;
+.input-field {
+    -fx-pref-height: 40px;
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-border-color: #333333;
+    -fx-border-radius: 5;
     -fx-text-fill: #F2F2F2;
     -fx-prompt-text-fill: #BBBBBB;
-    -fx-border-color: transparent;
-    -fx-padding: 8px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
+}
+
+.input-field:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
 }
 
 /* Botones */

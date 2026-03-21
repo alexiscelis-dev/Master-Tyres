@@ -39,8 +39,8 @@
 /* Etiquetas del menú */
 .menu-label {
      -fx-text-fill: #BBBBBB;
-        -fx-font-size: 17px;
-        -fx-font-weight: normal;
+        -fx-font-size: 18px;
+        -fx-font-weight: bold;
 
         -fx-alignment: center;
         -fx-transition: all 120ms ease-in;

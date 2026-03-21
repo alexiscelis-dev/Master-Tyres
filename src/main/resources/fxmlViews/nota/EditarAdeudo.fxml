@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #080808;"
+<AnchorPane fx:id="root" prefHeight="500" prefWidth="600" style="-fx-background-color: #1A1A1A;"
             stylesheets="/styles-css/ActualizarAdeudo.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.controllers.fxControllers.nota.EditarAdeudoController">
@@ -41,7 +41,7 @@
 
 
                         <TextField fx:id="txtAdeudo" prefHeight="26.0" prefWidth="250.0"
-                                   promptText="Ingrese el nuevo monto del adeudo" styleClass="buscador">
+                                   promptText="Ingrese el nuevo monto del adeudo" styleClass="input-field">
 
                         </TextField>
 

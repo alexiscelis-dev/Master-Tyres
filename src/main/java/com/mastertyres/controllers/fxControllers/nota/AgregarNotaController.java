@@ -304,7 +304,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             BuscarClienteController controller = loader.getController();
 
 
@@ -341,7 +341,7 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
             loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
             Parent root = loader.load();
 
-            Stage stage = new Stage(StageStyle.UTILITY);
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             BuscarLlantaController controller = loader.getController();
 
             stage.setTitle("Buscar llantas");
