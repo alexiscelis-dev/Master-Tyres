@@ -12,7 +12,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.Setting.setPantallaSize;
 
 @EnableScheduling
@@ -25,16 +24,14 @@ public class MasterTyresApplication extends Application {
 	@Override
 	public void init(){
 		try {
+
 			context = new SpringApplicationBuilder(MasterTyresApplication.class).run();
 		} catch (Exception e) {
 			Platform.runLater(() ->{
 				e.printStackTrace();
+				e.getCause().printStackTrace();
 
 
-				mostrarError("Error de Inicio",
-						"No se pudo conectar con la base de datos.",
-						"Por favor verifique que el servidor de base de datos esté encendido y configurado correctamente.\n\n" +
-								"Si el problema persiste, contacte a soporte técnico. ");
 				Platform.exit();
 				System.exit(1);
 
@@ -98,7 +95,11 @@ public class MasterTyresApplication extends Application {
 	}
 
 	public static void main(String[] args) {
+
+
 		launch(args);
-	}
+
+
+	}//main
 
 }//clase
