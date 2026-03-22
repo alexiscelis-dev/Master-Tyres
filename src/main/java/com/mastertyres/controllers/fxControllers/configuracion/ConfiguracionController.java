@@ -889,7 +889,6 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     }//verPerfil
 
 
-
     private void mostarPanelCambiarFoto(){
         User user =  userService.findUserById(userSession.getUsuarioId());
 

@@ -46,7 +46,9 @@ public class RespaldoService implements IRespaldoService {
     private String passwordDB;
     @Value(("${DB_DATABASE}"))
     private String dataBaseName;
-    private static final String mysqlDumpRuta = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump.exe";
+    @Value("${mysql.dump.ruta}")
+    private String mysqlDumpRuta;
+
 
 
     @Override
@@ -68,7 +70,6 @@ public class RespaldoService implements IRespaldoService {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
 
 
             }
