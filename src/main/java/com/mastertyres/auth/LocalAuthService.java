@@ -14,7 +14,6 @@ public class LocalAuthService {
     private PasswordEncoder passwordEncoder;
 
     public boolean authenticate(User localUser,String password){
-        System.out.println("Authenticandose localmente");
 
         verificarLicencia(localUser);
 
