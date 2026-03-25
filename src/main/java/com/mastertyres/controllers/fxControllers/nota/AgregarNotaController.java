@@ -85,6 +85,8 @@ public class AgregarNotaController extends BaseNota implements IFxController, IL
     @Override
     public void configuraciones() {
 
+
+
         dibujarGasolina(50);
 
         notaUtils.mostrarPopupHora(txtHoraEntrega);

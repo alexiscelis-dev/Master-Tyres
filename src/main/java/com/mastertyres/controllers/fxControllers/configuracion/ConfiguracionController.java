@@ -767,7 +767,10 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     } else if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         mostrarError("Accion cancelada", "", "Accion cancelada por el usuario");
                     } else {
-                        mostrarError("Error interno", "", "Ocurrio un error inesperado al crear el respaldo. Vuelva a intentarlo mas tarde.");
+                        mostrarExcepcionThrowable("Error interno",
+                                "",
+                                "Ocurrio un error inesperado al crear el respaldo. Vuelva a intentarlo mas tarde.",
+                                ex);
                     }
                 }, null
 
@@ -822,7 +825,10 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     if (ex instanceof RespaldoException) {
                         mostrarError("Error al mostrar datos", "", "" + ex.getMessage());
                     } else {
-                        mostrarError("Error interno", "", "Ocurrio un error inesperado al mostrar los datos. Vuelva a intentarlo mas tarde.");
+                        mostrarExcepcionThrowable("Error interno",
+                                "",
+                                "Ocurrio un error inesperado al mostrar los datos. Vuelva a intentarlo mas tarde.",
+                                ex);
                     }
 
                 }, null
