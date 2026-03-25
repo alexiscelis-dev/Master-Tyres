@@ -240,6 +240,7 @@ public class VentanaPrincipalController implements ILoader, IFxController {
                         "El respaldo se creó exitosamente."
                 ),
                 (ex) -> {
+                    ex.printStackTrace();
                     if (ex instanceof RespaldoException) {
                         mostrarError(
                                 "No se pudo crear el respaldo",

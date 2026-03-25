@@ -186,7 +186,7 @@
                                                       GridPane.rowIndex="0" GridPane.valignment="CENTER"
                                                       GridPane.vgrow="ALWAYS">
 
-                                                    <Label prefWidth="30" text="N°">
+                                                    <Label prefWidth="30" text="N°" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial Bold" size="14.0"/>
                                                         </font>
@@ -219,13 +219,13 @@
 
                                                     <Label alignment="CENTER" contentDisplay="CENTER"
                                                            minWidth="-Infinity" prefHeight="50.0" prefWidth="86.0"
-                                                           styleClass="label-fecha" text="  FECHA" textFill="#fffdfd">
+                                                           styleClass="label-fecha" text="  FECHA" textFill="#fffdfd" style="-fx-text-fill: black;">
 
                                                     </Label>
 
                                                     <Label alignment="CENTER_LEFT" contentDisplay="RIGHT"
                                                            minWidth="-Infinity" prefHeight="11.0" prefWidth="20.0"
-                                                           text="DIA" HBox.hgrow="ALWAYS">
+                                                           text="DIA" HBox.hgrow="ALWAYS" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="10.0"/>
                                                         </font>
@@ -239,13 +239,13 @@
                                                     <Label fx:id="lblDia" alignment="BOTTOM_CENTER"
                                                            nodeOrientation="LEFT_TO_RIGHT"
                                                            prefWidth="40.0" styleClass="textfield-fecha"
-                                                           translateX="-5.0">
+                                                           translateX="-5.0" style="-fx-text-fill: black;">
                                                         <HBox.margin>
                                                             <Insets top="15.0"/>
                                                         </HBox.margin>
                                                     </Label>
 
-                                                    <Label text="/" translateX="-5.0">
+                                                    <Label text="/" translateX="-5.0" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="15.0"/>
                                                         </font>
@@ -257,7 +257,7 @@
 
                                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT"
                                                            minWidth="-Infinity" text="MES" translateX="-10.0"
-                                                           HBox.hgrow="ALWAYS">
+                                                           HBox.hgrow="ALWAYS" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="10.0"/>
                                                         </font>
@@ -270,13 +270,13 @@
 
                                                     <Label fx:id="lblMes" alignment="BOTTOM_CENTER"
                                                            nodeOrientation="LEFT_TO_RIGHT" prefWidth="40.0"
-                                                           styleClass="textfield-fecha" translateX="-15.0">
+                                                           styleClass="textfield-fecha" translateX="-15.0" style="-fx-text-fill: black;">
                                                         <HBox.margin>
                                                             <Insets top="15.0"/>
                                                         </HBox.margin>
                                                     </Label>
 
-                                                    <Label text="/" translateX="-15.0">
+                                                    <Label text="/" translateX="-15.0" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="15.0"/>
                                                         </font>
@@ -287,7 +287,7 @@
 
                                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT"
                                                            minWidth="-Infinity" text="AÑO" translateX="-20.0"
-                                                           HBox.hgrow="ALWAYS">
+                                                           HBox.hgrow="ALWAYS" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="10.0"/>
                                                         </font>
@@ -296,7 +296,7 @@
 
                                                     <Label fx:id="lblAnio" alignment="BOTTOM_CENTER" layoutX="5.0"
                                                            nodeOrientation="LEFT_TO_RIGHT" prefWidth="45.0"
-                                                           styleClass="textfield-fecha" translateX="-25.0">
+                                                           styleClass="textfield-fecha" translateX="-25.0" style="-fx-text-fill: black;">
                                                         <HBox.margin>
                                                             <Insets top="15.0"/>
                                                         </HBox.margin>
@@ -381,7 +381,7 @@
 
 
                                                                 <Label styleClass="label-campos" text="Nombre:"
-                                                                       translateX="5">
+                                                                       translateX="5" style="-fx-text-fill: black;">
 
 
                                                                 </Label>
@@ -400,7 +400,7 @@
                                                                   GridPane.rowIndex="1">
 
 
-                                                                <Label styleClass="label-campos" text="Direccion:">
+                                                                <Label styleClass="label-campos" text="Direccion:" style="-fx-text-fill: black;">
 
                                                                 </Label>
 
@@ -431,7 +431,7 @@
                                                                   GridPane.columnIndex="0" GridPane.columnSpan="2"
                                                                   GridPane.rowIndex="3">
 
-                                                                <Label styleClass="label-campos2" text="RFC:">
+                                                                <Label styleClass="label-campos2" text="RFC:" style="-fx-text-fill: black;">
 
 
                                                                 </Label>
@@ -450,7 +450,7 @@
                                                                   GridPane.rowIndex="4">
 
 
-                                                                <Label styleClass="label-campos2" text="Correo:">
+                                                                <Label styleClass="label-campos2" text="Correo:" style="-fx-text-fill: black;">
 
                                                                 </Label>
 
@@ -467,7 +467,7 @@
 
                                                             <Label styleClass="label-campos2" text="Hora de entrega:"
                                                                    translateX="20" GridPane.columnIndex="2"
-                                                                   GridPane.rowIndex="0">
+                                                                   GridPane.rowIndex="0" style="-fx-text-fill: black;">
 
 
                                                             </Label>
@@ -488,7 +488,7 @@
                                                                 </HBox.margin>
 
 
-                                                                <Label styleClass="label-campos2" text="Marca:">
+                                                                <Label styleClass="label-campos2" text="Marca:" style="-fx-text-fill: black;">
 
                                                                 </Label>
 
@@ -506,7 +506,7 @@
                                                                   GridPane.columnIndex="2" GridPane.columnSpan="3"
                                                                   GridPane.rowIndex="2">
 
-                                                                <Label styleClass="label-campos2" text="Modelo:">
+                                                                <Label styleClass="label-campos2" text="Modelo:" style="-fx-text-fill: black;">
 
                                                                 </Label>
 
@@ -528,7 +528,7 @@
 
                                                                 </GridPane.margin>
                                                                 <HBox alignment="CENTER_LEFT" spacing="10">
-                                                                    <Label styleClass="label-campos2" text="Año:">
+                                                                    <Label styleClass="label-campos2" text="Año:" style="-fx-text-fill: black;">
 
                                                                     </Label>
                                                                     <TextField fx:id="txtAnioVehiculo" editable="false"
@@ -537,7 +537,7 @@
 
                                                                     </TextField>
 
-                                                                    <Label styleClass="label-campos2" text="Kms:">
+                                                                    <Label styleClass="label-campos2" text="Kms:" style="-fx-text-fill: black;">
 
 
                                                                     </Label>
@@ -562,7 +562,7 @@
 
                                                                 </GridPane.margin>
 
-                                                                <Label styleClass="label-campos2" text="Placas">
+                                                                <Label styleClass="label-campos2" text="Placas" style="-fx-text-fill: black;">
 
                                                                 </Label>
 
