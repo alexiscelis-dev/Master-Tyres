@@ -480,14 +480,14 @@ DatePicker
 -fx-font-family:"Arial";
 -fx-font-size:15px;
 -fx-margin: 0 0 0 5;
--fx-font-fill: #000000;
+-fx-text-fill: #000000;
 
 }
 
 .label-campos2{
 -fx-font-family:"Arial";
 -fx-font-size:15px;
--fx-font-fill: #000000;
+-fx-text-fill: #000000;
 }
 
 
