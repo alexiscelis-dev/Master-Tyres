@@ -1,5 +1,6 @@
 package com.mastertyres.common.utils;
 
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
@@ -32,6 +33,14 @@ public class Setting {
         stage.setMaxHeight(bounds.getHeight());
 
         stage.show();
+
+        // === Avisar al splash que la ventana ya está lista ===
+        // === Avisar al splash cuando la ventana ya está pintada ===
+        Platform.runLater(() -> {
+            try {
+                new java.io.File("C:\\MasterTires\\app_ready.flag").createNewFile();
+            } catch (Exception ignored) {}
+        });
     }
 
 }//class
