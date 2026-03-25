@@ -131,6 +131,7 @@ public class RespaldoService implements IRespaldoService {
 
 
         } catch (Exception e) {
+            e.printStackTrace();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             String fecha = LocalDateTime.now().format(formatter);

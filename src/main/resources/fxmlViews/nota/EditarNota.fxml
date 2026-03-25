@@ -201,7 +201,7 @@
                                 <HBox alignment="CENTER" prefHeight="55.0" prefWidth="140" styleClass="vBoxNumNota"
                                       GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS"
                                       GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-                                    <Label prefWidth="30" text="N°">
+                                    <Label prefWidth="30" text="N°" style="-fx-text-fill: black;">
                                         <font>
                                             <Font name="Arial Bold" size="16.0"/>
                                         </font>
@@ -227,7 +227,7 @@
 
                                 <VBox fx:id="contenedorTipoNota" visible="false" alignment="CENTER" maxWidth="110"
                                       styleClass="vBoxNumNota" translateX="-240" translateY="-45"
-                                      GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                      GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-text-fill: black;">
                                     <Label fx:id="lbltipoNota"
                                            style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: black;"
                                            text=" ORIGINAL">
@@ -236,7 +236,7 @@
 
 
                                 <Label text="Because so much is riding on your tires" translateX="-268.0"
-                                       translateY="40" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                       translateY="40" GridPane.columnIndex="1" GridPane.rowIndex="0" >
                                     <font>
                                         <Font name="Book Antiqua" size="15.0"/>
                                     </font>
@@ -246,7 +246,7 @@
                                 <HBox prefHeight="15" prefWidth="50" styleClass="vBoxNumNota" GridPane.columnIndex="0"
                                       GridPane.columnSpan="2" GridPane.rowIndex="1">
                                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="75.0"
-                                           styleClass="label-fecha" text="  FECHA" textFill="#fffdfd">
+                                           styleClass="label-fecha" text="  FECHA" textFill="#fffdfd" style="-fx-text-fill: black;">
                                         <VBox.margin>
                                             <Insets/>
                                         </VBox.margin>
@@ -256,7 +256,7 @@
                                     </Label>
 
                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="DIA"
-                                           HBox.hgrow="ALWAYS">
+                                           HBox.hgrow="ALWAYS" style="-fx-text-fill: black;">
                                         <font>
                                             <Font name="Arial" size="14.0"/>
                                         </font>
@@ -274,7 +274,7 @@
                                         </HBox.margin>
                                     </TextField>
 
-                                    <Label text="/">
+                                    <Label text="/" style="-fx-text-fill: black;">
                                         <font>
                                             <Font name="Arial" size="24.0"/>
                                         </font>
@@ -285,7 +285,7 @@
 
 
                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="MES"
-                                           HBox.hgrow="ALWAYS">
+                                           HBox.hgrow="ALWAYS" style="-fx-text-fill: black;">
                                         <font>
                                             <Font name="Arial" size="14.0"/>
                                         </font>
@@ -303,7 +303,7 @@
                                         </HBox.margin>
                                     </TextField>
 
-                                    <Label text="/">
+                                    <Label text="/" style="-fx-text-fill: black;">
                                         <font>
                                             <Font name="Arial" size="24.0"/>
                                         </font>
@@ -313,7 +313,7 @@
                                     </Label>
 
                                     <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="AÑO"
-                                           HBox.hgrow="ALWAYS">
+                                           HBox.hgrow="ALWAYS" style="-fx-text-fill: black;">
                                         <font>
                                             <Font name="Arial" size="14.0"/>
                                         </font>
@@ -658,7 +658,7 @@
                                                 </image>
                                             </ImageView>
                                             <Canvas fx:id="canvasGas" height="150" width="150"/>
-                                            <Label fx:id="lblGas" translateX="-45" translateY="140">
+                                            <Label fx:id="lblGas" translateX="-45" translateY="140" style="-fx-text-fill: black;">
                                                 <font>
                                                     <Font name="Arial Black" size="18.0"/>
 
@@ -701,7 +701,7 @@
                                                 <children>
 
                                                     <!-- Parte superior SI NO-->
-                                                    <Label text="SI" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                                    <Label text="SI" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="17.0"/>
                                                         </font>
@@ -709,7 +709,7 @@
 
                                                     </Label>
 
-                                                    <Label text="NO" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                                    <Label text="NO" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="17.0"/>
                                                         </font>
@@ -717,7 +717,7 @@
                                                     </Label>
 
 
-                                                    <Label text="SI" GridPane.columnIndex="6" GridPane.rowIndex="0">
+                                                    <Label text="SI" GridPane.columnIndex="6" GridPane.rowIndex="0" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="17.0"/>
                                                         </font>
@@ -725,7 +725,7 @@
 
                                                     </Label>
 
-                                                    <Label text="NO" GridPane.columnIndex="7" GridPane.rowIndex="0">
+                                                    <Label text="NO" GridPane.columnIndex="7" GridPane.rowIndex="0" style="-fx-text-fill: black;">
                                                         <font>
                                                             <Font name="Arial" size="17.0"/>
                                                         </font>
@@ -735,7 +735,7 @@
 
                                                     <!-- Parte de la izquirda solo etiquetas-->
                                                     <Label text="Rayones" GridPane.columnIndex="0"
-                                                           GridPane.rowIndex="1">
+                                                           GridPane.rowIndex="1" style="-fx-text-fill: black;">
                                                         <GridPane.margin>
                                                             <Insets left="10.0"/>
                                                         </GridPane.margin>
@@ -745,7 +745,7 @@
 
                                                     </Label>
 
-                                                    <Label text="Golpes" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                                    <Label text="Golpes" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-text-fill: black;">
                                                         <GridPane.margin>
                                                             <Insets left="20"/>
                                                         </GridPane.margin>
@@ -756,7 +756,7 @@
                                                     </Label>
 
                                                     <Label text="Tapones" GridPane.columnIndex="0"
-                                                           GridPane.rowIndex="3">
+                                                           GridPane.rowIndex="3" style="-fx-text-fill: black;">
                                                         <GridPane.margin>
                                                             <Insets left="10.0"/>
                                                         </GridPane.margin>
@@ -767,7 +767,7 @@
                                                     </Label>
 
                                                     <Label text="Tapetes" GridPane.columnIndex="0"
-                                                           GridPane.rowIndex="4">
+                                                           GridPane.rowIndex="4" style="-fx-text-fill: black;">
                                                         <GridPane.margin>
                                                             <Insets left="10.0"/>
                                                         </GridPane.margin>
@@ -778,7 +778,7 @@
                                                     </Label>
 
                                                     <!-- Parte de la derecha solo etiquetas-->
-                                                    <Label text="Radio" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                                                    <Label text="Radio" GridPane.columnIndex="5" GridPane.rowIndex="1" style="-fx-text-fill: black;">
                                                         <GridPane.margin>
                                                             <Insets left="20"/>
                                                         </GridPane.margin>
@@ -788,7 +788,7 @@
 
                                                     </Label>
 
-                                                    <Label text="Gato" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                                                    <Label text="Gato" GridPane.columnIndex="5" GridPane.rowIndex="2" style="-fx-text-fill: black;">
                                                         <GridPane.margin>
                                                             <Insets left="20"/>
                                                         </GridPane.margin>
@@ -798,7 +798,7 @@
 
                                                     </Label>
 
-                                                    <Label text="Llave" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                                                    <Label text="Llave" GridPane.columnIndex="5" GridPane.rowIndex="3" style="-fx-text-fill: black;">
                                                         <GridPane.margin>
                                                             <Insets left="20"/>
                                                         </GridPane.margin>
@@ -808,7 +808,7 @@
 
                                                     </Label>
 
-                                                    <Label text="Llanta" GridPane.columnIndex="5" GridPane.rowIndex="4">
+                                                    <Label text="Llanta" GridPane.columnIndex="5" GridPane.rowIndex="4" style="-fx-text-fill: black;">
                                                         <GridPane.margin>
                                                             <Insets left="20"/>
                                                         </GridPane.margin>
@@ -1014,7 +1014,7 @@
 
                                     <VBox alignment="CENTER_LEFT" styleClass="vBoxFill" GridPane.columnIndex="1"
                                           GridPane.rowIndex="0">
-                                        <Label text="DESCRIPCIÓN" textFill="#fffdfd">
+                                        <Label text="DESCRIPCIÓN" textFill="#fffdfd" style="-fx-text-fill: black;">
                                             <font>
                                                 <Font name="Arial" size="16.0"/>
                                             </font>
@@ -1026,7 +1026,7 @@
 
                                     <VBox alignment="CENTER" styleClass="vBoxFill" GridPane.columnIndex="2"
                                           GridPane.rowIndex="0">
-                                        <Label text="CANTIDAD" textFill="#fffdfd">
+                                        <Label text="CANTIDAD" textFill="#fffdfd" style="-fx-text-fill: black;">
                                             <font>
                                                 <Font name="Arial" size="16.0"/>
                                             </font>
@@ -1037,7 +1037,7 @@
 
                                     <VBox alignment="CENTER" styleClass="vBoxFill" GridPane.columnIndex="3"
                                           GridPane.rowIndex="0">
-                                        <Label text="UNITARIO" textFill="#fffdfd">
+                                        <Label text="UNITARIO" textFill="#fffdfd" style="-fx-text-fill: black;">
                                             <font>
                                                 <Font name="Arial" size="16.0"/>
                                             </font>
@@ -1049,7 +1049,7 @@
                                     <VBox alignment="CENTER" prefHeight="35" prefWidth="500"
                                           styleClass="vBoxFillDerecho" GridPane.columnIndex="4" GridPane.rowIndex="0">
 
-                                        <Label text="TOTAL" textFill="#fffdfd">
+                                        <Label text="TOTAL" textFill="#fffdfd" style="-fx-text-fill: black;">
                                             <font>
                                                 <Font name="Arial" size="16.0"/>
                                             </font>
@@ -1667,7 +1667,7 @@
 
                                     <StackPane alignment="CENTER" styleClass="total" GridPane.columnIndex="3"
                                                GridPane.rowIndex="22">
-                                        <Label style="-fx-font-weight: bold; -fx-font-size: 17px; -fx-text-fill: White; "
+                                        <Label style="-fx-font-weight: bold; -fx-font-size: 17px; -fx-text-fill: black; "
                                                text="TOTAL $">
                                             <font>
                                                 <Font name="Arial" size="14.0"/>
@@ -1693,7 +1693,7 @@
                                         <GridPane.margin>
                                             <Insets left="10" top="5"/>
                                         </GridPane.margin>
-                                        <Label text="Firma: ">
+                                        <Label text="Firma: " style="-fx-text-fill: black;">
                                             <font>
                                                 <Font name="Arial Bold" size="18.0"/>
                                             </font>
