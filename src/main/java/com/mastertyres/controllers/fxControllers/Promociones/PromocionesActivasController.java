@@ -6,10 +6,7 @@ import com.mastertyres.MasterTyresApplication;
 import com.mastertyres.categoria.model.Categoria;
 import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
-import com.mastertyres.common.interfaces.ICleanable;
-import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.interfaces.ILoader;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
+import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
@@ -54,7 +51,7 @@ import java.util.stream.Collectors;
 import static com.mastertyres.common.utils.MensajesAlert.*;
 
 @Component
-public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader, ICleanable {
+public class PromocionesActivasController implements IVentanaPrincipal, IFxController, ILoader, ICleanable, IRestaurableDatos {
 
     @FXML
     private AnchorPane ventanaPromocionesActivas;
@@ -643,6 +640,17 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
         if (contenedorPromociones != null) {
             contenedorPromociones.getChildren().clear();
         }
+    }
+
+    @Override
+    public void restaurarEstadoInicial() {
+        // 1. Resetear búsqueda
+        if (txtBuscar != null) {
+            txtBuscar.clear();
+        }
+
+        // 6. Recargar datos
+        cargarPromociones();
     }
 
 }//class

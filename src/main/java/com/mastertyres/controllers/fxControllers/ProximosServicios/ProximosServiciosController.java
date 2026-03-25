@@ -5,6 +5,7 @@ import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
+import com.mastertyres.common.interfaces.IRestaurableDatos;
 import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
@@ -35,7 +36,7 @@ import static com.mastertyres.common.utils.MensajesAlert.*;
 import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
-public class ProximosServiciosController implements IFxController, ILoader,  ICleanable {
+public class ProximosServiciosController implements IFxController, ILoader,  ICleanable, IRestaurableDatos {
 
 
     @FXML
@@ -409,6 +410,18 @@ public class ProximosServiciosController implements IFxController, ILoader,  ICl
         if (contenedorServicios != null) {
             contenedorServicios.getChildren().clear();
         }
+    }
+
+    @Override
+    public void restaurarEstadoInicial() {
+        // 1. Resetear búsqueda
+        if (txtBuscar != null) {
+            txtBuscar.clear();
+        }
+
+        // 6. Recargar datos
+        PaginadorServicios.setCurrentPageIndex(0);
+        cargarServicios();
     }
 
 }//class

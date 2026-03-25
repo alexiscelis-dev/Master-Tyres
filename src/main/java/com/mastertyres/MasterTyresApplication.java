@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -71,6 +72,8 @@ public class MasterTyresApplication extends Application {
 
 
 		Scene scene = new Scene(root);
+
+		ventanaPrincipal.getIcons().add(new Image(getClass().getResourceAsStream("/icons/ventana_principal/icono.png")));
 
         setPantallaSize(ventanaPrincipal,scene,"Master Tires",true,true,1000,800);
 
