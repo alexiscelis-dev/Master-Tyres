@@ -1,6 +1,6 @@
 package com.mastertyres.clientesPromocion.repository;
 
-import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.entity.ClientesPromocion;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

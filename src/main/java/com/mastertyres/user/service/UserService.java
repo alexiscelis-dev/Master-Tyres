@@ -1,6 +1,6 @@
 package com.mastertyres.user.service;
 
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.User;
 import com.mastertyres.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

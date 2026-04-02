@@ -1,7 +1,7 @@
 package com.mastertyres.nota.repository;
 
-import com.mastertyres.nota.model.Nota;
-import com.mastertyres.nota.model.NotaDTO;
+import com.mastertyres.nota.entity.Nota;
+import com.mastertyres.nota.DTOs.NotaDTO;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

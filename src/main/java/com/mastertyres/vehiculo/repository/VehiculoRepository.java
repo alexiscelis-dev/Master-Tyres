@@ -1,7 +1,7 @@
 package com.mastertyres.vehiculo.repository;
 
-import com.mastertyres.vehiculo.model.Vehiculo;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.vehiculo.entity.Vehiculo;
+import com.mastertyres.vehiculo.DTOs.VehiculoDTO;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

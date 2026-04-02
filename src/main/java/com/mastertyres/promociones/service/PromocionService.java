@@ -1,12 +1,12 @@
 package com.mastertyres.promociones.service;
 
-import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.entity.ClientesPromocion;
 import com.mastertyres.clientesPromocion.repository.ClientePromocionRepository;
-import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.entity.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.promociones.domain.PromocionValidator;
-import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.model.StatusPromocion;
+import com.mastertyres.promociones.entity.Promocion;
+import com.mastertyres.promociones.entity.StatusPromocion;
 import com.mastertyres.promociones.repository.PromocionesRepository;
 import com.mastertyres.vehiculoPromocion.domain.VehiculoPromocionValidator;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;

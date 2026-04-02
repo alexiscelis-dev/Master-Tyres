@@ -1,9 +1,9 @@
 package com.mastertyres.respaldo.service;
 
 import com.mastertyres.common.exeptions.RespaldoException;
-import com.mastertyres.respaldo.model.Respaldo;
-import com.mastertyres.respaldo.model.StatusRespaldo;
-import com.mastertyres.respaldo.model.TipoRespaldo;
+import com.mastertyres.respaldo.entity.Respaldo;
+import com.mastertyres.respaldo.entity.StatusRespaldo;
+import com.mastertyres.respaldo.entity.TipoRespaldo;
 import com.mastertyres.respaldo.repository.RespaldoRepository;
 import com.mastertyres.storage.SupabaseStorage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +86,8 @@ public class RespaldoService implements IRespaldoService {
                     mysqlDumpRuta,
                     "-u", usernameDB,
                     "-p" + passwordDB,
+                    "--port=3307",
+                    "--protocol=TCP",
                     dataBaseName
             );
 

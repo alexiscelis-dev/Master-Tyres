@@ -1,7 +1,7 @@
 package com.mastertyres.security;
 
 import com.mastertyres.common.exeptions.UserException;
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.User;
 import com.mastertyres.user.service.UserService;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;

@@ -8,7 +8,7 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.EmailService;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.User;
 import com.mastertyres.user.service.UserService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

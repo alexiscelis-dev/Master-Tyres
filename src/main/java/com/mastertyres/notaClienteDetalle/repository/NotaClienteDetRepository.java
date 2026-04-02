@@ -1,7 +1,7 @@
 package com.mastertyres.notaClienteDetalle.repository;
 
-import com.mastertyres.nota.model.Nota;
-import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
+import com.mastertyres.nota.entity.Nota;
+import com.mastertyres.notaClienteDetalle.entity.NotaClienteDetalle;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

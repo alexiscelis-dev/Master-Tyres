@@ -10,8 +10,8 @@ import com.mastertyres.components.fxComponents.loader.LoadingComponentController
 import com.mastertyres.controllers.fxControllers.historial.HistorialController;
 import com.mastertyres.controllers.fxControllers.imprimirNota.ImprimirNotaController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.nota.model.NotaDTO;
-import com.mastertyres.nota.model.StatusNota;
+import com.mastertyres.nota.DTOs.NotaDTO;
+import com.mastertyres.nota.entity.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import com.mastertyres.notaClienteDetalle.service.NotaClienteDetService;
 import com.mastertyres.notaDetalle.service.NotaDetalleService;

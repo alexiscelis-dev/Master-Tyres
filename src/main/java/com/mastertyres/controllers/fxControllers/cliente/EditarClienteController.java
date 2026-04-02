@@ -1,8 +1,8 @@
 package com.mastertyres.controllers.fxControllers.cliente;
 
 
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.TipoCliente;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.cliente.entity.TipoCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.IFxController;

@@ -1,10 +1,10 @@
 package com.mastertyres.detalleCategoria.service;
 
-import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.entity.Categoria;
 import com.mastertyres.detalleCategoria.domain.CategoriaValidator;
-import com.mastertyres.detalleCategoria.model.DetalleCategoria;
+import com.mastertyres.detalleCategoria.entity.DetalleCategoria;
 import com.mastertyres.detalleCategoria.repository.DetalleCategoriaRepository;
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.entity.Marca;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

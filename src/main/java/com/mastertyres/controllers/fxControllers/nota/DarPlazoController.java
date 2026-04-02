@@ -2,7 +2,7 @@ package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.service.NotaUtils;
-import com.mastertyres.nota.model.StatusNota;
+import com.mastertyres.nota.entity.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

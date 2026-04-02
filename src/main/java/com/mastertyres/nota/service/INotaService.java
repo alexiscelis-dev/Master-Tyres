@@ -1,9 +1,9 @@
 package com.mastertyres.nota.service;
 
-import com.mastertyres.nota.model.Nota;
-import com.mastertyres.nota.model.NotaDTO;
-import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
-import com.mastertyres.notaDetalle.model.NotaDetalle;
+import com.mastertyres.nota.entity.Nota;
+import com.mastertyres.nota.DTOs.NotaDTO;
+import com.mastertyres.notaClienteDetalle.entity.NotaClienteDetalle;
+import com.mastertyres.notaDetalle.entity.NotaDetalle;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;

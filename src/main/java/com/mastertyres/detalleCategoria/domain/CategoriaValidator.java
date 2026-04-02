@@ -2,7 +2,7 @@ package com.mastertyres.detalleCategoria.domain;
 
 import com.mastertyres.common.exeptions.CategoriaException;
 import com.mastertyres.common.exeptions.ModeloException;
-import com.mastertyres.detalleCategoria.model.DetalleCategoria;
+import com.mastertyres.detalleCategoria.entity.DetalleCategoria;
 import com.mastertyres.detalleCategoria.repository.DetalleCategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

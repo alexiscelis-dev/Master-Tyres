@@ -1,6 +1,6 @@
 package com.mastertyres.inventario.service;
 
-import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.inventario.entity.Inventario;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;

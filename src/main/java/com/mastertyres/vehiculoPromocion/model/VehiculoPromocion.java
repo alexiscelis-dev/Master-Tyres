@@ -1,9 +1,9 @@
 package com.mastertyres.vehiculoPromocion.model;
 
 
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.modelo.model.Modelo;
-import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.marca.entity.Marca;
+import com.mastertyres.modelo.entity.Modelo;
+import com.mastertyres.promociones.entity.Promocion;
 import jakarta.persistence.*;
 import lombok.*;
 

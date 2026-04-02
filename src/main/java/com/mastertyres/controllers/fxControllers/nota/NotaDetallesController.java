@@ -1,10 +1,10 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.cliente.entity.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.nota.model.NotaDTO;
-import com.mastertyres.nota.model.StatusNota;
+import com.mastertyres.nota.DTOs.NotaDTO;
+import com.mastertyres.nota.entity.StatusNota;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -12,11 +12,11 @@ import com.mastertyres.common.utils.GenerarLogs;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.respaldo.model.Respaldo;
+import com.mastertyres.respaldo.entity.Respaldo;
 import com.mastertyres.respaldo.service.RespaldoService;
 import com.mastertyres.security.SecurityPassword;
-import com.mastertyres.user.model.RolUser;
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.RolUser;
+import com.mastertyres.user.entity.User;
 import com.mastertyres.user.service.UserService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -767,7 +767,10 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     } else if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         mostrarError("Accion cancelada", "", "Accion cancelada por el usuario");
                     } else {
-                        mostrarError("Error interno", "", "Ocurrio un error inesperado al crear el respaldo. Vuelva a intentarlo mas tarde.");
+                        mostrarExcepcionThrowable("Error interno",
+                                "",
+                                "Ocurrio un error inesperado al crear el respaldo. Vuelva a intentarlo mas tarde.",
+                                ex);
                     }
                 }, null
 
@@ -820,9 +823,12 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                 }, (ex) -> {
 
                     if (ex instanceof RespaldoException) {
-                        mostrarError("Error al mostrar datos", "", "" + ex.getMessage());
+                        mostrarExcepcionThrowable("Error al mostrar datos", "", "" + ex.getMessage(), ex);
                     } else {
-                        mostrarError("Error interno", "", "Ocurrio un error inesperado al mostrar los datos. Vuelva a intentarlo mas tarde.");
+                        mostrarExcepcionThrowable("Error interno",
+                                "",
+                                "Ocurrio un error inesperado al mostrar los datos. Vuelva a intentarlo mas tarde.",
+                                ex);
                     }
 
                 }, null

@@ -1,13 +1,13 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.cliente.entity.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
-import com.mastertyres.nota.model.NotaDTO;
-import com.mastertyres.vehiculo.model.StatusVehiculo;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.nota.DTOs.NotaDTO;
+import com.mastertyres.vehiculo.entity.StatusVehiculo;
+import com.mastertyres.vehiculo.DTOs.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

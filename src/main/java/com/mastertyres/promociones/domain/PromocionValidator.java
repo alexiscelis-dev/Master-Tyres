@@ -1,7 +1,7 @@
 package com.mastertyres.promociones.domain;
 
 import com.mastertyres.common.exeptions.PromocionException;
-import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.entity.Promocion;
 import org.springframework.stereotype.Component;
 
 @Component

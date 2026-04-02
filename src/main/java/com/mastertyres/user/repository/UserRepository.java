@@ -1,6 +1,6 @@
 package com.mastertyres.user.repository;
 
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.User;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

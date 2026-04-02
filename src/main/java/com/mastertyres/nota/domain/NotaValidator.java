@@ -1,10 +1,10 @@
 package com.mastertyres.nota.domain;
 
 import com.mastertyres.common.exeptions.NotaException;
-import com.mastertyres.nota.model.Nota;
-import com.mastertyres.nota.model.StatusSiNo;
-import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
-import com.mastertyres.notaDetalle.model.NotaDetalle;
+import com.mastertyres.nota.entity.Nota;
+import com.mastertyres.nota.entity.StatusSiNo;
+import com.mastertyres.notaClienteDetalle.entity.NotaClienteDetalle;
+import com.mastertyres.notaDetalle.entity.NotaDetalle;
 import org.springframework.stereotype.Component;
 
 @Component

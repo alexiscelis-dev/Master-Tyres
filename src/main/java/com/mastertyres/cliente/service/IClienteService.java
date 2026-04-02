@@ -1,6 +1,6 @@
 package com.mastertyres.cliente.service;
 
-import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.entity.Cliente;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
