@@ -1,6 +1,6 @@
 package com.mastertyres.respaldo.service;
 
-import com.mastertyres.respaldo.model.Respaldo;
+import com.mastertyres.respaldo.entity.Respaldo;
 
 import java.util.List;
 

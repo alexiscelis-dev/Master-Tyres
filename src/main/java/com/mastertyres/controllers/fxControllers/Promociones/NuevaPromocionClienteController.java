@@ -2,8 +2,8 @@ package com.mastertyres.controllers.fxControllers.Promociones;
 
 
 import com.mastertyres.clientesPromocion.service.ClientePromocionService;
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.cliente.entity.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.ICleanable;
@@ -16,10 +16,10 @@ import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.model.StatusPromocion;
-import com.mastertyres.promociones.model.TipoDescuento;
-import com.mastertyres.promociones.model.TipoPromocion;
+import com.mastertyres.promociones.entity.Promocion;
+import com.mastertyres.promociones.entity.StatusPromocion;
+import com.mastertyres.promociones.entity.TipoDescuento;
+import com.mastertyres.promociones.entity.TipoPromocion;
 import com.mastertyres.promociones.service.PromocionService;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -542,16 +542,24 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
         }
 
         try {
+            // 1. Parsear el precio base
             double precio = Double.parseDouble(precioTexto);
-            double porcentaje = porcentajeDescuento.getValue();
+
+            // 2. IMPORTANTE: Usamos el valor redondeado del slider
+            // para que coincida con el "Descuento X%" que ve el usuario.
+            int porcentaje = (int) Math.round(porcentajeDescuento.getValue());
+
+            // 3. Calcular el descuento de forma limpia
             double descuento = precio * (porcentaje / 100.0);
             double precioFinal = precio - descuento;
 
+            // 4. Formatear a 2 decimales para la UI
             precioConDescuento.setText(String.format("%.2f", precioFinal));
+
         } catch (NumberFormatException e) {
             precioConDescuento.setText("");
         }
-    }//calcularPrecioConDescuento
+    }
 
     private boolean empty() {
         boolean empty = false;

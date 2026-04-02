@@ -1,6 +1,6 @@
 package com.mastertyres.inventario.repository;
 
-import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.inventario.entity.Inventario;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

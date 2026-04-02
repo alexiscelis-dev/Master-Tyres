@@ -1,6 +1,6 @@
 package com.mastertyres.promociones.repository;
 
-import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.promociones.entity.Promocion;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

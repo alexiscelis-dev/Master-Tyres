@@ -1,16 +1,16 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
-import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.entity.Cliente;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.inventario.model.Inventario;
-import com.mastertyres.nota.model.BaseNota;
-import com.mastertyres.nota.model.CampoNota;
-import com.mastertyres.nota.model.NotaDTO;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.inventario.entity.Inventario;
+import com.mastertyres.nota.entity.BaseNota;
+import com.mastertyres.nota.entity.CampoNota;
+import com.mastertyres.nota.DTOs.NotaDTO;
+import com.mastertyres.vehiculo.DTOs.VehiculoDTO;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;

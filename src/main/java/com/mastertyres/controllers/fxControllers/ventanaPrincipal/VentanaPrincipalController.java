@@ -10,7 +10,7 @@ import com.mastertyres.components.fxComponents.loader.LoadingComponentController
 import com.mastertyres.controllers.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.controllers.fxControllers.configuracion.ConfiguracionController;
 import com.mastertyres.respaldo.service.IRespaldoService;
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.User;
 import com.mastertyres.user.service.UserService;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;

@@ -1,7 +1,7 @@
 package com.mastertyres.controllers.fxControllers.vehiculo;
 
 
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.entity.StatusCliente;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.NotaUtils;
@@ -10,8 +10,8 @@ import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.vehiculo.model.StatusVehiculo;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.vehiculo.entity.StatusVehiculo;
+import com.mastertyres.vehiculo.DTOs.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleObjectProperty;

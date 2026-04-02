@@ -1,6 +1,6 @@
 package com.mastertyres.respaldo.service;
 
-import com.mastertyres.respaldo.model.Respaldo;
+import com.mastertyres.respaldo.entity.Respaldo;
 import com.mastertyres.respaldo.repository.RespaldoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

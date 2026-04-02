@@ -1,6 +1,6 @@
 package com.mastertyres.user.service;
 
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.User;
 
 public interface IUserService {
 

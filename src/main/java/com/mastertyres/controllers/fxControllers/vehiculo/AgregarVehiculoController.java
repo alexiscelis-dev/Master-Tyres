@@ -1,9 +1,9 @@
 package com.mastertyres.controllers.fxControllers.vehiculo;
 
-import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.entity.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.cliente.entity.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.common.interfaces.ICleanable;
@@ -14,11 +14,11 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.entity.Marca;
 import com.mastertyres.marca.service.MarcaService;
-import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.entity.Modelo;
 import com.mastertyres.modelo.service.ModeloService;
-import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.entity.Vehiculo;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.animation.PauseTransition;

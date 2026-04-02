@@ -1,7 +1,7 @@
 package com.mastertyres.marca.repository;
 
 
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.entity.Marca;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

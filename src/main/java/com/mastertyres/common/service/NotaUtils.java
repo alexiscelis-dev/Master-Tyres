@@ -1,6 +1,6 @@
 package com.mastertyres.common.service;
 
-import com.mastertyres.nota.model.CampoNota;
+import com.mastertyres.nota.entity.CampoNota;
 import jakarta.annotation.PostConstruct;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;

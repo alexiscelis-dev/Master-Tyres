@@ -1,13 +1,10 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
-import com.mastertyres.cliente.model.Cliente;
 import com.mastertyres.common.interfaces.ILoader;
-import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.service.IPromocionService;
+import com.mastertyres.promociones.entity.Promocion;
 import com.mastertyres.promociones.service.PromocionService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

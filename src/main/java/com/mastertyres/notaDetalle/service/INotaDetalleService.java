@@ -1,7 +1,7 @@
 package com.mastertyres.notaDetalle.service;
 
-import com.mastertyres.nota.model.Nota;
-import com.mastertyres.notaDetalle.model.NotaDetalle;
+import com.mastertyres.nota.entity.Nota;
+import com.mastertyres.notaDetalle.entity.NotaDetalle;
 
 public interface INotaDetalleService {
 

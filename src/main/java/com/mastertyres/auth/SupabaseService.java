@@ -2,7 +2,7 @@ package com.mastertyres.auth;
 
 import com.mastertyres.common.exeptions.UserException;
 
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.User;
 import com.mastertyres.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

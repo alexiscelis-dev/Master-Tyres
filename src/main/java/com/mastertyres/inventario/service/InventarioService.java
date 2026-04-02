@@ -2,8 +2,8 @@ package com.mastertyres.inventario.service;
 
 import com.mastertyres.common.exeptions.InventarioException;
 import com.mastertyres.inventario.domain.InventarioValidator;
-import com.mastertyres.inventario.model.Inventario;
-import com.mastertyres.inventario.model.StatusInventario;
+import com.mastertyres.inventario.entity.Inventario;
+import com.mastertyres.inventario.entity.StatusInventario;
 import com.mastertyres.inventario.repository.InventarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

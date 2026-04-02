@@ -200,7 +200,7 @@
                                     </VBox>
 
 
-                                    <Label text="Because so much is riding on your tires" translateX="-268.0" translateY="40" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <Label style="-fx-text-fill: black;" text="Because so much is riding on your tires" translateX="-268.0" translateY="40" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                         <font>
                                             <Font name="Book Antiqua" size="15.0" />
                                         </font>
@@ -293,7 +293,7 @@
 
                                     </HBox>
                                     <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                        <Label prefHeight="18.0" prefWidth="491.0" text="Juan Pablo II No. 33 / Col. Obrera / La Piedad, Mich. / C.P. 59370">
+                                        <Label prefHeight="18.0" prefWidth="491.0" style="-fx-text-fill: black;" text="Juan Pablo II No. 33 / Col. Obrera / La Piedad, Mich. / C.P. 59370" textFill="black">
                                             <GridPane.margin>
                                                 <Insets left="80.0" />
                                             </GridPane.margin>
@@ -302,7 +302,7 @@
                                             </font>
                                         </Label>
 
-                                        <Label text="Tel. 52.6.13.53  / Cel +52 352 102 8852Tel. 52.6.13.53  / Cel +52 352 102 8852">
+                                        <Label style="-fx-text-fill: black;" text="Tel. 52.6.13.53  / Cel +52 352 102 8852">
                                             <font>
                                                 <Font name="Arial Black" size="18.0" />
                                             </font>

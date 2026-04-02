@@ -1,7 +1,7 @@
 package com.mastertyres.inventario.domain;
 
 import com.mastertyres.common.exeptions.InventarioException;
-import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.inventario.entity.Inventario;
 import org.springframework.stereotype.Component;
 
 @Component

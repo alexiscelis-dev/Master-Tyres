@@ -7,7 +7,7 @@ import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.inventario.entity.Inventario;
 import com.mastertyres.inventario.service.InventarioService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

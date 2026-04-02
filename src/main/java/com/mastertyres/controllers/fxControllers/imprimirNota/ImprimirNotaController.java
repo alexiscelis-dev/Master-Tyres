@@ -1,15 +1,14 @@
 package com.mastertyres.controllers.fxControllers.imprimirNota;
 
 import com.mastertyres.cliente.service.ClienteService;
-import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.inventario.service.InventarioService;
-import com.mastertyres.nota.model.BaseNota;
-import com.mastertyres.nota.model.NotaDTO;
-import com.mastertyres.nota.model.StatusNota;
+import com.mastertyres.nota.entity.BaseNota;
+import com.mastertyres.nota.DTOs.NotaDTO;
+import com.mastertyres.nota.entity.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import com.mastertyres.notaDetalle.service.NotaDetalleService;
 import com.mastertyres.vehiculo.service.VehiculoService;
