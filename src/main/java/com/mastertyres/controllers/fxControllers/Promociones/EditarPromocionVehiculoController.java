@@ -1,6 +1,6 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
-import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.entity.Categoria;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
@@ -8,12 +8,12 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.entity.Marca;
 import com.mastertyres.marca.service.MarcaService;
-import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.entity.Modelo;
 import com.mastertyres.modelo.service.ModeloService;
-import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.model.TipoDescuento;
+import com.mastertyres.promociones.entity.Promocion;
+import com.mastertyres.promociones.entity.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;

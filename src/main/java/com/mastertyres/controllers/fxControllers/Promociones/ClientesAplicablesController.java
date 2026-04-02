@@ -1,7 +1,7 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
 import com.mastertyres.clientesPromocion.service.ClientePromocionService;
-import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.entity.Cliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
@@ -9,8 +9,8 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ClipboardUtil;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.model.TipoPromocion;
+import com.mastertyres.promociones.entity.Promocion;
+import com.mastertyres.promociones.entity.TipoPromocion;
 import com.mastertyres.promociones.service.PromocionService;
 import javafx.application.HostServices;
 import javafx.beans.property.BooleanProperty;
@@ -157,7 +157,7 @@ public class ClientesAplicablesController implements IFxController, ILoader, ICl
                     for (Cliente cliente : seleccionados) {
                         telefono = cliente.getNumTelefono(); // debe incluir lada internacional
 
-                        mensaje = "Master tires. \n\n" + "¡Hola " + cliente.getNombre() + "! Tenemos una promoción especial para ti 🚗🔥\n\n" +
+                        mensaje = "Master Tires. \n\n" + "¡Hola " + cliente.getNombre() + "! Tenemos una promoción especial para ti 🚗🔥\n\n" +
                                 promocion.getNombre() + "\n\n" + promocion.getDescripcion() + "\n\n" + "Tienes hasta el: " +
                                 promocion.getFechaFin() + " para reclamar tu promocion";
 

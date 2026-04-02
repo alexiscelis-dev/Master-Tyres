@@ -1,10 +1,10 @@
 package com.mastertyres.vehiculo.service;
 
 
-import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.vehiculo.model.Vehiculo;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.categoria.entity.Categoria;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.vehiculo.entity.Vehiculo;
+import com.mastertyres.vehiculo.DTOs.VehiculoDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

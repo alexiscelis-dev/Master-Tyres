@@ -1,6 +1,6 @@
 package com.mastertyres.categoria.service;
 
-import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.entity.Categoria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

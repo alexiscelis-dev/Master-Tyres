@@ -1,13 +1,13 @@
 package com.mastertyres.vehiculo.service;
 
-import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.entity.Categoria;
 import com.mastertyres.cliente.domain.ClienteValidator;
-import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.entity.Cliente;
 import com.mastertyres.common.exeptions.VehiculoException;
 import com.mastertyres.vehiculo.domain.VehiculoValidator;
-import com.mastertyres.vehiculo.model.StatusVehiculo;
-import com.mastertyres.vehiculo.model.Vehiculo;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.vehiculo.entity.StatusVehiculo;
+import com.mastertyres.vehiculo.entity.Vehiculo;
+import com.mastertyres.vehiculo.DTOs.VehiculoDTO;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

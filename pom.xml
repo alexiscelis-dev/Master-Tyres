@@ -81,11 +81,13 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>21.0.3</version>
+			<classifier>win</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
 			<version>21.0.3</version>
+			<classifier>win</classifier>
 		</dependency>
 
         <!--Dependencia para generar los PDF -->
@@ -160,6 +162,17 @@
     </dependencies>
 
 	<build>
+
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
+
 		<plugins>
 
 			<plugin>

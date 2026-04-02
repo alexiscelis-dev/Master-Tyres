@@ -1,6 +1,6 @@
 package com.mastertyres.controllers.fxControllers.inventario;
 
-import com.mastertyres.inventario.model.Inventario;
+import com.mastertyres.inventario.entity.Inventario;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -1,6 +1,6 @@
 package com.mastertyres.categoria.repository;
 
-import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.entity.Categoria;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

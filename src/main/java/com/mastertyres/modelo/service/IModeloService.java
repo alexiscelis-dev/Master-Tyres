@@ -1,6 +1,6 @@
 package com.mastertyres.modelo.service;
 
-import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.entity.Modelo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

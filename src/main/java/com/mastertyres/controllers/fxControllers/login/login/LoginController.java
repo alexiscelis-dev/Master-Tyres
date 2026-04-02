@@ -10,7 +10,7 @@ import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.login.recuperarPassword.RecuperarPasswordController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.User;
 import com.mastertyres.user.service.UserService;
 import javafx.event.ActionEvent;
 import javafx.event.Event;

@@ -1,6 +1,6 @@
 package com.mastertyres.controllers.fxControllers.AdministrarMarcasModelosCategorias;
 
-import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.entity.Categoria;
 import com.mastertyres.categoria.service.CategoriaService;
 import com.mastertyres.common.exeptions.ModeloException;
 import com.mastertyres.common.interfaces.ICleanable;
@@ -9,11 +9,11 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.detalleCategoria.model.DetalleCategoria;
+import com.mastertyres.detalleCategoria.entity.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.entity.Marca;
 import com.mastertyres.marca.service.MarcaService;
-import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.entity.Modelo;
 import com.mastertyres.modelo.service.ModeloService;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import com.mastertyres.vehiculo.service.VehiculoService;

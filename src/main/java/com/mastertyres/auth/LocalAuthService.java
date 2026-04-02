@@ -1,8 +1,8 @@
 package com.mastertyres.auth;
 
 import com.mastertyres.common.exeptions.UserException;
-import com.mastertyres.user.model.TipoLicencia;
-import com.mastertyres.user.model.User;
+import com.mastertyres.user.entity.TipoLicencia;
+import com.mastertyres.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

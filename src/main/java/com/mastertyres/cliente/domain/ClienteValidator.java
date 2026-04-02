@@ -1,9 +1,9 @@
 package com.mastertyres.cliente.domain;
 
-import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.entity.Cliente;
 import com.mastertyres.cliente.repository.ClienteRepository;
 import com.mastertyres.common.exeptions.ClienteException;
-import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.entity.Vehiculo;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

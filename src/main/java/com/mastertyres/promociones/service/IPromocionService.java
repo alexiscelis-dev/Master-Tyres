@@ -1,7 +1,7 @@
 package com.mastertyres.promociones.service;
 
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.promociones.model.Promocion;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.promociones.entity.Promocion;
 import com.mastertyres.vehiculoPromocion.model.VehiculoPromocion;
 
 import java.util.List;

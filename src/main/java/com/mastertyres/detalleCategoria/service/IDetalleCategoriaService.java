@@ -1,8 +1,8 @@
 package com.mastertyres.detalleCategoria.service;
 
-import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.detalleCategoria.model.DetalleCategoria;
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.categoria.entity.Categoria;
+import com.mastertyres.detalleCategoria.entity.DetalleCategoria;
+import com.mastertyres.marca.entity.Marca;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

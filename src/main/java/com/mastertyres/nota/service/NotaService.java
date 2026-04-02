@@ -2,13 +2,13 @@ package com.mastertyres.nota.service;
 
 import com.mastertyres.common.exeptions.NotaException;
 import com.mastertyres.nota.domain.NotaValidator;
-import com.mastertyres.nota.model.Nota;
-import com.mastertyres.nota.model.NotaDTO;
-import com.mastertyres.nota.model.StatusNota;
+import com.mastertyres.nota.entity.Nota;
+import com.mastertyres.nota.DTOs.NotaDTO;
+import com.mastertyres.nota.entity.StatusNota;
 import com.mastertyres.nota.repository.NotaRepository;
-import com.mastertyres.notaClienteDetalle.model.NotaClienteDetalle;
+import com.mastertyres.notaClienteDetalle.entity.NotaClienteDetalle;
 import com.mastertyres.notaClienteDetalle.repository.NotaClienteDetRepository;
-import com.mastertyres.notaDetalle.model.NotaDetalle;
+import com.mastertyres.notaDetalle.entity.NotaDetalle;
 import com.mastertyres.notaDetalle.repository.NotaDetalleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

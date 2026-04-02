@@ -1,7 +1,7 @@
 package com.mastertyres.modelo.domain;
 
 import com.mastertyres.common.exeptions.ModeloException;
-import com.mastertyres.modelo.model.Modelo;
+import com.mastertyres.modelo.entity.Modelo;
 import com.mastertyres.modelo.repository.ModeloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

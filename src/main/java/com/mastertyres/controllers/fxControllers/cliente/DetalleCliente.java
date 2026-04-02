@@ -1,7 +1,7 @@
 package com.mastertyres.controllers.fxControllers.cliente;
 
 
-import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.cliente.entity.Cliente;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

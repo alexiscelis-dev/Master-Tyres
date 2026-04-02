@@ -1,10 +1,10 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
 
-import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.entity.ClientesPromocion;
 import com.mastertyres.clientesPromocion.service.ClientePromocionService;
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.cliente.entity.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.ICleanable;
@@ -13,8 +13,8 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.model.TipoDescuento;
+import com.mastertyres.promociones.entity.Promocion;
+import com.mastertyres.promociones.entity.TipoDescuento;
 import com.mastertyres.promociones.service.PromocionService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;

@@ -1,6 +1,6 @@
 package com.mastertyres.marca.service;
 
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.entity.Marca;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

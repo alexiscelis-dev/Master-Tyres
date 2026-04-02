@@ -1,7 +1,7 @@
 package com.mastertyres.controllers.fxControllers.vehiculo;
 
-import com.mastertyres.vehiculo.model.Vehiculo;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.vehiculo.entity.Vehiculo;
+import com.mastertyres.vehiculo.DTOs.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

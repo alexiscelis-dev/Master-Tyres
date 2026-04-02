@@ -1,6 +1,6 @@
 package com.mastertyres.categoria.service;
 
-import com.mastertyres.categoria.model.Categoria;
+import com.mastertyres.categoria.entity.Categoria;
 import com.mastertyres.categoria.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -6,7 +6,7 @@ import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.entity.Marca;
 import com.mastertyres.marca.service.MarcaService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

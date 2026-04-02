@@ -1,7 +1,7 @@
 package com.mastertyres.vehiculo.domain;
 
 import com.mastertyres.common.exeptions.VehiculoException;
-import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.entity.Vehiculo;
 import com.mastertyres.vehiculo.repository.VehiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

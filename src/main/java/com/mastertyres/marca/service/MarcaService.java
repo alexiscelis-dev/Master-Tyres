@@ -1,7 +1,7 @@
 package com.mastertyres.marca.service;
 
 import com.mastertyres.marca.domain.MarcaValidator;
-import com.mastertyres.marca.model.Marca;
+import com.mastertyres.marca.entity.Marca;
 import com.mastertyres.marca.repository.MarcaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

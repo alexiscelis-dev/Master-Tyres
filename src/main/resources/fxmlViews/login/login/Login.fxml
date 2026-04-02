@@ -22,7 +22,7 @@
                 <VBox alignment="CENTER" maxHeight="500" maxWidth="451.0" prefHeight="383.0" prefWidth="451.0"
                       spacing="20"
                       styleClass="login-container">
-                    <Label styleClass="title" text="Login"/>
+                    <Label styleClass="title" text="Iniciar sesión"/>
                     <TextField fx:id="txtCorreo" promptText="Correo electrónico" styleClass="input-field"/>
 
 

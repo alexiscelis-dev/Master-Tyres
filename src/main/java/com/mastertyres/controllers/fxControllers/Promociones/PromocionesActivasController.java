@@ -1,10 +1,10 @@
 package com.mastertyres.controllers.fxControllers.Promociones;
 
-import com.mastertyres.clientesPromocion.model.ClientesPromocion;
+import com.mastertyres.clientesPromocion.entity.ClientesPromocion;
 import com.mastertyres.clientesPromocion.service.ClientePromocionService;
 import com.mastertyres.MasterTyresApplication;
-import com.mastertyres.categoria.model.Categoria;
-import com.mastertyres.cliente.model.Cliente;
+import com.mastertyres.categoria.entity.Categoria;
+import com.mastertyres.cliente.entity.Cliente;
 import com.mastertyres.common.exeptions.PromocionException;
 import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.NotaUtils;
@@ -14,10 +14,10 @@ import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.marca.model.Marca;
-import com.mastertyres.modelo.model.Modelo;
-import com.mastertyres.promociones.model.Promocion;
-import com.mastertyres.promociones.model.TipoPromocion;
+import com.mastertyres.marca.entity.Marca;
+import com.mastertyres.modelo.entity.Modelo;
+import com.mastertyres.promociones.entity.Promocion;
+import com.mastertyres.promociones.entity.TipoPromocion;
 import com.mastertyres.promociones.service.PromocionService;
 import com.mastertyres.vehiculoPromocion.service.VehiculoPromocionService;
 import javafx.event.ActionEvent;

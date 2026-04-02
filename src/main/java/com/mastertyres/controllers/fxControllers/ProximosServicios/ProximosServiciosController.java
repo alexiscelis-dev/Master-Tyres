@@ -10,7 +10,7 @@ import com.mastertyres.common.service.NotaUtils;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.vehiculo.model.VehiculoDTO;
+import com.mastertyres.vehiculo.DTOs.VehiculoDTO;
 import com.mastertyres.vehiculo.service.VehiculoService;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
@@ -175,11 +175,16 @@ public class ProximosServiciosController implements IFxController, ILoader,  ICl
                     vehiculoService.actualizarContador(vehiculoSeleccion.getId(), vehiculoSeleccion.getContador_mensaje() + 1);
 
                     String telefono = vehiculoSeleccion.getNumTelefono();
-                    String mensaje = "Master tires. \n\n" + "¡Hola "
-                            + vehiculoSeleccion.getNombreCliente() +
-                            "! Recuerda hacer el servicio de tu vehiculo "
-                            + vehiculoSeleccion.getNombreMarca() + " " + vehiculoSeleccion.getNombreModelo() + " " + vehiculoSeleccion.getAnio()
-                            + "🚗🔥\n\n" + "Tu ultimo servicio fue el: " + vehiculoSeleccion.getUltimoServicio();
+
+                    String mensaje = "Master Tires 🚗\n\n"
+                            + "Hola " + vehiculoSeleccion.getNombreCliente() + ".\n\n"
+                            + "Le recomendamos realizar el servicio de su vehículo "
+                            + vehiculoSeleccion.getNombreMarca() + " "
+                            + vehiculoSeleccion.getNombreModelo() + " "
+                            + vehiculoSeleccion.getAnio()
+                            + ", ya que ha pasado un tiempo desde su última visita.\n\n"
+                            + "Estamos a sus órdenes para agendar su próxima revisión.\n\n"
+                            + "Gracias por confiar en Master Tires.";
 
                     String url = "https://api.whatsapp.com/send?phone=" + telefono + "&text=" +
                             java.net.URLEncoder.encode(mensaje, java.nio.charset.StandardCharsets.UTF_8);

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="root" prefHeight="700" prefWidth="700" style="-fx-background-color: #080808;"
-            stylesheets="@../../styles-css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12"
+            stylesheets="@/styles-css/Nota.css" xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.mastertyres.controllers.fxControllers.nota.BuscarLlantaController">
 

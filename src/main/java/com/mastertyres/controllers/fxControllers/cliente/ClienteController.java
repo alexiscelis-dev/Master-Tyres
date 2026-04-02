@@ -1,7 +1,7 @@
 package com.mastertyres.controllers.fxControllers.cliente;
 
-import com.mastertyres.cliente.model.Cliente;
-import com.mastertyres.cliente.model.StatusCliente;
+import com.mastertyres.cliente.entity.Cliente;
+import com.mastertyres.cliente.entity.StatusCliente;
 import com.mastertyres.cliente.service.ClienteService;
 import com.mastertyres.common.exeptions.ClienteException;
 import com.mastertyres.common.interfaces.*;
@@ -11,7 +11,7 @@ import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.FechaUtils;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
-import com.mastertyres.vehiculo.model.Vehiculo;
+import com.mastertyres.vehiculo.entity.Vehiculo;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.canvas.Canvas?>
 
-<AnchorPane fx:id="rootPane" prefHeight="570.0" prefWidth="945.0" stylesheets="@../../styles-css/Nota.css"
-            translateX="100.0"
-            translateY="80.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mastertyres.controllers.fxControllers.nota.AgregarNotaController">
+<AnchorPane fx:id="rootPane" prefHeight="570.0" prefWidth="945.0" stylesheets="@../../styles-css/Nota.css" translateX="100.0" translateY="80.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mastertyres.controllers.fxControllers.nota.AgregarNotaController">
 
 
     <children>
 
 
         <!--Zona superior -->
-        <StackPane translateX="990" translateY="50" styleClass="showIcons" fx:id="btnShowIcons">
+        <StackPane fx:id="btnShowIcons" styleClass="showIcons" translateX="990" translateY="50">
 
 
             <StackPane.margin>
-                <Insets bottom="20" top="50"/>
+                <Insets bottom="20" top="50" />
             </StackPane.margin>
 
             <ImageView fitHeight="50" fitWidth="50" preserveRatio="true">
                 <image>
-                    <Image url="@/icons/add_circle.png"/>
+                    <Image url="@/icons/add_circle.png" />
                 </image>
             </ImageView>
 
@@ -38,67 +35,62 @@
 
             <GridPane fx:id="gridPaneIcons" alignment="CENTER" hgap="15" vgap="10" visible="false">
                 <padding>
-                    <Insets top="10" right="0" bottom="10" left="0"/>
+                    <Insets bottom="10" left="0" right="0" top="10" />
                 </padding>
                 <columnConstraints>
-                    <ColumnConstraints prefWidth="50"/>
+                    <ColumnConstraints prefWidth="50" />
 
                 </columnConstraints>
                 <rowConstraints>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
-                    <RowConstraints prefHeight="35.0"/>
+                    <RowConstraints prefHeight="35.0" />
+                    <RowConstraints prefHeight="35.0" />
+                    <RowConstraints prefHeight="35.0" />
+                    <RowConstraints prefHeight="35.0" />
+                    <RowConstraints prefHeight="35.0" />
+                    <RowConstraints prefHeight="35.0" />
 
                 </rowConstraints>
 
                 <children>
 
-                    <Button onAction="#buscarCliente" fx:id="btnBuscarCliente" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="25.0"
-                            prefWidth="25.0" styleClass="boton-accion">
+                    <Button fx:id="btnBuscarCliente" onAction="#buscarCliente" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion" GridPane.columnIndex="0" GridPane.rowIndex="0">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/person_search.png"/>
+                                    <Image url="@/icons/nota/person_search.png" />
                                 </image>
                             </ImageView>
                         </graphic>
 
                     </Button>
 
-                    <Button fx:id="btnBuscarLlanta" onAction="#buscarLlanta" GridPane.columnIndex="0"
-                            GridPane.rowIndex="1" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+                    <Button fx:id="btnBuscarLlanta" onAction="#buscarLlanta" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion" GridPane.columnIndex="0" GridPane.rowIndex="1">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/find-car-wheel.png"/>
+                                    <Image url="@/icons/nota/find-car-wheel.png" />
                                 </image>
                             </ImageView>
                         </graphic>
 
                     </Button>
 
-                    <Button disable="true" fx:id="btnBorrarCliente" onAction="#eliminarCliente" GridPane.columnIndex="0"
-                            GridPane.rowIndex="2" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+                    <Button fx:id="btnBorrarCliente" disable="true" onAction="#eliminarCliente" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion" GridPane.columnIndex="0" GridPane.rowIndex="2">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/delete-user.png"/>
+                                    <Image url="@/icons/nota/delete-user.png" />
                                 </image>
                             </ImageView>
                         </graphic>
 
                     </Button>
 
-                    <Button disable="true" fx:id="btnBorrarInventario" onAction="#eliminarInventario"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="3" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion">
+                    <Button fx:id="btnBorrarInventario" disable="true" onAction="#eliminarInventario" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion" GridPane.columnIndex="0" GridPane.rowIndex="3">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/nota/delete-car-wheel.png"/>
+                                    <Image url="@/icons/nota/delete-car-wheel.png" />
                                 </image>
                             </ImageView>
                         </graphic>
@@ -106,26 +98,22 @@
                     </Button>
 
 
-                    <Button fx:id="btnGuardar" GridPane.columnIndex="0" GridPane.rowIndex="5" prefHeight="25.0"
-                            prefWidth="25.0"
-                            styleClass="boton-accion">
+                    <Button fx:id="btnGuardar" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion" GridPane.columnIndex="0" GridPane.rowIndex="5">
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/save.png"/>
+                                    <Image url="@/icons/save.png" />
                                 </image>
                             </ImageView>
                         </graphic>
 
                     </Button>
-                    <Button fx:id="btnRefrescar" onAction="#refrescar" GridPane.columnIndex="0" GridPane.rowIndex="4"
-                            mnemonicParsing="false" prefHeight="25.0"
-                            prefWidth="25.0" styleClass="boton-accion">
+                    <Button fx:id="btnRefrescar" mnemonicParsing="false" onAction="#refrescar" prefHeight="25.0" prefWidth="25.0" styleClass="boton-accion" GridPane.columnIndex="0" GridPane.rowIndex="4">
 
                         <graphic>
                             <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                                 <image>
-                                    <Image url="@/icons/refresh.png"/>
+                                    <Image url="@/icons/refresh.png" />
                                 </image>
                             </ImageView>
                         </graphic>
@@ -140,11 +128,7 @@
 
 
         <!-- StackPane centra el ScrollPane dentro del AnchorPane -->
-        <StackPane alignment="CENTER" layoutY="-37.0" prefHeight="607.0" prefWidth="945.0"
-                   translateY="120.0"
-                   translateX="-10"
-                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                   AnchorPane.topAnchor="-40.0">
+        <StackPane alignment="CENTER" layoutY="-37.0" prefHeight="607.0" prefWidth="945.0" translateX="-10" translateY="120.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-40.0">
 
             <!-- ScrollPane centrado -->
             <ScrollPane fitToHeight="false" fitToWidth="true" pannable="true" prefHeight="617.0" prefWidth="945.0">
@@ -190,7 +174,7 @@
 
 
                                     <HBox alignment="CENTER" prefHeight="55.0" prefWidth="140" styleClass="vBoxNumNota" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-                                        <Label prefWidth="30" text="N°" style="-fx-text-fill: black;">
+                                        <Label prefWidth="30" style="-fx-text-fill: black;" text="N°">
                                             <font>
                                                 <Font name="Arial Bold" size="16.0" />
                                             </font>
@@ -206,17 +190,17 @@
 
                                     </HBox>
 
-                                    <Label fx:id="lblNumFactura" visible="false" alignment="CENTER" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: black; -fx-background-color: #FFFF66;" text="Número de factura:" translateX="330" translateY="-45" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <Label fx:id="lblNumFactura" alignment="CENTER" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: black; -fx-background-color: #FFFF66;" text="Número de factura:" translateX="330" translateY="-45" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
 
                                     </Label>
 
-                                    <VBox fx:id="contenedorTipoNota" visible="false" alignment="CENTER" maxWidth="110" styleClass="vBoxNumNota" translateX="-240" translateY="-45" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <VBox fx:id="contenedorTipoNota" alignment="CENTER" maxWidth="110" styleClass="vBoxNumNota" translateX="-240" translateY="-45" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                         <Label fx:id="lbltipoNota" style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: black;" text=" ORIGINAL">
                                         </Label>
                                     </VBox>
 
 
-                                    <Label text="Because so much is riding on your tires" translateX="-268.0" translateY="40" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <Label style="-fx-text-fill: black;" text="Because so much is riding on your tires" translateX="-268.0" translateY="40" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                         <font>
                                             <Font name="Book Antiqua" size="15.0" />
                                         </font>
@@ -224,7 +208,7 @@
 
 
                                     <HBox prefHeight="15" prefWidth="50" styleClass="vBoxNumNota" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="75.0" styleClass="label-fecha" text="  FECHA" textFill="#fffdfd">
+                                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="75.0" style="-fx-text-fill: black;" styleClass="label-fecha" text="  FECHA" textFill="#fffdfd">
                                             <VBox.margin>
                                                 <Insets />
                                             </VBox.margin>
@@ -233,7 +217,7 @@
                                             </font>
                                         </Label>
 
-                                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="DIA" HBox.hgrow="ALWAYS">
+                                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" style="-fx-text-fill: black;" text="DIA" HBox.hgrow="ALWAYS">
                                             <font>
                                                 <Font name="Arial" size="14.0" />
                                             </font>
@@ -250,7 +234,7 @@
                                             </HBox.margin>
                                         </TextField>
 
-                                        <Label text="/">
+                                        <Label style="-fx-text-fill: black;" text="/">
                                             <font>
                                                 <Font name="Arial" size="24.0" />
                                             </font>
@@ -260,7 +244,7 @@
                                         </Label>
 
 
-                                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="MES" HBox.hgrow="ALWAYS">
+                                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" style="-fx-text-fill: black;" text="MES" HBox.hgrow="ALWAYS">
                                             <font>
                                                 <Font name="Arial" size="14.0" />
                                             </font>
@@ -277,7 +261,7 @@
                                             </HBox.margin>
                                         </TextField>
 
-                                        <Label text="/">
+                                        <Label style="-fx-text-fill: black;" text="/">
                                             <font>
                                                 <Font name="Arial" size="24.0" />
                                             </font>
@@ -286,7 +270,7 @@
                                             </HBox.margin>
                                         </Label>
 
-                                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="AÑO" HBox.hgrow="ALWAYS">
+                                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" style="-fx-text-fill: black;" text="AÑO" HBox.hgrow="ALWAYS">
                                             <font>
                                                 <Font name="Arial" size="14.0" />
                                             </font>
@@ -309,7 +293,7 @@
 
                                     </HBox>
                                     <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                        <Label prefHeight="18.0" prefWidth="491.0" text="Juan Pablo II No. 33 / Col. Obrera / La Piedad, Mich. / C.P. 59370">
+                                        <Label prefHeight="18.0" prefWidth="491.0" style="-fx-text-fill: black;" text="Juan Pablo II No. 33 / Col. Obrera / La Piedad, Mich. / C.P. 59370" textFill="black">
                                             <GridPane.margin>
                                                 <Insets left="80.0" />
                                             </GridPane.margin>
@@ -318,7 +302,7 @@
                                             </font>
                                         </Label>
 
-                                        <Label text="Tel. 52.6.13.53  /  ID 52*237908*3">
+                                        <Label style="-fx-text-fill: black;" text="Tel. 52.6.13.53  / Cel +52 352 102 8852">
                                             <font>
                                                 <Font name="Arial Black" size="18.0" />
                                             </font>
@@ -593,7 +577,7 @@
                                                     </image>
                                                 </ImageView>
                                                 <Canvas fx:id="canvasGas" height="150" width="150" />
-                                                <Label fx:id="lblGas" translateX="-45" translateY="140" styleClass="label-campos2">
+                                                <Label fx:id="lblGas" styleClass="label-campos2" translateX="-45" translateY="140">
                                                     <font>
                                                         <Font name="Arial Black" size="18.0" />
 
@@ -635,7 +619,7 @@
                                                     <children>
 
                                                         <!-- Parte superior SI NO-->
-                                                        <Label text="SI" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="SI" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                                             <font>
                                                                 <Font name="Arial" size="17.0" />
                                                             </font>
@@ -643,7 +627,7 @@
 
                                                         </Label>
 
-                                                        <Label text="NO" GridPane.columnIndex="2" GridPane.rowIndex="0" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="NO" GridPane.columnIndex="2" GridPane.rowIndex="0">
                                                             <font>
                                                                 <Font name="Arial" size="17.0" />
                                                             </font>
@@ -651,7 +635,7 @@
                                                         </Label>
 
 
-                                                        <Label text="SI" GridPane.columnIndex="6" GridPane.rowIndex="0" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="SI" GridPane.columnIndex="6" GridPane.rowIndex="0">
                                                             <font>
                                                                 <Font name="Arial" size="17.0" />
                                                             </font>
@@ -659,7 +643,7 @@
 
                                                         </Label>
 
-                                                        <Label text="NO" GridPane.columnIndex="7" GridPane.rowIndex="0" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="NO" GridPane.columnIndex="7" GridPane.rowIndex="0">
                                                             <font>
                                                                 <Font name="Arial" size="17.0" />
                                                             </font>
@@ -668,7 +652,7 @@
 
 
                                                         <!-- Parte de la izquirda solo etiquetas-->
-                                                        <Label text="Rayones" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="Rayones" GridPane.columnIndex="0" GridPane.rowIndex="1">
                                                             <GridPane.margin>
                                                                 <Insets left="10.0" />
                                                             </GridPane.margin>
@@ -678,7 +662,7 @@
 
                                                         </Label>
 
-                                                        <Label text="Golpes" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="Golpes" GridPane.columnIndex="0" GridPane.rowIndex="2">
                                                             <GridPane.margin>
                                                                 <Insets left="20" />
                                                             </GridPane.margin>
@@ -688,7 +672,7 @@
 
                                                         </Label>
 
-                                                        <Label text="Tapones" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="Tapones" GridPane.columnIndex="0" GridPane.rowIndex="3">
                                                             <GridPane.margin>
                                                                 <Insets left="10.0" />
                                                             </GridPane.margin>
@@ -698,7 +682,7 @@
 
                                                         </Label>
 
-                                                        <Label text="Tapetes" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="Tapetes" GridPane.columnIndex="0" GridPane.rowIndex="4">
                                                             <GridPane.margin>
                                                                 <Insets left="10.0" />
                                                             </GridPane.margin>
@@ -709,7 +693,7 @@
                                                         </Label>
 
                                                         <!-- Parte de la derecha solo etiquetas-->
-                                                        <Label text="Radio" GridPane.columnIndex="5" GridPane.rowIndex="1" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="Radio" GridPane.columnIndex="5" GridPane.rowIndex="1">
                                                             <GridPane.margin>
                                                                 <Insets left="20" />
                                                             </GridPane.margin>
@@ -719,7 +703,7 @@
 
                                                         </Label>
 
-                                                        <Label text="Gato" GridPane.columnIndex="5" GridPane.rowIndex="2" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="Gato" GridPane.columnIndex="5" GridPane.rowIndex="2">
                                                             <GridPane.margin>
                                                                 <Insets left="20" />
                                                             </GridPane.margin>
@@ -729,7 +713,7 @@
 
                                                         </Label>
 
-                                                        <Label text="Llave" GridPane.columnIndex="5" GridPane.rowIndex="3" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="Llave" GridPane.columnIndex="5" GridPane.rowIndex="3">
                                                             <GridPane.margin>
                                                                 <Insets left="20" />
                                                             </GridPane.margin>
@@ -739,7 +723,7 @@
 
                                                         </Label>
 
-                                                        <Label text="Llanta" GridPane.columnIndex="5" GridPane.rowIndex="4" styleClass="label-campos">
+                                                        <Label styleClass="label-campos" text="Llanta" GridPane.columnIndex="5" GridPane.rowIndex="4">
                                                             <GridPane.margin>
                                                                 <Insets left="20" />
                                                             </GridPane.margin>
@@ -923,7 +907,7 @@
                                         </VBox>
 
                                         <VBox alignment="CENTER_LEFT" styleClass="vBoxFill" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                            <Label text="DESCRIPCIÓN" textFill="#fffdfd" style="-fx-text-fill: black;">
+                                            <Label style="-fx-text-fill: black;" text="DESCRIPCIÓN" textFill="#fffdfd">
                                                 <font>
                                                     <Font name="Arial" size="16.0" />
                                                 </font>
@@ -934,7 +918,7 @@
                                         </VBox>
 
                                         <VBox alignment="CENTER" styleClass="vBoxFill" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                                            <Label text="CANTIDAD" textFill="#fffdfd" style="-fx-text-fill: black;">
+                                            <Label style="-fx-text-fill: black;" text="CANTIDAD" textFill="#fffdfd">
                                                 <font>
                                                     <Font name="Arial" size="16.0" />
                                                 </font>
@@ -944,7 +928,7 @@
                                         </VBox>
 
                                         <VBox alignment="CENTER" styleClass="vBoxFill" GridPane.columnIndex="3" GridPane.rowIndex="0">
-                                            <Label text="UNITARIO" textFill="#fffdfd" style="-fx-text-fill: black;">
+                                            <Label style="-fx-text-fill: black;" text="UNITARIO" textFill="#fffdfd">
                                                 <font>
                                                     <Font name="Arial" size="16.0" />
                                                 </font>
@@ -955,7 +939,7 @@
 
                                         <VBox alignment="CENTER" prefHeight="35" prefWidth="500" styleClass="vBoxFillDerecho" GridPane.columnIndex="4" GridPane.rowIndex="0">
 
-                                            <Label text="TOTAL" textFill="#fffdfd" style="-fx-text-fill: black;">
+                                            <Label style="-fx-text-fill: black;" text="TOTAL" textFill="#fffdfd">
                                                 <font>
                                                     <Font name="Arial" size="16.0" />
                                                 </font>
@@ -1529,11 +1513,11 @@
 
                                         <!-- Seccionn de Firma en Nota, no se llena es firma fisica -->
 
-                                        <HBox visible="false" alignment="CENTER_LEFT" spacing="10" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="22">
+                                        <HBox alignment="CENTER_LEFT" spacing="10" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="22">
                                             <GridPane.margin>
                                                 <Insets left="10" top="5" />
                                             </GridPane.margin>
-                                            <Label text="Firma: " style="-fx-text-fill: black;">
+                                            <Label style="-fx-text-fill: black;" text="Firma: ">
                                                 <font>
                                                     <Font name="Arial Bold" size="18.0" />
                                                 </font>

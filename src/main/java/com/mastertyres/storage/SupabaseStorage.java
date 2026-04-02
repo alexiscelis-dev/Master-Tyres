@@ -1,9 +1,9 @@
 package com.mastertyres.storage;
 
 import com.mastertyres.common.exeptions.RespaldoException;
-import com.mastertyres.respaldo.model.Respaldo;
-import com.mastertyres.respaldo.model.StatusRespaldo;
-import com.mastertyres.respaldo.model.TipoRespaldo;
+import com.mastertyres.respaldo.entity.Respaldo;
+import com.mastertyres.respaldo.entity.StatusRespaldo;
+import com.mastertyres.respaldo.entity.TipoRespaldo;
 import com.mastertyres.respaldo.service.RespaldoProxyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
