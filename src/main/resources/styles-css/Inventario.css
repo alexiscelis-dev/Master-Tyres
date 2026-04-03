@@ -648,3 +648,10 @@ SpinnerAnnio
     -fx-padding: 20;
     -fx-spacing: 15;
 }
+
+.label-editar{
+-fx-text-fill: #FFFFFF;
+-fx-font-size: 14px;
+-fx-font-family: "System Bold";
+-fx-font-weight: bold;
+}

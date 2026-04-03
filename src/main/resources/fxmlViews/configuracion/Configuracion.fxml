@@ -352,8 +352,27 @@
                                        fx:id="lblDerechosReservados" />
                             </VBox>
 
-                            <!-- Generar Logs Respaldo -->
-                            <VBox fx:id="panelAdmin" styleClass="detail-panel" visible="false" spacing="20">
+                            <!-- Eliminar usuarios Locales -->
+                            <VBox fx:id="eliminarUsuariosLocales" styleClass="detail-panel" visible="false" spacing="20">
+                                <ListView fx:id="listaUsuarios" prefWidth="200" prefHeight="300">
+
+                                </ListView>
+
+                                <HBox>
+
+
+                                    <Button fx:id="EliminarUsuarioLocal" text="Eliminar" styleClass="btn-primary" onAction="#eliminarUsuarioLocal">
+
+                                    </Button>
+
+                                </HBox>
+
+
+
+                            </VBox>
+
+
+                            <VBox fx:id="panelLogs" styleClass="detail-panel" visible="false" spacing="20">
 
                                 <Label text="Administrador" styleClass="panel-title"/>
 
@@ -374,6 +393,8 @@
                                         styleClass="btn-primary"/>
 
                             </VBox>
+
+
 
                         </StackPane>
                         <!-- FIN PANEL IZQUIERDO -->

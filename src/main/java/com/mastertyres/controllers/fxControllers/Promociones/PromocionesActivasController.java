@@ -490,7 +490,7 @@ public class PromocionesActivasController implements IVentanaPrincipal, IFxContr
 
         lblNombre.setText(p.getNombre());
         lblDescripcion.setText(p.getDescripcion());
-        //lblTipoDescuento.setText(p.getTipoDescuento());
+
         lblValorDescuento.setText(p.getPorcentaje() + "%");
         lblPrecio.setText(p.getPrecio() + "");
         lblPrecioConDescuento.setText("$"+ ( p.getPrecio() - ( (p.getPorcentaje() * p.getPrecio()) / 100 ) ) );

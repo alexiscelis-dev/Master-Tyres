@@ -22,7 +22,7 @@ public class EmailService {
             javaMailSender.send(mail);
 
         }catch (MailException e){
-
+            e.printStackTrace();
         }
 
 

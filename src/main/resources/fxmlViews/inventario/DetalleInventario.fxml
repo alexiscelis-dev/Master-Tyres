@@ -25,7 +25,7 @@
                     <Insets bottom="20" left="20" right="20" top="20" />
                 </padding>
 
-                <Label styleClass="s" text="Información del inventario" textFill="WHITE">
+                <Label  text="Información del inventario" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="40.0" />
                     </font>
@@ -37,49 +37,49 @@
                     </columnConstraints>
 
                     <!-- codigo de barras -->
-                    <Label styleClass="s" fx:id="txtCodBarras" text="Codigo de barras:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label  fx:id="txtCodBarras" text="Codigo de barras:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
                     </Label>
 
                     <!-- Primer Apellido -->
-                    <Label styleClass="s" fx:id="txtDot" text="Dot:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label  fx:id="txtDot" text="Dot:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
                     </Label>
 
                     <!-- Segundo Apellido -->
-                    <Label styleClass="s" fx:id="txtMarca" text="Marca:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                    <Label fx:id="txtMarca" text="Marca:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="2">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
                     </Label>
 
                     <!-- Modelo -->
-                    <Label styleClass="s" fx:id="txtModelo" text="Modelo:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                    <Label  fx:id="txtModelo" text="Modelo:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="3">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
                     </Label>
 
                     <!-- Medida -->
-                    <Label styleClass="s" fx:id="txtMedida" text="Medida:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                    <Label  fx:id="txtMedida" text="Medida:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="4">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
                     </Label>
 
                     <!-- Indice carga -->
-                    <Label  styleClass="s" fx:id="txtIdCarga" text="Indice de carga:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                    <Label  fx:id="txtIdCarga" text="Indice de carga:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="5">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
                     </Label>
 
                     <!-- Indice velocidad -->
-                    <Label styleClass="s" fx:id="txtIdVelocidad" text="Indice de velocidad:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="6">
+                    <Label  fx:id="txtIdVelocidad" text="Indice de velocidad:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="6">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
@@ -107,14 +107,14 @@
                     </Label>
 
                     <!-- Tipo Cliente -->
-                    <Label styleClass="s" fx:id="txtObservaciones" text="Observaciones:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="10">
+                    <Label  fx:id="txtObservaciones" text="Observaciones:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="10">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>
                     </Label>
 
                     <!-- fecha de registro -->
-                    <Label styleClass="s" fx:id="txtFechaRegistro" text="Fecha de registro:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="11">
+                    <Label  fx:id="txtFechaRegistro" text="Fecha de registro:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="11">
                         <font>
                             <Font name="System Bold" size="18.0" />
                         </font>

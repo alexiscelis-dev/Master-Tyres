@@ -262,7 +262,6 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     }//listeners
 
 
-
     private void clean() {
         nombrePromocion.setText("");
         descripcion.setText("");
@@ -301,7 +300,6 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
         }
     }//obtenerPorcentaje
-
 
 
     private void calcularPrecioConDescuento() {

@@ -91,8 +91,6 @@ public class RecuperarPasswordController implements ILoader, IFxController {
         taskService.runTask(
                 loadingOverlayController,
                 ()->{
-                    Thread.sleep(6000);
-
 
                 User supabaseUser =  supabaseService.findUsuarioByCorreo(txtCorreoRecuperacion.getText().trim());
 
@@ -108,6 +106,7 @@ public class RecuperarPasswordController implements ILoader, IFxController {
                 //Actualiza la contraseña localmente
                 userService.updatePassword(passwordEncoder.encode(password),supabaseUser.getUsuarioId());
                 userService.actualizarUpdateAt(supabaseUser.getUsuarioId(), LocalDateTime.now().toString());
+
                 //Hace que la proxima vez se tenga que logear en supabase
                 userService.updateNextCheck(supabaseUser.getUsuarioId(), LocalDateTime.now().toString());
 
@@ -123,10 +122,7 @@ public class RecuperarPasswordController implements ILoader, IFxController {
                 emailService.enviarCorreoRecuperarPassword(supabaseUser.getCorreo(),asunto,mensaje);
 
 
-
-
                }
-
 
 
                     return null;

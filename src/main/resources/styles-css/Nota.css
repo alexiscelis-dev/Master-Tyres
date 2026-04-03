@@ -423,6 +423,7 @@ DatePicker
     -fx-background-color: #080808;
     -fx-mark-color: #F2F2F2;
     -fx-text-fill: white;
+    -fx-font-weight: bold;
     -fx-background-radius: 5px;
     -fx-padding: 2px;
     -fx-pref-height: 36px;

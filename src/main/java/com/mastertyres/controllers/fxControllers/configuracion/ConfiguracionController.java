@@ -101,7 +101,9 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     @FXML
     private VBox panelCambiarFoto;
     @FXML
-    private VBox panelAdmin;
+    private VBox panelLogs;
+    @FXML
+    private VBox eliminarUsuariosLocales;
     @FXML
     private Label lblNombreCompleto;
     @FXML
@@ -166,7 +168,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     @FXML
     private Label lblNombreUsuarioActual;
 
-    //Cambiar foto dde perfil
+    //Cambiar foto de perfil
     @FXML
     private Button btnSeleccionarFoto;
     @FXML
@@ -175,8 +177,10 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     private TextField txtRutaImg;
     @FXML
     private ImageView avatarPreview;
-    @FXML private StackPane profileContainer;
-    @FXML private Circle profileCircle;
+    @FXML
+    private StackPane profileContainer;
+    @FXML
+    private Circle profileCircle;
 
 
     // Almacenamiento
@@ -205,6 +209,12 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     private DatePicker dpFechaFin;
     @FXML
     private Button btnGenerarLogs;
+    @FXML
+    private ListView<User> listaUsuarios;
+    @FXML
+    private TextField txtUsuarioEliminar;
+    @FXML
+    private Button EliminarUsuarioLocal;
 
 
     // FXML — TreeView
@@ -237,7 +247,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         panelMap.put("panelCrearRespaldo", panelCrearRespaldo);
         panelMap.put("panelFechaRespaldo", panelFechaRespaldo);
         panelMap.put("panelContacto", panelContacto);
-        panelMap.put("logsRespaldos", panelAdmin);
+        panelMap.put("logsRespaldos", panelLogs);
+        panelMap.put("eliminarUsuariosLocales", eliminarUsuariosLocales);
     }
 
     /**
@@ -277,6 +288,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
             TreeItem<NavItem> secAdmin = seccion("👑", "Administrador");
 
             secAdmin.getChildren().addAll(
+                    hoja("❌", "Eliminar usuarios locales", "eliminarUsuariosLocales"),
                     hoja("📊", "Logs respaldos", "logsRespaldos")
             );
 
@@ -326,6 +338,9 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
 
         if (panelId.equals("logsRespaldos") && !esAdmin()) {
+            mostrarError("Acceso denegado", "", "No tienes permisos para acceder");
+            return;
+        } else if (panelId.equals("eliminarUsuariosLocales") && !esAdmin()) {
             mostrarError("Acceso denegado", "", "No tienes permisos para acceder");
             return;
         }
@@ -385,10 +400,17 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
         } else if (panelId.equals("logsRespaldos")) {
             if (esAdmin()) {
-                panelAdmin.setVisible(true);
+                panelLogs.setVisible(true);
 
             }
 
+        } else if (panelId.equals("eliminarUsuariosLocales")) {
+
+            if (esAdmin()) {
+                eliminarUsuariosLocales.setVisible(true);
+                mostrarUsuarios();
+
+            }
         }
     }//mostrarPanel
 
@@ -502,8 +524,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
                     }, (resultado) -> {
 
-                      lblNombreUsuarioActual.setText(userSession.getUsername());
-                      ventanaPrincipalController.refreshUserInfo(userSession);
+                        lblNombreUsuarioActual.setText(userSession.getUsername());
+                        ventanaPrincipalController.refreshUserInfo(userSession);
 //                      String texto = userSession.getUsername();
 //                      ventanaPrincipalController.setCambiarPaginaEtiqueta(new Label(texto));
 
@@ -587,7 +609,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     return null;
                 }, (resultado) -> {
 
-                    mostrarInformacion("Foto actualizada","","La foto se actualizó exitosamente.");
+                    mostrarInformacion("Foto actualizada", "", "La foto se actualizó exitosamente.");
                     ventanaPrincipalController.refreshUserInfo(userSession);
 
                 }, (ex) -> {
@@ -611,7 +633,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
         taskService.runTask(
                 loadingComponentController,
-                ()->{
+                () -> {
                     userSession.setFotoPerfil(null);
 
                     supabaseService.actualizarFotoPerfil(userSession.getAuthId(), userSession);
@@ -640,7 +662,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     avatarPreview.setImage(image);
                     txtRutaImg.setText("");
 
-                    mostrarInformacion("Foto eliminada","","La foto se elimino exitosamente.");
+                    mostrarInformacion("Foto eliminada", "", "La foto se elimino exitosamente.");
                     ventanaPrincipalController.refreshUserInfo(userSession);
 
                 }, (ex) -> {
@@ -698,17 +720,20 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
 
         txtNuevoNombreUsuario.textProperty().addListener((observable, oldValue, newValue) -> {
-           if (txtNuevoNombreUsuario.getText().length() > 40){
-               txtNuevoNombreUsuario.setText(oldValue);
-           }
+            if (txtNuevoNombreUsuario.getText().length() > 40) {
+                txtNuevoNombreUsuario.setText(oldValue);
+            }
         });
 
         btnGenerarLogs.disableProperty().bind(dpFechaInicio.valueProperty().isNull()
                 .or(dpFechaFin.valueProperty().isNull()));
+
+
     }//configuraciones
 
     @Override
     public void listeners() {
+
 
         pfConfirmarContrasena.setOnKeyPressed(event -> {
             validarPassword();
@@ -872,9 +897,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
         double radio = 45;
 
-        Circle circle = new Circle(radio,radio,radio);
+        Circle circle = new Circle(radio, radio, radio);
         avatarImageView.setClip(circle);
-
 
 
         DateTimeFormatter formatterIn = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -895,32 +919,32 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     }//verPerfil
 
 
-    private void mostarPanelCambiarFoto(){
-        User user =  userService.findUserById(userSession.getUsuarioId());
+    private void mostarPanelCambiarFoto() {
+        User user = userService.findUserById(userSession.getUsuarioId());
 
 
         String imgRuta = user.getFotoPerfil();
 
-        if (imgRuta != null){
+        if (imgRuta != null) {
 
             File file = new File(imgRuta);
 
             if (file != null && file.exists()) {
                 Image image = new Image(file.toURI().toString());
                 avatarPreview.setImage(image);
-            }else {
+            } else {
                 Image image = new Image("/icons/user.png");
                 avatarPreview.setImage(image);
             }
 
-        }else {
+        } else {
             Image image = new Image("/icons/user.png");
             avatarPreview.setImage(image);
         }
 
         double radio = 55;
 
-        Circle circle = new Circle(radio,radio,radio);
+        Circle circle = new Circle(radio, radio, radio);
         avatarPreview.setClip(circle);
 
 
@@ -987,7 +1011,6 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
             return;
 
 
-
         String fechaInicio = dpFechaInicio.getValue() != null ? dpFechaInicio.getValue().toString() : null;
         String fechaFin = dpFechaFin.getValue() != null ? dpFechaFin.getValue().toString() : null;
 
@@ -999,16 +1022,16 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     List<Respaldo> respaldos = respaldoService.listarRespaldos(fechaInicio, fechaFin);
                     StringBuilder logContenido = new StringBuilder();
 
-                    for (Respaldo respaldo: respaldos){
+                    for (Respaldo respaldo : respaldos) {
                         logContenido.append(respaldo.toString()).append("\n");
                     }
-                    GenerarLogs.generarLogRespaldo(file,fechaInicio,fechaFin,logContenido.toString());
+                    GenerarLogs.generarLogRespaldo(file, fechaInicio, fechaFin, logContenido.toString());
 
                     return null;
 
                 }, (resultado) -> {
 
-                   mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Logs generados",
                             "Los logs se generaron correctamente."
@@ -1016,7 +1039,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
                 }, (ex) -> {
 
-                    if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException){
+                    if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         mostrarError("Operación cancelada",
                                 "",
                                 "La operación fue cancelada por el usuario.");
@@ -1027,7 +1050,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                                 "Ocurrió un problema al crear el archivo de logs de respaldos.",
                                 ex
                         );
-                    }else {
+                    } else {
                         mostrarExcepcionThrowable(
                                 "Error interno",
                                 "Error inesperado en el sistema",
@@ -1040,6 +1063,80 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         );
 
     }//generarLogs
+
+    @FXML
+    private void mostrarUsuarios() {
+        List<User> usuarios = userService.listarUsuarios();
+
+        listaUsuarios.getItems().setAll(usuarios);
+
+    }//mostrarUsuarios
+
+    @FXML
+    private void eliminarUsuarioLocal(ActionEvent actionEvent) {
+
+        User usuarioSeleccionado = listaUsuarios.getSelectionModel().getSelectedItem();
+
+        int index = usuarioSeleccionado.getUsuarioId();
+
+        boolean eliminar = mostrarConfirmacion("Eliminar usuario ",
+                "El usuario con el identificador " + index + " sera eliminado de la base de datos local.",
+                "¿Desea continuar?",
+                "Elimiinar",
+                "Cancelar");
+
+        if (!eliminar)
+            return;
+
+        taskService.disable(rootPane);
+
+        taskService.runTask(
+                loadingComponentController,
+                () -> {
+                    userService.eliminarUsuarioLocal(index);
+
+
+
+
+                    return null;
+                }, (resultado) -> {
+                    taskService.enable(rootPane);
+                    listaUsuarios.getItems().remove(usuarioSeleccionado);
+
+                    mostrarInformacion(
+                            "Operación completada",
+                            "Nota usuario eliminado",
+                            "El usuario ha sido eliminado del sistema correctamente."
+                    );
+
+
+                }, (ex) -> {
+                    taskService.enable(rootPane);
+
+                    if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
+                        mostrarError("Operación cancelada",
+                                "",
+                                "La operación fue cancelada por el usuario.");
+                    } else if (ex instanceof UserException) {
+                        mostrarExcepcionThrowable(
+                                "Error interno",
+                                "Ocurrio un error al eliminar el usuario.",
+                                "Ocurrió un error inesperado al intentar eliminar el usuario seleccionado. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
+                    } else {
+                        mostrarExcepcionThrowable(
+                                "Error interno",
+                                "Error inesperado en el sistema",
+                                "Ocurrió un error inesperado al intentar guardar los cambios. Por favor, inténtelo de nuevo más tarde.",
+                                ex
+                        );
+                    }
+
+                }, null
+        );
+
+    }//eliminarUsuarioLocal
 
 
     private boolean esAdmin() {

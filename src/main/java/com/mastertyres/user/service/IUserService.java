@@ -2,6 +2,8 @@ package com.mastertyres.user.service;
 
 import com.mastertyres.user.entity.User;
 
+import java.util.List;
+
 public interface IUserService {
 
    void guardarUsuario(User usuario);
@@ -19,5 +21,9 @@ public interface IUserService {
    void actualizarUpdateAt(Integer userId, String updateAt);
 
    void actualizarNextCheckAutomatico();
+
+   List<User> listarUsuarios();
+
+
 
 }//interface

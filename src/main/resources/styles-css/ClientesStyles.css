@@ -13,19 +13,22 @@
 /* Estilo del buscador */
 
 .buscador {
-    -fx-background-color: #1A1A1A;
-    -fx-text-fill: #F2F2F2;
+    -fx-background-color: #2A2A2A;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
     -fx-prompt-text-fill: #BBBBBB;
-    -fx-border-color: transparent;
-    -fx-padding: 8px;
-    -fx-background-radius: 5px;
+    -fx-border-color: #444;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 6 10;
+    -fx-pref-width: 300px;
+    -fx-pref-height:30px;
 }
 
 .buscador:focused {
     -fx-border-color: #8EB83D;
-    -fx-border-width: 2;
+    -fx-border-width: 2px;
 }
-
 
 
 /* Label del filtro */
@@ -317,6 +320,7 @@ SpinnerAnnio
     -fx-background-color: #080808;
     -fx-mark-color: #F2F2F2;
     -fx-text-fill: #F2F2F2;
+    -fx-font-weight:bold;
     -fx-background-radius: 5px;
     -fx-padding: 2px;
     -fx-pref-height: 36px;
@@ -345,7 +349,7 @@ SpinnerAnnio
 .choicebox-mini3 .menu-item > .label {
     -fx-font-size: 12px;
     -fx-padding: 2 8 2 8;
-    -fx-text-fill: #F2F2F2;
+    -fx-text-fill: white;
 }
 
 .choicebox-mini .menu-item:focused,
@@ -378,4 +382,11 @@ SpinnerAnnio
 /* Si quieres que el fondo no cambie al enfocarse */
 .TextAreaDescripcion:focused .content {
     -fx-background-color: #2A2A2A;
+}
+
+.label-editar{
+-fx-text-fill: #FFFFFF;
+-fx-font-size: 14px;
+-fx-font-family: "System Bold";
+-fx-font-weight:bold;
 }

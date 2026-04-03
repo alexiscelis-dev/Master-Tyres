@@ -30,18 +30,18 @@ public class FechaUtils {
 
 
     public static String formatearFecha(String fecha) {
-        if (fecha == null || fecha.isBlank()) return "N/A";
+        if (fecha == null || fecha.isBlank()) return "N/D";
 
         try {
             LocalDate f = LocalDate.parse(fecha);  // yyyy-MM-dd
             return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         } catch (Exception e) {
-            return "N/A";
+            return "N/D";
         }
     }
 
     public static String formatearFechaHora(String fechaHora) {
-        if (fechaHora == null || fechaHora.isBlank()) return "N/A";
+        if (fechaHora == null || fechaHora.isBlank()) return "N/D";
 
         try {
             LocalDateTime f = LocalDateTime.parse(
@@ -49,7 +49,7 @@ public class FechaUtils {
             );
             return f.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         } catch (Exception e) {
-            return "N/A";
+            return "N/D";
         }
     }
 
