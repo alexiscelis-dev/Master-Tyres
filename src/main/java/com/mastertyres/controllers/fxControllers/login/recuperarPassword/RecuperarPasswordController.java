@@ -99,16 +99,21 @@ public class RecuperarPasswordController implements ILoader, IFxController {
 
                 String password = generarPassword(10);
 
+
                 //Actualiza contraseña en tabla de autenticacion
+
                 supabaseAuthService.actualizarPassword(supabaseUser.getAuthId(),password);
                 //Actualiza contraseña en Supabase
                 supabaseService.actualizarPassword(supabaseUser.getAuthId(),supabaseUser,password);
                 //Actualiza la contraseña localmente
-                userService.updatePassword(passwordEncoder.encode(password),supabaseUser.getUsuarioId());
-                userService.actualizarUpdateAt(supabaseUser.getUsuarioId(), LocalDateTime.now().toString());
 
-                //Hace que la proxima vez se tenga que logear en supabase
-                userService.updateNextCheck(supabaseUser.getUsuarioId(), LocalDateTime.now().toString());
+                User localUser = userService.findByEmail(supabaseUser.getCorreo());
+
+                localUser.setPassword(passwordEncoder.encode(password));
+                localUser.setUpdatedAt(LocalDateTime.now().toString());
+                localUser.setNextCheck(LocalDateTime.now().toString());
+
+                userService.guardarUsuario(localUser);
 
                    final String destino = supabaseUser.getCorreo();
                    final String asunto = "Recuperación de contraseña";

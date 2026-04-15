@@ -20,7 +20,7 @@
 
 .buscador {
     -fx-background-color: #2A2A2A;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-prompt-text-fill: #BBBBBB;
     -fx-border-color: #444;
     -fx-border-radius: 5;

@@ -12,6 +12,9 @@ import java.util.Properties;
 public class MailConfig {
     @Value("${email.recovery.password}")
     private String emailRecoveryPassword;
+    @Value("${email.google.app.password}")
+    private String googlePassword;
+
 
     @Bean
     public JavaMailSender getJavaMailSender() {
@@ -20,13 +23,13 @@ public class MailConfig {
         mailSender.setPort(587);
 
         mailSender.setUsername(emailRecoveryPassword);
-        mailSender.setPassword("kcxs jsps phua kwyb");
+        mailSender.setPassword(googlePassword);
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
+        props.put("mail.debug", "false");
 
         return mailSender;
     }

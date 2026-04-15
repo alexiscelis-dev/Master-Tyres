@@ -64,7 +64,7 @@ public class UserService implements IUserService{
         userRepository.actualizarUpdateAt(userId,updateAt);
     }
 
-    @Scheduled(cron = "0 0 0 */3 * ?", zone = "America/Mexico_City")//Cada dia
+    @Scheduled(cron = "0 0 0 */3 * ?", zone = "America/Mexico_City")
     @Transactional
     @Override
     public void actualizarNextCheckAutomatico() {

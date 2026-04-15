@@ -7,20 +7,47 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.mastertyres</groupId>
-	<artifactId>master-tyres</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Master-Tyres</name>
-	<description>Aplicación de escritorio para administración y gestión de clientes</description>
+	</parent><groupId>com.mastertyres</groupId>
+	<artifactId>master-tires</artifactId>
+	<version>1.1.0</version>
+	<name>Master-Tires</name>
+	<description>Sistema híbrido de gestión para talleres de llantas que combina almacenamiento local y sincronización en la nube para administrar clientes, vehículos, servicios, inventario y promociones.</description>
 	<url/>
 	<licenses>
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+
+		<developer>
+			<id>alexis-celis</id>
+			<name>Ing. Raphael Alexis Celis Torres</name>
+			<email>celis.alexis.1hm@gmail.com</email>
+			<organization>Master Tires</organization>
+			<roles>
+				<role>backend-developer</role>
+				<role>architect</role>
+				<role>project-manager</role>
+				<role>maintainer</role>
+				<role>tester</role>
+			</roles>
+		</developer>
+
+		<developer>
+			<id>jayro-echeverria</id>
+			<name>Jayro de Jesus Echeverria Mena</name>
+			<email>jayromirayt@gmail.com</email>
+			<organization>Master Tires</organization>
+			<roles>
+				<role>backend-developer</role>
+				<role>frontend-developer</role>
+				<role>ui-designer</role>
+				<role>tester</role>
+			</roles>
+		</developer>
+
 	</developers>
 	<scm>
+
 		<connection/>
 		<developerConnection/>
 		<tag/>

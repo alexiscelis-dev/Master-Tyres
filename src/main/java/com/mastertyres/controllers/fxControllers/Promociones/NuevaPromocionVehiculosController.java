@@ -8,9 +8,9 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
+import com.mastertyres.detalleCategoria.entity.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
 import com.mastertyres.marca.entity.Marca;
 import com.mastertyres.marca.service.MarcaService;
@@ -104,6 +104,10 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     private ObservableList<VehiculoPromocion> vehiculos = FXCollections.observableList(FXCollections.observableArrayList());
     private PauseTransition pauseTransition;
 
+    private List<Marca> marcasPromocion;
+    private List<Modelo> modelosPromocion;
+    private DetalleCategoria detallesCategoria;
+
     @Autowired
     private PromocionService promocionService;
     @Autowired
@@ -129,6 +133,9 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     @FXML
     public void initialize() {
 
+        //Hace la consulta a la base de datos
+        initializeMarcas();
+
         //Inicializar marca, modelo, año
         vehiculosParticipantesInitialize();
 
@@ -146,7 +153,6 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
     @Override
     public void configuraciones() {
 
-        //cargarPorcentaje();
 
         precioSinDescuento.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
@@ -244,11 +250,6 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
         porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
 
             obtenerPorcentaje(valNuevo.doubleValue());
-
-        });
-
-        porcentajeDescuento.valueProperty().addListener((observable, valAnterior, valNuevo) -> {
-            obtenerPorcentaje(valNuevo.doubleValue());
             calcularPrecioConDescuento();
         });
 
@@ -312,7 +313,8 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
         try {
             double precio = Double.parseDouble(precioTexto);
-            double porcentaje = porcentajeDescuento.getValue();
+            int porcentaje = (int) Math.round(porcentajeDescuento.getValue());
+
             double descuento = precio * (porcentaje / 100.0);
             double precioFinal = precio - descuento;
 
@@ -324,8 +326,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
     private void vehiculosParticipantesInitialize() {
 
-        List<Marca> marcas = marcaService.listarMarcas();
-        List<Modelo> modelos = modeloService.listarModelos();
+
         List<Integer> anios = new ArrayList<>();
 
         int anioActual = LocalDate.now().getYear();
@@ -335,8 +336,8 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
         }
         choiceAnio.getItems().setAll(anios);
 
-        choiceMarca.setItems(FXCollections.observableArrayList(marcas));
-        choiceModelo.setItems(FXCollections.observableArrayList(modelos));
+        choiceMarca.setItems(FXCollections.observableArrayList(marcasPromocion));
+        choiceModelo.setItems(FXCollections.observableArrayList(modelosPromocion));
 
         choiceMarca.setConverter(new StringConverter<Marca>() {
             @Override
@@ -353,7 +354,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
         choiceModelo.setConverter(new StringConverter<Modelo>() {
             @Override
             public String toString(Modelo modelo) {
-                //return modelo != null ? modelo.getNombreModelo() : "";
+
                 return modelo != null ? obtenerNombreModeloConCategoria(choiceMarca.getValue(), modelo) : "";
             }
 
@@ -365,7 +366,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
         choiceMarca.getSelectionModel().selectedItemProperty().addListener((observable, oldMarca, newMarca) -> {
             if (newMarca != null) {
-                List<Modelo> modelosFiltrados = modelos.stream()
+                List<Modelo> modelosFiltrados = modelosPromocion.stream()
                         .filter(mod -> mod.getMarca_id().getMarcaId().equals(newMarca.getMarcaId()))
                         .toList();
 
@@ -403,7 +404,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
         }
 
         return nombreModelo + " (" + categoriasTexto + ")";
-    }
+    }//obtenerNombreModeloConCategoria
 
     private boolean empty() {
         boolean empty = false;
@@ -437,7 +438,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
         } else if (fechaFinLD.equals(fechaInicioLD)) {
 
-            fechaValida = MensajesAlert.mostrarConfirmacion(
+            fechaValida = mostrarConfirmacion(
                     "Confirmar fechas",
                     "Fechas de inicio y fin idénticas",
                     "Ha ingresado la misma fecha para el inicio y el fin de la promoción. ¿Desea continuar?",
@@ -460,7 +461,7 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
             return new SimpleObjectProperty<>(data.getValue().getMarca().getNombreMarca());
         });
         colModelo.setCellValueFactory(data -> {
-            //return new SimpleObjectProperty<>(data.getValue().getModelo().getNombreModelo());
+
             return new SimpleObjectProperty<>(
                     obtenerNombreModeloConCategoria(data.getValue().getMarca(), data.getValue().getModelo())
             );
@@ -476,7 +477,6 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
         Modelo modelo = choiceModelo.getValue();
         Integer anio = choiceAnio.getValue();
 
-        System.out.println(modelo);
 
         String mensaje = marca + " " + modelo + " " + anio;
 
@@ -525,14 +525,14 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
 
                 }, (resultado) -> {
 
-                    MensajesAlert.mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Promoción registrada",
                             "La promoción se ha registrado en el sistema exitosamente."
                     );
                     actualizarPromocionesActivas();
                     clean();
-                    ventanaPrincipalController.irAtras();
+
 
 
                 }, (ex) -> {
@@ -625,6 +625,13 @@ public class NuevaPromocionVehiculosController implements IVentanaPrincipal, IFx
         if (vehiculos != null) {
             vehiculos.clear();
         }
+    }
+
+    private void initializeMarcas(){
+        marcasPromocion = marcaService.listarMarcas();
+        modelosPromocion = modeloService.listarModelos();
+
+
     }
 
 }//clase
