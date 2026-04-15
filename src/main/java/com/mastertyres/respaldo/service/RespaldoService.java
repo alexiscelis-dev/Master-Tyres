@@ -48,6 +48,9 @@ public class RespaldoService implements IRespaldoService {
     private String dataBaseName;
     @Value("${mysql.dump.ruta}")
     private String mysqlDumpRuta;
+    @Value("${mysql.port}")
+    private String mysqlPort;
+
 
 
 
@@ -86,7 +89,7 @@ public class RespaldoService implements IRespaldoService {
                     mysqlDumpRuta,
                     "-u", usernameDB,
                     "-p" + passwordDB,
-                    "--port=3307",
+                    "--port=" + mysqlPort ,
                     "--protocol=TCP",
                     dataBaseName
             );

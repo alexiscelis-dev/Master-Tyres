@@ -36,51 +36,51 @@
                     </columnConstraints>
 
                     <!-- Marca -->
-                    <Label text="Marca:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Label styleClass="label-editar" text="Marca:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                     <ChoiceBox fx:id="choiceMarca" styleClass="choicebox-mini2" GridPane.columnIndex="1"
                                GridPane.rowIndex="0"/>
 
                     <!-- Modelo -->
-                    <Label text="Modelo:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label styleClass="label-editar" text="Modelo:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                     <ChoiceBox fx:id="choiceModelo" styleClass="choicebox-mini2" GridPane.columnIndex="1"
                                GridPane.rowIndex="1"/>
 
                     <!-- Categoria -->
-                    <Label text="Categoria:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <Label styleClass="label-editar" text="Categoria:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                     <ChoiceBox fx:id="choiceCategoria" styleClass="choicebox-mini2" GridPane.columnIndex="1"
                                GridPane.rowIndex="2"/>
 
                     <!-- Año -->
-                    <Label text="Año:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                    <Label styleClass="label-editar" text="Año:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
                     <Spinner fx:id="spinnerAnio" editable="true" promptText="Año" styleClass="spinner"
                              GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
                     <!-- Kilometros -->
-                    <Label text="Kilometros:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                    <Label styleClass="label-editar" text="Kilometros:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                     <TextField fx:id="txtKilometros" styleClass="buscador" GridPane.columnIndex="1"
                                GridPane.rowIndex="4"/>
 
                     <!-- Placas -->
-                    <Label text="Placas:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                    <Label styleClass="label-editar" text="Placas:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
                     <TextField fx:id="txtPlacas" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
                     <!-- Numero de serire -->
-                    <Label text="Numero de serie:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                    <Label styleClass="label-editar" text="Numero de serie:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
                     <TextField fx:id="txtNumSerie" styleClass="buscador" GridPane.columnIndex="1"
                                GridPane.rowIndex="6"/>
 
                     <!-- Observaciones -->
-                    <Label text="Observaciones:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                    <Label styleClass="label-editar" text="Observaciones:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
                     <TextField fx:id="txtObservaciones" styleClass="buscador" GridPane.columnIndex="1"
                                GridPane.rowIndex="7"/>
 
                     <!-- Ultimo servicio -->
-                    <Label text="Ultimo servicio:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                    <Label styleClass="label-editar" text="Ultimo servicio:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
                     <DatePicker fx:id="dateUltimoServicio" editable="false" styleClass="date-picker"
                                 GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
                     <!-- Color -->
-                    <Label text="Color:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                    <Label styleClass="label-editar" text="Color:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
                     <TextField fx:id="txtColor" styleClass="buscador" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
                     <rowConstraints>
                         <RowConstraints/>

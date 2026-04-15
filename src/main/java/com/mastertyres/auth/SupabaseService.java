@@ -1,7 +1,7 @@
 package com.mastertyres.auth;
 
 import com.mastertyres.common.exeptions.UserException;
-
+import com.mastertyres.user.entity.TipoLicencia;
 import com.mastertyres.user.entity.User;
 import com.mastertyres.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,6 +166,10 @@ public class SupabaseService {
 
         if (supabaseUserAuth == null) {
             throw new UserException("Usuario o contraseña incorrectos");
+        }
+
+        if (userSupabaseJson.getStatusLicencia().equals(TipoLicencia.SUSPENDED.toString())){
+            throw new UserException("Cuenta momentaneamente suspendida.");
         }
 
         //Se busca el usuario para saber si forzar actualizar o no

@@ -177,6 +177,8 @@ public class RegistrarNotaController implements IFxController, ILoader{
             return;
         }
 
+        taskService.disable(root);
+
 
         taskService.runTask(
                 loadingOverlayController,
@@ -357,6 +359,7 @@ public class RegistrarNotaController implements IFxController, ILoader{
 
 
                 }, (resultado) -> {
+                    taskService.enable(root);
 
 
                     mostrarInformacion(
@@ -370,6 +373,8 @@ public class RegistrarNotaController implements IFxController, ILoader{
                     }
 
                 }, (ex) -> {
+                    taskService.enable(root);
+
 
                     if (ex instanceof NotaException) {
                         mostrarError(

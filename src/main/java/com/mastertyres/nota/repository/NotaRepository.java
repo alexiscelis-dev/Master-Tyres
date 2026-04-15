@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public interface NotaRepository extends JpaRepository<Nota, Integer> {
 
-    final String SELECT_NOTA_DTO = "SELECT NEW com.mastertyres.nota.model.NotaDTO(" +
+    final String SELECT_NOTA_DTO = "SELECT NEW com.mastertyres.nota.DTOs.NotaDTO(" +
             "n.notaId, n.numNota, n.numFactura, n.fechaYhora, n.fechaVencimiento, n.statusNota, n.createdAt, n.active, n.total, " +
             "i.inventarioId, " +
             "nd.observaciones, nd.observaciones2, nd.porcentajeGas, nd.rayones, nd.golpes, nd.tapones, nd.tapetes, nd.radio, nd.gato, nd.llave, nd.llanta, " +
