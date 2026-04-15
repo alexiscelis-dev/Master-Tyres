@@ -17,7 +17,7 @@ import java.util.List;
 public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
 
     final String SELECT_VEHICULO_DTO = """ 
-              SELECT new com.mastertyres.vehiculo.model.VehiculoDTO(
+              SELECT new com.mastertyres.vehiculo.DTOs.VehiculoDTO(
                     v.vehiculoId,
                     c.nombre,
                     c.apellido,

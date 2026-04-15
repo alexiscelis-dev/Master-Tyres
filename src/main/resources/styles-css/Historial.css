@@ -10,7 +10,8 @@
 /* Buscador */
 .buscador {
     -fx-background-color: #1A1A1A;
-    -fx-text-fill: #F2F2F2;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
     -fx-prompt-text-fill: #BBBBBB;
     -fx-border-color: transparent;
     -fx-padding: 8px;
@@ -19,7 +20,7 @@
 
 .buscador {
     -fx-background-color: #2A2A2A;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-prompt-text-fill: #BBBBBB;
     -fx-border-color: #444;
     -fx-border-radius: 5;
@@ -248,6 +249,7 @@
     -fx-background-color: #1A1A1A;
     -fx-mark-color: #F2F2F2;
     -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
     -fx-padding: 2px;
     -fx-background-radius: 5px;
     -fx-pref-width: 150px;

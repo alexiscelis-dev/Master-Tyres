@@ -156,7 +156,6 @@ public class LoginController implements IFxController {
 
                     }
 
-
                     return userService.findByEmail(txtCorreo.getText().trim());
 
                 }, (userAutenticado) -> {

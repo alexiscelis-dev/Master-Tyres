@@ -9,12 +9,15 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
 
     final String SELECT_USER = "SELECT u FROM User u";
 
     final String UPDATE_USER = "UPDATE User u SET";
+
 
 
     @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
@@ -46,6 +49,12 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Modifying
     @Query(UPDATE_USER + " " + "u.nextCheck = :fecha WHERE u.active = 'ACTIVE'")
     void actualizarNextCheckAutomatico(@Param("fecha")String fecha);
+
+    @QueryHints(@QueryHint(name = org.hibernate.annotations.QueryHints.READ_ONLY, value = "true"))
+    @Query(SELECT_USER)
+    List<User> listarUsuarios();
+
+
 
 
 

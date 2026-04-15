@@ -104,6 +104,8 @@ public class EditarSaldoController implements IFxController, ILoader {
     @FXML
     private void actualizar(ActionEvent event){
 
+        taskService.disable(root);
+
         taskService.runTask(
                 loadingOverlayController,
                 () ->{
@@ -119,6 +121,7 @@ public class EditarSaldoController implements IFxController, ILoader {
                     return null;
 
                 },(resultado) ->{
+                    taskService.enable(root);
 
                     mostrarInformacion(
                             "Operación completada",
@@ -128,6 +131,7 @@ public class EditarSaldoController implements IFxController, ILoader {
                     cancelar(null);
 
                 },(ex) ->{
+                    taskService.enable(root);
 
                     if (ex instanceof NotaException){
 

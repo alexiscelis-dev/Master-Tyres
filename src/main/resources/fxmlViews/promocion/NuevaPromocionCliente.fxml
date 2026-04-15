@@ -361,11 +361,11 @@
 
                     <children>
 
-                        <TextField fx:id="textFieldImg" editable="false" prefHeight="26.0" prefWidth="204.0" promptText="Seleccionar imagen (Opcional)" styleClass="buscador-img" />
+                        <TextField fx:id="textFieldImg" prefHeight="26.0" prefWidth="204.0" promptText="Seleccionar imagen (Opcional)" styleClass="buscador-img" />
 
 
 
-                        <Button fx:id="btnImagen" disable="true" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0" styleClass="boton-img" text="..." />
+                        <Button fx:id="btnImagen" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0" styleClass="boton-img" text="..." />
 
                     </children>
 

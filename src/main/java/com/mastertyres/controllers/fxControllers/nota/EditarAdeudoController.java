@@ -156,6 +156,8 @@ public class EditarAdeudoController implements IFxController, ILoader {
 
     private void actualizar(NotaDTO notaAdeudo) {
 
+        taskService.disable(root);
+
         taskService.runTask(
                 loadingOverlayController,
                 () -> {
@@ -180,6 +182,8 @@ public class EditarAdeudoController implements IFxController, ILoader {
                     return null;
                 }, (resultado) -> {
 
+                    taskService.enable(root);
+
 
                     mostrarInformacion(
                             "Operación completada",
@@ -190,6 +194,8 @@ public class EditarAdeudoController implements IFxController, ILoader {
 
 
                 }, (ex) -> {
+
+                    taskService.enable(root);
 
                     if (ex instanceof NotaException) {
 

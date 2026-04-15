@@ -107,7 +107,7 @@ public interface DetalleCategoriaRepository extends JpaRepository<DetalleCategor
 
     @QueryHints({@QueryHint(name = "org.hibernate.readOnly", value = "true")})
     @Query("SELECT dc.categoria FROM DetalleCategoria dc " +
-            "WHERE dc.marca.marcaId = :marcaId AND dc.modelo.modeloId = :modeloId ORDER BY dc.categoria.nombreCategoria")
+            "WHERE dc.marca.marcaId = :marcaId AND dc.modelo.modeloId = :modeloId ")
     List<Categoria> findCategoriasByMarcaAndModelo(@Param("marcaId") Integer marcaId,
                                                    @Param("modeloId") Integer modeloId);
 
