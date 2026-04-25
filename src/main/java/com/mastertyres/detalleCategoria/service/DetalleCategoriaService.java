@@ -123,7 +123,7 @@ public class DetalleCategoriaService implements IDetalleCategoriaService {
         try {
             detalleCategoriaRepository.eliminarPorMarcaId(marcaId);
         } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar los registros de detalleCategoria para la marca con ID: " + marcaId, e);
+            throw new RuntimeException("Error al eliminar los registros de detalleCategoria para la marca con ID: " + marcaId + e.getClass().getName() + "-"  + e.getMessage());
         }
     }
 

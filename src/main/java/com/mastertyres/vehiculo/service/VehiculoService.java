@@ -81,7 +81,7 @@ public class VehiculoService implements IVehiculoService {
                     vehiculoRepository.save(vehiculo); // persiste el cambio
                     return true;
                 })
-                .orElseThrow(() -> new VehiculoException("No se encontro el vehiculo con el identificador " + idVehiculo)); // si no se encuentra el vehículo
+                .orElseThrow(() -> new VehiculoException("No se encontro el vehiculo con el identificador " + idVehiculo )); // si no se encuentra el vehículo
     }
 
     @Transactional

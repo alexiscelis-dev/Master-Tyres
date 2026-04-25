@@ -29,7 +29,6 @@ public class SecurityPassword {
 
         if (passwordEncoder.matches(passwordValidator,user.getPassword())){
 
-         //   userService.updatePassword(passwordEncoder.encode(passwordValidator),user.getUsuarioId());
 
         }
 

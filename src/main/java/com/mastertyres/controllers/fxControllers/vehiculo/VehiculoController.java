@@ -226,7 +226,7 @@ public class VehiculoController implements IVentanaPrincipal, IFxController, ILo
                                             " " + vehiculoSeleccionado.getNombreModelo() + " " + vehiculoSeleccionado.getAnio();
 
 
-                                    boolean eliminar = MensajesAlert.mostrarConfirmacion(
+                                    boolean eliminar = mostrarConfirmacion(
                                             "Confirmar eliminación",
                                             "Eliminar vehículo",
                                             "¿Está seguro de que desea eliminar este vehículo? Esta acción no se puede deshacer.",

@@ -247,10 +247,11 @@ public class InventarioController implements IVentanaPrincipal, IFxController, I
 
                                                     } else if (ex.getCause() instanceof InventarioException) {
 
-                                                        mostrarError(
+                                                        mostrarExcepcionThrowable(
                                                                 "Error al eliminar",
                                                                 "No se pudo eliminar el elemento seleccionado:",
-                                                                "" + ex.getMessage());
+                                                                "" + ex.getMessage(),
+                                                                ex);
 
                                                     } else {
 

@@ -1,4 +1,4 @@
-v.1.1.0
+v1.1.0
 
 Date 08/04/2026
 
@@ -30,6 +30,7 @@ Fixed
 
 * Se corrigió el bug en agregar promoción por vehículos y por Clientes (Botón agregar imagen deshabilitado).
 * Se corrige el problema de licencia al momento de cambiar a SUSPENDED y regresarla -> ACTIVE o LIFETIME.(No se podia volver a cambiar).
+* Corrección de bug al actualizar adeudo
 
 
 
@@ -47,7 +48,25 @@ Added
 
 
 
+V1.1.1
+
+Date 15/04/2026
 
 
-&#x20;
+
+Changed
+
+
+
+* Corrección de formato al lanzar excepciones. Se muestran ahora desde el back con formato \*\*Clase + mensaje\*\* y se muestras en mensajes con mostrarExcepcionThrowable.
+* Se cambio la ubicación de los respaldos a "C:/MasterTires/respaldos"
+
+
+
+Fixed
+
+
+
+* Refactorización de código.
+* Corrección de año en login derechos Reservados.
 

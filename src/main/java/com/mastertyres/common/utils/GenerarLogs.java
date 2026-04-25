@@ -14,6 +14,7 @@ public class GenerarLogs {
 
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.newLine();
                 writer.write("Logs del sistema tabla 'Respaldos'." );
                 writer.newLine();
                 writer.write("Fecha de inicio: " + fechaInicio + ".");
@@ -21,14 +22,14 @@ public class GenerarLogs {
                 writer.write("Fecha de fin: " + fechaFin + ".");
                 writer.newLine();
                 writer.newLine();
-                writer.newLine();
+
 
                 writer.write(logContenido);
                 writer.close();
 
 
             }catch (IOException e){
-                throw new RespaldoException("Error al crear el archivo de logs: " + e);
+                throw new RespaldoException("Error al crear el archivo de logs: " + e.getClass().getName() + " - " + e.getMessage());
             }
 
 

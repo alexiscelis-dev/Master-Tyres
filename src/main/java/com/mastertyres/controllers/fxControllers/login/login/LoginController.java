@@ -40,8 +40,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
-import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
+import static com.mastertyres.common.utils.MensajesAlert.*;
 import static com.mastertyres.common.utils.MenuContextSetting.disableMenu;
 
 @Component
@@ -169,9 +168,10 @@ public class LoginController implements IFxController {
 
                     } else {
                         ex.printStackTrace();
-                        mostrarError("Error interno",
+                        mostrarExcepcionThrowable("Error interno",
                                 "",
-                                "Ocurrió un error inesperado al iniciar sesión. Vuelva a intentarlo más tarde.");
+                                "Ocurrió un error inesperado al iniciar sesión. Vuelva a intentarlo más tarde.",
+                                ex);
                     }
 
                 }, null

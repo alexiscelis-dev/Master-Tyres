@@ -332,7 +332,8 @@ public class AgregarInventarioController implements IVentanaPrincipal, IFxContro
                         mostrarError(
                                 "Error de inventario",
                                 "Problema al agregar al inventario",
-                                "" + ex.getMessage());
+                                "" + ex.getMessage()
+                                );
                     } else {
 
                         mostrarExcepcionThrowable(

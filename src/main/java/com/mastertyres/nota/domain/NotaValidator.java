@@ -28,7 +28,7 @@ public class NotaValidator {
             throw new NotaException("Error interno: No se pudo obtener la nota");
         }
 
-        if (fechaVencimiento == null || fechaVencimiento.trim().isEmpty()) {
+        if ((fechaVencimiento == null || fechaVencimiento.trim().isEmpty()) && adeudo != 0) {
             throw new NotaException("No se pudo obtener la fecha de vencimiento");
         }
 

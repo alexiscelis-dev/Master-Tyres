@@ -8,11 +8,10 @@ import com.mastertyres.common.interfaces.ICleanable;
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.service.TaskService;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.detalleCategoria.entity.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
-import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.modelo.entity.Modelo;
 import com.mastertyres.modelo.service.ModeloService;
 import javafx.beans.property.BooleanProperty;
@@ -151,7 +150,7 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
     public void GuardarCambios(ActionEvent actionEvent) {
 
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar actualización",
                 "Guardar cambios",
                 "¿Está seguro de que desea guardar los cambios en este modelo? Se actualizará el nombre del modelo seleccionado.",
@@ -189,10 +188,11 @@ public class EditarModeloController implements IFxController, ILoader, ICleanabl
 
                         if (ex instanceof ModeloException) {
 
-                            mostrarError(
+                            mostrarExcepcionThrowable(
                                     "Error al actualizar",
                                     "Problema al guardar los cambios",
-                                    "" + ex.getMessage());
+                                    "" + ex.getMessage(),
+                                    ex);
 
                         } else {
 

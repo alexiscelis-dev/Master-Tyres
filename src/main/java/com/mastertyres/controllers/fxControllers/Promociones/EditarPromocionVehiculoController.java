@@ -138,7 +138,7 @@ public class EditarPromocionVehiculoController implements IFxController, ILoader
         //elimina scroll horizontal de tabla vehculos paricipantes
         tableVehiculosParticipantes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        //txtTipoDescuento.getItems().addAll("Porcentaje", "Otro");
+
 
         // Inicializar columnas
         colMarca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMarca().getNombreMarca()));
