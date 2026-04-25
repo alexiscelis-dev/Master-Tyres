@@ -57,7 +57,7 @@ public class SupabaseStorage {
 
         } catch (Exception e) {
             respaldoProxyService.actualizarEstado(archivoDatos.getRespaldoId(), StatusRespaldo.FALLIDO.toString());
-            throw new RespaldoException("El respaldo no se pudo almacenar en la nube. Verifique su conexión \ne intente nuevamente.");
+            throw new RespaldoException("El respaldo no se pudo almacenar en la nube. Verifique su conexión \ne intente nuevamente." + e.getClass().getName() + " - " + e.getMessage());
         }
 
     }//crearRespaldo

@@ -100,14 +100,6 @@ public class SupabaseAuthService {
 
             Map<String, Object> body = new HashMap<>();
             body.put("password", password);
-/*
-            String body = """
-                    {
-                        "password": "%s"
-                    }
-                    """.formatted(password);
-
- */
 
             HttpEntity<Map<String,Object>> request = new HttpEntity<Map<String, Object>>(body, headers);
 

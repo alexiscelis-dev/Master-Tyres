@@ -679,7 +679,7 @@ public class EditarPromocionClienteController implements IFxController, ILoader,
         taskService.disable(rootPane);
 
 
-        //      try {
+
         taskService.runTask(
                 loadingOverlayController,
                 () -> {

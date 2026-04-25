@@ -5,7 +5,6 @@ import com.mastertyres.common.exeptions.RespaldoException;
 import com.mastertyres.common.interfaces.*;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ProximosServicios.ProximosServiciosController;
 import com.mastertyres.controllers.fxControllers.configuracion.ConfiguracionController;
@@ -242,19 +241,21 @@ public class VentanaPrincipalController implements ILoader, IFxController {
                 (ex) -> {
                     ex.printStackTrace();
                     if (ex instanceof RespaldoException) {
-                        mostrarError(
+                        mostrarExcepcionThrowable(
                                 "No se pudo crear el respaldo",
                                 "Ocurrió un problema al crear el respaldo",
-                                ex.getMessage()
+                                ex.getMessage(),
+                                ex
                         );
                     } else if (ex instanceof InterruptedException ||
                             ex instanceof java.util.concurrent.CancellationException) {
                         mostrarError("Acción cancelada", "", "Acción cancelada por el usuario.");
                     } else {
-                        mostrarError(
+                        mostrarExcepcionThrowable(
                                 "Error interno",
                                 "",
-                                "Ocurrió un error inesperado al crear el respaldo. Vuelva a intentarlo más tarde."
+                                "Ocurrió un error inesperado al crear el respaldo. Vuelva a intentarlo más tarde.",
+                                ex
                         );
                     }
                 },
@@ -368,65 +369,6 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
 
 
-    /*
-
-    public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
-        try {
-            // NUEVO: Limpiar controlador anterior antes de cargar nuevo
-            limpiarControladorActual();
-
-            if (vistaActual != null) {
-                historialVistas.push(vistaActual);
-            }
-            if (NombreVistaActual != null) {
-                historialNombreVistas.push(NombreVistaActual);
-            }
-
-            vistaActual = archivoFXML;
-            NombreVistaActual = nombreVentana;
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent contenido = loader.load();
-            Object controller = loader.getController();
-
-            // NUEVO: Guardar referencia al controlador actual
-            controladorActual = controller;
-
-            configurarControlador(controller);
-
-            panelMenu.getChildren().clear();
-
-            aplicarEscalaAlContenido(contenido); // él hace el add internamente
-
-            AnchorPane.setTopAnchor(contenido, 0.0);
-            AnchorPane.setBottomAnchor(contenido, 0.0);
-            AnchorPane.setLeftAnchor(contenido, 0.0);
-            AnchorPane.setRightAnchor(contenido, 0.0);
-
-            restaurarEstadoInicial();
-
-            System.gc();
-
-            return controller;
-
-        } catch (IOException e) {
-
-            mostrarExcepcion(
-                    "Error de carga",
-                    "No se pudo inicializar la interfaz",
-                    "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
-                    e
-            );
-
-            return null;
-        }
-    }
-
-     */
-
-
-
     public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
         // Creamos un future para obtener el controller cuando termine la tarea
         CompletableFuture<Object> future = new CompletableFuture<>();
@@ -514,62 +456,6 @@ public class VentanaPrincipalController implements ILoader, IFxController {
 
 
 
-    /*
-    public Object viewContent(MouseEvent event, String archivoFXML, String nombreVentana) {
-        try {
-            // NUEVO: Limpiar controlador anterior antes de cargar nuevo
-            limpiarControladorActual();
-
-            if (vistaActual != null) {
-                historialVistas.push(vistaActual);
-            }
-            if (NombreVistaActual != null) {
-                historialNombreVistas.push(NombreVistaActual);
-            }
-
-            vistaActual = archivoFXML;
-            NombreVistaActual = nombreVentana;
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(archivoFXML));
-            loader.setControllerFactory(ApplicationContextProvider.getApplicationContext()::getBean);
-            Parent contenido = loader.load();
-            Object controller = loader.getController();
-
-            // NUEVO: Guardar referencia al controlador actual
-            controladorActual = controller;
-
-            configurarControlador(controller);
-
-            panelMenu.getChildren().clear();
-
-            aplicarEscalaAlContenido(contenido); // él hace el add internamente
-
-            AnchorPane.setTopAnchor(contenido, 0.0);
-            AnchorPane.setBottomAnchor(contenido, 0.0);
-            AnchorPane.setLeftAnchor(contenido, 0.0);
-            AnchorPane.setRightAnchor(contenido, 0.0);
-
-            restaurarEstadoInicial();
-
-            System.gc();
-
-            return controller;
-
-        } catch (IOException e) {
-
-            mostrarExcepcion(
-                    "Error de carga",
-                    "No se pudo inicializar la interfaz",
-                    "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",
-                    e
-            );
-
-            return null;
-        }
-    }
-
-     */
-
     private void limpiarControladorActual() {
         if (controladorActual != null && controladorActual instanceof ICleanable) {
             ((ICleanable) controladorActual).cleanup();
@@ -626,7 +512,7 @@ public class VentanaPrincipalController implements ILoader, IFxController {
             restaurarEstadoInicial();
 
         } catch (Exception e) {
-            MensajesAlert.mostrarExcepcion(
+           mostrarExcepcion(
                     "Error de carga",
                     "No se pudo inicializar la interfaz",
                     "Ocurrió un error al intentar cargar la vista. Por favor, inténtelo de nuevo más tarde.",

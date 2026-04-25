@@ -136,7 +136,7 @@ public class RespaldoService implements IRespaldoService {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
             String fecha = LocalDateTime.now().format(formatter);
@@ -156,10 +156,9 @@ public class RespaldoService implements IRespaldoService {
                     .build();
 
             respaldoProxyService.guardarRespaldo(archivoRespaldo);
-            if (e instanceof RespaldoException)
-                throw new RespaldoException("" + e.getMessage());
-            else
-                throw new RespaldoException("Error interno. Ocurrio un error inesperado al crear el respaldo.");
+
+                throw new RespaldoException("Error interno: " + e.getClass().getName() + " - " + e.getMessage());
+
 
         }
 

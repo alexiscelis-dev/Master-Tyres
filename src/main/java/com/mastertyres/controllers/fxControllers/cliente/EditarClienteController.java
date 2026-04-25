@@ -441,7 +441,8 @@ public class EditarClienteController implements IFxController, ILoader{
                                 mostrarError(
                                         "Error al actualizar",
                                         "Ocurrió un problema al intentar guardar los cambios del cliente:",
-                                        " " + ex.getMessage());
+                                        " " + ex.getMessage()
+                                        );
                             } else {
                                 mostrarExcepcionThrowable(
                                         "Error inesperado",

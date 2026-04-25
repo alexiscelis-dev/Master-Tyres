@@ -281,7 +281,7 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
      tablaVehiculos.getItems().clear();
  });
 
-      //pickerUltimoServicio.addEventHandler(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
+
 
         configurarValidaciones();
 
@@ -784,7 +784,6 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
 
         v.setMarca(choiceMarca.getValue());
         v.setModelo(obtenerModeloSeleccionado());
-        //v.setModelo(choiceModelo.getValue());
         v.setCategoria(choiceCategoria.getValue());
 
         listaVehiculos.add(v);
@@ -970,7 +969,8 @@ public class AgregarClienteController implements IVentanaPrincipal, IFxControlle
                         mostrarError(
                                 "Error al guardar",
                                 "Ocurrió un problema al intentar guardar la información del cliente:",
-                                "" + ex.getMessage());
+                                "" + ex.getMessage()
+                                );
                     } else {
                         mostrarExcepcionThrowable(
                                 "Error del sistema",

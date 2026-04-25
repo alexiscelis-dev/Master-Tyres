@@ -27,7 +27,6 @@ public class VehiculoPromocionService implements  IVehiculoPromocionService{
     @Override
     public List<VehiculoPromocion> obtenerVehiculosPorPromocion(Integer promocionId) {
         return repo.findAllByPromocionIdWithMarcaModelo(promocionId);
-        // Si prefieres la simple: return repo.findByPromocion_PromocionId(promocionId);
     }
 
     @Transactional
