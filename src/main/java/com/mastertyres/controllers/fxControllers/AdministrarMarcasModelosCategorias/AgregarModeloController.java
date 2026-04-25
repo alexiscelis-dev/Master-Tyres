@@ -321,10 +321,11 @@ public class AgregarModeloController implements IFxController, ILoader, ICleanab
 
 
                         if(ex instanceof ModeloException){
-                           mostrarError(
+                            mostrarExcepcionThrowable(
                                     "Error al guardar",
                                     "Ocurrió un problema al intentar guardar alguno/s de los modelos proporcionados:",
-                                    "" + ex.getMessage());
+                                    "" + ex.getMessage(),
+                                    ex);
                         } else {
                             mostrarExcepcionThrowable(
                                     "Error interno",

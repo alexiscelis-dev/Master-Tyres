@@ -8,7 +8,6 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IRestaurableDatos;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.detalleCategoria.entity.DetalleCategoria;
 import com.mastertyres.detalleCategoria.service.DetalleCategoriaService;
@@ -414,7 +413,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
             return;
         }
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar eliminación",
                 "Eliminar modelo",
                 "¿Está seguro de que desea eliminar el modelo seleccionado? Esta acción no se puede deshacer.",
@@ -454,19 +453,19 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
 
                     }, (ex) -> {
 
-                        if (ex.getCause() instanceof ModeloException) {
-                            mostrarError(
+                        if (ex instanceof ModeloException) {
+                            mostrarExcepcionThrowable(
                                     "Error al eliminar modelo",
                                     "Se produjo un problema con el modelo",
-                                    "" + ex.getMessage() );
+                                    "" + ex.getMessage(),
+                                    ex);
 
-                        } else if (ex.getCause() instanceof Exception) {
+                        } else if (ex instanceof Exception) {
                            mostrarExcepcionThrowable(
                                     "Error inesperado",
                                     "No se pudo completar la operación",
                                     "Ocurrió un error inesperado al intentar eliminar el modelo seleccionado.",
-                                    ex
-                            );
+                                    ex);
                         }
 
                     }, null
@@ -498,7 +497,7 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
             return;
         }
 
-        boolean confirmar = MensajesAlert.mostrarConfirmacion(
+        boolean confirmar = mostrarConfirmacion(
                 "Confirmar eliminación",
                 "Eliminar marca",
                 "¿Está seguro de que desea eliminar la marca seleccionada? Esta acción no se puede deshacer.",
@@ -542,15 +541,15 @@ public class AdministarMarcasController implements IFxController, ILoader, IRest
 
                     }, (ex) -> {
 
-                        if (ex.getCause() instanceof MarcaException) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                        if (ex instanceof MarcaException) {
+                           mostrarExcepcionThrowable(
                                     "Error al eliminar marca",
                                     "Se produjo un problema con la marca",
                                     ex.getMessage(),
                                     ex
                             );
-                        } else if (ex.getCause() instanceof Exception) {
-                            MensajesAlert.mostrarExcepcionThrowable(
+                        } else if (ex instanceof Exception) {
+                            mostrarExcepcionThrowable(
                                     "Error inesperado",
                                     "No se pudo completar la operación",
                                     "Ocurrió un error inesperado al intentar eliminar la marca seleccionada.",

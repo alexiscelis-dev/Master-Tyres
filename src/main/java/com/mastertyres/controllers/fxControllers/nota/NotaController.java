@@ -732,20 +732,13 @@ public class NotaController implements IVentanaPrincipal, IFxController, ILoader
                                     "Error al generar archivo",
                                     "Fallo de acceso al archivo",
                                     "El archivo no pudo crearse o está siendo usado por otro programa. Por favor, cierre otras aplicaciones e inténtelo de nuevo."
-
                             );
+
                         } else if (excepcion instanceof InterruptedException || excepcion instanceof CancellationException) {
                             mostrarWarning(
                                     "Operación cancelada",
                                     "Acción interrumpida",
                                     "La impresión del documento fue cancelada por el usuario."
-                            );
-                        } else {
-                            excepcion.printStackTrace();
-                            mostrarWarning(
-                                    "Operación cancelada",
-                                    "Acción interrumpida",
-                                    "La impresión del documento ha sido cancelada."
                             );
                         }
                     }, null

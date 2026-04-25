@@ -135,10 +135,11 @@ public class EditarSaldoController implements IFxController, ILoader {
 
                     if (ex instanceof NotaException){
 
-                        mostrarError(
+                        mostrarExcepcionThrowable(
                                 "Error al actualizar",
                                 "Ocurrió un problema técnico al intentar guardar los cambios:",
-                                "" + ex.getMessage());
+                                "" + ex.getMessage(),
+                                ex);
 
                     }else {
                         mostrarExcepcionThrowable(

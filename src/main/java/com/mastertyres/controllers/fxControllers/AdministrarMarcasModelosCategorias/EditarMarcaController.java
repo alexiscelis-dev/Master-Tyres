@@ -138,10 +138,11 @@ public class EditarMarcaController implements IFxController, ILoader, ICleanable
 
 
                         if (ex instanceof MarcaException) {
-                            mostrarError(
+                            mostrarExcepcionThrowable(
                                     "Error al actualizar",
                                     "Problema con el registro de la marca",
-                                    "" + ex.getMessage());
+                                    "" + ex.getMessage(),
+                                    ex);
                         } else {
 
                             mostrarExcepcionThrowable(

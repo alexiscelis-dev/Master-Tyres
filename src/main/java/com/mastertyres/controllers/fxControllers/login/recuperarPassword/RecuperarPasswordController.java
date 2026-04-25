@@ -154,7 +154,7 @@ public class RecuperarPasswordController implements ILoader, IFxController {
                         mostrarError("Accion cancelada","","Accion cancelada por el usuario");
 
                     } else if (ex instanceof UserException) {
-                        mostrarError("Error interno", "", "Ocurrio un error al cambiar la contraseña. Verifica tu conexion a internet.");
+                        mostrarExcepcionThrowable("Error interno", "", "Ocurrio un error al cambiar la contraseña. Verifica tu conexion a internet.",ex);
                     } else if (ex instanceof MailException) {
                         mostrarError("Error al enviar correo","","No se pudo enviar el correo con la contraseña. Vuelve a intentarlo mas tarde.");
                     }

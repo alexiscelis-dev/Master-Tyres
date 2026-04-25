@@ -9,8 +9,8 @@ import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.ApplicationContextProvider;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
-import com.mastertyres.nota.entity.BaseNota;
 import com.mastertyres.nota.DTOs.NotaDTO;
+import com.mastertyres.nota.entity.BaseNota;
 import com.mastertyres.nota.entity.StatusNota;
 import com.mastertyres.nota.service.NotaService;
 import javafx.fxml.FXML;
@@ -37,7 +37,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.mastertyres.common.utils.MensajesAlert.mostrarError;
 import static com.mastertyres.common.utils.MensajesAlert.mostrarExcepcionThrowable;
 
 @Component
@@ -212,10 +211,11 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                     mostrarNotas(historial);
                 }, (ex) -> {
                     if (ex instanceof NotaException) {
-                        mostrarError(
+                        mostrarExcepcionThrowable(
                                 "Error de carga",
                                 "Se produjo un error de validación al intentar recuperar los registros del historial.",
-                                ""+ex.getMessage());
+                                ""+ex.getMessage(),
+                                ex);
 
                     } else if (ex instanceof Exception) {
                         mostrarExcepcionThrowable(
@@ -312,10 +312,11 @@ public class HistorialController extends BaseNota implements IFxController, ILoa
                     llenarNota((NotaDTO) notaPreview);
                 }, (ex) -> {
                     if (ex instanceof NotaException) {
-                        mostrarError(
+                        mostrarExcepcionThrowable(
                                 "Error de carga",
                                 "No fue posible acceder a la información detallada de la nota seleccionada.",
-                                "" + ex.getMessage()
+                                "" + ex.getMessage(),
+                                ex
                         );
 
                     } else if (ex instanceof Exception) {

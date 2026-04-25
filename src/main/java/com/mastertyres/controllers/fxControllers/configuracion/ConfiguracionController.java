@@ -786,9 +786,9 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
                     mostrarInformacion("Respaldo creado", "", "El respaldo se creo exitosamente.");
                 }, (ex) -> {
                     if (ex instanceof RespaldoException) {
-                        mostrarError("No se pudo crear respaldo",
+                        mostrarExcepcionThrowable("No se pudo crear respaldo",
                                 "Ocurrio un problema al crear el respaldo",
-                                "" + ex.getMessage());
+                                "" + ex.getMessage(), ex);
                     } else if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         mostrarError("Accion cancelada", "", "Accion cancelada por el usuario");
                     } else {

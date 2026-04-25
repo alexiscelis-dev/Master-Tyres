@@ -84,7 +84,7 @@ public class UserService implements IUserService{
         try {
             userRepository.deleteById(usuarioId);
         }catch (Exception e) {
-            throw new UserException("Ocurrio un error al eliminar el usuario proporcionado. \n" + e);
+            throw new UserException("Ocurrio un error al eliminar el usuario proporcionado. \n" + e.getClass().getName() + "-" + e.getMessage());
         }
 
     }

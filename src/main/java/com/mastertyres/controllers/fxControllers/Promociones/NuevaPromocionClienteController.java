@@ -435,13 +435,13 @@ public class NuevaPromocionClienteController implements IVentanaPrincipal, ILoad
                             .map(Cliente::getClienteId)
                             .toList();
 
-                    //System.out.println(clientesIds);
+
                     promocionService.crearPromocionConClientes(promocion, clientesIds);
 
 
                     return null;
                 }, (resultado) -> {
-                   mostrarInformacion(
+                    mostrarInformacion(
                             "Operación completada",
                             "Promoción registrada",
                             "La promoción ha sido registrada en el sistema exitosamente."

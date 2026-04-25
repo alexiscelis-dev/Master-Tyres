@@ -1,7 +1,6 @@
 package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.interfaces.IFxController;
-import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.inventario.entity.Inventario;
 import com.mastertyres.inventario.entity.StatusInventario;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mastertyres.common.utils.MensajesAlert.mostrarExcepcion;
+import static com.mastertyres.common.utils.MensajesAlert.mostrarWarning;
 
 @Component
 public class BuscarLlantaController implements IFxController {
@@ -195,7 +195,7 @@ public class BuscarLlantaController implements IFxController {
             String unidad = (disponible == 1) ? "unidad disponible" : "unidades disponibles";
 
             if (Integer.parseInt(txtStock.getText()) > llantaSeleccionada.getStock()) {
-                MensajesAlert.mostrarWarning(
+               mostrarWarning(
                         "Advertencia",
                         "Stock insuficiente",
                         "La llanta seleccionada (" + llantaSeleccionada.getMarca() + " " + llantaSeleccionada.getModelo() + ") " +

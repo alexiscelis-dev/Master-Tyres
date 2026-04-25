@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent><groupId>com.mastertyres</groupId>
 	<artifactId>master-tires</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<name>Master-Tires</name>
 	<description>Sistema híbrido de gestión para talleres de llantas que combina almacenamiento local y sincronización en la nube para administrar clientes, vehículos, servicios, inventario y promociones.</description>
 	<url/>

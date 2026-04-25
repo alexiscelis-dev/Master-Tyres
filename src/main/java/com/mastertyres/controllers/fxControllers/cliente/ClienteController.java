@@ -260,10 +260,11 @@ public class ClienteController implements IVentanaPrincipal, IFxController, ILoa
                                                                 "La acción fue cancelada por el usuario o el sistema."
                                                         );
                                                     } else if (ex instanceof ClienteException) {
-                                                        mostrarError(
+                                                        mostrarExcepcionThrowable(
                                                                 "Error al eliminar cliente",
                                                                 "Problema con el registro del cliente",
-                                                                "" + ex.getMessage());
+                                                                "" + ex.getMessage(),
+                                                                ex);
                                                     } else {
                                                         mostrarExcepcionThrowable(
                                                                 "Error inesperado",

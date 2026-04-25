@@ -420,13 +420,14 @@ public class EditarInventarioController implements IFxController, ILoader {
                 (ex) -> {
                   taskService.enable(rootPane);
 
-                    if (ex.getCause() instanceof InventarioException) {
-                      mostrarError(
+                    if (ex instanceof InventarioException) {
+                        mostrarError(
                                 "Error al actualizar",
                                 "Ocurrió un problema al intentar actualizar los datos. ",
-                                "" + ex.getMessage());
+                                "" + ex.getMessage()
+                                );
 
-                    } else if (ex.getCause() instanceof InterruptedException || ex.getCause() instanceof java.util.concurrent.CancellationException) {
+                    } else if (ex instanceof InterruptedException || ex instanceof java.util.concurrent.CancellationException) {
                         mostrarWarning(
                                 "Operación cancelada",
                                 "Acción interrumpida",
