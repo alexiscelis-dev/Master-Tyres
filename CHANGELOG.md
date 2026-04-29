@@ -70,3 +70,21 @@ Fixed
 * Refactorización de código.
 * Corrección de año en login derechos Reservados.
 
+
+
+
+
+V1.1.2
+
+Date 25/04/2026
+
+
+
+Fixed
+
+
+
+* Corrección de bug visual en "Agregar Vehículo".
+* Corrección de bug en "Agregar Llanta" en Nota, dejar solamente ingresar números.
+* Corrección de bug Agregaba llanta con stock en 0.
+

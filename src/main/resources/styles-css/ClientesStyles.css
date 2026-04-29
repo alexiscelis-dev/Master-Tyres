@@ -30,6 +30,20 @@
     -fx-border-width: 2px;
 }
 
+.buscador2 {
+    -fx-background-color: #080808;
+    -fx-text-fill: #F2F2F2;
+    -fx-prompt-text-fill: #BBBBBB;
+    -fx-border-color: transparent;
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+}
+
+.buscador2:focused {
+    -fx-border-color: #8EB83D;
+    -fx-border-width: 2;
+}
+
 
 /* Label del filtro */
 /*

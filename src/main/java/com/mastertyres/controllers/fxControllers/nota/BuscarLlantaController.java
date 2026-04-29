@@ -2,6 +2,7 @@ package com.mastertyres.controllers.fxControllers.nota;
 
 import com.mastertyres.common.interfaces.IFxController;
 import com.mastertyres.common.utils.MenuContextSetting;
+import com.mastertyres.common.utils.RegexTools;
 import com.mastertyres.inventario.entity.Inventario;
 import com.mastertyres.inventario.entity.StatusInventario;
 import com.mastertyres.inventario.service.InventarioService;
@@ -79,6 +80,7 @@ public class BuscarLlantaController implements IFxController {
     public void configuraciones(){
 
         MenuContextSetting.disableMenu(root);
+        RegexTools.aplicarNumeroEntero(txtStock);
 
     }//configuraciones
 
@@ -109,6 +111,8 @@ public class BuscarLlantaController implements IFxController {
 
     @FXML
     private void cancelar(ActionEvent event) {
+        llantaSeleccionada = null;
+
         Stage stage = (Stage) txtLlanta.getScene().getWindow();
         stage.close();
 
@@ -191,11 +195,25 @@ public class BuscarLlantaController implements IFxController {
         int solicitado = Integer.parseInt(txtStock.getText());
         int disponible = llantaSeleccionada.getStock();
 
-        if (solicitado > disponible) {
+        if (disponible == 0) {
+
+
+               mostrarWarning(
+                        "Advertencia",
+                        "Stock insuficiente",
+                        "La llanta seleccionada (" + llantaSeleccionada.getMarca() + " " + llantaSeleccionada.getModelo() + ") " +
+                                "no cuenta con stock en el inventario."
+                );
+
+               llantaSeleccionada = null;//Evita el bug de cerrar ventana y te agregue la llanta a la nota sin stock
+
+
+        } else if (solicitado > disponible) {
+
             String unidad = (disponible == 1) ? "unidad disponible" : "unidades disponibles";
 
             if (Integer.parseInt(txtStock.getText()) > llantaSeleccionada.getStock()) {
-               mostrarWarning(
+                mostrarWarning(
                         "Advertencia",
                         "Stock insuficiente",
                         "La llanta seleccionada (" + llantaSeleccionada.getMarca() + " " + llantaSeleccionada.getModelo() + ") " +
@@ -204,7 +222,7 @@ public class BuscarLlantaController implements IFxController {
             }
 
 
-        }else{
+        } else{
 
             llantaSeleccionada.setStock(Integer.parseInt(txtStock.getText())); // se actualiza el stock con lo que se selecciona en el campo de texto
             btnAceptar.getScene().getWindow().hide();
