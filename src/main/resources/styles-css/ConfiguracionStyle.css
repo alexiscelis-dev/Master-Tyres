@@ -20,6 +20,19 @@
     -fx-text-fill: white;
 }
 
+.sql-console-area {
+    -fx-control-inner-background: #111111;
+    -fx-text-fill: white;
+    -fx-font-family: "Consolas";
+    -fx-font-size: 13px;
+    -fx-highlight-fill: #8EB83D;
+    -fx-highlight-text-fill: white;
+    -fx-border-color: #8EB83D;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+
 /* SIDEBAR (derecha) — árbol de navegación*/
 .sidebar {
     -fx-background-color: #1A1A1A;

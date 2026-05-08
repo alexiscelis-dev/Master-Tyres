@@ -1,5 +1,6 @@
 package com.mastertyres.controllers.fxControllers.configuracion;
 
+import com.mastertyres.admin.service.ConsoleService;
 import com.mastertyres.auth.SupabaseAuthService;
 import com.mastertyres.auth.SupabaseService;
 import com.mastertyres.common.exeptions.RespaldoException;
@@ -9,6 +10,7 @@ import com.mastertyres.common.interfaces.ILoader;
 import com.mastertyres.common.interfaces.IVentanaPrincipal;
 import com.mastertyres.common.service.TaskService;
 import com.mastertyres.common.utils.GenerarLogs;
+import com.mastertyres.common.utils.MensajesAlert;
 import com.mastertyres.common.utils.MenuContextSetting;
 import com.mastertyres.components.fxComponents.loader.LoadingComponentController;
 import com.mastertyres.controllers.fxControllers.ventanaPrincipal.VentanaPrincipalController;
@@ -80,6 +82,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     private SupabaseService supabaseService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ConsoleService databaseConsoleService;
 
 
     @FXML
@@ -182,6 +186,17 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     @FXML
     private Circle profileCircle;
 
+    @FXML
+    private VBox consolaBD;
+
+    @FXML
+    private TextArea txtConsultaSQL;
+
+    @FXML
+    private Button btnEjecutarConsulta;
+
+    @FXML
+    private Button btnLimpiarConsola;
 
     // Almacenamiento
     @FXML
@@ -223,6 +238,11 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     // Mapa: id de panel → nodo FXML
     private final Map<String, Node> panelMap = new HashMap<>();
+    private final List<String> panelesAdmin = List.of(
+            "logsRespaldos",
+            "eliminarUsuariosLocales",
+            "consolaBD"
+    );
     private User userSession;
 
     // INICIALIZACIÓN
@@ -249,6 +269,7 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
         panelMap.put("panelContacto", panelContacto);
         panelMap.put("logsRespaldos", panelLogs);
         panelMap.put("eliminarUsuariosLocales", eliminarUsuariosLocales);
+        panelMap.put("consolaBD", consolaBD);
     }
 
     /**
@@ -289,7 +310,8 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
             secAdmin.getChildren().addAll(
                     hoja("❌", "Eliminar usuarios locales", "eliminarUsuariosLocales"),
-                    hoja("📊", "Logs respaldos", "logsRespaldos")
+                    hoja("📊", "Logs respaldos", "logsRespaldos"),
+                    hoja("🖥", "Consola de BD", "consolaBD")
             );
 
             root.getChildren().add(secAdmin);
@@ -333,32 +355,34 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
     /**
      * Oculta todos los paneles y muestra solo el solicitado.
      */
-
     private void mostrarPanel(String panelId) {
 
+        if (panelesAdmin.contains(panelId) && !esAdmin()) {
 
-        if (panelId.equals("logsRespaldos") && !esAdmin()) {
-            mostrarError("Acceso denegado", "", "No tienes permisos para acceder");
-            return;
-        } else if (panelId.equals("eliminarUsuariosLocales") && !esAdmin()) {
-            mostrarError("Acceso denegado", "", "No tienes permisos para acceder");
+            mostrarError(
+                    "Acceso denegado",
+                    "",
+                    "No tienes permisos para acceder a esta sección."
+            );
+
             return;
         }
 
-
         panelMap.forEach((id, nodo) -> nodo.setVisible(false));
+
         Node target = panelMap.get(panelId);
+
         if (target != null) {
+
             target.setVisible(true);
 
             mostrarPanelConfiguracion(panelId);
 
-
         } else {
+
             panelBienvenida.setVisible(true);
         }
-    }//mostrarPanel
-
+    }
 
     // HELPERS PARA CREAR ÍTEMS DEL ÁRBOL
     private TreeItem<NavItem> seccion(String icono, String nombre) {
@@ -733,6 +757,32 @@ public class ConfiguracionController implements IVentanaPrincipal, Initializable
 
     @Override
     public void listeners() {
+
+        btnEjecutarConsulta.setOnAction(event -> {
+
+            try {
+
+                Object resultado =
+                        databaseConsoleService.ejecutarConsulta(
+                                txtConsultaSQL.getText()
+                        );
+
+                System.out.println(resultado);
+                MensajesAlert.mostrarInformacion("Exito", "Se ha realizado la siguiente accion:", resultado.toString());
+
+            } catch (Exception ex) {
+
+                mostrarError(
+                        "Error SQL",
+                        "",
+                        ex.getMessage()
+                );
+            }
+        });
+
+        btnLimpiarConsola.setOnAction(event -> {
+            txtConsultaSQL.clear();
+        });
 
 
         pfConfirmarContrasena.setOnKeyPressed(event -> {
