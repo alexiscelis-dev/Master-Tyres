@@ -352,6 +352,10 @@
                                        fx:id="lblDerechosReservados" />
                             </VBox>
 
+
+                            <!-- ADMIN -->
+
+
                             <!-- Eliminar usuarios Locales -->
                             <VBox fx:id="eliminarUsuariosLocales" styleClass="detail-panel" visible="false" spacing="20">
                                 <ListView fx:id="listaUsuarios" prefWidth="200" prefHeight="300">
@@ -371,7 +375,7 @@
 
                             </VBox>
 
-
+                            <!-- LOGS -->
                             <VBox fx:id="panelLogs" styleClass="detail-panel" visible="false" spacing="20">
 
                                 <Label text="Administrador" styleClass="panel-title"/>
@@ -391,6 +395,40 @@
 
                                 <Button fx:id="btnGenerarLogs" onAction="#generarLogs" text="Generar logs"
                                         styleClass="btn-primary"/>
+
+                            </VBox>
+
+                            <!-- Consola de la Base de datos -->
+                            <VBox fx:id="consolaBD"
+                                  styleClass="detail-panel"
+                                  visible="false"
+                                  spacing="20">
+
+                                <Label text="Consola de Base de Datos"
+                                       styleClass="panel-title"/>
+
+                                <Separator/>
+
+                                <Label text="Consulta SQL"
+                                       styleClass="field-label"/>
+
+                                <TextArea fx:id="txtConsultaSQL"
+                                          prefHeight="320"
+                                          wrapText="true"
+                                          promptText="Ejemplo: SELECT * FROM users;"
+                                          styleClass="sql-console-area"/>
+
+                                <HBox spacing="10">
+
+                                    <Button fx:id="btnEjecutarConsulta"
+                                            text="Ejecutar"
+                                            styleClass="boton-accion"/>
+
+                                    <Button fx:id="btnLimpiarConsola"
+                                            text="Limpiar"
+                                            styleClass="boton-accion"/>
+
+                                </HBox>
 
                             </VBox>
 
